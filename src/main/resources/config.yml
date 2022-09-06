@@ -1,0 +1,46 @@
+#   ___  __    ____    __    _  _  ___   ___
+#  / __)(  )  ( ___)  /__\  ( \( )/ __) / __)
+# ( (__  )(__  )__)  /(__)\  )  ( \__ \( (__
+#  \___)(____)(____)(__)(__)(_)\_)(___/ \___)
+#
+# Configuration file.
+
+settings:
+
+  # By activating this option, the console will be able to send messages (not receive them) in staffchat.
+  console_staffchat: true
+  console_name: "Console"
+
+  # Activating these options, staff members will receive a message when another staff member enters/leaves the server.
+  staff_join_message: true
+  staff_quit_message: true
+
+  # You can customise permissions.
+  staffchat_use_permission: "staffchat.use"
+  staffchat_mute_permission: "staffchat.mute"
+  staffchat_toggle_permission: "staffchat.toggle"
+  staffchat_reload_permission: "staffchat.reload"
+
+  # Don't activate it if you don't need it.
+  debug: false
+
+
+
+messages:
+
+  # General
+  prefix: "&c&lSC &8»"
+  arguments: "%prefix% &7Use &d/sc <message/reload/help>"
+
+  # Chat Formats.
+  staffchat_format: "%prefix% &7%user% &8» &7%message%"
+  staff_join_message_format: "%prefix% &7[&a+&7] &f%user%"
+  staff_quit_message_format: "%prefix% &7[&c-&7] &f%user%"
+
+  # Errors and reload.
+  no_permission: "%prefix% &cYou don't have the permission to do this."
+  console: "%prefix% &cYou must be a player to use that command."
+  staffchat_muted: "%prefix% &7StaffChat is actually &cmuted&7 by an operator!"
+  reloaded: "%prefix% &7The StaffChat has been &areloaded&7!"
+
+# Enjoy.

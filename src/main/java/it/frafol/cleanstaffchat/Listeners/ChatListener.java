@@ -24,6 +24,11 @@ public class ChatListener {
         String message = event.getMessage();
         String sender = event.getPlayer().getUsername();
 
+        if (!(STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
+            MODULE_DISABLED.send(event.getPlayer(), new Placeholder("prefix", PREFIX.color()));
+            return;
+        }
+
         if (PlayerCache.getToggled_2().contains(event.getPlayer().getUniqueId())) {
             if (event.getPlayer().hasPermission(STAFFCHAT_USE_PERMISSION.get(String.class))) {
                 event.setResult(PlayerChatEvent.ChatResult.denied());
@@ -35,7 +40,12 @@ public class ChatListener {
                                 new Placeholder("message", message),
                                 new Placeholder("prefix", PREFIX.color())));
 
+            } else {
+                PlayerCache.getToggled_2().remove(event.getPlayer().getUniqueId());
             }
+        } else {
+            STAFFCHAT_MUTED_ERROR.send(event.getPlayer(),
+                    new Placeholder("prefix", PREFIX.color()));
         }
     }
 }

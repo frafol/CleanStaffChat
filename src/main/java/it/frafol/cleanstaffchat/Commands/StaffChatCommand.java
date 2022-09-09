@@ -8,7 +8,6 @@ import it.frafol.cleanstaffchat.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.objects.Placeholder;
 import it.frafol.cleanstaffchat.objects.PlayerCache;
 import it.frafol.cleanstaffchat.objects.TextFile;
-import net.kyori.adventure.text.Component;
 
 import java.util.Arrays;
 
@@ -36,14 +35,21 @@ public class StaffChatCommand implements SimpleCommand {
 
             Player player = (Player) commandSource;
 
-            if (commandSource.hasPermission(STAFFCHAT_USE_PERMISSION.get(String.class))) {
+            if (!(STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
+                MODULE_DISABLED.send(commandSource, new Placeholder("prefix", PREFIX.color()));
+                return;
+            }
+
+            if (commandSource.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
                 if (!PlayerCache.getToggled_2().contains(player.getUniqueId())) {
                     PlayerCache.getToggled_2().add(player.getUniqueId());
-                    player.sendMessage(Component.text("Ora quello che scrivi va in staffchat"));
+                    STAFFCHAT_TALK_ENABLED.send(commandSource,
+                            new Placeholder("prefix", PREFIX.color()));
                     return;
                 } else if (PlayerCache.getToggled_2().contains(player.getUniqueId())) {
                     PlayerCache.getToggled_2().remove(player.getUniqueId());
-                    player.sendMessage(Component.text("Ora quello che scrivi va in chat normale"));
+                    STAFFCHAT_TALK_DISABLED.send(commandSource,
+                            new Placeholder("prefix", PREFIX.color()));
                     return;
                 }
             } else {
@@ -82,6 +88,11 @@ public class StaffChatCommand implements SimpleCommand {
 
         if (args[0].equalsIgnoreCase("toggle")) {
 
+            if (!(STAFFCHAT_TOGGLE_MODULE.get(Boolean.class))) {
+                MODULE_DISABLED.send(commandSource, new Placeholder("prefix", PREFIX.color()));
+                return;
+            }
+
             if (!(commandSource instanceof Player)) {
                 PLAYER_ONLY.send(commandSource, new Placeholder("prefix", PREFIX.color()));
                 return;
@@ -92,14 +103,16 @@ public class StaffChatCommand implements SimpleCommand {
             if (player.hasPermission(VelocityConfig.STAFFCHAT_TOGGLE_PERMISSION.get(String.class))) {
                 if (!PlayerCache.getToggled().contains(player.getUniqueId())) {
                     PlayerCache.getToggled().add(player.getUniqueId());
-                    player.sendMessage(Component.text("Aggiunto"));
+                    STAFFCHAT_TOGGLED_OFF.send(commandSource,
+                            new Placeholder("prefix", PREFIX.color()));
                     return;
                 }
             }
 
             PlayerCache.getToggled().remove(player.getUniqueId());
 
-            player.sendMessage(Component.text("Rimosso"));
+            STAFFCHAT_TOGGLED_ON.send(commandSource,
+                    new Placeholder("prefix", PREFIX.color()));
 
             return;
         }
@@ -110,13 +123,20 @@ public class StaffChatCommand implements SimpleCommand {
 
         if (args[0].equalsIgnoreCase("mute")) {
 
+            if (!(STAFFCHAT_MUTE_MODULE.get(Boolean.class))) {
+                MODULE_DISABLED.send(commandSource, new Placeholder("prefix", PREFIX.color()));
+                return;
+            }
+
             if (commandSource.hasPermission(VelocityConfig.STAFFCHAT_MUTE_PERMISSION.get(String.class))) {
                 if (!PlayerCache.getMuted().contains("true")) {
                     PlayerCache.getMuted().add("true");
-                    commandSource.sendMessage(Component.text("Bloccata"));
+                    STAFFCHAT_MUTED.send(commandSource,
+                            new Placeholder("prefix", PREFIX.color()));
                 } else {
                     PlayerCache.getMuted().remove("true");
-                    commandSource.sendMessage(Component.text("Sbloccata"));
+                    STAFFCHAT_UNMUTED.send(commandSource,
+                            new Placeholder("prefix", PREFIX.color()));
                 }
                 return;
             }
@@ -161,20 +181,25 @@ public class StaffChatCommand implements SimpleCommand {
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId()))));
                     }
                 } else if (CONSOLE_CAN_TALK.get(Boolean.class)) {
-                    if (DEBUG.get(Boolean.class)) {
-                        PLUGIN.getLogger().info("[DEBUG] Console detected");
-                    }
-                    CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+                    if (!PlayerCache.getMuted().contains("true")) {
+                        if (DEBUG.get(Boolean.class)) {
+                            PLUGIN.getLogger().info("[DEBUG] Console detected");
+                        }
+                        CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+                                        (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                .forEach(players -> STAFFCHAT_FORMAT.send(players,
+                                        new Placeholder("user", sender),
+                                        new Placeholder("message", message),
+                                        new Placeholder("prefix", PREFIX.color())));
+                        if (DEBUG.get(Boolean.class)) {
+                            PLUGIN.getLogger().info("Message was sent to " + CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                     (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                            && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                            .forEach(players -> STAFFCHAT_FORMAT.send(players,
-                                    new Placeholder("user", sender),
-                                    new Placeholder("message", message),
-                                    new Placeholder("prefix", PREFIX.color())));
-                    if (DEBUG.get(Boolean.class)) {
-                        PLUGIN.getLogger().info("Message was sent to " + CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
-                                (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled().contains(players.getUniqueId()))));
+                                            && !(PlayerCache.getToggled().contains(players.getUniqueId()))));
+                        }
+                    } else {
+                        STAFFCHAT_MUTED_ERROR.send(commandSource,
+                                new Placeholder("prefix", PREFIX.color()));
                     }
                     STAFFCHAT_FORMAT.send(commandSource,
                             new Placeholder("user", sender),
@@ -183,9 +208,12 @@ public class StaffChatCommand implements SimpleCommand {
                     if (DEBUG.get(Boolean.class)) {
                         PLUGIN.getLogger().info("Message was sent to " + commandSource);
                     }
+                } else {
+                    PLAYER_ONLY.send(commandSource,
+                            new Placeholder("prefix", PREFIX.color()));
                 }
             } else {
-                STAFFCHAT_MUTED.send(commandSource,
+                STAFFCHAT_MUTED_ERROR.send(commandSource,
                         new Placeholder("prefix", PREFIX.color()));
             }
         } else {

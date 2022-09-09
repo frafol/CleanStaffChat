@@ -13,27 +13,48 @@ import java.util.List;
 public enum VelocityConfig {
 
     PLAYER_ONLY("messages.console"),
+
     NO_PERMISSION("messages.no_permission"),
+
     PREFIX("messages.prefix"),
+
     STAFFCHAT_FORMAT("messages.staffchat_format"),
-    STAFFCHAT_MUTED("messages.staffchat_muted"),
+
+    STAFFCHAT_MUTED_ERROR("messages.staffchat_muted_error"),
+
     STAFF_JOIN_MESSAGE("settings.staff_join_message"),
     STAFF_QUIT_MESSAGE("settings.staff_quit_message"),
     STAFF_JOIN_MESSAGE_FORMAT("messages.staff_join_message_format"),
     STAFF_QUIT_MESSAGE_FORMAT("messages.staff_quit_message_format"),
+
     STAFFCHAT_USE_PERMISSION("settings.staffchat_use_permission"),
+
     DEBUG("settings.debug"),
+
     CONSOLE_PREFIX("settings.console_name"),
 
     ARGUMENTS("messages.arguments"),
 
+    STAFFCHAT_TALK_MODULE("modules.staffchat_talk_module"),
+    STAFFCHAT_TALK_ENABLED("messages.staffchat_talk_enabled"),
+    STAFFCHAT_TALK_DISABLED("messages.staffchat_talk_disabled"),
+
+    STAFFCHAT_MUTE_MODULE("modules.staffchat_mute_module"),
+    STAFFCHAT_MUTED("messages.staffchat_muted"),
+    STAFFCHAT_UNMUTED("messages.staffchat_unmuted"),
     STAFFCHAT_MUTE_PERMISSION("settings.staffchat_mute_permission"),
 
+    STAFFCHAT_TOGGLE_MODULE("modules.staffchat_toggle_module"),
+    STAFFCHAT_TOGGLED_ON("messages.staffchat_toggled_on"),
+    STAFFCHAT_TOGGLED_OFF("messages.staffchat_toggled_off"),
+
     STAFFCHAT_RELOAD_PERMISSION("settings.staffchat_reload_permission"),
-    RELOADED("messages.staffchat_reloaded"),
+    RELOADED("messages.reloaded"),
 
     CONSOLE_CAN_TALK("settings.console_staffchat"),
-    STAFFCHAT_TOGGLE_PERMISSION("settings.staffchat_toggle_permission");
+    STAFFCHAT_TOGGLE_PERMISSION("settings.staffchat_toggle_permission"),
+
+    MODULE_DISABLED("messages.module_disabled");
 
     private final String path;
     public static final CleanStaffChat instance = CleanStaffChat.getInstance();

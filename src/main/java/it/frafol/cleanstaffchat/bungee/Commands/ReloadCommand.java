@@ -17,12 +17,10 @@ public class ReloadCommand extends Command {
         if (sender.hasPermission(BungeeConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class))) {
             TextFile.reloadAll();
             sender.sendMessage(new TextComponent(BungeeConfig.RELOADED.color()
-                    .replace("%prefix%", BungeeConfig.PREFIX.color())
-                    .replace("&", "§")));
+                    .replace("%prefix%", BungeeConfig.PREFIX.color())));
         } else {
             sender.sendMessage(new TextComponent(BungeeConfig.NO_PERMISSION.color()
-                    .replace("%prefix%", BungeeConfig.PREFIX.color())
-                    .replace("&", "§")));
+                    .replace("%prefix%", BungeeConfig.PREFIX.color())));
         }
     }
 }

@@ -30,8 +30,7 @@ public class JoinListener implements Listener {
                                             (BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
                                     .forEach(players -> players.sendMessage(new TextComponent(BungeeConfig.STAFF_JOIN_MESSAGE_FORMAT.color()
                                             .replace("%prefix%", BungeeConfig.PREFIX.color())
-                                            .replace("%user%", player.getName())
-                                            .replace("&", "§"))));
+                                            .replace("%user%", player.getName()))));
                         }
                     }
                 }
@@ -52,8 +51,7 @@ public class JoinListener implements Listener {
                                             (BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
                                     .forEach(players -> players.sendMessage(new TextComponent(BungeeConfig.STAFF_QUIT_MESSAGE_FORMAT.color()
                                             .replace("%prefix%", BungeeConfig.PREFIX.color())
-                                            .replace("%user%", player.getName())
-                                            .replace("&", "§"))));
+                                            .replace("%user%", player.getName()))));
                         }
                     }
                 }

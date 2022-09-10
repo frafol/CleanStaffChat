@@ -27,8 +27,7 @@ public class ChatListener implements Listener {
                 PlayerCache.getToggled_2().remove(((ProxiedPlayer) event.getSender()).getUniqueId());
                 event.setCancelled(true);
                 ((ProxiedPlayer)event.getSender()).sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_MUTED_ERROR.color()
-                        .replace("%prefix%", BungeeConfig.PREFIX.color())
-                        .replace("&", "§")));
+                        .replace("%prefix%", BungeeConfig.PREFIX.color())));
                 return;
             }
             if (!event.getMessage().startsWith("/")) {
@@ -44,8 +43,7 @@ public class ChatListener implements Listener {
                             .forEach(players -> ((ProxiedPlayer)event.getSender()).sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_FORMAT.color()
                                     .replace("%prefix%", BungeeConfig.PREFIX.color())
                                     .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
-                                    .replace("%message%", message)
-                                    .replace("&", "§"))));
+                                    .replace("%message%", message))));
                 } else {
                     PlayerCache.getToggled_2().remove(((ProxiedPlayer) event.getSender()).getUniqueId());
                 }

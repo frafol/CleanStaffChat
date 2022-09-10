@@ -9,7 +9,6 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.util.Arrays;
-import java.util.logging.Logger;
 
 public class StaffChatCommand extends Command {
 
@@ -26,8 +25,7 @@ public class StaffChatCommand extends Command {
 
             if (!(sender instanceof ProxiedPlayer)) {
                 sender.sendMessage(new TextComponent(BungeeConfig.ARGUMENTS.color()
-                        .replace("%prefix%", BungeeConfig.PREFIX.color())
-                        .replace("&", "§")));
+                        .replace("%prefix%", BungeeConfig.PREFIX.color())));
                 return;
             }
 
@@ -37,26 +35,22 @@ public class StaffChatCommand extends Command {
                 if (!PlayerCache.getToggled_2().contains(player.getUniqueId())) {
                     if (!(BungeeConfig.STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
                         sender.sendMessage(new TextComponent(BungeeConfig.MODULE_DISABLED.color()
-                                .replace("%prefix%", BungeeConfig.PREFIX.color())
-                                .replace("&", "§")));
+                                .replace("%prefix%", BungeeConfig.PREFIX.color())));
                         return;
                     }
                     if (!PlayerCache.getMuted().contains("true")) {
                         PlayerCache.getToggled_2().add(player.getUniqueId());
                         sender.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_TALK_ENABLED.color()
-                                .replace("%prefix%", BungeeConfig.PREFIX.color())
-                                .replace("&", "§")));
+                                .replace("%prefix%", BungeeConfig.PREFIX.color())));
                         return;
                     } else {
                         sender.sendMessage(new TextComponent(BungeeConfig.ARGUMENTS.color()
-                                .replace("%prefix%", BungeeConfig.PREFIX.color())
-                                .replace("&", "§")));
+                                .replace("%prefix%", BungeeConfig.PREFIX.color())));
                     }
                 } else if (PlayerCache.getToggled_2().contains(player.getUniqueId())) {
                     PlayerCache.getToggled_2().remove(player.getUniqueId());
                     sender.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_TALK_DISABLED.color()
-                            .replace("%prefix%", BungeeConfig.PREFIX.color())
-                            .replace("&", "§")));
+                            .replace("%prefix%", BungeeConfig.PREFIX.color())));
                     return;
                 }
             } else {
@@ -89,38 +83,32 @@ public class StaffChatCommand extends Command {
                                 .forEach(players -> players.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_FORMAT.color()
                                         .replace("%prefix%", BungeeConfig.PREFIX.color())
                                         .replace("%user%", commandsender)
-                                        .replace("%message%", message)
-                                        .replace("&", "§"))));
+                                        .replace("%message%", message))));
                     } else {
                         sender.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_MUTED_ERROR.color()
-                                .replace("%prefix%", BungeeConfig.PREFIX.color())
-                                .replace("&", "§")));
+                                .replace("%prefix%", BungeeConfig.PREFIX.color())));
                     }
 
                     sender.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_FORMAT.color()
                             .replace("%prefix%", BungeeConfig.PREFIX.color())
                             .replace("%user%", commandsender)
-                            .replace("%message%", message)
-                            .replace("&", "§")));
+                            .replace("%message%", message)));
 
                 } else {
                     sender.sendMessage(new TextComponent(BungeeConfig.PLAYER_ONLY.color()
-                            .replace("%prefix%", BungeeConfig.PREFIX.color())
-                            .replace("&", "§")));
+                            .replace("%prefix%", BungeeConfig.PREFIX.color())));
                 }
             } else {
 
                 sender.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_MUTED_ERROR.color()
-                        .replace("%prefix%", BungeeConfig.PREFIX.color())
-                        .replace("&", "§")));
+                        .replace("%prefix%", BungeeConfig.PREFIX.color())));
 
             }
 
         } else {
 
             sender.sendMessage(new TextComponent(BungeeConfig.NO_PERMISSION.color()
-                    .replace("%prefix%", BungeeConfig.PREFIX.color())
-                    .replace("&", "§")));
+                    .replace("%prefix%", BungeeConfig.PREFIX.color())));
 
         }
     }

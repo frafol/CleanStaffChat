@@ -1,0 +1,4 @@
+name: CleanStaffChat
+version: 1.0.0
+main: it.frafol.cleanstaffchat.bungee.CleanStaffChat
+author: frafol

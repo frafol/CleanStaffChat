@@ -1,0 +1,18 @@
+name: CleanStaffChat
+version: '1.0.0'
+main: it.frafol.cleanstaffchat.spigot.CleanStaffChat
+authors: [ frafol ]
+description: Best StaffChat plugin.
+commands:
+  sc:
+    description: Use staffchat
+    aliases: [staffchat, cleansc, cleanstaffchat]
+  scmute:
+    description: Mute staffchat
+    aliases: [staffchatmute, cleanscmute, cleanstaffchatmute]
+  sctoggle:
+    description: Toggle staffchat
+    aliases: [staffchattoggle, cleansctoggle, cleanstaffchattoggle, staffchatoggle, cleanstaffchatoggle]
+  screload:
+    description: Reload staffchat
+    aliases: [staffchatreload, cleanscreload, cleanstaffchatreload]

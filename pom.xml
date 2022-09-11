@@ -60,6 +60,10 @@
             <url>https://nexus.velocitypowered.com/repository/maven-public/</url>
         </repository>
         <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
@@ -102,9 +106,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.azbh111</groupId>
-            <artifactId>craftbukkit-1.8.8</artifactId>
-            <version>R</version>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.19-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

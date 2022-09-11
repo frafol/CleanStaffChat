@@ -7,6 +7,7 @@ import com.velocitypowered.api.proxy.Player;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
+import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 
 import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.*;
 
@@ -24,16 +25,12 @@ public class JoinListener {
             Player player = event.getPlayer();
             if (STAFF_JOIN_MESSAGE.get(Boolean.class)) {
                 if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
-                    for(Player all : CleanStaffChat.getInstance().getServer().getAllPlayers()) {
-                        if (all.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
-                            CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
-                                    (players -> players.hasPermission
-                                            (VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
-                                    .forEach(players -> STAFF_JOIN_MESSAGE_FORMAT.send(players,
-                                            new Placeholder("user", player.getUsername()),
-                                            new Placeholder("prefix", PREFIX.color())));
-                        }
-                    }
+                    CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+                                    (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                            && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                            .forEach(players -> STAFF_JOIN_MESSAGE_FORMAT.send(players,
+                                    new Placeholder("user", player.getUsername()),
+                                    new Placeholder("prefix", PREFIX.color())));
                 }
             }
         }
@@ -45,16 +42,12 @@ public class JoinListener {
             Player player = event.getPlayer();
             if (STAFF_QUIT_MESSAGE.get(Boolean.class)) {
                 if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
-                    for(Player all : CleanStaffChat.getInstance().getServer().getAllPlayers()) {
-                        if (all.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
-                            CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
-                                    (players -> players.hasPermission
-                                            (VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
+                    CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+                                    (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                            && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                                     .forEach(players -> STAFF_QUIT_MESSAGE_FORMAT.send(players,
                                             new Placeholder("user", player.getUsername()),
                                             new Placeholder("prefix", PREFIX.color())));
-                        }
-                    }
                 }
             }
         }

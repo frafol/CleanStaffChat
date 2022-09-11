@@ -6,6 +6,7 @@ import it.frafol.cleanstaffchat.bungee.Commands.StaffChatCommand;
 import it.frafol.cleanstaffchat.bungee.Commands.ToggleCommand;
 import it.frafol.cleanstaffchat.bungee.Listeners.ChatListener;
 import it.frafol.cleanstaffchat.bungee.Listeners.JoinListener;
+import it.frafol.cleanstaffchat.bungee.Listeners.ServerListener;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import it.frafol.cleanstaffchat.bungee.objects.TextFile;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -38,6 +39,7 @@ public class CleanStaffChat extends Plugin {
 
         getLogger().info("§7Registering listeners...");
         getProxy().getPluginManager().registerListener(this, new JoinListener(this));
+        getProxy().getPluginManager().registerListener(this, new ServerListener(this));
         getProxy().getPluginManager().registerListener(this, new ChatListener(this));
         getLogger().info("§7Listeners registered §asuccessfully§7!");
 

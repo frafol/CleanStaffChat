@@ -12,6 +12,7 @@ import it.frafol.cleanstaffchat.velocity.Commands.StaffChatCommand;
 import it.frafol.cleanstaffchat.velocity.Commands.ToggleCommand;
 import it.frafol.cleanstaffchat.velocity.Listeners.ChatListener;
 import it.frafol.cleanstaffchat.velocity.Listeners.JoinListener;
+import it.frafol.cleanstaffchat.velocity.Listeners.ServerListener;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import it.frafol.cleanstaffchat.velocity.objects.TextFile;
 import lombok.Getter;
@@ -83,6 +84,7 @@ public class CleanStaffChat {
         logger.info("§7Commands registered §asuccessfully§7!");
         logger.info("§7Registering listeners...");
         server.getEventManager().register(this, new JoinListener(this));
+        server.getEventManager().register(this, new ServerListener(this));
         server.getEventManager().register(this, new ChatListener(this));
         logger.info("§7Listeners registered §asuccessfully§7!");
         logger.info("§7Loading configurations...");

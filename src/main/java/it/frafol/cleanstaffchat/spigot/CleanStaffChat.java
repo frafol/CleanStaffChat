@@ -12,6 +12,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.simpleyaml.configuration.file.YamlFile;
 
+import java.util.Objects;
+
 public class CleanStaffChat extends JavaPlugin {
 
     private TextFile configTextFile;
@@ -44,10 +46,10 @@ public class CleanStaffChat extends JavaPlugin {
             return;
         }
         getLogger().info("Registering commands...");
-        getCommand("scmute").setExecutor(new MuteCommand(this));
-        getCommand("sctoggle").setExecutor(new ToggleCommand(this));
-        getCommand("screload").setExecutor(new ReloadCommand(this));
-        getCommand("sc").setExecutor(new StaffChatCommand(this));
+        Objects.requireNonNull(getCommand("scmute")).setExecutor(new MuteCommand(this));
+        Objects.requireNonNull(getCommand("sctoggle")).setExecutor(new ToggleCommand(this));
+        Objects.requireNonNull(getCommand("screload")).setExecutor(new ReloadCommand(this));
+        Objects.requireNonNull(getCommand("sc")).setExecutor(new StaffChatCommand(this));
         getLogger().info("Commands registered successfully!");
 
         getLogger().info("Registering listeners...");

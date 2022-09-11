@@ -44,7 +44,10 @@ public enum SpigotConfig {
     CONSOLE_CAN_TALK("settings.console_staffchat"),
     STAFFCHAT_TOGGLE_PERMISSION("settings.staffchat_toggle_permission"),
 
-    MODULE_DISABLED("messages.module_disabled");
+    MODULE_DISABLED("messages.module_disabled"),
+
+    DISCORD("discord.enabled"),
+    DISCORD_WEBHOOK("discord.webhook");
 
     private final String path;
     public static final CleanStaffChat instance = CleanStaffChat.getInstance();

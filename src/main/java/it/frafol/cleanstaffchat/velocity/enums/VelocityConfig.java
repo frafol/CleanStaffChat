@@ -48,6 +48,9 @@ public enum VelocityConfig {
     CONSOLE_CAN_TALK("settings.console_staffchat"),
     STAFFCHAT_TOGGLE_PERMISSION("settings.staffchat_toggle_permission"),
 
+    STAFFCHAT_SWITCH_MODULE("modules.staffchat_switch_module"),
+    STAFF_SWITCH_MESSAGE_FORMAT("messages.staff_switch_message_format"),
+
     MODULE_DISABLED("messages.module_disabled");
 
     private final String path;

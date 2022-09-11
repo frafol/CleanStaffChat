@@ -30,6 +30,19 @@ public class CleanStaffChat extends JavaPlugin {
                 "( (__  )(__  )__)  /(__)\\  )  (   \\__ \\( (__ \n" +
                 " \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)\n");
 
+
+        getLogger().info("Server version: " + Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3] + ".");
+        if (Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_6_R")
+            || Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_5_R")
+                || Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_4_R")
+                || Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_3_R")
+                || Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_2_R")
+                || Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_1_R")
+                || Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_0_R")) {
+            getLogger().severe("Support for your version was declined.");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
         getLogger().info("Registering commands...");
         getCommand("scmute").setExecutor(new MuteCommand(this));
         getCommand("sctoggle").setExecutor(new ToggleCommand(this));
@@ -38,7 +51,6 @@ public class CleanStaffChat extends JavaPlugin {
         getLogger().info("Commands registered successfully!");
 
         getLogger().info("Registering listeners...");
-        getLogger().info("Server version: " + Bukkit.getServer().getBukkitVersion() + ".");
         getServer().getPluginManager().registerEvents(new JoinListener(this), this);
         getServer().getPluginManager().registerEvents(new ChatListener(this), this);
         getLogger().info("Listeners registered successfully!");

@@ -38,14 +38,6 @@ public class StaffChatCommand implements CommandExecutor {
                                 .replace("%prefix%", SpigotConfig.PREFIX.color())));
                         return false;
                     }
-                    if (Bukkit.getServer().getBukkitVersion().contains("1.19")) {
-                        sender.sendMessage((SpigotConfig.ARGUMENTS.color()
-                                .replace("%prefix%", SpigotConfig.PREFIX.color())));
-                        if (PlayerCache.getMuted().contains("true")) {
-                            PlayerCache.getToggled_2().remove(player.getUniqueId());
-                        }
-                        return false;
-                    }
                     if (!PlayerCache.getMuted().contains("true")) {
                         PlayerCache.getToggled_2().add(player.getUniqueId());
                         sender.sendMessage((SpigotConfig.STAFFCHAT_TALK_ENABLED.color()

@@ -39,9 +39,6 @@ public class CleanStaffChat extends JavaPlugin {
 
         getLogger().info("Registering listeners...");
         getLogger().info("Server version: " + Bukkit.getServer().getBukkitVersion() + ".");
-        if (Bukkit.getServer().getBukkitVersion().contains("1.19")) {
-            getLogger().severe("Some of the functions will not be available for your version of the server.");
-        }
         getServer().getPluginManager().registerEvents(new JoinListener(this), this);
         getServer().getPluginManager().registerEvents(new ChatListener(this), this);
         getLogger().info("Listeners registered successfully!");

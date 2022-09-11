@@ -3,6 +3,7 @@ package it.frafol.cleanstaffchat.spigot.Commands;
 import it.frafol.cleanstaffchat.spigot.CleanStaffChat;
 import it.frafol.cleanstaffchat.spigot.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.spigot.objects.PlayerCache;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.entity.Player;
@@ -37,6 +38,14 @@ public class StaffChatCommand implements CommandExecutor {
                                 .replace("%prefix%", SpigotConfig.PREFIX.color())));
                         return false;
                     }
+                    if (Bukkit.getServer().getBukkitVersion().contains("1.19")) {
+                        sender.sendMessage((SpigotConfig.ARGUMENTS.color()
+                                .replace("%prefix%", SpigotConfig.PREFIX.color())));
+                        if (PlayerCache.getMuted().contains("true")) {
+                            PlayerCache.getToggled_2().remove(player.getUniqueId());
+                        }
+                        return false;
+                    }
                     if (!PlayerCache.getMuted().contains("true")) {
                         PlayerCache.getToggled_2().add(player.getUniqueId());
                         sender.sendMessage((SpigotConfig.STAFFCHAT_TALK_ENABLED.color()
@@ -51,11 +60,13 @@ public class StaffChatCommand implements CommandExecutor {
                     PlayerCache.getToggled_2().remove(player.getUniqueId());
                     sender.sendMessage((SpigotConfig.STAFFCHAT_TALK_DISABLED.color()
                             .replace("%prefix%", SpigotConfig.PREFIX.color())));
+                    return false;
                 }
             } else {
                 sender.sendMessage(("§7This server is using §dCleanStaffChat §7by §dfrafol§7."));
                 return false;
             }
+            return false;
         }
 
         String message = String.join(" ", Arrays.copyOfRange(strings, 0, strings.length));
@@ -87,28 +98,28 @@ public class StaffChatCommand implements CommandExecutor {
                     } else {
                         sender.sendMessage((SpigotConfig.STAFFCHAT_MUTED_ERROR.color()
                                 .replace("%prefix%", SpigotConfig.PREFIX.color())));
+                        return false;
                     }
-
                     sender.sendMessage((SpigotConfig.STAFFCHAT_FORMAT.color()
                             .replace("%prefix%", SpigotConfig.PREFIX.color())
                             .replace("%user%", commandsender)
                             .replace("%message%", message)));
-
+                    return false;
                 } else {
                     sender.sendMessage((SpigotConfig.PLAYER_ONLY.color()
                             .replace("%prefix%", SpigotConfig.PREFIX.color())));
                 }
+                return false;
             } else {
 
                 sender.sendMessage((SpigotConfig.STAFFCHAT_MUTED_ERROR.color()
                         .replace("%prefix%", SpigotConfig.PREFIX.color())));
 
             }
+            return false;
         } else {
-
             sender.sendMessage((SpigotConfig.NO_PERMISSION.color()
                     .replace("%prefix%", SpigotConfig.PREFIX.color())));
-
         }
         return false;
     }

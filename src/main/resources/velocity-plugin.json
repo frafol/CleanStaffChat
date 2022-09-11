@@ -1,1 +1,1 @@
-{"id":"cleanstaffchat","name":"CleanStaffChat","version":"1.0.0","url":"github.com/frafol","authors":["frafol"],"dependencies":[],"main":"it.frafol.cleanstaffchat.velocity.CleanStaffChat"}
+{"id":"cleanstaffchat","name":"CleanStaffChat","version":"${project.version}","url":"github.com/frafol","authors":["frafol"],"dependencies":[],"main":"it.frafol.cleanstaffchat.velocity.CleanStaffChat"}

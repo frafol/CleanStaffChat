@@ -1,4 +1,4 @@
 name: CleanStaffChat
-version: 1.0.0
+version: ${project.version}
 main: it.frafol.cleanstaffchat.bungee.CleanStaffChat
 author: frafol

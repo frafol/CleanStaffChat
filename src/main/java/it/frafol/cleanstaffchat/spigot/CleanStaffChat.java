@@ -6,6 +6,7 @@ import it.frafol.cleanstaffchat.spigot.Commands.StaffChatCommand;
 import it.frafol.cleanstaffchat.spigot.Commands.ToggleCommand;
 import it.frafol.cleanstaffchat.spigot.Listeners.ChatListener;
 import it.frafol.cleanstaffchat.spigot.Listeners.JoinListener;
+import it.frafol.cleanstaffchat.spigot.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.spigot.objects.PlayerCache;
 import it.frafol.cleanstaffchat.spigot.objects.TextFile;
 import org.bukkit.Bukkit;
@@ -45,6 +46,7 @@ public class CleanStaffChat extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
+
         getLogger().info("Registering commands...");
         Objects.requireNonNull(getCommand("scmute")).setExecutor(new MuteCommand(this));
         Objects.requireNonNull(getCommand("sctoggle")).setExecutor(new ToggleCommand(this));
@@ -60,6 +62,15 @@ public class CleanStaffChat extends JavaPlugin {
         getLogger().info("Loading configurations...");
         configTextFile = new TextFile(getDataFolder().toPath(), "config.yml");
         getLogger().info("Configurations loaded successfully!");
+
+
+        if (SpigotConfig.UPDATE_CHECK.get(Boolean.class)) {
+            new UpdateCheck(this).getVersion(version -> {
+                if (!this.getDescription().getVersion().equals(version)) {
+                    getLogger().warning("There is a new update available, download it on SpigotMC!");
+                }
+            });
+        }
 
         getLogger().info("Plugin successfully enabled, enjoy!");
     }

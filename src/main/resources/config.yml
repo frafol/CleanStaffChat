@@ -54,12 +54,9 @@ messages:
   module_disabled: "%prefix% &7This function is actually &cdisabled&7!"
 
 
-discord:
-  enabled: false
-  webhook: "YOUR_WEBHOOK_HERE"
-
 modules:
 
+  update_check: true
   staffchat_switch_module: true
   staffchat_talk_module: true
   staffchat_mute_module: true

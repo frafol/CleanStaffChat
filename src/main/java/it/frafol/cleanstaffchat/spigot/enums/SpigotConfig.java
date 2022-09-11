@@ -46,8 +46,7 @@ public enum SpigotConfig {
 
     MODULE_DISABLED("messages.module_disabled"),
 
-    DISCORD("discord.enabled"),
-    DISCORD_WEBHOOK("discord.webhook");
+    UPDATE_CHECK("modules.update_check");
 
     private final String path;
     public static final CleanStaffChat instance = CleanStaffChat.getInstance();

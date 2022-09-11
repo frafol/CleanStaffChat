@@ -5,6 +5,7 @@ import it.frafol.cleanstaffchat.spigot.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.spigot.objects.TextFile;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
+import org.jetbrains.annotations.NotNull;
 
 public class ReloadCommand implements CommandExecutor {
 
@@ -15,7 +16,7 @@ public class ReloadCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(org.bukkit.command.CommandSender sender, Command command, String s, String[] strings) {
+    public boolean onCommand(org.bukkit.command.@NotNull CommandSender sender, Command command, @NotNull String s, String[] strings) {
         if (command.getName().equalsIgnoreCase("screload")
                 || command.getName().equalsIgnoreCase("staffchatreload")
                 || command.getName().equalsIgnoreCase("cleanscreload")

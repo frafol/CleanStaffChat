@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -19,7 +20,7 @@ public class StaffChatCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(org.bukkit.command.CommandSender sender, Command command, String s, String[] strings) {
+    public boolean onCommand(org.bukkit.command.@NotNull CommandSender sender, @NotNull Command command, String s, String[] strings) {
 
         if (strings.length == 0) {
 

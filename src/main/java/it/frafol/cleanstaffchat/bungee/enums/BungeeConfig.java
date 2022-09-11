@@ -47,7 +47,9 @@ public enum BungeeConfig {
     STAFFCHAT_SWITCH_MODULE("modules.staffchat_switch_module"),
     STAFF_SWITCH_MESSAGE_FORMAT("messages.staff_switch_message_format"),
 
-    MODULE_DISABLED("messages.module_disabled");
+    MODULE_DISABLED("messages.module_disabled"),
+
+    UPDATE_CHECK("modules.update_check");
 
     private final String path;
     public static final CleanStaffChat instance = CleanStaffChat.getInstance();

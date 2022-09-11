@@ -7,6 +7,7 @@ import it.frafol.cleanstaffchat.bungee.Commands.ToggleCommand;
 import it.frafol.cleanstaffchat.bungee.Listeners.ChatListener;
 import it.frafol.cleanstaffchat.bungee.Listeners.JoinListener;
 import it.frafol.cleanstaffchat.bungee.Listeners.ServerListener;
+import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import it.frafol.cleanstaffchat.bungee.objects.TextFile;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -15,12 +16,13 @@ import org.simpleyaml.configuration.file.YamlFile;
 public class CleanStaffChat extends Plugin {
 
     private TextFile configTextFile;
-    private static CleanStaffChat instance;
+    public static CleanStaffChat instance;
 
     public static CleanStaffChat getInstance() {
         return instance;
     }
 
+    @Override
     public void onEnable() {
 
         instance = this;
@@ -47,6 +49,15 @@ public class CleanStaffChat extends Plugin {
         configTextFile = new TextFile(getDataFolder().toPath(), "config.yml");
         getLogger().info("§7Configurations loaded §asuccessfully§7!");
 
+
+        if (BungeeConfig.UPDATE_CHECK.get(Boolean.class)) {
+            new UpdateCheck(this).getVersion(version -> {
+                if (!this.getDescription().getVersion().equals(version)) {
+                    getLogger().warning("§eThere is a new update available, download it on SpigotMC!");
+                }
+            });
+        }
+
         getLogger().info("§7Plugin successfully §aenabled§7, enjoy!");
     }
 
@@ -54,6 +65,7 @@ public class CleanStaffChat extends Plugin {
         return getInstance().configTextFile.getConfig();
     }
 
+    @Override
     public void onDisable() {
         getLogger().info("§7Deleting instances...");
         instance = null;

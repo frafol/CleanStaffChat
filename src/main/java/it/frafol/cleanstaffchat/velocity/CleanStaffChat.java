@@ -4,6 +4,7 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
+import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import it.frafol.cleanstaffchat.velocity.Commands.MuteCommand;
@@ -13,6 +14,7 @@ import it.frafol.cleanstaffchat.velocity.Commands.ToggleCommand;
 import it.frafol.cleanstaffchat.velocity.Listeners.ChatListener;
 import it.frafol.cleanstaffchat.velocity.Listeners.JoinListener;
 import it.frafol.cleanstaffchat.velocity.Listeners.ServerListener;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import it.frafol.cleanstaffchat.velocity.objects.TextFile;
 import lombok.Getter;
@@ -48,6 +50,9 @@ public class CleanStaffChat {
         this.path = path;
     }
 
+    @Inject
+    public PluginContainer container;
+
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
         instance = this;
@@ -55,6 +60,7 @@ public class CleanStaffChat {
                 " / __)(  )  ( ___)  /__\\  ( \\( )  / __) / __)\n" +
                 "( (__  )(__  )__)  /(__)\\  )  (   \\__ \\( (__ \n" +
                 " \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)\n");
+
         logger.info("§7Registering commands...");
         server.getCommandManager().register(server.getCommandManager()
                 .metaBuilder("sc")
@@ -82,14 +88,25 @@ public class CleanStaffChat {
                 .aliases("cleanstaffchattoggle")
                 .build(), new ToggleCommand(this));
         logger.info("§7Commands registered §asuccessfully§7!");
+
         logger.info("§7Registering listeners...");
         server.getEventManager().register(this, new JoinListener(this));
         server.getEventManager().register(this, new ServerListener(this));
         server.getEventManager().register(this, new ChatListener(this));
         logger.info("§7Listeners registered §asuccessfully§7!");
+
         logger.info("§7Loading configurations...");
         configTextFile = new TextFile(path, "config.yml");
         logger.info("§7Configurations loaded §asuccessfully§7!");
+
+        if (VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {
+            new UpdateCheck(this).getVersion(version -> {
+                if (!container.getDescription().getVersion().equals(version)) {
+                    getLogger().warning("There is a new update available, download it on SpigotMC!");
+                }
+            });
+        }
+
         logger.info("§7Plugin successfully §aenabled§7, enjoy!");
     }
 
@@ -101,5 +118,4 @@ public class CleanStaffChat {
         PlayerCache.getMuted().clear();
         logger.info("§7Successfully §cdisabled§7.");
     }
-
 }

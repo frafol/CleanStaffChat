@@ -63,6 +63,8 @@ public class CleanStaffChat extends JavaPlugin {
         configTextFile = new TextFile(getDataFolder().toPath(), "config.yml");
         getLogger().info("Configurations loaded successfully!");
 
+        int pluginId = 105220;
+        Metrics metrics = new Metrics(this, pluginId);
 
         if (SpigotConfig.UPDATE_CHECK.get(Boolean.class)) {
             new UpdateCheck(this).getVersion(version -> {

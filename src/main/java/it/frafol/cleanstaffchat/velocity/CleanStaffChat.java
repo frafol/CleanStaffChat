@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.0.0",
+        version = "1.0.1",
         url = "github.com/frafol",
         authors = "frafol"
 )
@@ -49,6 +49,7 @@ public class CleanStaffChat {
         this.logger = logger;
         this.path = path;
     }
+
 
     @Inject
     public PluginContainer container;
@@ -101,8 +102,10 @@ public class CleanStaffChat {
 
         if (VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {
             new UpdateCheck(this).getVersion(version -> {
-                if (!container.getDescription().getVersion().equals(version)) {
-                    getLogger().warning("There is a new update available, download it on SpigotMC!");
+                if (container.getDescription().getVersion().isPresent()) {
+                    if (!container.getDescription().getVersion().get().equals(version)) {
+                        getLogger().warning("There is a new update available, download it on SpigotMC!");
+                    }
                 }
             });
         }
@@ -112,10 +115,15 @@ public class CleanStaffChat {
 
     @Subscribe
     public void onProxyShutdown(ProxyShutdownEvent event) {
+        getLogger().info("Deleting instances...");
+        instance = null;
+        configTextFile = null;
+
         logger.info("§7Clearing lists...");
         PlayerCache.getToggled_2().clear();
         PlayerCache.getToggled().clear();
         PlayerCache.getMuted().clear();
+
         logger.info("§7Successfully §cdisabled§7.");
     }
 }

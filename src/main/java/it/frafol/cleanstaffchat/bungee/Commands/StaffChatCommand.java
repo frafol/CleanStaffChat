@@ -114,6 +114,7 @@ public class StaffChatCommand extends Command {
                                         .replace("%user%", commandsender)
                                         .replace("%userprefix%", "")
                                         .replace("%usersuffix%", "")
+                                        .replace("%displayname%", commandsender)
                                         .replace("%message%", message))));
                     } else {
                         sender.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_MUTED_ERROR.color()
@@ -123,6 +124,9 @@ public class StaffChatCommand extends Command {
                     sender.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_FORMAT.color()
                             .replace("%prefix%", BungeeConfig.PREFIX.color())
                             .replace("%user%", commandsender)
+                            .replace("%displayname%", commandsender)
+                            .replace("%userprefix%", "")
+                            .replace("%usersuffix%", "")
                             .replace("%message%", message)));
 
                 } else {

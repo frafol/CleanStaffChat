@@ -114,6 +114,7 @@ public class StaffChatCommand implements CommandExecutor {
                                         .replace("%user%", commandsender)
                                         .replace("%userprefix%", "")
                                         .replace("%usersuffix%", "")
+                                        .replace("%displayname%", commandsender)
                                         .replace("%message%", message))));
                     } else {
                         sender.sendMessage((SpigotConfig.STAFFCHAT_MUTED_ERROR.color()
@@ -123,6 +124,9 @@ public class StaffChatCommand implements CommandExecutor {
                     sender.sendMessage((SpigotConfig.STAFFCHAT_FORMAT.color()
                             .replace("%prefix%", SpigotConfig.PREFIX.color())
                             .replace("%user%", commandsender)
+                            .replace("%displayname%", commandsender)
+                            .replace("%userprefix%", "")
+                            .replace("%usersuffix%", "")
                             .replace("%message%", message)));
                     return false;
                 } else {

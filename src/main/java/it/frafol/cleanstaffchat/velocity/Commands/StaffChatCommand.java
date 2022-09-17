@@ -116,6 +116,7 @@ public class StaffChatCommand implements SimpleCommand {
                                 .forEach(players -> STAFFCHAT_FORMAT.send(players,
                                         new Placeholder("user", sender),
                                         new Placeholder("message", message),
+                                        new Placeholder("displayname", sender),
                                         new Placeholder("userprefix", ""),
                                         new Placeholder("usersuffix", ""),
                                         new Placeholder("prefix", PREFIX.color())));
@@ -126,6 +127,7 @@ public class StaffChatCommand implements SimpleCommand {
                     STAFFCHAT_FORMAT.send(commandSource,
                             new Placeholder("user", sender),
                             new Placeholder("message", message),
+                            new Placeholder("displayname", sender),
                             new Placeholder("userprefix", ""),
                             new Placeholder("usersuffix", ""),
                             new Placeholder("prefix", PREFIX.color()));

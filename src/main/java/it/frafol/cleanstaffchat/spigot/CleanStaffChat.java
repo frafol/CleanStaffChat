@@ -24,6 +24,7 @@ public class CleanStaffChat extends JavaPlugin {
         return instance;
     }
 
+    @Override
     public void onEnable() {
 
         instance = this;
@@ -47,24 +48,25 @@ public class CleanStaffChat extends JavaPlugin {
             return;
         }
 
-        getLogger().info("Registering commands...");
         Objects.requireNonNull(getCommand("scmute")).setExecutor(new MuteCommand(this));
         Objects.requireNonNull(getCommand("sctoggle")).setExecutor(new ToggleCommand(this));
         Objects.requireNonNull(getCommand("screload")).setExecutor(new ReloadCommand(this));
         Objects.requireNonNull(getCommand("sc")).setExecutor(new StaffChatCommand(this));
         getLogger().info("Commands registered successfully!");
 
-        getLogger().info("Registering listeners...");
         getServer().getPluginManager().registerEvents(new JoinListener(this), this);
         getServer().getPluginManager().registerEvents(new ChatListener(this), this);
         getLogger().info("Listeners registered successfully!");
 
-        getLogger().info("Loading configurations...");
         configTextFile = new TextFile(getDataFolder().toPath(), "config.yml");
         getLogger().info("Configurations loaded successfully!");
 
-        int pluginId = 105220;
-        Metrics metrics = new Metrics(this, pluginId);
+        if (SpigotConfig.STATS.get(Boolean.class)) {
+
+            new Metrics(this, 16448);
+
+            getLogger().info("Metrics loaded successfully!");
+        }
 
         if (SpigotConfig.UPDATE_CHECK.get(Boolean.class)) {
             new UpdateCheck(this).getVersion(version -> {
@@ -74,13 +76,15 @@ public class CleanStaffChat extends JavaPlugin {
             });
         }
 
-        getLogger().info("Plugin successfully enabled, enjoy!");
+        getLogger().info("Plugin successfully enabled!");
     }
 
     public YamlFile getConfigTextFile() {
         return getInstance().configTextFile.getConfig();
     }
 
+
+    @Override
     public void onDisable() {
         getLogger().info("Deleting instances...");
         instance = null;

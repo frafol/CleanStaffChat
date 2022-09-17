@@ -40,11 +40,11 @@ messages:
   staffchat_toggled_on: "%prefix% &7The StaffChat is now &avisible&7."
   staffchat_toggled_off: "%prefix% &7The StaffChat is now &ainvisible&7."
 
-  # Chat Formats.
+  # Chat Formats (If you use LuckPerms you can use %displayname%, %userprefix% and %usersuffix%).
   staffchat_format: "%prefix% &7%user% &8» &7%message%"
-  staff_join_message_format: "%prefix% &7[&a+&7] &f%user%"
-  staff_quit_message_format: "%prefix% &7[&c-&7] &f%user%"
-  staff_switch_message_format: "%prefix% &7%user% &e➜ %server%" # This will not work if you run your plugin on spigot.
+  staff_join_message_format: "%prefix% &7[&a+&7] &f&7%user%"
+  staff_quit_message_format: "%prefix% &7[&c-&7] &f&7%user%" #
+  staff_switch_message_format: "%prefix% &7%user% &e➜ %server%" # This won't work if you run your plugin on spigot.
 
   # Errors and reload.
   no_permission: "%prefix% &cYou don't have the permission to do this."
@@ -57,6 +57,8 @@ messages:
 modules:
 
   update_check: true
+  stats: true
+
   staffchat_switch_module: true
   staffchat_talk_module: true
   staffchat_mute_module: true

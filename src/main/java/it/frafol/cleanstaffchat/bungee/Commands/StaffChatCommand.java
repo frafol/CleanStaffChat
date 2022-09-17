@@ -3,7 +3,11 @@ package it.frafol.cleanstaffchat.bungee.Commands;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.user.User;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -67,14 +71,39 @@ public class StaffChatCommand extends Command {
         if (sender.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
             if (!PlayerCache.getMuted().contains("true")) {
                 if (sender instanceof ProxiedPlayer) {
-                    CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
-                                    (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                            && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                            .forEach(players -> players.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_FORMAT.color()
-                                    .replace("%prefix%", BungeeConfig.PREFIX.color())
-                                    .replace("%user%", commandsender)
-                                    .replace("%message%", message)
-                                    .replace("&", "§"))));
+                    if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
+
+                        LuckPerms api = LuckPermsProvider.get();
+
+                        User user = api.getUserManager().getUser(((ProxiedPlayer) sender).getUniqueId());
+                        assert user != null;
+                        final String prefix = user.getCachedData().getMetaData().getPrefix();
+                        final String suffix = user.getCachedData().getMetaData().getSuffix();
+                        final String user_prefix = prefix == null ? "" : prefix;
+                        final String user_suffix = suffix == null ? "" : suffix;
+
+                        CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
+                                        (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                .forEach(players -> players.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_FORMAT.color()
+                                        .replace("%prefix%", BungeeConfig.PREFIX.color())
+                                        .replace("%user%", commandsender)
+                                        .replace("%message%", message)
+                                        .replace("%displayname%", user_prefix + commandsender + user_suffix)
+                                        .replace("%userprefix%", user_prefix)
+                                        .replace("%usersuffix%", user_suffix)
+                                        .replace("&", "§"))));
+
+                    } else {
+                        CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
+                                        (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                .forEach(players -> players.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_FORMAT.color()
+                                        .replace("%prefix%", BungeeConfig.PREFIX.color())
+                                        .replace("%user%", commandsender)
+                                        .replace("%message%", message)
+                                        .replace("&", "§"))));
+                    }
                 } else if (BungeeConfig.CONSOLE_CAN_TALK.get(Boolean.class)) {
                     if (!PlayerCache.getMuted().contains("true")) {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
@@ -83,6 +112,8 @@ public class StaffChatCommand extends Command {
                                 .forEach(players -> players.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_FORMAT.color()
                                         .replace("%prefix%", BungeeConfig.PREFIX.color())
                                         .replace("%user%", commandsender)
+                                        .replace("%userprefix%", "")
+                                        .replace("%usersuffix%", "")
                                         .replace("%message%", message))));
                     } else {
                         sender.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_MUTED_ERROR.color()

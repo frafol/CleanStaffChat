@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 )
 public class CleanStaffChat {
 
+    private final Metrics.Factory metricsFactory;
     private final ProxyServer server;
     private final Logger logger;
     private final Path path;
@@ -44,10 +45,11 @@ public class CleanStaffChat {
     }
 
     @Inject
-    public CleanStaffChat(ProxyServer server, Logger logger, @DataDirectory Path path) {
+    public CleanStaffChat(ProxyServer server, Logger logger, @DataDirectory Path path, Metrics.Factory metricsFactory) {
         this.server = server;
         this.logger = logger;
         this.path = path;
+        this.metricsFactory = metricsFactory;
     }
 
 
@@ -57,12 +59,11 @@ public class CleanStaffChat {
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
         instance = this;
-        logger.info("\n§d  ___  __    ____    __    _  _    ___   ___ \n" +
+        getLogger().info("\n§d  ___  __    ____    __    _  _    ___   ___ \n" +
                 " / __)(  )  ( ___)  /__\\  ( \\( )  / __) / __)\n" +
                 "( (__  )(__  )__)  /(__)\\  )  (   \\__ \\( (__ \n" +
                 " \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)\n");
 
-        logger.info("§7Registering commands...");
         server.getCommandManager().register(server.getCommandManager()
                 .metaBuilder("sc")
                 .aliases("staffchat")
@@ -88,17 +89,24 @@ public class CleanStaffChat {
                 .aliases("cleansctoggle")
                 .aliases("cleanstaffchattoggle")
                 .build(), new ToggleCommand(this));
-        logger.info("§7Commands registered §asuccessfully§7!");
+        getLogger().info("§7Commands registered §asuccessfully§7!");
 
-        logger.info("§7Registering listeners...");
         server.getEventManager().register(this, new JoinListener(this));
         server.getEventManager().register(this, new ServerListener(this));
         server.getEventManager().register(this, new ChatListener(this));
-        logger.info("§7Listeners registered §asuccessfully§7!");
+        getLogger().info("§7Listeners registered §asuccessfully§7!");
 
-        logger.info("§7Loading configurations...");
         configTextFile = new TextFile(path, "config.yml");
-        logger.info("§7Configurations loaded §asuccessfully§7!");
+        getLogger().info("§7Configurations loaded §asuccessfully§7!");
+
+
+        if (VelocityConfig.STATS.get(Boolean.class)) {
+
+            metricsFactory.make(this, 16447);
+
+            getLogger().info("§7Metrics loaded §asuccessfully§7!");
+
+        }
 
         if (VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {
             new UpdateCheck(this).getVersion(version -> {
@@ -110,7 +118,7 @@ public class CleanStaffChat {
             });
         }
 
-        logger.info("§7Plugin successfully §aenabled§7, enjoy!");
+        getLogger().info("§7Plugin successfully §aenabled§7!");
     }
 
     @Subscribe

@@ -32,22 +32,27 @@ public class CleanStaffChat extends Plugin {
                 "( (__  )(__  )__)  /(__)\\  )  (   \\__ \\( (__ \n" +
                 " \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)\n");
 
-        getLogger().info("§7Registering commands...");
         getProxy().getPluginManager().registerCommand(this, new StaffChatCommand());
         getProxy().getPluginManager().registerCommand(this, new ReloadCommand());
         getProxy().getPluginManager().registerCommand(this, new MuteCommand());
         getProxy().getPluginManager().registerCommand(this, new ToggleCommand());
         getLogger().info("§7Commands registered §asuccessfully§7!");
 
-        getLogger().info("§7Registering listeners...");
         getProxy().getPluginManager().registerListener(this, new JoinListener(this));
         getProxy().getPluginManager().registerListener(this, new ServerListener(this));
         getProxy().getPluginManager().registerListener(this, new ChatListener(this));
         getLogger().info("§7Listeners registered §asuccessfully§7!");
 
-        getLogger().info("§7Loading configurations...");
         configTextFile = new TextFile(getDataFolder().toPath(), "config.yml");
         getLogger().info("§7Configurations loaded §asuccessfully§7!");
+
+
+        if (BungeeConfig.STATS.get(Boolean.class)) {
+
+            new Metrics(this, 16449);
+
+            getLogger().info("§7Metrics loaded §asuccessfully§7!");
+        }
 
 
         if (BungeeConfig.UPDATE_CHECK.get(Boolean.class)) {
@@ -58,7 +63,7 @@ public class CleanStaffChat extends Plugin {
             });
         }
 
-        getLogger().info("§7Plugin successfully §aenabled§7, enjoy!");
+        getLogger().info("§7Plugin successfully §aenabled§7!");
     }
 
     public YamlFile getConfigTextFile() {

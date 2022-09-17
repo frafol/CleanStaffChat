@@ -22,8 +22,8 @@ public class ChatUtil {
     }
 
     public String applyPlaceholder(String s, Placeholder... placeholders) {
-        for (Placeholder placeHolder : placeholders) {
-            s = s.replace(placeHolder.getKey(), placeHolder.getValue());
+        for (Placeholder placeholder : placeholders) {
+            s = s.replace(placeholder.getKey(), placeholder.getValue());
         }
 
         return s;

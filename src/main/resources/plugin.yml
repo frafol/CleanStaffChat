@@ -3,6 +3,8 @@ version: '${project.version}'
 main: it.frafol.cleanstaffchat.spigot.CleanStaffChat
 authors: [ frafol ]
 description: Best StaffChat plugin.
+softdepend:
+  - LuckPerms
 commands:
   sc:
     description: Use staffchat

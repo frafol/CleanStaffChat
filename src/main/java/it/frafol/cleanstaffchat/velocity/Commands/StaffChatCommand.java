@@ -3,10 +3,14 @@ package it.frafol.cleanstaffchat.velocity.Commands;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.ProxyServer;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.user.User;
 
 import java.util.Arrays;
 
@@ -15,6 +19,7 @@ import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.*;
 public class StaffChatCommand implements SimpleCommand {
 
     public final CleanStaffChat PLUGIN;
+    public ProxyServer server;
 
     public StaffChatCommand(CleanStaffChat plugin) {
         this.PLUGIN = plugin;
@@ -22,6 +27,7 @@ public class StaffChatCommand implements SimpleCommand {
 
     @Override
     public void execute(Invocation invocation) {
+
         CommandSource commandSource = invocation.source();
         String[] args = invocation.arguments();
 
@@ -68,16 +74,40 @@ public class StaffChatCommand implements SimpleCommand {
         String sender = !(commandSource instanceof Player) ? CONSOLE_PREFIX.get(String.class) :
         ((Player) commandSource).getUsername();
 
+
         if (commandSource.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
             if (!PlayerCache.getMuted().contains("true")) {
                 if (commandSource instanceof Player) {
-                    CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
-                                    (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                            && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                            .forEach(players -> STAFFCHAT_FORMAT.send(players,
-                                    new Placeholder("user", sender),
-                                    new Placeholder("message", message),
-                                    new Placeholder("prefix", PREFIX.color())));
+                    if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
+
+                        LuckPerms api = LuckPermsProvider.get();
+
+                        User user = api.getUserManager().getUser(((Player) commandSource).getUniqueId());
+                        assert user != null;
+                        final String prefix = user.getCachedData().getMetaData().getPrefix();
+                        final String suffix = user.getCachedData().getMetaData().getSuffix();
+                        final String user_prefix = prefix == null ? "" : prefix;
+                        final String user_suffix = suffix == null ? "" : suffix;
+
+                        CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+                                        (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                .forEach(players -> STAFFCHAT_FORMAT.send(players,
+                                        new Placeholder("user", sender),
+                                        new Placeholder("message", message),
+                                        new Placeholder("displayname", user_prefix + sender + user_suffix),
+                                        new Placeholder("userprefix", user_prefix),
+                                        new Placeholder("usersuffix", user_suffix),
+                                        new Placeholder("prefix", PREFIX.color())));
+                    } else {
+                        CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+                                        (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                .forEach(players -> STAFFCHAT_FORMAT.send(players,
+                                        new Placeholder("user", sender),
+                                        new Placeholder("message", message),
+                                        new Placeholder("prefix", PREFIX.color())));
+                    }
                 } else if (CONSOLE_CAN_TALK.get(Boolean.class)) {
                     if (!PlayerCache.getMuted().contains("true")) {
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
@@ -86,6 +116,8 @@ public class StaffChatCommand implements SimpleCommand {
                                 .forEach(players -> STAFFCHAT_FORMAT.send(players,
                                         new Placeholder("user", sender),
                                         new Placeholder("message", message),
+                                        new Placeholder("userprefix", ""),
+                                        new Placeholder("usersuffix", ""),
                                         new Placeholder("prefix", PREFIX.color())));
                     } else {
                         STAFFCHAT_MUTED_ERROR.send(commandSource,
@@ -94,6 +126,8 @@ public class StaffChatCommand implements SimpleCommand {
                     STAFFCHAT_FORMAT.send(commandSource,
                             new Placeholder("user", sender),
                             new Placeholder("message", message),
+                            new Placeholder("userprefix", ""),
+                            new Placeholder("usersuffix", ""),
                             new Placeholder("prefix", PREFIX.color()));
                 } else {
                     PLAYER_ONLY.send(commandSource,

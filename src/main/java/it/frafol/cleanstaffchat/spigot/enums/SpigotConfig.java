@@ -46,6 +46,8 @@ public enum SpigotConfig {
 
     MODULE_DISABLED("messages.module_disabled"),
 
+    STATS("modules.stats"),
+
     UPDATE_CHECK("modules.update_check");
 
     private final String path;

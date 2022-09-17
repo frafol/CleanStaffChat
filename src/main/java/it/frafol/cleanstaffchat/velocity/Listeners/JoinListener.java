@@ -5,9 +5,12 @@ import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.proxy.Player;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
-import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
+import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.user.User;
 
 import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.*;
 
@@ -25,12 +28,33 @@ public class JoinListener {
             Player player = event.getPlayer();
             if (STAFF_JOIN_MESSAGE.get(Boolean.class)) {
                 if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
-                    CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
-                                    (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                            && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                            .forEach(players -> STAFF_JOIN_MESSAGE_FORMAT.send(players,
-                                    new Placeholder("user", player.getUsername()),
-                                    new Placeholder("prefix", PREFIX.color())));
+                    if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
+
+                        LuckPerms api = LuckPermsProvider.get();
+
+                        User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
+                        assert user != null;
+                        final String prefix = user.getCachedData().getMetaData().getPrefix();
+                        final String suffix = user.getCachedData().getMetaData().getSuffix();
+                        final String user_prefix = prefix == null ? "" : prefix;
+                        final String user_suffix = suffix == null ? "" : suffix;
+                        CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+                                        (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                .forEach(players -> STAFF_JOIN_MESSAGE_FORMAT.send(players,
+                                        new Placeholder("user", player.getUsername()),
+                                        new Placeholder("displayname", user_prefix + player.getUsername() + user_suffix),
+                                        new Placeholder("userprefix", user_prefix),
+                                        new Placeholder("usersuffix", user_suffix),
+                                        new Placeholder("prefix", PREFIX.color())));
+                    } else {
+                        CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+                                        (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                .forEach(players -> STAFF_JOIN_MESSAGE_FORMAT.send(players,
+                                        new Placeholder("user", player.getUsername()),
+                                        new Placeholder("prefix", PREFIX.color())));
+                    }
                 }
             }
         }
@@ -42,12 +66,33 @@ public class JoinListener {
             Player player = event.getPlayer();
             if (STAFF_QUIT_MESSAGE.get(Boolean.class)) {
                 if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
-                    CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
-                                    (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                            && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                    .forEach(players -> STAFF_QUIT_MESSAGE_FORMAT.send(players,
-                                            new Placeholder("user", player.getUsername()),
-                                            new Placeholder("prefix", PREFIX.color())));
+                    if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
+
+                        LuckPerms api = LuckPermsProvider.get();
+
+                        User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
+                        assert user != null;
+                        final String prefix = user.getCachedData().getMetaData().getPrefix();
+                        final String suffix = user.getCachedData().getMetaData().getSuffix();
+                        final String user_prefix = prefix == null ? "" : prefix;
+                        final String user_suffix = suffix == null ? "" : suffix;
+                        CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+                                        (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                .forEach(players -> STAFF_QUIT_MESSAGE_FORMAT.send(players,
+                                        new Placeholder("user", player.getUsername()),
+                                        new Placeholder("displayname", user_prefix + player.getUsername() + user_suffix),
+                                        new Placeholder("userprefix", user_prefix),
+                                        new Placeholder("usersuffix", user_suffix),
+                                        new Placeholder("prefix", PREFIX.color())));
+                    } else {
+                        CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+                                        (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                .forEach(players -> STAFF_QUIT_MESSAGE_FORMAT.send(players,
+                                        new Placeholder("user", player.getUsername()),
+                                        new Placeholder("prefix", PREFIX.color())));
+                    }
                 }
             }
         }

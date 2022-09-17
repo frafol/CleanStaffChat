@@ -7,6 +7,9 @@ import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.user.User;
 
 import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.*;
 
@@ -32,14 +35,37 @@ public class ChatListener {
                 }
                 if (!event.getMessage().startsWith("/")) {
                     if (!PlayerCache.getMuted().contains("true")) {
-                        event.setResult(PlayerChatEvent.ChatResult.denied());
-                        CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
-                                        (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> STAFFCHAT_FORMAT.send(players,
-                                        new Placeholder("user", sender),
-                                        new Placeholder("message", message),
-                                        new Placeholder("prefix", PREFIX.color())));
+                        if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
+
+                            LuckPerms api = LuckPermsProvider.get();
+                            event.setResult(PlayerChatEvent.ChatResult.denied());
+
+                            User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
+                            assert user != null;
+                            final String prefix = user.getCachedData().getMetaData().getPrefix();
+                            final String suffix = user.getCachedData().getMetaData().getSuffix();
+                            final String user_prefix = prefix == null ? "" : prefix;
+                            final String user_suffix = suffix == null ? "" : suffix;
+
+                            CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+                                            (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                                    && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                    .forEach(players -> STAFFCHAT_FORMAT.send(players,
+                                            new Placeholder("user", sender),
+                                            new Placeholder("message", message),
+                                            new Placeholder("displayname", user_prefix + sender + user_suffix),
+                                            new Placeholder("userprefix", user_prefix),
+                                            new Placeholder("usersuffix", user_suffix),
+                                            new Placeholder("prefix", PREFIX.color())));
+                        } else {
+                            CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+                                            (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                                    && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                    .forEach(players -> STAFFCHAT_FORMAT.send(players,
+                                            new Placeholder("user", sender),
+                                            new Placeholder("message", message),
+                                            new Placeholder("prefix", PREFIX.color())));
+                        }
                     } else {
                         STAFFCHAT_MUTED_ERROR.send(event.getPlayer(),
                                 new Placeholder("prefix", PREFIX.color()));

@@ -10,7 +10,7 @@ Clean StaffChat is a basic StaffChat plugin, compatible with BungeeCord, Spigot 
 » Possibility to deactivate StaffChat globally;
 » Possibility of not seeing StaffChat personally;
 » Possibility to talk in StaffChat without doing commands;
-» Staff join / exit messages;
+» Staff join / exit messages.
 ```
 
 ## Velocity, BungeeCord and Spigot compatibility is here.

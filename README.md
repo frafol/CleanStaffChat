@@ -24,26 +24,18 @@ Clean StaffChat is a basic StaffChat plugin, compatible with BungeeCord, Spigot 
 
 ## Commands
 ```
-» /sc - Send the messages you write in staffchat, redoing it will return you to the server chat;
-
-» /sc (message) - Speak in StaffChat;
-
-» /screload - Reloads the plugin;
-
-» /scmute - Deactivate staffchat;
-
-» /sctoggle - Mute the staffchat just for you, redo the command and you will see it again.
+» /sc (message) • Send messages in the StaffChat;
+» /sctoggle • Makes StaffChat invisible, just for you;
+» /scmute • Deactivate StaffChat globally;
+» /screload • Reloads the plugin.
 ```
 
 ## Permissions
 ```
-» Use: staffchat.use
+» /sc (message) • staffchat.use
+» /sctoggle • staffchat.toggle
+» /scmute • staffchat.mute
+» /screload • staffchat.reload
 
-» Mute: staffchat.mute
-
-» Toggle: staffchat.toggle
-
-» Reload: staffchat.reload
-
-(Permissions are configurable in plugins/cleanstaffchat/config.yml)
+(Permissions are configurable in the config.yml)
 ```

@@ -101,6 +101,8 @@ public class StaffChatCommand implements CommandExecutor {
                                 .forEach(players -> players.sendMessage(SpigotConfig.STAFFCHAT_FORMAT.color()
                                         .replace("%prefix%", SpigotConfig.PREFIX.color())
                                         .replace("%user%", commandsender)
+                                        .replace("%userprefix%", "")
+                                        .replace("%usersuffix%", "")
                                         .replace("%message%", message)
                                         .replace("&", "§")));
                     }

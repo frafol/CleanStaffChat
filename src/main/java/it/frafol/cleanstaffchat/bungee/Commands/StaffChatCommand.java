@@ -101,6 +101,8 @@ public class StaffChatCommand extends Command {
                                 .forEach(players -> players.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_FORMAT.color()
                                         .replace("%prefix%", BungeeConfig.PREFIX.color())
                                         .replace("%user%", commandsender)
+                                        .replace("%userprefix%", "")
+                                        .replace("%usersuffix%", "")
                                         .replace("%message%", message)
                                         .replace("&", "§"))));
                     }

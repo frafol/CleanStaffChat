@@ -106,6 +106,8 @@ public class StaffChatCommand implements SimpleCommand {
                                 .forEach(players -> STAFFCHAT_FORMAT.send(players,
                                         new Placeholder("user", sender),
                                         new Placeholder("message", message),
+                                        new Placeholder("userprefix", ""),
+                                        new Placeholder("usersuffix", ""),
                                         new Placeholder("prefix", PREFIX.color())));
                     }
                 } else if (CONSOLE_CAN_TALK.get(Boolean.class)) {

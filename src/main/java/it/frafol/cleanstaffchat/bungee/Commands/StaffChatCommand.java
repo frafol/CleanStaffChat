@@ -102,6 +102,7 @@ public class StaffChatCommand extends Command {
                                         .replace("%prefix%", BungeeConfig.PREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%userprefix%", "")
+                                        .replace("%displayname%", commandsender)
                                         .replace("%usersuffix%", "")
                                         .replace("%message%", message)
                                         .replace("&", "§"))));

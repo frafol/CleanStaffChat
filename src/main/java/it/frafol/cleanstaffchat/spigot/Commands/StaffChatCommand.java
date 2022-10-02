@@ -103,6 +103,7 @@ public class StaffChatCommand implements CommandExecutor {
                                         .replace("%user%", commandsender)
                                         .replace("%userprefix%", "")
                                         .replace("%usersuffix%", "")
+                                        .replace("%displayname%", commandsender)
                                         .replace("%message%", message)
                                         .replace("&", "§")));
                     }

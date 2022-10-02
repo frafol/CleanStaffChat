@@ -13,14 +13,10 @@ import it.frafol.cleanstaffchat.bungee.objects.TextFile;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.simpleyaml.configuration.file.YamlFile;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class CleanStaffChat extends Plugin {
 
     private TextFile configTextFile;
     public static CleanStaffChat instance;
-    Timer timer = new Timer ();
 
     public static CleanStaffChat getInstance() {
         return instance;
@@ -65,7 +61,6 @@ public class CleanStaffChat extends Plugin {
                     getLogger().warning("§eThere is a new update available, download it on SpigotMC!");
                 }
             });
-
         }
 
         getLogger().info("§7Plugin successfully §aenabled§7!");

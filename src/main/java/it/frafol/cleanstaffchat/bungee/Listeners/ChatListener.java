@@ -72,6 +72,8 @@ public class ChatListener implements Listener {
                                         .replace("%prefix%", BungeeConfig.PREFIX.color())
                                         .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
                                         .replace("%message%", message)
+                                        .replace("%userprefix%", "")
+                                        .replace("%usersuffix%", "")
                                         .replace("&", "§"))));
                     }
                 } else {

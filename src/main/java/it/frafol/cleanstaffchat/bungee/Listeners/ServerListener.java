@@ -22,6 +22,11 @@ public class ServerListener implements Listener {
 
     @EventHandler
     public void Switch(ServerSwitchEvent event){
+
+        if (event.getFrom().getName() == null) {
+            return;
+        }
+
         if (!(CleanStaffChat.getInstance().getProxy().getPlayers().size() < 1)) {
             ProxiedPlayer player = event.getPlayer();
             if (BungeeConfig.STAFFCHAT_SWITCH_MODULE.get(Boolean.class)) {

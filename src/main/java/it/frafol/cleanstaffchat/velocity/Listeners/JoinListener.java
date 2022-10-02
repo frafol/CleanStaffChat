@@ -5,9 +5,11 @@ import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.proxy.Player;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
+import it.frafol.cleanstaffchat.velocity.UpdateCheck;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
+import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -24,6 +26,20 @@ public class JoinListener {
 
     @Subscribe
     public void handle(LoginEvent event){
+
+        if (event.getPlayer().hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
+            if (VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {
+                new UpdateCheck(PLUGIN).getVersion(version -> {
+                    if (PLUGIN.container.getDescription().getVersion().isPresent()) {
+                        if (!PLUGIN.container.getDescription().getVersion().get().equals(version)) {
+                            event.getPlayer().sendMessage(Component.text("§7e[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz"));
+                            PLUGIN.getLogger().warning("There is a new update available, download it on SpigotMC!");
+                        }
+                    }
+                });
+            }
+        }
+
         if (!(CleanStaffChat.getInstance().getServer().getAllPlayers().size() < 1)) {
             Player player = event.getPlayer();
             if (STAFF_JOIN_MESSAGE.get(Boolean.class)) {

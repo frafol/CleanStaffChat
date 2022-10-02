@@ -29,6 +29,7 @@ public class JoinListener implements Listener {
             new UpdateCheck(PLUGIN).getVersion(version -> {
                 if (!PLUGIN.getDescription().getVersion().equals(version)) {
                     event.getPlayer().sendMessage(ChatColor.YELLOW + "[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz");
+                    PLUGIN.getLogger().warning("§eThere is a new update available, download it on SpigotMC!");
                 }
             });
         }

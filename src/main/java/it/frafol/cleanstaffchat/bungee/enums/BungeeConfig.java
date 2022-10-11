@@ -14,6 +14,8 @@ public enum BungeeConfig {
 
     STAFFCHAT_MUTED_ERROR("messages.staffchat_muted_error"),
 
+    STAFFCHAT_JOIN_LEAVE_ALL("settings.staff_join_leave_all_players"),
+
     STAFF_JOIN_MESSAGE("settings.staff_join_message"),
     STAFF_QUIT_MESSAGE("settings.staff_quit_message"),
     STAFF_JOIN_MESSAGE_FORMAT("messages.staff_join_message_format"),
@@ -45,6 +47,7 @@ public enum BungeeConfig {
     STAFFCHAT_TOGGLE_PERMISSION("settings.staffchat_toggle_permission"),
 
     STAFFCHAT_SWITCH_MODULE("modules.staffchat_switch_module"),
+    STAFFCHAT_SWITCH_ALL("settings.staff_switch_all_players"),
     STAFF_SWITCH_MESSAGE_FORMAT("messages.staff_switch_message_format"),
 
     MODULE_DISABLED("messages.module_disabled"),

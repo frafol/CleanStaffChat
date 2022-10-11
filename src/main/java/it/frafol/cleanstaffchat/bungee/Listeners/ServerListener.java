@@ -29,6 +29,43 @@ public class ServerListener implements Listener {
 
         if (!(CleanStaffChat.getInstance().getProxy().getPlayers().size() < 1)) {
             ProxiedPlayer player = event.getPlayer();
+            if (BungeeConfig.STAFFCHAT_SWITCH_MODULE.get(Boolean.class) && BungeeConfig.STAFFCHAT_SWITCH_ALL.get(Boolean.class)) {
+                if (player.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
+                    if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
+
+                        LuckPerms api = LuckPermsProvider.get();
+
+                        User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
+                        assert user != null;
+                        final String prefix = user.getCachedData().getMetaData().getPrefix();
+                        final String suffix = user.getCachedData().getMetaData().getSuffix();
+                        final String user_prefix = prefix == null ? "" : prefix;
+                        final String user_suffix = suffix == null ? "" : suffix;
+                        CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
+                                        (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                .forEach(players -> players.sendMessage(new TextComponent(BungeeConfig.STAFF_SWITCH_MESSAGE_FORMAT.color()
+                                        .replace("%prefix%", BungeeConfig.PREFIX.color())
+                                        .replace("%user%", player.getName())
+                                        .replace("%displayname%", user_prefix + player.getName() + user_suffix)
+                                        .replace("%userprefix%", user_prefix)
+                                        .replace("%usersuffix%", user_suffix)
+                                        .replace("%server%", player.getServer().getInfo().getName()))));
+                    } else {
+                        CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
+                                        (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                .forEach(players -> players.sendMessage(new TextComponent(BungeeConfig.STAFF_SWITCH_MESSAGE_FORMAT.color()
+                                        .replace("%prefix%", BungeeConfig.PREFIX.color())
+                                        .replace("%user%", player.getName())
+                                        .replace("%server%", player.getServer().getInfo().getName()))));
+                    }
+                    return;
+                }
+            }
+        }
+        if (!(CleanStaffChat.getInstance().getProxy().getPlayers().size() < 1)) {
+            ProxiedPlayer player = event.getPlayer();
             if (BungeeConfig.STAFFCHAT_SWITCH_MODULE.get(Boolean.class)) {
                 if (player.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
                     if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {

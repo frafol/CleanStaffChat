@@ -12,7 +12,6 @@ import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
-import org.bukkit.ChatColor;
 
 public class ServerListener {
 
@@ -30,7 +29,7 @@ public class ServerListener {
                 new UpdateCheck(PLUGIN).getVersion(version -> {
                     if (PLUGIN.container.getDescription().getVersion().isPresent()) {
                         if (!PLUGIN.container.getDescription().getVersion().get().equals(version)) {
-                            event.getPlayer().sendMessage(Component.text(ChatColor.YELLOW + "[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz"));
+                            event.getPlayer().sendMessage(Component.text("§e[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz"));
                         }
                     }
                 });

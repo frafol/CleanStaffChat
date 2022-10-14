@@ -40,7 +40,8 @@ public class ServerListener {
         if (!(CleanStaffChat.getInstance().getServer().getAllPlayers().size() < 1)) {
             Player player = event.getPlayer();
             if (VelocityConfig.STAFFCHAT_SWITCH_MODULE.get(Boolean.class)) {
-                if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
+                if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                        || VelocityConfig.STAFFCHAT_SWITCH_ALL.get(Boolean.class)) {
                     if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
                         LuckPerms api = LuckPermsProvider.get();

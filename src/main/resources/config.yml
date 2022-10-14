@@ -14,6 +14,8 @@ settings:
   # Activating these options, staff members will receive a message when another staff member enters/leaves the server.
   staff_join_message: true
   staff_quit_message: true
+  staff_join_all_players: false # By activating it, the staff will receive a message every time any player enters the server.
+  staff_quit_all_players: false # By activating it, the staff will receive a message every time any player leaves the server.
 
   # You can customise permissions.
   staffchat_use_permission: "staffchat.use"
@@ -43,7 +45,7 @@ messages:
   # Chat Formats (If you use LuckPerms you can use %displayname%, %userprefix% and %usersuffix%).
   staffchat_format: "%prefix% &7%user% &8» &7%message%"
   staff_join_message_format: "%prefix% &7[&a+&7] &f&7%user%"
-  staff_quit_message_format: "%prefix% &7[&c-&7] &f&7%user%" #
+  staff_quit_message_format: "%prefix% &7[&c-&7] &f&7%user%"
   staff_switch_message_format: "%prefix% &7%user% &e➜ %server%" # This won't work if you run your plugin on spigot.
 
   # Errors and reload.

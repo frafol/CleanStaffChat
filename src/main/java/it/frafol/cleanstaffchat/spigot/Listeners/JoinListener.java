@@ -36,7 +36,8 @@ public class JoinListener implements Listener {
         if (!(CleanStaffChat.getInstance().getServer().getOnlinePlayers().size() < 1)) {
             Player player = event.getPlayer();
             if (SpigotConfig.STAFF_JOIN_MESSAGE.get(Boolean.class)) {
-                if (player.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
+                if (player.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                        || SpigotConfig.STAFFCHAT_JOIN_LEAVE_ALL.get(Boolean.class)) {
                     if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
 
                         LuckPerms api = LuckPermsProvider.get();
@@ -80,18 +81,45 @@ public class JoinListener implements Listener {
 
     @EventHandler
     public void handle(PlayerQuitEvent event){
-        if (CleanStaffChat.getInstance().getServer().getOnlinePlayers().size() >= 1) {
+        if (!(CleanStaffChat.getInstance().getServer().getOnlinePlayers().size() < 1)) {
             Player player = event.getPlayer();
             if (SpigotConfig.STAFF_QUIT_MESSAGE.get(Boolean.class)) {
-                if (player.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
-                    for(Player all : CleanStaffChat.getInstance().getServer().getOnlinePlayers()) {
-                        if (all.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
-                            CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
-                                    (players -> players.hasPermission
-                                            (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
-                                    .forEach(players -> players.sendMessage(SpigotConfig.STAFF_QUIT_MESSAGE_FORMAT.color()
-                                            .replace("%prefix%", SpigotConfig.PREFIX.color())
-                                            .replace("%user%", player.getName())));
+                if (player.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                        || SpigotConfig.STAFFCHAT_QUIT_ALL.get(Boolean.class)) {
+                    if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
+
+                        LuckPerms api = LuckPermsProvider.get();
+
+                        User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
+                        assert user != null;
+                        final String prefix = user.getCachedData().getMetaData().getPrefix();
+                        final String suffix = user.getCachedData().getMetaData().getSuffix();
+                        final String user_prefix = prefix == null ? "" : prefix;
+                        final String user_suffix = suffix == null ? "" : suffix;
+
+                        for (Player all : CleanStaffChat.getInstance().getServer().getOnlinePlayers()) {
+                            if (all.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
+                                CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                                                (players -> players.hasPermission
+                                                        (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
+                                        .forEach(players -> players.sendMessage(SpigotConfig.STAFF_QUIT_MESSAGE_FORMAT.color()
+                                                .replace("%prefix%", SpigotConfig.PREFIX.color())
+                                                .replace("%displayname%", user_prefix + player.getName() + user_suffix)
+                                                .replace("%userprefix%", user_prefix)
+                                                .replace("%usersuffix%", user_suffix)
+                                                .replace("%user%", player.getName())));
+                            }
+                        }
+                    } else {
+                        for (Player all : CleanStaffChat.getInstance().getServer().getOnlinePlayers()) {
+                            if (all.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
+                                CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                                                (players -> players.hasPermission
+                                                        (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
+                                        .forEach(players -> players.sendMessage(SpigotConfig.STAFF_QUIT_MESSAGE_FORMAT.color()
+                                                .replace("%prefix%", SpigotConfig.PREFIX.color())
+                                                .replace("%user%", player.getName())));
+                            }
                         }
                     }
                 }

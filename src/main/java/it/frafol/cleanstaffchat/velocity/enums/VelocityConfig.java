@@ -33,6 +33,8 @@ public enum VelocityConfig {
     STAFFCHAT_TALK_ENABLED("messages.staffchat_talk_enabled"),
     STAFFCHAT_TALK_DISABLED("messages.staffchat_talk_disabled"),
 
+    STAFFCHAT_JOIN_LEAVE_ALL("settings.staff_join_all_players"),
+    STAFFCHAT_QUIT_ALL("settings.staff_quit_all_players"),
     STAFFCHAT_MUTE_MODULE("modules.staffchat_mute_module"),
     STAFFCHAT_MUTED("messages.staffchat_muted"),
     STAFFCHAT_UNMUTED("messages.staffchat_unmuted"),
@@ -49,6 +51,7 @@ public enum VelocityConfig {
     STAFFCHAT_TOGGLE_PERMISSION("settings.staffchat_toggle_permission"),
 
     STAFFCHAT_SWITCH_MODULE("modules.staffchat_switch_module"),
+    STAFFCHAT_SWITCH_ALL("settings.staff_switch_all_players"),
     STAFF_SWITCH_MESSAGE_FORMAT("messages.staff_switch_message_format"),
 
     MODULE_DISABLED("messages.module_disabled"),

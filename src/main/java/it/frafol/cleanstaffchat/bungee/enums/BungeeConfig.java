@@ -14,7 +14,8 @@ public enum BungeeConfig {
 
     STAFFCHAT_MUTED_ERROR("messages.staffchat_muted_error"),
 
-    STAFFCHAT_JOIN_LEAVE_ALL("settings.staff_join_leave_all_players"),
+    STAFFCHAT_JOIN_LEAVE_ALL("settings.staff_join_all_players"),
+    STAFFCHAT_QUIT_ALL("settings.staff_quit_all_players"),
 
     STAFF_JOIN_MESSAGE("settings.staff_join_message"),
     STAFF_QUIT_MESSAGE("settings.staff_quit_message"),

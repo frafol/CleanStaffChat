@@ -32,7 +32,7 @@ public class JoinListener {
                 new UpdateCheck(PLUGIN).getVersion(version -> {
                     if (PLUGIN.container.getDescription().getVersion().isPresent()) {
                         if (!PLUGIN.container.getDescription().getVersion().get().equals(version)) {
-                            event.getPlayer().sendMessage(Component.text("§7e[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz"));
+                            event.getPlayer().sendMessage(Component.text("§e[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz"));
                             PLUGIN.getLogger().warning("There is a new update available, download it on SpigotMC!");
                         }
                     }
@@ -43,7 +43,8 @@ public class JoinListener {
         if (!(CleanStaffChat.getInstance().getServer().getAllPlayers().size() < 1)) {
             Player player = event.getPlayer();
             if (STAFF_JOIN_MESSAGE.get(Boolean.class)) {
-                if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
+                if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                        || STAFFCHAT_JOIN_LEAVE_ALL.get(Boolean.class)) {
                     if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
                         LuckPerms api = LuckPermsProvider.get();
@@ -81,7 +82,8 @@ public class JoinListener {
         if (CleanStaffChat.getInstance().getServer().getAllPlayers().size() >= 1) {
             Player player = event.getPlayer();
             if (STAFF_QUIT_MESSAGE.get(Boolean.class)) {
-                if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
+                if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                        || STAFFCHAT_QUIT_ALL.get(Boolean.class)) {
                     if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
                         LuckPerms api = LuckPermsProvider.get();

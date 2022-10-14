@@ -16,6 +16,7 @@ settings:
   staff_quit_message: true
   staff_join_all_players: false # By activating it, the staff will receive a message every time any player enters the server.
   staff_quit_all_players: false # By activating it, the staff will receive a message every time any player leaves the server.
+  staff_switch_all_players: false # By activating it, the staff will receive a message every time any player switch a server.
 
   # You can customise permissions.
   staffchat_use_permission: "staffchat.use"

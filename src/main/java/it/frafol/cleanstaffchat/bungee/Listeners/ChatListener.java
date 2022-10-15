@@ -34,13 +34,50 @@ public class ChatListener implements Listener {
                         .replace("%prefix%", BungeeConfig.PREFIX.color())));
                 return;
             }
+
             if (!event.getMessage().startsWith("/")) {
                 if (!(BungeeConfig.STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
                     ((ProxiedPlayer)event.getSender()).sendMessage(new TextComponent(BungeeConfig.MODULE_DISABLED.color()
                             .replace("%prefix%", BungeeConfig.PREFIX.color())
                             .replace("&", "§")));
+
                 } else if (((ProxiedPlayer) event.getSender()).hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
+
                     event.setCancelled(true);
+
+                    if (BungeeConfig.PREVENT_COLOR_CODES.get(Boolean.class)) {
+                        if (message.contains("&0") ||
+                                message.contains("&1") ||
+                                message.contains("&2") ||
+                                message.contains("&3") ||
+                                message.contains("&4") ||
+                                message.contains("&5") ||
+                                message.contains("&6") ||
+                                message.contains("&7") ||
+                                message.contains("&8") ||
+                                message.contains("&9") ||
+                                message.contains("&a") ||
+                                message.contains("&b") ||
+                                message.contains("&c") ||
+                                message.contains("&d") ||
+                                message.contains("&e") ||
+                                message.contains("&f") ||
+                                message.contains("&k") ||
+                                message.contains("&l") ||
+                                message.contains("&m") ||
+                                message.contains("&n") ||
+                                message.contains("&o") ||
+                                message.contains("&r")) {
+
+                            ((ProxiedPlayer) event.getSender()).sendMessage(new TextComponent(BungeeConfig.COLOR_CODES.color()
+                                    .replace("%prefix%", BungeeConfig.PREFIX.color())
+                                    .replace("&", "§")));
+
+                            return;
+
+                        }
+                    }
+
                     if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
 
                         LuckPerms api = LuckPermsProvider.get();
@@ -65,6 +102,7 @@ public class ChatListener implements Listener {
                                         .replace("&", "§"))));
 
                     } else {
+
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -76,9 +114,12 @@ public class ChatListener implements Listener {
                                         .replace("%usersuffix%", "")
                                         .replace("&", "§"))));
                     }
+
                 } else {
+
                     PlayerCache.getToggled_2().remove(((ProxiedPlayer) event.getSender()).getUniqueId());
                 }
+
             }
         }
     }

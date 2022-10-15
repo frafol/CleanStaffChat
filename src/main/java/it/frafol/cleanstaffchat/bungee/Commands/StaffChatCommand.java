@@ -63,19 +63,54 @@ public class StaffChatCommand extends Command {
             return;
         }
 
-        String message = String.join(" ", Arrays.copyOfRange(args, 0, args.length));
+        final String message = String.join(" ", Arrays.copyOfRange(args, 0, args.length));
 
-        String commandsender = !(sender instanceof ProxiedPlayer) ? BungeeConfig.CONSOLE_PREFIX.get(String.class) :
+        final String commandsender = !(sender instanceof ProxiedPlayer) ? BungeeConfig.CONSOLE_PREFIX.get(String.class) :
                 sender.getName();
 
         if (sender.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
             if (!PlayerCache.getMuted().contains("true")) {
                 if (sender instanceof ProxiedPlayer) {
+
+                    if (BungeeConfig.PREVENT_COLOR_CODES.get(Boolean.class)) {
+                        if (message.contains("&0") ||
+                                message.contains("&1") ||
+                                message.contains("&2") ||
+                                message.contains("&3") ||
+                                message.contains("&4") ||
+                                message.contains("&5") ||
+                                message.contains("&6") ||
+                                message.contains("&7") ||
+                                message.contains("&8") ||
+                                message.contains("&9") ||
+                                message.contains("&a") ||
+                                message.contains("&b") ||
+                                message.contains("&c") ||
+                                message.contains("&d") ||
+                                message.contains("&e") ||
+                                message.contains("&f") ||
+                                message.contains("&k") ||
+                                message.contains("&l") ||
+                                message.contains("&m") ||
+                                message.contains("&n") ||
+                                message.contains("&o") ||
+                                message.contains("&r")) {
+
+                            sender.sendMessage(new TextComponent(BungeeConfig.COLOR_CODES.color()
+                                    .replace("%prefix%", BungeeConfig.PREFIX.color())
+                                    .replace("&", "§")));
+
+                            return;
+
+                        }
+                    }
+
                     if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
 
-                        LuckPerms api = LuckPermsProvider.get();
+                        final LuckPerms api = LuckPermsProvider.get();
 
-                        User user = api.getUserManager().getUser(((ProxiedPlayer) sender).getUniqueId());
+                        final User user = api.getUserManager().getUser(((ProxiedPlayer) sender).getUniqueId());
+
                         assert user != null;
                         final String prefix = user.getCachedData().getMetaData().getPrefix();
                         final String suffix = user.getCachedData().getMetaData().getSuffix();
@@ -95,6 +130,7 @@ public class StaffChatCommand extends Command {
                                         .replace("&", "§"))));
 
                     } else {
+
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -107,7 +143,9 @@ public class StaffChatCommand extends Command {
                                         .replace("%message%", message)
                                         .replace("&", "§"))));
                     }
+
                 } else if (BungeeConfig.CONSOLE_CAN_TALK.get(Boolean.class)) {
+
                     if (!PlayerCache.getMuted().contains("true")) {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
@@ -119,9 +157,12 @@ public class StaffChatCommand extends Command {
                                         .replace("%usersuffix%", "")
                                         .replace("%displayname%", commandsender)
                                         .replace("%message%", message))));
+
                     } else {
+
                         sender.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_MUTED_ERROR.color()
                                 .replace("%prefix%", BungeeConfig.PREFIX.color())));
+
                     }
 
                     sender.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_FORMAT.color()
@@ -133,8 +174,10 @@ public class StaffChatCommand extends Command {
                             .replace("%message%", message)));
 
                 } else {
+
                     sender.sendMessage(new TextComponent(BungeeConfig.PLAYER_ONLY.color()
                             .replace("%prefix%", BungeeConfig.PREFIX.color())));
+
                 }
             } else {
 

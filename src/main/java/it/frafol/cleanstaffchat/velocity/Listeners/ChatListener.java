@@ -24,17 +24,56 @@ public class ChatListener {
     @Subscribe(order = PostOrder.FIRST)
     public void onChat(PlayerChatEvent event) {
 
-        String message = event.getMessage();
-        String sender = event.getPlayer().getUsername();
+        final String message = event.getMessage();
+        final String sender = event.getPlayer().getUsername();
 
         if (PlayerCache.getToggled_2().contains(event.getPlayer().getUniqueId())) {
+
             if (event.getPlayer().hasPermission(STAFFCHAT_USE_PERMISSION.get(String.class))) {
+
                 if (!(STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
+
                     MODULE_DISABLED.send(event.getPlayer(), new Placeholder("prefix", PREFIX.color()));
+
                     return;
+
                 }
+
                 if (!event.getMessage().startsWith("/")) {
+
                     if (!PlayerCache.getMuted().contains("true")) {
+
+                        if (PREVENT_COLOR_CODES.get(Boolean.class)) {
+                            if (message.contains("&0") ||
+                                    message.contains("&1") ||
+                                    message.contains("&2") ||
+                                    message.contains("&3") ||
+                                    message.contains("&4") ||
+                                    message.contains("&5") ||
+                                    message.contains("&6") ||
+                                    message.contains("&7") ||
+                                    message.contains("&8") ||
+                                    message.contains("&9") ||
+                                    message.contains("&a") ||
+                                    message.contains("&b") ||
+                                    message.contains("&c") ||
+                                    message.contains("&d") ||
+                                    message.contains("&e") ||
+                                    message.contains("&f") ||
+                                    message.contains("&k") ||
+                                    message.contains("&l") ||
+                                    message.contains("&m") ||
+                                    message.contains("&n") ||
+                                    message.contains("&o") ||
+                                    message.contains("&r")) {
+
+                                COLOR_CODES.send(event.getPlayer(),
+                                        new Placeholder("prefix", PREFIX.color()));
+
+                                return;
+                            }
+                        }
+
                         if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
                             LuckPerms api = LuckPermsProvider.get();
@@ -57,7 +96,9 @@ public class ChatListener {
                                             new Placeholder("userprefix", user_prefix),
                                             new Placeholder("usersuffix", user_suffix),
                                             new Placeholder("prefix", PREFIX.color())));
+
                         } else {
+
                             CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                             (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                     && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -65,14 +106,21 @@ public class ChatListener {
                                             new Placeholder("user", sender),
                                             new Placeholder("message", message),
                                             new Placeholder("prefix", PREFIX.color())));
+
                         }
+
                     } else {
+
                         STAFFCHAT_MUTED_ERROR.send(event.getPlayer(),
                                 new Placeholder("prefix", PREFIX.color()));
+
                     }
                 }
+
             } else {
+
                 PlayerCache.getToggled_2().remove(event.getPlayer().getUniqueId());
+
             }
         }
     }

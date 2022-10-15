@@ -24,6 +24,8 @@ settings:
   staffchat_toggle_permission: "staffchat.toggle"
   staffchat_reload_permission: "staffchat.reload"
 
+  # By activating this option, you will not be able to send messages with formatting codes (&c, &f etc.).
+  prevent_color_codes: false
 
 messages:
 
@@ -50,6 +52,7 @@ messages:
   staff_switch_message_format: "%prefix% &7%user% &e➜ %server%" # This won't work if you run your plugin on spigot.
 
   # Errors and reload.
+  deny_color_codes: "%prefix% &cColor codes are not permitted."
   no_permission: "%prefix% &cYou don't have the permission to do this."
   console: "%prefix% &cYou must be a player to use that command."
   staffchat_muted_error: "%prefix% &7StaffChat is actually &cmuted&7 by an operator!"

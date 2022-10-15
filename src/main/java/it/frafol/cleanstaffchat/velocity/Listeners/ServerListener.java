@@ -37,15 +37,16 @@ public class ServerListener {
             return;
         }
         if (!(CleanStaffChat.getInstance().getServer().getAllPlayers().size() < 1)) {
-            Player player = event.getPlayer();
+            final Player player = event.getPlayer();
             if (VelocityConfig.STAFFCHAT_SWITCH_MODULE.get(Boolean.class)) {
                 if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                         || VelocityConfig.STAFFCHAT_SWITCH_ALL.get(Boolean.class)) {
                     if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
-                        LuckPerms api = LuckPermsProvider.get();
+                        final LuckPerms api = LuckPermsProvider.get();
 
-                        User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
+                        final User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
+
                         assert user != null;
                         final String prefix = user.getCachedData().getMetaData().getPrefix();
                         final String suffix = user.getCachedData().getMetaData().getSuffix();

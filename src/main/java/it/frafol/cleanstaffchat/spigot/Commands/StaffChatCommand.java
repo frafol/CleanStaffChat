@@ -28,41 +28,68 @@ public class StaffChatCommand implements CommandExecutor {
         if (strings.length == 0) {
 
             if (!(sender instanceof Player)) {
+
                 sender.sendMessage((SpigotConfig.ARGUMENTS.color()
                         .replace("%prefix%", SpigotConfig.PREFIX.color())));
+
                 return false;
+
             }
 
             Player player = (Player) sender;
 
             if (sender.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
+
                 if (!PlayerCache.getToggled_2().contains(player.getUniqueId())) {
+
                     if (!(SpigotConfig.STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
+
                         sender.sendMessage((SpigotConfig.MODULE_DISABLED.color()
                                 .replace("%prefix%", SpigotConfig.PREFIX.color())));
+
                         return false;
+
                     }
+
                     if (!PlayerCache.getMuted().contains("true")) {
+
                         PlayerCache.getToggled_2().add(player.getUniqueId());
+
                         sender.sendMessage((SpigotConfig.STAFFCHAT_TALK_ENABLED.color()
                                 .replace("%prefix%", SpigotConfig.PREFIX.color())));
+
                     } else {
+
                         sender.sendMessage((SpigotConfig.ARGUMENTS.color()
                                 .replace("%prefix%", SpigotConfig.PREFIX.color())));
+
                         return false;
+
                     }
+
                     return false;
+
                 } else if (PlayerCache.getToggled_2().contains(player.getUniqueId())) {
+
                     PlayerCache.getToggled_2().remove(player.getUniqueId());
+
                     sender.sendMessage((SpigotConfig.STAFFCHAT_TALK_DISABLED.color()
                             .replace("%prefix%", SpigotConfig.PREFIX.color())));
+
                     return false;
+
                 }
+
             } else {
+
                 sender.sendMessage(("§7This server is using §dCleanStaffChat §7by §dfrafol§7."));
+
                 return false;
+
             }
+
             return false;
+
         }
 
         String message = String.join(" ", Arrays.copyOfRange(strings, 0, strings.length));
@@ -71,8 +98,44 @@ public class StaffChatCommand implements CommandExecutor {
                 sender.getName();
 
         if (sender.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
+
             if (!PlayerCache.getMuted().contains("true")) {
+
                 if (sender instanceof Player) {
+
+                    if (SpigotConfig.PREVENT_COLOR_CODES.get(Boolean.class)) {
+                        if (message.contains("&0") ||
+                                message.contains("&1") ||
+                                message.contains("&2") ||
+                                message.contains("&3") ||
+                                message.contains("&4") ||
+                                message.contains("&5") ||
+                                message.contains("&6") ||
+                                message.contains("&7") ||
+                                message.contains("&8") ||
+                                message.contains("&9") ||
+                                message.contains("&a") ||
+                                message.contains("&b") ||
+                                message.contains("&c") ||
+                                message.contains("&d") ||
+                                message.contains("&e") ||
+                                message.contains("&f") ||
+                                message.contains("&k") ||
+                                message.contains("&l") ||
+                                message.contains("&m") ||
+                                message.contains("&n") ||
+                                message.contains("&o") ||
+                                message.contains("&r")) {
+
+                            sender.sendMessage(SpigotConfig.COLOR_CODES.color()
+                                    .replace("%prefix%", SpigotConfig.PREFIX.color())
+                                    .replace("&", "§"));
+
+                            return false;
+
+                        }
+                    }
+
                     if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
 
                         LuckPerms api = LuckPermsProvider.get();
@@ -83,6 +146,7 @@ public class StaffChatCommand implements CommandExecutor {
                         final String suffix = user.getCachedData().getMetaData().getSuffix();
                         final String user_prefix = prefix == null ? "" : prefix;
                         final String user_suffix = suffix == null ? "" : suffix;
+
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                         (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -94,7 +158,9 @@ public class StaffChatCommand implements CommandExecutor {
                                         .replace("%userprefix%", user_prefix)
                                         .replace("%usersuffix%", user_suffix)
                                         .replace("&", "§")));
+
                     } else {
+
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                         (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -106,9 +172,13 @@ public class StaffChatCommand implements CommandExecutor {
                                         .replace("%displayname%", commandsender)
                                         .replace("%message%", message)
                                         .replace("&", "§")));
+
                     }
+
                 } else if (SpigotConfig.CONSOLE_CAN_TALK.get(Boolean.class)) {
+
                     if (!PlayerCache.getMuted().contains("true")) {
+
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                         (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -119,11 +189,16 @@ public class StaffChatCommand implements CommandExecutor {
                                         .replace("%usersuffix%", "")
                                         .replace("%displayname%", commandsender)
                                         .replace("%message%", message))));
+
                     } else {
+
                         sender.sendMessage((SpigotConfig.STAFFCHAT_MUTED_ERROR.color()
                                 .replace("%prefix%", SpigotConfig.PREFIX.color())));
+
                         return false;
+
                     }
+
                     sender.sendMessage((SpigotConfig.STAFFCHAT_FORMAT.color()
                             .replace("%prefix%", SpigotConfig.PREFIX.color())
                             .replace("%user%", commandsender)
@@ -131,23 +206,35 @@ public class StaffChatCommand implements CommandExecutor {
                             .replace("%userprefix%", "")
                             .replace("%usersuffix%", "")
                             .replace("%message%", message)));
+
                     return false;
+
                 } else {
+
                     sender.sendMessage((SpigotConfig.PLAYER_ONLY.color()
                             .replace("%prefix%", SpigotConfig.PREFIX.color())));
+
                 }
+
                 return false;
+
             } else {
 
                 sender.sendMessage((SpigotConfig.STAFFCHAT_MUTED_ERROR.color()
                         .replace("%prefix%", SpigotConfig.PREFIX.color())));
 
             }
+
             return false;
+
         } else {
+
             sender.sendMessage((SpigotConfig.NO_PERMISSION.color()
                     .replace("%prefix%", SpigotConfig.PREFIX.color())));
+
         }
+
         return false;
+
     }
 }

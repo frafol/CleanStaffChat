@@ -27,6 +27,9 @@ public enum VelocityConfig {
 
     CONSOLE_PREFIX("settings.console_name"),
 
+    PREVENT_COLOR_CODES("settings.prevent_color_codes"),
+    COLOR_CODES("messages.deny_color_codes"),
+
     ARGUMENTS("messages.arguments"),
 
     STAFFCHAT_TALK_MODULE("modules.staffchat_talk_module"),

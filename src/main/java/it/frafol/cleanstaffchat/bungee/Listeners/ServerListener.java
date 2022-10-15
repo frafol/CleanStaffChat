@@ -23,7 +23,7 @@ public class ServerListener implements Listener {
     @EventHandler
     public void Switch(ServerSwitchEvent event){
 
-        if (event.getFrom().getName() == null) {
+        if (event.getFrom() == null) {
             return;
         }
 

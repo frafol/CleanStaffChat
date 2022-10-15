@@ -24,6 +24,9 @@ public enum BungeeConfig {
 
     STAFFCHAT_USE_PERMISSION("settings.staffchat_use_permission"),
 
+    PREVENT_COLOR_CODES("settings.prevent_color_codes"),
+    COLOR_CODES("messages.deny_color_codes"),
+
     CONSOLE_PREFIX("settings.console_name"),
 
     ARGUMENTS("messages.arguments"),

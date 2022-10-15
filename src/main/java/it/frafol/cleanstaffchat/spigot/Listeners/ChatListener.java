@@ -23,24 +23,74 @@ public class ChatListener implements Listener {
     public void onChat(AsyncPlayerChatEvent event) {
 
         if (PlayerCache.getToggled_2().contains(event.getPlayer().getUniqueId())) {
+
             if (PlayerCache.getMuted().contains("true")) {
+
                 PlayerCache.getToggled_2().remove(event.getPlayer().getUniqueId());
+
                 event.setCancelled(true);
+
                 event.getPlayer().sendMessage(SpigotConfig.STAFFCHAT_MUTED_ERROR.color()
                         .replace("%prefix%", SpigotConfig.PREFIX.color()));
+
                 return;
+
             }
+
             if (!event.getMessage().startsWith("/")) {
+
                 if (!(SpigotConfig.STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
+
                     event.getPlayer().sendMessage((SpigotConfig.MODULE_DISABLED.color()
                             .replace("%prefix%", SpigotConfig.PREFIX.color())
                             .replace("&", "§")));
+
                 } else if (event.getPlayer().hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
+
+                    final String message = event.getMessage();
+
+                    if (SpigotConfig.PREVENT_COLOR_CODES.get(Boolean.class)) {
+
+                        if (message.contains("&0") ||
+                                message.contains("&1") ||
+                                message.contains("&2") ||
+                                message.contains("&3") ||
+                                message.contains("&4") ||
+                                message.contains("&5") ||
+                                message.contains("&6") ||
+                                message.contains("&7") ||
+                                message.contains("&8") ||
+                                message.contains("&9") ||
+                                message.contains("&a") ||
+                                message.contains("&b") ||
+                                message.contains("&c") ||
+                                message.contains("&d") ||
+                                message.contains("&e") ||
+                                message.contains("&f") ||
+                                message.contains("&k") ||
+                                message.contains("&l") ||
+                                message.contains("&m") ||
+                                message.contains("&n") ||
+                                message.contains("&o") ||
+                                message.contains("&r")) {
+
+                            event.getPlayer().sendMessage(SpigotConfig.COLOR_CODES.color()
+                                    .replace("%prefix%", SpigotConfig.PREFIX.color())
+                                    .replace("&", "§"));
+
+                            event.setCancelled(true);
+
+                            return;
+
+                        }
+                    }
+
                     if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
 
-                        LuckPerms api = LuckPermsProvider.get();
+                        final LuckPerms api = LuckPermsProvider.get();
 
-                        User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
+                        final User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
+
                         assert user != null;
                         final String prefix = user.getCachedData().getMetaData().getPrefix();
                         final String suffix = user.getCachedData().getMetaData().getSuffix();
@@ -58,7 +108,9 @@ public class ChatListener implements Listener {
                                         .replace("%userprefix%", user_prefix)
                                         .replace("%usersuffix%", user_suffix)
                                         .replace("&", "§")));
+
                     } else {
+
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                         (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -67,10 +119,15 @@ public class ChatListener implements Listener {
                                         .replace("%user%", event.getPlayer().getName())
                                         .replace("%message%", event.getMessage())
                                         .replace("&", "§")));
+
                     }
+
                     event.setCancelled(true);
+
                 } else {
+
                     PlayerCache.getToggled_2().remove(event.getPlayer().getUniqueId());
+
                 }
             }
         }

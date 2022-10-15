@@ -6,6 +6,7 @@ import it.frafol.cleanstaffchat.spigot.objects.PlayerCache;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 public class MuteCommand implements CommandExecutor {
 
@@ -16,7 +17,7 @@ public class MuteCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] strings) {
+    public boolean onCommand(@NotNull CommandSender sender, Command command, String s, String[] strings) {
         if (command.getName().equalsIgnoreCase("scmute")
                 || command.getName().equalsIgnoreCase("staffchatmute")
                 || command.getName().equalsIgnoreCase("cleanscmute")

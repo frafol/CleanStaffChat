@@ -54,7 +54,6 @@ public class CleanStaffChat extends Plugin {
             getLogger().info("§7Metrics loaded §asuccessfully§7!");
         }
 
-
         if (BungeeConfig.UPDATE_CHECK.get(Boolean.class)) {
             new UpdateCheck(this).getVersion(version -> {
                 if (!this.getDescription().getVersion().equals(version)) {

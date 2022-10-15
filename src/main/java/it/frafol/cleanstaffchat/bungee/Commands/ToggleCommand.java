@@ -15,6 +15,7 @@ public class ToggleCommand extends Command {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
+
         if (!(BungeeConfig.STAFFCHAT_TOGGLE_MODULE.get(Boolean.class))) {
             sender.sendMessage(new TextComponent(BungeeConfig.MODULE_DISABLED.color()
                     .replace("%prefix%", BungeeConfig.PREFIX.color())));

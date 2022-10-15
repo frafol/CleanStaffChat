@@ -89,8 +89,13 @@ public class JoinListener {
 
                         LuckPerms api = LuckPermsProvider.get();
 
+                        if (api.getUserManager().getUser(event.getPlayer().getUniqueId()) == null) {
+                            return;
+                        }
+
                         User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
                         assert user != null;
+
                         final String prefix = user.getCachedData().getMetaData().getPrefix();
                         final String suffix = user.getCachedData().getMetaData().getSuffix();
                         final String user_prefix = prefix == null ? "" : prefix;

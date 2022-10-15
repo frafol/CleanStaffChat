@@ -18,30 +18,46 @@ public class MuteCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, Command command, String s, String[] strings) {
+
         if (command.getName().equalsIgnoreCase("scmute")
                 || command.getName().equalsIgnoreCase("staffchatmute")
                 || command.getName().equalsIgnoreCase("cleanscmute")
                 || command.getName().equalsIgnoreCase("cleanstaffchatmute")) {
+
             if (!(SpigotConfig.STAFFCHAT_MUTE_MODULE.get(Boolean.class))) {
+
                 sender.sendMessage((SpigotConfig.MODULE_DISABLED.color()
                         .replace("%prefix%", SpigotConfig.PREFIX.color())));
+
             }
 
             if (sender.hasPermission(SpigotConfig.STAFFCHAT_MUTE_PERMISSION.get(String.class))) {
+
                 if (!PlayerCache.getMuted().contains("true")) {
+
                     PlayerCache.getMuted().add("true");
+
                     sender.sendMessage((SpigotConfig.STAFFCHAT_MUTED.color()
                             .replace("%prefix%", SpigotConfig.PREFIX.color())));
+
                 } else {
+
                     PlayerCache.getMuted().remove("true");
+
                     sender.sendMessage((SpigotConfig.STAFFCHAT_UNMUTED.color()
                             .replace("%prefix%", SpigotConfig.PREFIX.color())));
                 }
+
             } else {
+
                 sender.sendMessage((SpigotConfig.NO_PERMISSION.color()
                         .replace("%prefix%", SpigotConfig.PREFIX.color())));
+
+
             }
         }
+
         return false;
+
     }
 }

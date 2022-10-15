@@ -36,6 +36,7 @@ public class StaffChatCommand extends Command {
             ProxiedPlayer player = (ProxiedPlayer) sender;
 
             if (sender.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
+
                 if (!PlayerCache.getToggled_2().contains(player.getUniqueId())) {
                     if (!(BungeeConfig.STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
                         sender.sendMessage(new TextComponent(BungeeConfig.MODULE_DISABLED.color()
@@ -57,10 +58,15 @@ public class StaffChatCommand extends Command {
                             .replace("%prefix%", BungeeConfig.PREFIX.color())));
                     return;
                 }
+
             } else {
+
                 sender.sendMessage(new TextComponent("§7This server is using §dCleanStaffChat §7by §dfrafol§7."));
+
             }
+
             return;
+
         }
 
         final String message = String.join(" ", Arrays.copyOfRange(args, 0, args.length));

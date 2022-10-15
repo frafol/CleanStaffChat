@@ -17,19 +17,28 @@ public class ReloadCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(org.bukkit.command.@NotNull CommandSender sender, Command command, @NotNull String s, String[] strings) {
+
         if (command.getName().equalsIgnoreCase("screload")
                 || command.getName().equalsIgnoreCase("staffchatreload")
                 || command.getName().equalsIgnoreCase("cleanscreload")
                 || command.getName().equalsIgnoreCase("cleanstaffchatreload")) {
+
             if (sender.hasPermission(SpigotConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class))) {
+
                 TextFile.reloadAll();
+
                 sender.sendMessage((SpigotConfig.RELOADED.color()
                         .replace("%prefix%", SpigotConfig.PREFIX.color())));
+
             } else {
+
                 sender.sendMessage((SpigotConfig.NO_PERMISSION.color()
                         .replace("%prefix%", SpigotConfig.PREFIX.color())));
+
             }
         }
+
         return false;
+
     }
 }

@@ -36,6 +36,7 @@ public class CleanStaffChat extends JavaPlugin {
 
 
         getLogger().info("Server version: " + Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3] + ".");
+
         if (Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_6_R")
             || Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_5_R")
                 || Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_4_R")
@@ -43,10 +44,15 @@ public class CleanStaffChat extends JavaPlugin {
                 || Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_2_R")
                 || Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_1_R")
                 || Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_0_R")) {
+
             getLogger().severe("Support for your version was declined.");
+
             Bukkit.getPluginManager().disablePlugin(this);
+
             return;
+
         }
+
 
         Objects.requireNonNull(getCommand("scmute")).setExecutor(new MuteCommand(this));
         Objects.requireNonNull(getCommand("sctoggle")).setExecutor(new ToggleCommand(this));

@@ -2,12 +2,14 @@ package it.frafol.cleanstaffchat.velocity.Commands;
 
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
+import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
+import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -41,17 +43,27 @@ public class StaffChatCommand implements SimpleCommand {
 
             }
 
-            Player player = (Player) commandSource;
-
-            if (!(STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
-
-                MODULE_DISABLED.send(commandSource, new Placeholder("prefix", PREFIX.color()));
-
-                return;
-
-            }
-
             if (commandSource.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
+
+                Player player = (Player) commandSource;
+
+                if (((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19
+                        || ((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19_1) {
+
+                    ARGUMENTS.send(commandSource, new Placeholder("prefix", PREFIX.color()));
+
+                    return;
+
+                }
+
+                if (!(STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
+
+                    MODULE_DISABLED.send(commandSource, new Placeholder("prefix", PREFIX.color()));
+
+                    return;
+
+                }
+
 
                 if (!PlayerCache.getToggled_2().contains(player.getUniqueId())) {
 
@@ -61,12 +73,14 @@ public class StaffChatCommand implements SimpleCommand {
 
                         STAFFCHAT_TALK_ENABLED.send(commandSource,
                                 new Placeholder("prefix", PREFIX.color()));
+
                         return;
 
                     } else {
 
                         ARGUMENTS.send(commandSource,
                                 new Placeholder("prefix", PREFIX.color()));
+
                     }
 
                 } else if (PlayerCache.getToggled_2().contains(player.getUniqueId())) {
@@ -82,8 +96,7 @@ public class StaffChatCommand implements SimpleCommand {
 
             } else {
 
-                NO_PERMISSION.send(commandSource,
-                        new Placeholder("prefix", PREFIX.color()));
+                commandSource.sendMessage(Component.text("§7This server is using §dCleanStaffChat §7by §dfrafol§7."));
 
                 return;
 
@@ -129,6 +142,7 @@ public class StaffChatCommand implements SimpleCommand {
                                     new Placeholder("prefix", PREFIX.color()));
 
                             return;
+
                         }
                     }
 
@@ -154,6 +168,7 @@ public class StaffChatCommand implements SimpleCommand {
                                         new Placeholder("userprefix", user_prefix),
                                         new Placeholder("usersuffix", user_suffix),
                                         new Placeholder("prefix", PREFIX.color())));
+
                     } else {
 
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter

@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.1.1",
+        version = "1.1.2",
         url = "github.com/frafol",
         authors = "frafol"
 )
@@ -107,6 +107,8 @@ public class CleanStaffChat {
             getLogger().info("§7Metrics loaded §asuccessfully§7!");
 
         }
+
+        getLogger().warning("Some functions are not available in 1.19+ clients, this is due to Mojang's self-moderation.");
 
         if (VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {
             new UpdateCheck(this).getVersion(version -> {

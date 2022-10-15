@@ -33,7 +33,7 @@ messages:
   prefix: "&c&lSC &8»"
   arguments: "%prefix% &7Use &d/sc <message>&7."
 
-  # StaffChat talk messages.
+  # StaffChat talk messages. (NOTE: 1.19+ clients does not support it)
   staffchat_talk_enabled: "%prefix% &7Now your messages will be sent in the &aStaffChat&7."
   staffchat_talk_disabled: "%prefix% &7Now your messages will be sent in the &achat&7."
 

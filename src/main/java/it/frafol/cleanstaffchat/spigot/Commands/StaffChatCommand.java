@@ -1,5 +1,8 @@
 package it.frafol.cleanstaffchat.spigot.Commands;
 
+import com.viaversion.viaversion.api.Via;
+import com.viaversion.viaversion.api.ViaAPI;
+import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
 import it.frafol.cleanstaffchat.spigot.CleanStaffChat;
 import it.frafol.cleanstaffchat.spigot.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.spigot.objects.PlayerCache;

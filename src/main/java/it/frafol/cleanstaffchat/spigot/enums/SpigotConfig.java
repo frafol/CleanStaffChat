@@ -14,6 +14,12 @@ public enum SpigotConfig {
 
     STAFFCHAT_MUTED_ERROR("messages.staffchat_muted_error"),
 
+    STAFFCHAT_AFK_MODULE("modules.staffchat_afk_module"),
+    STAFFCHAT_AFK_ON("messages.staff_afk_on_message_format"),
+    STAFFCHAT_AFK_OFF("messages.staff_afk_off_message_format"),
+    STAFFCHAT_NO_AFK_ONCHANGE_SERVER("settings.staff_disable_afk_on_move"),
+    STAFFCHAT_AFK_PERMISSION("settings.staffchat_afk_permission"),
+
     STAFFCHAT_JOIN_LEAVE_ALL("settings.staff_join_all_players"),
     STAFFCHAT_QUIT_ALL("settings.staff_quit_all_players"),
     STAFF_JOIN_MESSAGE("settings.staff_join_message"),

@@ -110,5 +110,8 @@ public class JoinListener implements Listener {
                 }
             }
         }
+
+        PlayerCache.getAfk().remove(event.getPlayer().getUniqueId());
+
     }
 }

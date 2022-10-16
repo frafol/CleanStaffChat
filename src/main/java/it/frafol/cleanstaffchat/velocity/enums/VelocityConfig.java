@@ -32,6 +32,12 @@ public enum VelocityConfig {
 
     ARGUMENTS("messages.arguments"),
 
+    STAFFCHAT_AFK_MODULE("modules.staffchat_afk_module"),
+    STAFFCHAT_AFK_ON("messages.staff_afk_on_message_format"),
+    STAFFCHAT_AFK_OFF("messages.staff_afk_off_message_format"),
+    STAFFCHAT_NO_AFK_ONCHANGE_SERVER("settings.staff_disable_afk_on_move"),
+    STAFFCHAT_AFK_PERMISSION("settings.staffchat_afk_permission"),
+
     STAFFCHAT_TALK_MODULE("modules.staffchat_talk_module"),
     STAFFCHAT_TALK_ENABLED("messages.staffchat_talk_enabled"),
     STAFFCHAT_TALK_DISABLED("messages.staffchat_talk_disabled"),

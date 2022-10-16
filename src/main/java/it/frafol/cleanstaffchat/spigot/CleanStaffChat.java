@@ -1,11 +1,9 @@
 package it.frafol.cleanstaffchat.spigot;
 
-import it.frafol.cleanstaffchat.spigot.Commands.MuteCommand;
-import it.frafol.cleanstaffchat.spigot.Commands.ReloadCommand;
-import it.frafol.cleanstaffchat.spigot.Commands.StaffChatCommand;
-import it.frafol.cleanstaffchat.spigot.Commands.ToggleCommand;
+import it.frafol.cleanstaffchat.spigot.Commands.*;
 import it.frafol.cleanstaffchat.spigot.Listeners.ChatListener;
 import it.frafol.cleanstaffchat.spigot.Listeners.JoinListener;
+import it.frafol.cleanstaffchat.spigot.Listeners.MoveListener;
 import it.frafol.cleanstaffchat.spigot.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.spigot.objects.PlayerCache;
 import it.frafol.cleanstaffchat.spigot.objects.TextFile;
@@ -58,10 +56,12 @@ public class CleanStaffChat extends JavaPlugin {
         Objects.requireNonNull(getCommand("sctoggle")).setExecutor(new ToggleCommand(this));
         Objects.requireNonNull(getCommand("screload")).setExecutor(new ReloadCommand(this));
         Objects.requireNonNull(getCommand("sc")).setExecutor(new StaffChatCommand(this));
+        Objects.requireNonNull(getCommand("scafk")).setExecutor(new AFKCommand(this));
         getLogger().info("Commands registered successfully!");
 
         getServer().getPluginManager().registerEvents(new JoinListener(this), this);
         getServer().getPluginManager().registerEvents(new ChatListener(this), this);
+        getServer().getPluginManager().registerEvents(new MoveListener(this), this);
         getLogger().info("Listeners registered successfully!");
 
         configTextFile = new TextFile(getDataFolder().toPath(), "config.yml");
@@ -100,6 +100,7 @@ public class CleanStaffChat extends JavaPlugin {
         PlayerCache.getToggled_2().clear();
         PlayerCache.getToggled().clear();
         PlayerCache.getMuted().clear();
+        PlayerCache.getAfk().clear();
 
         getLogger().info("Successfully disabled.");
     }

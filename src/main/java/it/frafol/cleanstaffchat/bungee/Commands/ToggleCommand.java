@@ -10,7 +10,7 @@ import net.md_5.bungee.api.plugin.Command;
 public class ToggleCommand extends Command {
 
     public ToggleCommand() {
-        super("sctoggle","","staffchattoggle","cleansctoggle","cleanstaffchattoggle");
+        super("sctoggle","","staffchattoggle","cleansctoggle","cleanstaffchattoggle","stafftoggle");
     }
 
     @Override

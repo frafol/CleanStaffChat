@@ -11,10 +11,13 @@ commands:
     aliases: [staffchat, cleansc, cleanstaffchat]
   scmute:
     description: Mute staffchat
-    aliases: [staffchatmute, cleanscmute, cleanstaffchatmute]
+    aliases: [staffchatmute, cleanscmute, cleanstaffchatmute, staffmute]
   sctoggle:
     description: Toggle staffchat
-    aliases: [staffchattoggle, cleansctoggle, cleanstaffchattoggle, staffchatoggle, cleanstaffchatoggle]
+    aliases: [staffchattoggle, cleansctoggle, cleanstaffchattoggle, staffchatoggle, cleanstaffchatoggle, stafftoggle]
   screload:
     description: Reload staffchat
-    aliases: [staffchatreload, cleanscreload, cleanstaffchatreload]
+    aliases: [staffchatreload, cleanscreload, cleanstaffchatreload, staffreload]
+  scafk:
+    description: Reload staffchat
+    aliases: [staffchatafk, cleanscafk, cleanstaffchatafk, staffafk]

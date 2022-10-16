@@ -7,10 +7,7 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
-import it.frafol.cleanstaffchat.velocity.Commands.MuteCommand;
-import it.frafol.cleanstaffchat.velocity.Commands.ReloadCommand;
-import it.frafol.cleanstaffchat.velocity.Commands.StaffChatCommand;
-import it.frafol.cleanstaffchat.velocity.Commands.ToggleCommand;
+import it.frafol.cleanstaffchat.velocity.Commands.*;
 import it.frafol.cleanstaffchat.velocity.Listeners.ChatListener;
 import it.frafol.cleanstaffchat.velocity.Listeners.JoinListener;
 import it.frafol.cleanstaffchat.velocity.Listeners.ServerListener;
@@ -27,7 +24,7 @@ import java.util.logging.Logger;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.1.2",
+        version = "1.2",
         url = "github.com/frafol",
         authors = "frafol"
 )
@@ -68,18 +65,21 @@ public class CleanStaffChat {
                 .metaBuilder("sc")
                 .aliases("staffchat")
                 .aliases("cleansc")
+                .aliases("staff")
                 .aliases("cleanstaffchat")
                 .build(), new StaffChatCommand(this));
         server.getCommandManager().register(server.getCommandManager()
                 .metaBuilder("scmute")
                 .aliases("staffchatmute")
                 .aliases("cleanscmute")
+                .aliases("staffmute")
                 .aliases("cleanstaffchatmute")
                 .build(), new MuteCommand(this));
         server.getCommandManager().register(server.getCommandManager()
                 .metaBuilder("screload")
                 .aliases("staffchatreload")
                 .aliases("cleanscreload")
+                .aliases("staffreload")
                 .aliases("cleanstaffchatreload")
                 .build(), new ReloadCommand(this));
         server.getCommandManager().register(server.getCommandManager()
@@ -87,8 +87,16 @@ public class CleanStaffChat {
                 .aliases("staffchattoggle")
                 .aliases("staffchatoggle")
                 .aliases("cleansctoggle")
+                .aliases("stafftoggle")
                 .aliases("cleanstaffchattoggle")
                 .build(), new ToggleCommand(this));
+        server.getCommandManager().register(server.getCommandManager()
+                .metaBuilder("scafk")
+                .aliases("staffchatafk")
+                .aliases("staffafk")
+                .aliases("cleanscafk")
+                .aliases("cleanstaffchatafk")
+                .build(), new AFKCommand(this));
         getLogger().info("§7Commands registered §asuccessfully§7!");
 
         server.getEventManager().register(this, new JoinListener(this));
@@ -133,6 +141,7 @@ public class CleanStaffChat {
         PlayerCache.getToggled_2().clear();
         PlayerCache.getToggled().clear();
         PlayerCache.getMuted().clear();
+        PlayerCache.getAfk().clear();
 
         logger.info("§7Successfully §cdisabled§7.");
     }

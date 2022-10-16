@@ -1,8 +1,5 @@
 package it.frafol.cleanstaffchat.spigot.Commands;
 
-import com.viaversion.viaversion.api.Via;
-import com.viaversion.viaversion.api.ViaAPI;
-import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
 import it.frafol.cleanstaffchat.spigot.CleanStaffChat;
 import it.frafol.cleanstaffchat.spigot.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.spigot.objects.PlayerCache;
@@ -27,6 +24,16 @@ public class StaffChatCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(org.bukkit.command.@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] strings) {
+
+        if (!command.getName().equalsIgnoreCase("sc")
+                || command.getName().equalsIgnoreCase("staffchat")
+                || command.getName().equalsIgnoreCase("cleansc")
+                || command.getName().equalsIgnoreCase("cleanstaffchat")
+                || command.getName().equalsIgnoreCase("staff")) {
+
+            return false;
+
+        }
 
         if (strings.length == 0) {
 

@@ -1,9 +1,6 @@
 package it.frafol.cleanstaffchat.bungee;
 
-import it.frafol.cleanstaffchat.bungee.Commands.MuteCommand;
-import it.frafol.cleanstaffchat.bungee.Commands.ReloadCommand;
-import it.frafol.cleanstaffchat.bungee.Commands.StaffChatCommand;
-import it.frafol.cleanstaffchat.bungee.Commands.ToggleCommand;
+import it.frafol.cleanstaffchat.bungee.Commands.*;
 import it.frafol.cleanstaffchat.bungee.Listeners.ChatListener;
 import it.frafol.cleanstaffchat.bungee.Listeners.JoinListener;
 import it.frafol.cleanstaffchat.bungee.Listeners.ServerListener;
@@ -36,6 +33,7 @@ public class CleanStaffChat extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new ReloadCommand());
         getProxy().getPluginManager().registerCommand(this, new MuteCommand());
         getProxy().getPluginManager().registerCommand(this, new ToggleCommand());
+        getProxy().getPluginManager().registerCommand(this, new AFKCommand());
         getLogger().info("§7Commands registered §asuccessfully§7!");
 
         getProxy().getPluginManager().registerListener(this, new JoinListener(this));
@@ -79,6 +77,7 @@ public class CleanStaffChat extends Plugin {
         PlayerCache.getToggled_2().clear();
         PlayerCache.getToggled().clear();
         PlayerCache.getMuted().clear();
+        PlayerCache.getAfk().clear();
 
         getLogger().info("§7Successfully §cdisabled§7.");
     }

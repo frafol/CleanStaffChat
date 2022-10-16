@@ -120,5 +120,8 @@ public class JoinListener {
                 }
             }
         }
+
+        PlayerCache.getAfk().remove(event.getPlayer().getUniqueId());
+
     }
 }

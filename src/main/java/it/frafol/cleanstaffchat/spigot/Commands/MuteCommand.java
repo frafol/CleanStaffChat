@@ -17,12 +17,13 @@ public class MuteCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, Command command, String s, String[] strings) {
+    public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String s, String[] strings) {
 
         if (command.getName().equalsIgnoreCase("scmute")
                 || command.getName().equalsIgnoreCase("staffchatmute")
                 || command.getName().equalsIgnoreCase("cleanscmute")
-                || command.getName().equalsIgnoreCase("cleanstaffchatmute")) {
+                || command.getName().equalsIgnoreCase("cleanstaffchatmute")
+                || command.getName().equalsIgnoreCase("staffmute")) {
 
             if (!(SpigotConfig.STAFFCHAT_MUTE_MODULE.get(Boolean.class))) {
 

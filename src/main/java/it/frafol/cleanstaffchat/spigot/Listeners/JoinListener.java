@@ -3,6 +3,7 @@ package it.frafol.cleanstaffchat.spigot.Listeners;
 import it.frafol.cleanstaffchat.spigot.CleanStaffChat;
 import it.frafol.cleanstaffchat.spigot.UpdateCheck;
 import it.frafol.cleanstaffchat.spigot.enums.SpigotConfig;
+import it.frafol.cleanstaffchat.spigot.objects.PlayerCache;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -29,7 +30,7 @@ public class JoinListener implements Listener {
             new UpdateCheck(PLUGIN).getVersion(version -> {
                 if (!PLUGIN.getDescription().getVersion().equals(version)) {
                     event.getPlayer().sendMessage(ChatColor.YELLOW + "[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz");
-                    PLUGIN.getLogger().warning("§eThere is a new update available, download it on SpigotMC!");
+                    PLUGIN.getLogger().warning("There is a new update available, download it on SpigotMC!");
                 }
             });
         }
@@ -126,5 +127,8 @@ public class JoinListener implements Listener {
                 }
             }
         }
+
+        PlayerCache.getAfk().remove(event.getPlayer().getUniqueId());
+
     }
 }

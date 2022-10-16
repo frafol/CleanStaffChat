@@ -18,7 +18,7 @@ public class StaffChatCommand extends Command {
 
     public StaffChatCommand() {
 
-        super("sc","","staffchat","cleansc","cleanstaffchat");
+        super("sc","","staffchat","cleansc","cleanstaffchat","staff");
 
     }
 

@@ -17,11 +17,13 @@ settings:
   staff_join_all_players: false # By activating it, the staff will receive a message every time any player enters the server.
   staff_quit_all_players: false # By activating it, the staff will receive a message every time any player leaves the server.
   staff_switch_all_players: false # By activating it, the staff will receive a message every time any player switch a server.
+  staff_disable_afk_on_move: true # On Velocity and BungeeCord, this works when a player changes server.
 
   # You can customise permissions.
   staffchat_use_permission: "staffchat.use"
   staffchat_mute_permission: "staffchat.mute"
   staffchat_toggle_permission: "staffchat.toggle"
+  staffchat_afk_permission: "staffchat.afk"
   staffchat_reload_permission: "staffchat.reload"
 
   # By activating this option, you will not be able to send messages with formatting codes (&c, &f etc.).
@@ -50,6 +52,8 @@ messages:
   staff_join_message_format: "%prefix% &7[&a+&7] &f&7%user%"
   staff_quit_message_format: "%prefix% &7[&c-&7] &f&7%user%"
   staff_switch_message_format: "%prefix% &7%user% &e➜ %server%" # This won't work if you run your plugin on spigot.
+  staff_afk_on_message_format: "%prefix% &7%user% is now &aAFK&7."
+  staff_afk_off_message_format: "%prefix% &7%user% is no longer &aAFK&7."
 
   # Errors and reload.
   deny_color_codes: "%prefix% &cColor codes are not permitted."
@@ -66,6 +70,7 @@ modules:
   stats: true
 
   staffchat_switch_module: true
+  staffchat_afk_module: true
   staffchat_talk_module: true
   staffchat_mute_module: true
   staffchat_toggle_module: true

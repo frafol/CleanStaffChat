@@ -21,7 +21,8 @@ public class ReloadCommand implements CommandExecutor {
         if (command.getName().equalsIgnoreCase("screload")
                 || command.getName().equalsIgnoreCase("staffchatreload")
                 || command.getName().equalsIgnoreCase("cleanscreload")
-                || command.getName().equalsIgnoreCase("cleanstaffchatreload")) {
+                || command.getName().equalsIgnoreCase("cleanstaffchatreload")
+                || command.getName().equalsIgnoreCase("staffreload")) {
 
             if (sender.hasPermission(SpigotConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class))) {
 

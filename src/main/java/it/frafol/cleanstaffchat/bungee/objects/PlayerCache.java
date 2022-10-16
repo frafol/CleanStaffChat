@@ -17,6 +17,9 @@ public class PlayerCache {
     private final List<UUID> toggled_2 = Lists.newArrayList();
 
     @Getter
+    private final List<UUID> afk = Lists.newArrayList();
+
+    @Getter
     private final List<String> muted = Lists.newArrayList();
 
 }

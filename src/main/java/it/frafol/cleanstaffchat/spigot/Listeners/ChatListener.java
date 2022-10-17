@@ -106,6 +106,7 @@ public class ChatListener implements Listener {
                                         .replace("%message%", event.getMessage())
                                         .replace("%displayname%", user_prefix + event.getPlayer().getName() + user_suffix)
                                         .replace("%userprefix%", user_prefix)
+                                        .replace("%server%", "")
                                         .replace("%usersuffix%", user_suffix)
                                         .replace("&", "§")));
 
@@ -118,6 +119,7 @@ public class ChatListener implements Listener {
                                         .replace("%prefix%", SpigotConfig.PREFIX.color())
                                         .replace("%user%", event.getPlayer().getName())
                                         .replace("%message%", event.getMessage())
+                                        .replace("%server%", "")
                                         .replace("&", "§")));
 
                     }

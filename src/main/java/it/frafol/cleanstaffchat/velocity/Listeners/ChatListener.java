@@ -74,6 +74,12 @@ public class ChatListener {
                             }
                         }
 
+                        if (!(event.getPlayer().getCurrentServer().isPresent())) {
+
+                            return;
+
+                        }
+
                         if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
                             LuckPerms api = LuckPermsProvider.get();
@@ -95,6 +101,7 @@ public class ChatListener {
                                             new Placeholder("displayname", user_prefix + sender + user_suffix),
                                             new Placeholder("userprefix", user_prefix),
                                             new Placeholder("usersuffix", user_suffix),
+                                            new Placeholder("server", event.getPlayer().getCurrentServer().get().getServerInfo().getName()),
                                             new Placeholder("prefix", PREFIX.color())));
 
                         } else {
@@ -105,6 +112,10 @@ public class ChatListener {
                                     .forEach(players -> STAFFCHAT_FORMAT.send(players,
                                             new Placeholder("user", sender),
                                             new Placeholder("message", message),
+                                            new Placeholder("displayname", sender),
+                                            new Placeholder("userprefix", ""),
+                                            new Placeholder("usersuffix", ""),
+                                            new Placeholder("server", event.getPlayer().getCurrentServer().get().getServerInfo().getName()),
                                             new Placeholder("prefix", PREFIX.color())));
 
                         }

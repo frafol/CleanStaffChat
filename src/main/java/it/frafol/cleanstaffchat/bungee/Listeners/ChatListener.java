@@ -99,6 +99,7 @@ public class ChatListener implements Listener {
                                         .replace("%displayname%", user_prefix + ((ProxiedPlayer) event.getSender()).getName() + user_suffix)
                                         .replace("%userprefix%", user_prefix)
                                         .replace("%usersuffix%", user_suffix)
+                                        .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
                                         .replace("&", "§"))));
 
                     } else {
@@ -112,6 +113,7 @@ public class ChatListener implements Listener {
                                         .replace("%message%", message)
                                         .replace("%userprefix%", "")
                                         .replace("%usersuffix%", "")
+                                        .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
                                         .replace("&", "§"))));
                     }
 

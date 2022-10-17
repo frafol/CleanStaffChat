@@ -47,6 +47,12 @@ public class AFKCommand implements SimpleCommand {
 
         }
 
+        if (!((Player) commandSource).getCurrentServer().isPresent()) {
+
+            return;
+
+        }
+
         if (!PlayerCache.getAfk().contains(((Player) commandSource).getUniqueId())) {
             if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
@@ -68,6 +74,7 @@ public class AFKCommand implements SimpleCommand {
                                 new Placeholder("displayname", user_prefix + commandSource + user_suffix),
                                 new Placeholder("userprefix", user_prefix),
                                 new Placeholder("usersuffix", user_suffix),
+                                new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
                                 new Placeholder("prefix", PREFIX.color())));
 
             } else {
@@ -80,6 +87,7 @@ public class AFKCommand implements SimpleCommand {
                                 new Placeholder("displayname", ((Player) commandSource).getUsername()),
                                 new Placeholder("userprefix", ""),
                                 new Placeholder("usersuffix", ""),
+                                new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
                                 new Placeholder("prefix", PREFIX.color())));
 
             }
@@ -108,6 +116,7 @@ public class AFKCommand implements SimpleCommand {
                                 new Placeholder("displayname", user_prefix + commandSource + user_suffix),
                                 new Placeholder("userprefix", user_prefix),
                                 new Placeholder("usersuffix", user_suffix),
+                                new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
                                 new Placeholder("prefix", PREFIX.color())));
 
             } else {
@@ -120,6 +129,7 @@ public class AFKCommand implements SimpleCommand {
                                 new Placeholder("displayname", ((Player) commandSource).getUsername()),
                                 new Placeholder("userprefix", ""),
                                 new Placeholder("usersuffix", ""),
+                                new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
                                 new Placeholder("prefix", PREFIX.color())));
 
             }

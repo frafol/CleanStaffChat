@@ -133,6 +133,7 @@ public class StaffChatCommand extends Command {
                                         .replace("%displayname%", user_prefix + commandsender + user_suffix)
                                         .replace("%userprefix%", user_prefix)
                                         .replace("%usersuffix%", user_suffix)
+                                        .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
                                         .replace("&", "§"))));
 
                     } else {
@@ -147,6 +148,7 @@ public class StaffChatCommand extends Command {
                                         .replace("%displayname%", commandsender)
                                         .replace("%usersuffix%", "")
                                         .replace("%message%", message)
+                                        .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
                                         .replace("&", "§"))));
                     }
 
@@ -162,6 +164,7 @@ public class StaffChatCommand extends Command {
                                         .replace("%userprefix%", "")
                                         .replace("%usersuffix%", "")
                                         .replace("%displayname%", commandsender)
+                                        .replace("%server%", "")
                                         .replace("%message%", message))));
 
                     } else {
@@ -177,6 +180,7 @@ public class StaffChatCommand extends Command {
                             .replace("%displayname%", commandsender)
                             .replace("%userprefix%", "")
                             .replace("%usersuffix%", "")
+                            .replace("%server%", "")
                             .replace("%message%", message)));
 
                 } else {

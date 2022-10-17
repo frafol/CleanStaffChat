@@ -82,6 +82,7 @@ public class AFKCommand implements CommandExecutor {
                                 .replace("%user%", sender.getName())
                                 .replace("%displayname%", user_prefix + sender.getName() + user_suffix)
                                 .replace("%userprefix%", user_prefix)
+                                .replace("%server%", "")
                                 .replace("%usersuffix%", user_suffix)));
 
             } else {
@@ -93,6 +94,7 @@ public class AFKCommand implements CommandExecutor {
                                 .replace("%prefix%", SpigotConfig.PREFIX.color())
                                 .replace("%user%", sender.getName())
                                 .replace("%userprefix%", "")
+                                .replace("%server%", "")
                                 .replace("%usersuffix%", "")
                                 .replace("%displayname%", sender.getName())));
 
@@ -122,6 +124,7 @@ public class AFKCommand implements CommandExecutor {
                                 .replace("%user%", sender.getName())
                                 .replace("%displayname%", user_prefix + sender.getName() + user_suffix)
                                 .replace("%userprefix%", user_prefix)
+                                .replace("%server%", "")
                                 .replace("%usersuffix%", user_suffix)));
 
             } else {
@@ -133,6 +136,7 @@ public class AFKCommand implements CommandExecutor {
                                 .replace("%prefix%", SpigotConfig.PREFIX.color())
                                 .replace("%user%", sender.getName())
                                 .replace("%userprefix%", "")
+                                .replace("%server%", "")
                                 .replace("%usersuffix%", "")
                                 .replace("%displayname%", sender.getName())));
 

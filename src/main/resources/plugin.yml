@@ -19,5 +19,5 @@ commands:
     description: Reload staffchat
     aliases: [staffchatreload, cleanscreload, cleanstaffchatreload, staffreload]
   scafk:
-    description: Reload staffchat
+    description: Send AFK message
     aliases: [staffchatafk, cleanscafk, cleanstaffchatafk, staffafk]

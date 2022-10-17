@@ -66,6 +66,7 @@ public class AFKCommand extends Command {
                                 .replace("%user%", sender.getName())
                                 .replace("%displayname%", user_prefix + sender.getName() + user_suffix)
                                 .replace("%userprefix%", user_prefix)
+                                .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
                                 .replace("%usersuffix%", user_suffix))));
 
             } else {
@@ -78,6 +79,7 @@ public class AFKCommand extends Command {
                                 .replace("%user%", sender.getName())
                                 .replace("%userprefix%", "")
                                 .replace("%usersuffix%", "")
+                                .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
                                 .replace("%displayname%", sender.getName()))));
 
             }
@@ -106,6 +108,7 @@ public class AFKCommand extends Command {
                                 .replace("%user%", sender.getName())
                                 .replace("%displayname%", user_prefix + sender.getName() + user_suffix)
                                 .replace("%userprefix%", user_prefix)
+                                .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
                                 .replace("%usersuffix%", user_suffix))));
 
             } else {
@@ -118,6 +121,7 @@ public class AFKCommand extends Command {
                                 .replace("%user%", sender.getName())
                                 .replace("%userprefix%", "")
                                 .replace("%usersuffix%", "")
+                                .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
                                 .replace("%displayname%", sender.getName()))));
 
             }

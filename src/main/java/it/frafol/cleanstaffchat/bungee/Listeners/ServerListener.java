@@ -27,7 +27,8 @@ public class ServerListener implements Listener {
             return;
         }
 
-        if (BungeeConfig.STAFFCHAT_NO_AFK_ONCHANGE_SERVER.get(Boolean.class)) {
+        if (BungeeConfig.STAFFCHAT_NO_AFK_ONCHANGE_SERVER.get(Boolean.class)
+                && PlayerCache.getAfk().contains(event.getPlayer().getUniqueId())) {
 
             if (event.getPlayer().hasPermission(BungeeConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))) {
 

@@ -167,6 +167,7 @@ public class StaffChatCommand implements CommandExecutor {
                                         .replace("%message%", message)
                                         .replace("%userprefix%", user_prefix)
                                         .replace("%usersuffix%", user_suffix)
+                                        .replace("%server%", "")
                                         .replace("&", "§")));
 
                     } else {
@@ -181,6 +182,7 @@ public class StaffChatCommand implements CommandExecutor {
                                         .replace("%usersuffix%", "")
                                         .replace("%displayname%", commandsender)
                                         .replace("%message%", message)
+                                        .replace("%server%", "")
                                         .replace("&", "§")));
 
                     }
@@ -198,6 +200,7 @@ public class StaffChatCommand implements CommandExecutor {
                                         .replace("%userprefix%", "")
                                         .replace("%usersuffix%", "")
                                         .replace("%displayname%", commandsender)
+                                        .replace("%server%", "")
                                         .replace("%message%", message))));
 
                     } else {
@@ -215,6 +218,7 @@ public class StaffChatCommand implements CommandExecutor {
                             .replace("%displayname%", commandsender)
                             .replace("%userprefix%", "")
                             .replace("%usersuffix%", "")
+                            .replace("%server%", "")
                             .replace("%message%", message)));
 
                     return false;

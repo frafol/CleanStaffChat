@@ -146,6 +146,12 @@ public class StaffChatCommand implements SimpleCommand {
                         }
                     }
 
+                    if (!((Player) commandSource).getCurrentServer().isPresent()) {
+
+                        return;
+
+                    }
+
                     if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
                         final LuckPerms api = LuckPermsProvider.get();
@@ -167,6 +173,7 @@ public class StaffChatCommand implements SimpleCommand {
                                         new Placeholder("displayname", user_prefix + sender + user_suffix),
                                         new Placeholder("userprefix", user_prefix),
                                         new Placeholder("usersuffix", user_suffix),
+                                        new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
                                         new Placeholder("prefix", PREFIX.color())));
 
                     } else {
@@ -180,6 +187,7 @@ public class StaffChatCommand implements SimpleCommand {
                                         new Placeholder("displayname", sender),
                                         new Placeholder("userprefix", ""),
                                         new Placeholder("usersuffix", ""),
+                                        new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
                                         new Placeholder("prefix", PREFIX.color())));
 
                     }
@@ -197,6 +205,7 @@ public class StaffChatCommand implements SimpleCommand {
                                         new Placeholder("displayname", sender),
                                         new Placeholder("userprefix", ""),
                                         new Placeholder("usersuffix", ""),
+                                        new Placeholder("server", ""),
                                         new Placeholder("prefix", PREFIX.color())));
 
                     } else {
@@ -212,6 +221,7 @@ public class StaffChatCommand implements SimpleCommand {
                             new Placeholder("displayname", sender),
                             new Placeholder("userprefix", ""),
                             new Placeholder("usersuffix", ""),
+                            new Placeholder("server", ""),
                             new Placeholder("prefix", PREFIX.color()));
 
                 } else {

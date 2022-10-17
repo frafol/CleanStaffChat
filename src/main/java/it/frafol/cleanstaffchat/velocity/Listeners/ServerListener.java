@@ -47,7 +47,8 @@ public class ServerListener {
             return;
         }
 
-        if (VelocityConfig.STAFFCHAT_NO_AFK_ONCHANGE_SERVER.get(Boolean.class)) {
+        if (VelocityConfig.STAFFCHAT_NO_AFK_ONCHANGE_SERVER.get(Boolean.class)
+                && PlayerCache.getAfk().contains(event.getPlayer().getUniqueId())) {
 
             if (event.getPlayer().hasPermission(VelocityConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))) {
 

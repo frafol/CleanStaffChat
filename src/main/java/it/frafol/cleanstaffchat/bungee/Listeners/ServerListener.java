@@ -47,7 +47,7 @@ public class ServerListener implements Listener {
                     CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                     (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                             && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                            .forEach(players -> players.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_AFK_ON.color()
+                            .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFFCHAT_AFK_ON.color()
                                     .replace("%prefix%", BungeeConfig.PREFIX.color())
                                     .replace("%user%", event.getPlayer().getName())
                                     .replace("%displayname%", user_prefix + event.getPlayer().getName() + user_suffix)
@@ -59,7 +59,7 @@ public class ServerListener implements Listener {
                     CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                     (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                             && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                            .forEach(players -> players.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_AFK_ON.color()
+                            .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFFCHAT_AFK_ON.color()
                                     .replace("%prefix%", BungeeConfig.PREFIX.color())
                                     .replace("%user%", event.getPlayer().getName())
                                     .replace("%userprefix%", "")
@@ -96,7 +96,7 @@ public class ServerListener implements Listener {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(new TextComponent(BungeeConfig.STAFF_SWITCH_MESSAGE_FORMAT.color()
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFF_SWITCH_MESSAGE_FORMAT.color()
                                         .replace("%prefix%", BungeeConfig.PREFIX.color())
                                         .replace("%user%", player.getName())
                                         .replace("%displayname%", user_prefix + player.getName() + user_suffix)
@@ -109,7 +109,7 @@ public class ServerListener implements Listener {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(new TextComponent(BungeeConfig.STAFF_SWITCH_MESSAGE_FORMAT.color()
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFF_SWITCH_MESSAGE_FORMAT.color()
                                         .replace("%prefix%", BungeeConfig.PREFIX.color())
                                         .replace("%user%", player.getName())
                                         .replace("%server%", player.getServer().getInfo().getName()))));

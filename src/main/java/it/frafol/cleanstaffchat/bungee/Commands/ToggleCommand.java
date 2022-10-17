@@ -17,13 +17,13 @@ public class ToggleCommand extends Command {
     public void execute(CommandSender sender, String[] args) {
 
         if (!(BungeeConfig.STAFFCHAT_TOGGLE_MODULE.get(Boolean.class))) {
-            sender.sendMessage(new TextComponent(BungeeConfig.MODULE_DISABLED.color()
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.MODULE_DISABLED.color()
                     .replace("%prefix%", BungeeConfig.PREFIX.color())));
             return;
         }
 
         if (!(sender instanceof ProxiedPlayer)) {
-            sender.sendMessage(new TextComponent(BungeeConfig.PLAYER_ONLY.color()
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.PLAYER_ONLY.color()
                     .replace("%prefix%", BungeeConfig.PREFIX.color())));
             return;
         }
@@ -33,19 +33,19 @@ public class ToggleCommand extends Command {
         if (player.hasPermission(BungeeConfig.STAFFCHAT_TOGGLE_PERMISSION.get(String.class))) {
             if (!PlayerCache.getToggled().contains(player.getUniqueId())) {
                 PlayerCache.getToggled().add(player.getUniqueId());
-                sender.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_TOGGLED_OFF.color()
+                sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFFCHAT_TOGGLED_OFF.color()
                         .replace("%prefix%", BungeeConfig.PREFIX.color())));
                 return;
             }
         } else {
-            sender.sendMessage(new TextComponent(BungeeConfig.NO_PERMISSION.color()
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.NO_PERMISSION.color()
                     .replace("%prefix%", BungeeConfig.PREFIX.color())));
             return;
         }
 
         PlayerCache.getToggled().remove(player.getUniqueId());
 
-        sender.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_TOGGLED_ON.color()
+        sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFFCHAT_TOGGLED_ON.color()
                 .replace("%prefix%", BungeeConfig.PREFIX.color())));
     }
 }

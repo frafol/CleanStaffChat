@@ -16,10 +16,10 @@ public class ReloadCommand extends Command {
     public void execute(CommandSender sender, String[] args) {
         if (sender.hasPermission(BungeeConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class))) {
             TextFile.reloadAll();
-            sender.sendMessage(new TextComponent(BungeeConfig.RELOADED.color()
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.RELOADED.color()
                     .replace("%prefix%", BungeeConfig.PREFIX.color())));
         } else {
-            sender.sendMessage(new TextComponent(BungeeConfig.NO_PERMISSION.color()
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.NO_PERMISSION.color()
                     .replace("%prefix%", BungeeConfig.PREFIX.color())));
         }
     }

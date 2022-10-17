@@ -29,7 +29,7 @@ public class JoinListener implements Listener {
                 && (BungeeConfig.UPDATE_CHECK.get(Boolean.class))) {
             new UpdateCheck(PLUGIN).getVersion(version -> {
                 if (!PLUGIN.getDescription().getVersion().equals(version)) {
-                    event.getPlayer().sendMessage(new TextComponent("[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz"));
+                    event.getPlayer().sendMessage(TextComponent.fromLegacyText("[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz"));
                     PLUGIN.getLogger().warning("§eThere is a new update available, download it on SpigotMC!");
                 }
             });
@@ -53,7 +53,7 @@ public class JoinListener implements Listener {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(new TextComponent(BungeeConfig.STAFF_JOIN_MESSAGE_FORMAT.color()
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFF_JOIN_MESSAGE_FORMAT.color()
                                         .replace("%prefix%", BungeeConfig.PREFIX.color())
                                         .replace("%displayname%", user_prefix + player.getName() + user_suffix)
                                         .replace("%userprefix%", user_prefix)
@@ -63,7 +63,7 @@ public class JoinListener implements Listener {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(new TextComponent(BungeeConfig.STAFF_JOIN_MESSAGE_FORMAT.color()
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFF_JOIN_MESSAGE_FORMAT.color()
                                         .replace("%prefix%", BungeeConfig.PREFIX.color())
                                         .replace("%user%", player.getName()))));
                     }
@@ -93,7 +93,7 @@ public class JoinListener implements Listener {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(new TextComponent(BungeeConfig.STAFF_QUIT_MESSAGE_FORMAT.color()
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFF_QUIT_MESSAGE_FORMAT.color()
                                         .replace("%prefix%", BungeeConfig.PREFIX.color())
                                         .replace("%displayname%", user_prefix + player.getName() + user_suffix)
                                         .replace("%userprefix%", user_prefix)
@@ -103,7 +103,7 @@ public class JoinListener implements Listener {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(new TextComponent(BungeeConfig.STAFF_QUIT_MESSAGE_FORMAT.color()
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFF_QUIT_MESSAGE_FORMAT.color()
                                         .replace("%prefix%", BungeeConfig.PREFIX.color())
                                         .replace("%user%", player.getName()))));
                     }

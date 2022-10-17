@@ -15,7 +15,7 @@ public class MuteCommand extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (!(BungeeConfig.STAFFCHAT_MUTE_MODULE.get(Boolean.class))) {
-            sender.sendMessage(new TextComponent(BungeeConfig.MODULE_DISABLED.color()
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.MODULE_DISABLED.color()
                     .replace("%prefix%", BungeeConfig.PREFIX.color())));
             return;
         }
@@ -23,15 +23,15 @@ public class MuteCommand extends Command {
         if (sender.hasPermission(BungeeConfig.STAFFCHAT_MUTE_PERMISSION.get(String.class))) {
             if (!PlayerCache.getMuted().contains("true")) {
                 PlayerCache.getMuted().add("true");
-                sender.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_MUTED.color()
+                sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFFCHAT_MUTED.color()
                         .replace("%prefix%", BungeeConfig.PREFIX.color())));
             } else {
                 PlayerCache.getMuted().remove("true");
-                sender.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_UNMUTED.color()
+                sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFFCHAT_UNMUTED.color()
                         .replace("%prefix%", BungeeConfig.PREFIX.color())));
             }
         } else {
-            sender.sendMessage(new TextComponent(BungeeConfig.NO_PERMISSION.color()
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.NO_PERMISSION.color()
                     .replace("%prefix%", BungeeConfig.PREFIX.color())));
         }
     }

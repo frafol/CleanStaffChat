@@ -30,14 +30,14 @@ public class ChatListener implements Listener {
             if (PlayerCache.getMuted().contains("true")) {
                 PlayerCache.getToggled_2().remove(((ProxiedPlayer) event.getSender()).getUniqueId());
                 event.setCancelled(true);
-                ((ProxiedPlayer)event.getSender()).sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_MUTED_ERROR.color()
+                ((ProxiedPlayer)event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFFCHAT_MUTED_ERROR.color()
                         .replace("%prefix%", BungeeConfig.PREFIX.color())));
                 return;
             }
 
             if (!event.getMessage().startsWith("/")) {
                 if (!(BungeeConfig.STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
-                    ((ProxiedPlayer)event.getSender()).sendMessage(new TextComponent(BungeeConfig.MODULE_DISABLED.color()
+                    ((ProxiedPlayer)event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeConfig.MODULE_DISABLED.color()
                             .replace("%prefix%", BungeeConfig.PREFIX.color())
                             .replace("&", "§")));
 
@@ -69,7 +69,7 @@ public class ChatListener implements Listener {
                                 message.contains("&o") ||
                                 message.contains("&r")) {
 
-                            ((ProxiedPlayer) event.getSender()).sendMessage(new TextComponent(BungeeConfig.COLOR_CODES.color()
+                            ((ProxiedPlayer) event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeConfig.COLOR_CODES.color()
                                     .replace("%prefix%", BungeeConfig.PREFIX.color())
                                     .replace("&", "§")));
 
@@ -92,7 +92,7 @@ public class ChatListener implements Listener {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_FORMAT.color()
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFFCHAT_FORMAT.color()
                                         .replace("%prefix%", BungeeConfig.PREFIX.color())
                                         .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
                                         .replace("%message%", message)
@@ -107,7 +107,7 @@ public class ChatListener implements Listener {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(new TextComponent(BungeeConfig.STAFFCHAT_FORMAT.color()
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFFCHAT_FORMAT.color()
                                         .replace("%prefix%", BungeeConfig.PREFIX.color())
                                         .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
                                         .replace("%message%", message)

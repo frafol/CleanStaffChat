@@ -48,7 +48,7 @@ messages:
   staffchat_toggled_off: "%prefix% &7The StaffChat is now &ainvisible&7."
 
   # Chat Formats (If you use LuckPerms you can use %displayname%, %userprefix% and %usersuffix%).
-  staffchat_format: "%prefix% &7(%server%) %userprefix% %user% &8» &7%message%"
+  staffchat_format: "%prefix% &7%userprefix% %user% &8» &7%message%" # You can use %server% on BungeeCord or Velocity.
   staff_join_message_format: "%prefix% &7[&a+&7] &f&d%user%"
   staff_quit_message_format: "%prefix% &7[&c-&7] &f&d%user%"
   staff_switch_message_format: "%prefix% &7%user% &e➜ &d%server%" # This won't work if you run your plugin on spigot.

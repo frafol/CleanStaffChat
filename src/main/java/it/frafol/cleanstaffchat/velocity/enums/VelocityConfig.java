@@ -4,7 +4,7 @@ import com.velocitypowered.api.command.CommandSource;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public enum VelocityConfig {
 
@@ -93,6 +93,7 @@ public enum VelocityConfig {
             return;
         }
 
-        commandSource.sendMessage(Component.text(ChatUtil.getFormattedString(this, placeholders)));
+        commandSource.sendMessage(LegacyComponentSerializer.legacy('§').deserialize(ChatUtil.getFormattedString(this, placeholders)));
+        
     }
 }

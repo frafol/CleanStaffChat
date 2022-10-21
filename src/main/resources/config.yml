@@ -1,0 +1,159 @@
+#   ___  __    ____    __    _  _    ___   ___
+#  / __)(  )  ( ___)  /__\  ( \( )  / __) / __)
+# ( (__  )(__  )__)  /(__)\  )  (   \__ \( (__
+#  \___)(____)(____)(__)(__)(_)\_)  (___/ \___)
+#
+# Configuration file.
+
+settings:
+
+  # By activating this option, the console will be able to send messages (not receive them) in staffchat.
+  console_staffchat: true
+  console_name: "Console"
+
+  reload_permission: "staffchat.reload"
+
+  use_staffchat: true
+  use_adminchat: true
+  use_donorchat: true
+
+  staffchat:
+
+    # Activating these options, staff members will receive a message when another staff member enters/leaves the server.
+    staff_join_message: true
+    staff_quit_message: true
+    staff_join_all_players: false # By activating it, the staff will receive a message every time any player enters the server.
+    staff_quit_all_players: false # By activating it, the staff will receive a message every time any player leaves the server.
+    staff_switch_all_players: false # By activating it, the staff will receive a message every time any player switch a server.
+    staff_disable_afk_on_move: true # On Velocity and BungeeCord, this works when a player changes server.
+
+    # You can customise permissions.
+    staffchat_use_permission: "staffchat.use"
+    staffchat_mute_permission: "staffchat.mute"
+    staffchat_toggle_permission: "staffchat.toggle"
+    staffchat_afk_permission: "staffchat.afk"
+
+  adminchat:
+
+    # You can customise permissions.
+    adminchat_use_permission: "adminchat.use"
+    adminchat_mute_permission: "adminchat.mute"
+    adminchat_toggle_permission: "adminchat.toggle"
+    adminchat_afk_permission: "adminchat.afk"
+
+  donorchat:
+
+    # Cooldown in seconds, to disable set it to 0.
+    cooldown: 30
+
+    # You can customise permissions.
+    donorchat_use_permission: "donorchat.use"
+    donorchat_mute_permission: "donorchat.mute"
+    donorchat_toggle_permission: "donorchat.toggle"
+    donorchat_afk_permission: "donorchat.afk"
+
+  # By activating this option, you will not be able to send messages with formatting codes (&c, &f etc.).
+  prevent_color_codes: false
+
+messages:
+
+  staffchat:
+    # General
+    prefix: "&5&lSTAFF&d&lCHAT &8&l•"
+    arguments: "%prefix% &7Use &d/sc <message>&7."
+
+    # StaffChat talk messages. (NOTE: 1.19+ clients does not support it on Velocity)
+    staffchat_talk_enabled: "%prefix% &7Now your messages will be sent in the &aStaffChat&7."
+    staffchat_talk_disabled: "%prefix% &7Now your messages will be sent in the &achat&7."
+
+    # StaffChat mute messages.
+    staffchat_muted: "%prefix% &7StaffChat has been &amuted&7."
+    staffchat_unmuted: "%prefix% &7StaffChat has been &aunmuted&7."
+
+    # StaffChat toggle messages.
+    staffchat_toggled_on: "%prefix% &7The StaffChat is now &avisible&7."
+    staffchat_toggled_off: "%prefix% &7The StaffChat is now &ainvisible&7."
+
+    # Chat Formats (If you use LuckPerms you can use %displayname%, %userprefix% and %usersuffix%).
+    staffchat_format: "%prefix% &7%userprefix% %user% &8» &7%message%" # You can use %server% on BungeeCord or Velocity.
+    staff_join_message_format: "%prefix% &7[&a+&7] &f&d%user%"
+    staff_quit_message_format: "%prefix% &7[&c-&7] &f&d%user%"
+    staff_switch_message_format: "%prefix% &7%user% &e➜ &d%server%" # This won't work if you run your plugin on spigot.
+    staff_afk_on_message_format: "%prefix% &7%user% is now &aAFK&7."
+    staff_afk_off_message_format: "%prefix% &7%user% is no longer &aAFK&7."
+
+  adminchat:
+    # General
+    prefix: "&5&lADMIN&d&lCHAT &8&l•"
+    arguments: "%prefix% &7Use &d/ac <message>&7."
+
+    # AdminChat talk messages. (NOTE: 1.19+ clients does not support it on Velocity)
+    adminchat_talk_enabled: "%prefix% &7Now your messages will be sent in the &aAdminChat&7."
+    adminchat_talk_disabled: "%prefix% &7Now your messages will be sent in the &achat&7."
+
+    # AdminChat mute messages.
+    adminchat_muted: "%prefix% &7AdminChat has been &amuted&7."
+    adminchat_unmuted: "%prefix% &7AdminChat has been &aunmuted&7."
+
+    # AdminChat toggle messages.
+    adminchat_toggled_on: "%prefix% &7The AdminChat is now &avisible&7."
+    adminchat_toggled_off: "%prefix% &7The AdminChat is now &ainvisible&7."
+
+    # Chat Formats (If you use LuckPerms you can use %displayname%, %userprefix% and %usersuffix%).
+    adminchat_format: "%prefix% &7%userprefix% %user% &8» &7%message%" # You can use %server% on BungeeCord or Velocity.
+
+  donorchat:
+    # General
+    prefix: "&5&lDONOR&d&lCHAT &8&l•"
+    arguments: "%prefix% &7Use &d/dc <message>&7."
+    cooldown: "%prefix% &7Please wait to be able to reuse this &dchat&7."
+
+    # DonorChat talk messages. (NOTE: 1.19+ clients does not support it on Velocity)
+    donorchat_talk_enabled: "%prefix% &7Now your messages will be sent in the &aDonorChat&7."
+    donorchat_talk_disabled: "%prefix% &7Now your messages will be sent in the &achat&7."
+
+    # DonorChat mute messages.
+    donorchat_muted: "%prefix% &7DonorChat has been &amuted&7."
+    donorchat_unmuted: "%prefix% &7DonorChat has been &aunmuted&7."
+
+    # DonorChat toggle messages.
+    donorchat_toggled_on: "%prefix% &7The DonorChat is now &avisible&7."
+    donorchat_toggled_off: "%prefix% &7The DonorChat is now &ainvisible&7."
+
+    # Chat Formats (If you use LuckPerms you can use %displayname%, %userprefix% and %usersuffix%).
+    donorchat_format: "%prefix% &7%userprefix% %user% &8» &7%message%" # You can use %server% on BungeeCord or Velocity.
+
+  # Errors and reload.
+  deny_color_codes: "%prefix% &cColor codes are not permitted."
+  no_permission: "%prefix% &cYou don't have the permission to do this."
+  console: "%prefix% &cYou must be a player to use that command."
+  chat_muted_error: "%prefix% &7Chat is actually &cmuted&7 by an operator!"
+  reloaded: "%prefix% &7The plugin has been &areloaded&7!"
+  module_disabled: "%prefix% &7This function is actually &cdisabled&7!"
+
+
+modules:
+
+  update_check: true
+  stats: true
+
+  staffchat_switch_module: true
+  staffchat_afk_module: true
+  staffchat_talk_module: true
+  staffchat_mute_module: true
+  staffchat_toggle_module: true
+
+  adminchat_switch_module: true
+  adminchat_afk_module: true
+  adminchat_talk_module: true
+  adminchat_mute_module: true
+  adminchat_toggle_module: true
+
+  donorchat_switch_module: true
+  donorchat_afk_module: true
+  donorchat_talk_module: true
+  donorchat_mute_module: true
+  donorchat_toggle_module: true
+
+
+# Enjoy.

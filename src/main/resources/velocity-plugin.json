@@ -1,0 +1,1 @@
+{"id":"cleanstaffchat","name":"CleanStaffChat","version":"${project.version}","url":"github.com/frafol","authors":["frafol"],"dependencies":[{"id":"luckperms","optional":true}],"main":"it.frafol.cleanstaffchat.velocity.CleanStaffChat"}

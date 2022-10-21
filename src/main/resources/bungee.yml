@@ -1,0 +1,6 @@
+name: CleanStaffChat
+version: ${project.version}
+main: it.frafol.cleanstaffchat.bungee.CleanStaffChat
+author: frafol
+softDepends:
+  - LuckPerms

@@ -39,7 +39,7 @@ public class StaffChatCommand extends Command {
 
                 if (!PlayerCache.getToggled_2().contains(player.getUniqueId())) {
                     if (!(BungeeConfig.STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
-                        sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.MODULE_DISABLED.color()
+                        sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.ARGUMENTS.color()
                                 .replace("%prefix%", BungeeConfig.PREFIX.color())));
                         return;
                     }

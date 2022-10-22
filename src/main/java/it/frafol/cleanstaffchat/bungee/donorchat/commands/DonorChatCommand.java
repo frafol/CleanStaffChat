@@ -50,7 +50,7 @@ public class DonorChatCommand extends Command {
 
                 if (!PlayerCache.getToggled_2_donor().contains(player.getUniqueId())) {
                     if (!(BungeeConfig.DONORCHAT_TALK_MODULE.get(Boolean.class))) {
-                        sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.MODULE_DISABLED.color()
+                        sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.DONORARGUMENTS.color()
                                 .replace("%prefix%", BungeeConfig.DONORPREFIX.color())));
                         return;
                     }

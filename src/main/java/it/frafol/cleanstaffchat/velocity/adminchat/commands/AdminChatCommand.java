@@ -58,7 +58,7 @@ public class AdminChatCommand implements SimpleCommand {
 
                 if (!(ADMINCHAT_TALK_MODULE.get(Boolean.class))) {
 
-                    MODULE_DISABLED.send(commandSource, new Placeholder("prefix", ADMINPREFIX.color()));
+                    ADMINARGUMENTS.send(commandSource, new Placeholder("prefix", ADMINPREFIX.color()));
 
                     return;
 

@@ -58,7 +58,7 @@ public class StaffChatCommand implements SimpleCommand {
 
                 if (!(STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
 
-                    MODULE_DISABLED.send(commandSource, new Placeholder("prefix", PREFIX.color()));
+                    ARGUMENTS.send(commandSource, new Placeholder("prefix", PREFIX.color()));
 
                     return;
 

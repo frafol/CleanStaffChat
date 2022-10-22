@@ -54,7 +54,7 @@ public class DonorChatCommand implements CommandExecutor {
 
                     if (!(SpigotConfig.DONORCHAT_TALK_MODULE.get(Boolean.class))) {
 
-                        sender.sendMessage((SpigotConfig.MODULE_DISABLED.color()
+                        sender.sendMessage((SpigotConfig.DONORARGUMENTS.color()
                                 .replace("%prefix%", SpigotConfig.DONORPREFIX.color())));
 
                         return false;

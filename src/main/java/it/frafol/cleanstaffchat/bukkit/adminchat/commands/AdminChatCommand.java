@@ -37,7 +37,7 @@ public class AdminChatCommand implements CommandExecutor {
 
             if (!(sender instanceof Player)) {
 
-                sender.sendMessage((SpigotConfig.ARGUMENTS.color()
+                sender.sendMessage((SpigotConfig.ADMINARGUMENTS.color()
                         .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
 
                 return false;
@@ -52,7 +52,7 @@ public class AdminChatCommand implements CommandExecutor {
 
                     if (!(SpigotConfig.ADMINCHAT_TALK_MODULE.get(Boolean.class))) {
 
-                        sender.sendMessage((SpigotConfig.MODULE_DISABLED.color()
+                        sender.sendMessage((SpigotConfig.ADMINARGUMENTS.color()
                                 .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
 
                         return false;

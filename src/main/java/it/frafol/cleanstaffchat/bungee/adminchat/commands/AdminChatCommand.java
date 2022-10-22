@@ -39,7 +39,7 @@ public class AdminChatCommand extends Command {
 
                 if (!PlayerCache.getToggled_2_admin().contains(player.getUniqueId())) {
                     if (!(BungeeConfig.ADMINCHAT_TALK_MODULE.get(Boolean.class))) {
-                        sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.MODULE_DISABLED.color()
+                        sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.ADMINARGUMENTS.color()
                                 .replace("%prefix%", BungeeConfig.ADMINPREFIX.color())));
                         return;
                     }

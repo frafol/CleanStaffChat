@@ -54,7 +54,7 @@ public class StaffChatCommand implements CommandExecutor {
 
                     if (!(SpigotConfig.STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
 
-                        sender.sendMessage((SpigotConfig.MODULE_DISABLED.color()
+                        sender.sendMessage((SpigotConfig.ARGUMENTS.color()
                                 .replace("%prefix%", SpigotConfig.PREFIX.color())));
 
                         return false;

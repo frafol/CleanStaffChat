@@ -59,7 +59,7 @@ public class DonorChatCommand implements SimpleCommand {
 
                 if (!(DONORCHAT_TALK_MODULE.get(Boolean.class))) {
 
-                    MODULE_DISABLED.send(commandSource, new Placeholder("prefix", DONORPREFIX.color()));
+                    DONORARGUMENTS.send(commandSource, new Placeholder("prefix", DONORPREFIX.color()));
 
                     return;
 

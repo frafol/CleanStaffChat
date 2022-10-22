@@ -38,7 +38,7 @@ public class DonorChatCommand implements SimpleCommand {
 
             if (!(commandSource instanceof Player)) {
 
-                ARGUMENTS.send(commandSource, new Placeholder("prefix", DONORPREFIX.color()));
+                DONORARGUMENTS.send(commandSource, new Placeholder("prefix", DONORPREFIX.color()));
 
                 return;
 
@@ -51,7 +51,7 @@ public class DonorChatCommand implements SimpleCommand {
                 if (((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19
                         || ((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19_1) {
 
-                    ARGUMENTS.send(commandSource, new Placeholder("prefix", DONORPREFIX.color()));
+                    DONORARGUMENTS.send(commandSource, new Placeholder("prefix", DONORPREFIX.color()));
 
                     return;
 
@@ -79,7 +79,7 @@ public class DonorChatCommand implements SimpleCommand {
 
                     } else {
 
-                        ARGUMENTS.send(commandSource,
+                        DONORARGUMENTS.send(commandSource,
                                 new Placeholder("prefix", DONORPREFIX.color()));
 
                     }

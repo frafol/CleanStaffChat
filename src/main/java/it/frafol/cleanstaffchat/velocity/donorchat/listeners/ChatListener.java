@@ -11,6 +11,8 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 
+import java.util.concurrent.TimeUnit;
+
 import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.*;
 
 public class ChatListener {
@@ -27,7 +29,16 @@ public class ChatListener {
         final String message = event.getMessage();
         final String sender = event.getPlayer().getUsername();
 
-        if (PlayerCache.getToggled_2().contains(event.getPlayer().getUniqueId())) {
+        if (PlayerCache.getToggled_2_donor().contains(event.getPlayer().getUniqueId())) {
+
+            if (PlayerCache.getCooldown().contains(event.getPlayer().getUniqueId())) {
+
+                DONORCHAT_COOLDOWN_MESSAGE.send(event.getPlayer(), new Placeholder("prefix", DONORPREFIX.color()));
+                event.setResult(PlayerChatEvent.ChatResult.denied());
+
+                return;
+
+            }
 
             if (event.getPlayer().hasPermission(DONORCHAT_USE_PERMISSION.get(String.class))) {
 
@@ -41,7 +52,7 @@ public class ChatListener {
 
                 if (!event.getMessage().startsWith("/")) {
 
-                    if (!PlayerCache.getMuted().contains("true")) {
+                    if (!PlayerCache.getMuted_donor().contains("true")) {
 
                         if (PREVENT_COLOR_CODES.get(Boolean.class)) {
                             if (message.contains("&0") ||
@@ -80,6 +91,13 @@ public class ChatListener {
 
                         }
 
+                        PlayerCache.getCooldown().add(event.getPlayer().getUniqueId());
+
+                        PLUGIN.getServer().getScheduler()
+                                .buildTask(PLUGIN, scheduledTask -> PlayerCache.getCooldown().remove(event.getPlayer().getUniqueId()))
+                                .delay(DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS)
+                                .schedule();
+
                         if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
                             LuckPerms api = LuckPermsProvider.get();
@@ -94,7 +112,7 @@ public class ChatListener {
 
                             CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                             (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
-                                                    && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                                    && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
                                     .forEach(players -> DONORCHAT_FORMAT.send(players,
                                             new Placeholder("user", sender),
                                             new Placeholder("message", message),
@@ -108,7 +126,7 @@ public class ChatListener {
 
                             CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                             (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
-                                                    && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                                    && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
                                     .forEach(players -> DONORCHAT_FORMAT.send(players,
                                             new Placeholder("user", sender),
                                             new Placeholder("message", message),
@@ -130,7 +148,7 @@ public class ChatListener {
 
             } else {
 
-                PlayerCache.getToggled_2().remove(event.getPlayer().getUniqueId());
+                PlayerCache.getToggled_2_donor().remove(event.getPlayer().getUniqueId());
 
             }
         }

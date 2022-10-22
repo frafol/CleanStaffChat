@@ -23,27 +23,27 @@ public class MuteCommand implements CommandExecutor {
                 || command.getName().equalsIgnoreCase("adminchatmute")
                 || command.getName().equalsIgnoreCase("adminmute")) {
 
-            if (!(SpigotConfig.STAFFCHAT_MUTE_MODULE.get(Boolean.class))) {
+            if (!(SpigotConfig.ADMINCHAT_MUTE_MODULE.get(Boolean.class))) {
 
                 sender.sendMessage((SpigotConfig.MODULE_DISABLED.color()
                         .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
 
             }
 
-            if (sender.hasPermission(SpigotConfig.STAFFCHAT_MUTE_PERMISSION.get(String.class))) {
+            if (sender.hasPermission(SpigotConfig.ADMINCHAT_MUTE_PERMISSION.get(String.class))) {
 
                 if (!PlayerCache.getMuted().contains("true")) {
 
                     PlayerCache.getMuted().add("true");
 
-                    sender.sendMessage((SpigotConfig.STAFFCHAT_MUTED.color()
+                    sender.sendMessage((SpigotConfig.ADMINCHAT_MUTED.color()
                             .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
 
                 } else {
 
                     PlayerCache.getMuted().remove("true");
 
-                    sender.sendMessage((SpigotConfig.STAFFCHAT_UNMUTED.color()
+                    sender.sendMessage((SpigotConfig.ADMINCHAT_UNMUTED.color()
                             .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
                 }
 

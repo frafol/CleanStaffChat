@@ -19,7 +19,7 @@ public class ToggleCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, String s, String[] strings) {
-        if (!(SpigotConfig.STAFFCHAT_TOGGLE_MODULE.get(Boolean.class))) {
+        if (!(SpigotConfig.ADMINCHAT_TOGGLE_MODULE.get(Boolean.class))) {
             sender.sendMessage((SpigotConfig.MODULE_DISABLED.color()
                     .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
             return false;
@@ -33,10 +33,10 @@ public class ToggleCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        if (player.hasPermission(SpigotConfig.STAFFCHAT_TOGGLE_PERMISSION.get(String.class))) {
+        if (player.hasPermission(SpigotConfig.ADMINCHAT_TOGGLE_PERMISSION.get(String.class))) {
             if (!PlayerCache.getToggled_admin().contains(player.getUniqueId())) {
                 PlayerCache.getToggled_admin().add(player.getUniqueId());
-                sender.sendMessage((SpigotConfig.STAFFCHAT_TOGGLED_OFF.color()
+                sender.sendMessage((SpigotConfig.ADMINCHAT_TOGGLED_OFF.color()
                         .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
                 return false;
             }
@@ -48,7 +48,7 @@ public class ToggleCommand implements CommandExecutor {
 
         PlayerCache.getToggled_admin().remove(player.getUniqueId());
 
-        sender.sendMessage((SpigotConfig.STAFFCHAT_TOGGLED_ON.color()
+        sender.sendMessage((SpigotConfig.ADMINCHAT_TOGGLED_ON.color()
                 .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
         return false;
     }

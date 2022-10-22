@@ -7,6 +7,8 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import it.frafol.cleanstaffchat.velocity.adminchat.commands.AdminChatCommand;
+import it.frafol.cleanstaffchat.velocity.donorchat.commands.DonorChatCommand;
 import it.frafol.cleanstaffchat.velocity.staffchat.commands.*;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.ChatListener;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.JoinListener;
@@ -64,49 +66,96 @@ public class CleanStaffChat {
         configTextFile = new TextFile(path, "config.yml");
         getLogger().info("§7Configurations loaded §asuccessfully§7!");
 
-        server.getCommandManager().register(server.getCommandManager()
-                .metaBuilder("sc")
-                .aliases("staffchat")
-                .aliases("cleansc")
-                .aliases("staff")
-                .aliases("cleanstaffchat")
-                .build(), new StaffChatCommand(this));
-        server.getCommandManager().register(server.getCommandManager()
-                .metaBuilder("scmute")
-                .aliases("staffchatmute")
-                .aliases("cleanscmute")
-                .aliases("staffmute")
-                .aliases("cleanstaffchatmute")
-                .build(), new MuteCommand(this));
-        server.getCommandManager().register(server.getCommandManager()
-                .metaBuilder("screload")
-                .aliases("staffchatreload")
-                .aliases("cleanscreload")
-                .aliases("staffreload")
-                .aliases("cleanstaffchatreload")
-                .build(), new ReloadCommand(this));
-        server.getCommandManager().register(server.getCommandManager()
-                .metaBuilder("sctoggle")
-                .aliases("staffchattoggle")
-                .aliases("staffchatoggle")
-                .aliases("cleansctoggle")
-                .aliases("stafftoggle")
-                .aliases("cleanstaffchattoggle")
-                .build(), new ToggleCommand(this));
-        server.getCommandManager().register(server.getCommandManager()
-                .metaBuilder("scafk")
-                .aliases("staffchatafk")
-                .aliases("staffafk")
-                .aliases("cleanscafk")
-                .aliases("cleanstaffchatafk")
-                .build(), new AFKCommand(this));
-        getLogger().info("§7Commands registered §asuccessfully§7!");
+        if (VelocityConfig.STAFFCHAT.get(Boolean.class)) {
 
-        server.getEventManager().register(this, new JoinListener(this));
-        server.getEventManager().register(this, new ServerListener(this));
-        server.getEventManager().register(this, new ChatListener(this));
-        getLogger().info("§7Listeners registered §asuccessfully§7!");
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder("sc")
+                    .aliases("staffchat")
+                    .aliases("cleansc")
+                    .aliases("staff")
+                    .aliases("cleanstaffchat")
+                    .build(), new StaffChatCommand(this));
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder("scmute")
+                    .aliases("staffchatmute")
+                    .aliases("cleanscmute")
+                    .aliases("staffmute")
+                    .aliases("cleanstaffchatmute")
+                    .build(), new MuteCommand(this));
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder("screload")
+                    .aliases("staffchatreload")
+                    .aliases("cleanscreload")
+                    .aliases("staffreload")
+                    .aliases("cleanstaffchatreload")
+                    .build(), new ReloadCommand(this));
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder("sctoggle")
+                    .aliases("staffchattoggle")
+                    .aliases("staffchatoggle")
+                    .aliases("cleansctoggle")
+                    .aliases("stafftoggle")
+                    .aliases("cleanstaffchattoggle")
+                    .build(), new ToggleCommand(this));
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder("scafk")
+                    .aliases("staffchatafk")
+                    .aliases("staffafk")
+                    .aliases("cleanscafk")
+                    .aliases("cleanstaffchatafk")
+                    .build(), new AFKCommand(this));
 
+            server.getEventManager().register(this, new JoinListener(this));
+            server.getEventManager().register(this, new ServerListener(this));
+            server.getEventManager().register(this, new ChatListener(this));
+
+        }
+
+        if (VelocityConfig.DONORCHAT.get(Boolean.class)) {
+
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder("dc")
+                    .aliases("donorchat")
+                    .aliases("donor")
+                    .build(), new DonorChatCommand(this));
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder("dcmute")
+                    .aliases("donorchatmute")
+                    .aliases("donormute")
+                    .build(), new it.frafol.cleanstaffchat.velocity.donorchat.commands.MuteCommand(this));
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder("dctoggle")
+                    .aliases("donorchattoggle")
+                    .aliases("donorchatoggle")
+                    .aliases("donortoggle")
+                    .build(), new it.frafol.cleanstaffchat.velocity.donorchat.commands.ToggleCommand(this));
+
+            server.getEventManager().register(this, new it.frafol.cleanstaffchat.velocity.donorchat.listeners.ChatListener(this));
+
+        }
+
+        if (VelocityConfig.ADMINCHAT.get(Boolean.class)) {
+
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder("ac")
+                    .aliases("adminchat")
+                    .aliases("admin")
+                    .build(), new AdminChatCommand(this));
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder("acmute")
+                    .aliases("adminchatmute")
+                    .aliases("adminmute")
+                    .build(), new it.frafol.cleanstaffchat.velocity.adminchat.commands.MuteCommand(this));
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder("actoggle")
+                    .aliases("adminchattoggle")
+                    .aliases("adminchatoggle")
+                    .aliases("admintoggle")
+                    .build(), new it.frafol.cleanstaffchat.velocity.adminchat.commands.ToggleCommand(this));
+
+            server.getEventManager().register(this, new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
+
+        }
 
         if (VelocityConfig.STATS.get(Boolean.class)) {
 

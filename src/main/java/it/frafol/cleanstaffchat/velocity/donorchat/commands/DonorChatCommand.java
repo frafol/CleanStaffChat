@@ -15,6 +15,7 @@ import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.*;
 
@@ -65,11 +66,11 @@ public class DonorChatCommand implements SimpleCommand {
                 }
 
 
-                if (!PlayerCache.getToggled_2().contains(player.getUniqueId())) {
+                if (!PlayerCache.getToggled_2_donor().contains(player.getUniqueId())) {
 
-                    if (!PlayerCache.getMuted().contains("true")) {
+                    if (!PlayerCache.getMuted_donor().contains("true")) {
 
-                        PlayerCache.getToggled_2().add(player.getUniqueId());
+                        PlayerCache.getToggled_2_donor().add(player.getUniqueId());
 
                         DONORCHAT_TALK_ENABLED.send(commandSource,
                                 new Placeholder("prefix", DONORPREFIX.color()));
@@ -83,9 +84,9 @@ public class DonorChatCommand implements SimpleCommand {
 
                     }
 
-                } else if (PlayerCache.getToggled_2().contains(player.getUniqueId())) {
+                } else if (PlayerCache.getToggled_2_donor().contains(player.getUniqueId())) {
 
-                    PlayerCache.getToggled_2().remove(player.getUniqueId());
+                    PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
 
                     DONORCHAT_TALK_DISABLED.send(commandSource,
                             new Placeholder("prefix", DONORPREFIX.color()));
@@ -108,9 +109,18 @@ public class DonorChatCommand implements SimpleCommand {
         final String sender = !(commandSource instanceof Player) ? CONSOLE_PREFIX.get(String.class) :
         ((Player) commandSource).getUsername();
 
+        if (commandSource instanceof Player && PlayerCache.getCooldown().contains(((Player) commandSource).getUniqueId())) {
+
+            DONORCHAT_COOLDOWN_MESSAGE.send(commandSource,
+                    new Placeholder("prefix", DONORPREFIX.color()));
+
+            return;
+
+        }
+
         if (commandSource.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))) {
 
-            if (!PlayerCache.getMuted().contains("true")) {
+            if (!PlayerCache.getMuted_donor().contains("true")) {
 
                 if (commandSource instanceof Player) {
 
@@ -152,6 +162,13 @@ public class DonorChatCommand implements SimpleCommand {
 
                     }
 
+                    PlayerCache.getCooldown().add(((Player) commandSource).getUniqueId());
+
+                    PLUGIN.getServer().getScheduler()
+                            .buildTask(PLUGIN, scheduledTask -> PlayerCache.getCooldown().remove(((Player) commandSource).getUniqueId()))
+                            .delay(DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS)
+                            .schedule();
+
                     if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
                         final LuckPerms api = LuckPermsProvider.get();
@@ -166,7 +183,7 @@ public class DonorChatCommand implements SimpleCommand {
 
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
-                                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                                && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
                                 .forEach(players -> DONORCHAT_FORMAT.send(players,
                                         new Placeholder("user", sender),
                                         new Placeholder("message", message),
@@ -180,7 +197,7 @@ public class DonorChatCommand implements SimpleCommand {
 
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
-                                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                                && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
                                 .forEach(players -> DONORCHAT_FORMAT.send(players,
                                         new Placeholder("user", sender),
                                         new Placeholder("message", message),
@@ -194,11 +211,11 @@ public class DonorChatCommand implements SimpleCommand {
 
                 } else if (CONSOLE_CAN_TALK.get(Boolean.class)) {
 
-                    if (!PlayerCache.getMuted().contains("true")) {
+                    if (!PlayerCache.getMuted_donor().contains("true")) {
 
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
-                                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                                && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
                                 .forEach(players -> DONORCHAT_FORMAT.send(players,
                                         new Placeholder("user", sender),
                                         new Placeholder("message", message),

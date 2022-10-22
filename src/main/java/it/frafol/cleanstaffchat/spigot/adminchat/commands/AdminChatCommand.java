@@ -46,11 +46,11 @@ public class AdminChatCommand implements CommandExecutor {
 
             Player player = (Player) sender;
 
-            if (sender.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
+            if (sender.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))) {
 
                 if (!PlayerCache.getToggled_2_admin().contains(player.getUniqueId())) {
 
-                    if (!(SpigotConfig.STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
+                    if (!(SpigotConfig.ADMINCHAT_TALK_MODULE.get(Boolean.class))) {
 
                         sender.sendMessage((SpigotConfig.MODULE_DISABLED.color()
                                 .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
@@ -63,12 +63,12 @@ public class AdminChatCommand implements CommandExecutor {
 
                         PlayerCache.getToggled_2_admin().add(player.getUniqueId());
 
-                        sender.sendMessage((SpigotConfig.STAFFCHAT_TALK_ENABLED.color()
+                        sender.sendMessage((SpigotConfig.ADMINCHAT_TALK_ENABLED.color()
                                 .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
 
                     } else {
 
-                        sender.sendMessage((SpigotConfig.ARGUMENTS.color()
+                        sender.sendMessage((SpigotConfig.ADMINARGUMENTS.color()
                                 .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
 
                         return false;
@@ -81,7 +81,7 @@ public class AdminChatCommand implements CommandExecutor {
 
                     PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
 
-                    sender.sendMessage((SpigotConfig.STAFFCHAT_TALK_DISABLED.color()
+                    sender.sendMessage((SpigotConfig.ADMINCHAT_TALK_DISABLED.color()
                             .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
 
                     return false;
@@ -105,7 +105,7 @@ public class AdminChatCommand implements CommandExecutor {
         String commandsender = !(sender instanceof Player) ? SpigotConfig.CONSOLE_PREFIX.get(String.class) :
                 sender.getName();
 
-        if (sender.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
+        if (sender.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))) {
 
             if (!PlayerCache.getMuted().contains("true")) {
 
@@ -156,9 +156,9 @@ public class AdminChatCommand implements CommandExecutor {
                         final String user_suffix = suffix == null ? "" : suffix;
 
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
-                                        (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                        (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(SpigotConfig.STAFFCHAT_FORMAT.color()
+                                .forEach(players -> players.sendMessage(SpigotConfig.ADMINCHAT_FORMAT.color()
                                         .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%displayname%", user_prefix + commandsender + user_suffix)
@@ -171,9 +171,9 @@ public class AdminChatCommand implements CommandExecutor {
                     } else {
 
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
-                                        (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                        (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(SpigotConfig.STAFFCHAT_FORMAT.color()
+                                .forEach(players -> players.sendMessage(SpigotConfig.ADMINCHAT_FORMAT.color()
                                         .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%userprefix%", "")
@@ -190,9 +190,9 @@ public class AdminChatCommand implements CommandExecutor {
                     if (!PlayerCache.getMuted().contains("true")) {
 
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
-                                        (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                        (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage((SpigotConfig.STAFFCHAT_FORMAT.color()
+                                .forEach(players -> players.sendMessage((SpigotConfig.ADMINCHAT_FORMAT.color()
                                         .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%userprefix%", "")
@@ -203,14 +203,14 @@ public class AdminChatCommand implements CommandExecutor {
 
                     } else {
 
-                        sender.sendMessage((SpigotConfig.STAFFCHAT_MUTED_ERROR.color()
+                        sender.sendMessage((SpigotConfig.ADMINCHAT_MUTED_ERROR.color()
                                 .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
 
                         return false;
 
                     }
 
-                    sender.sendMessage((SpigotConfig.STAFFCHAT_FORMAT.color()
+                    sender.sendMessage((SpigotConfig.ADMINCHAT_FORMAT.color()
                             .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())
                             .replace("%user%", commandsender)
                             .replace("%displayname%", commandsender)
@@ -232,7 +232,7 @@ public class AdminChatCommand implements CommandExecutor {
 
             } else {
 
-                sender.sendMessage((SpigotConfig.STAFFCHAT_MUTED_ERROR.color()
+                sender.sendMessage((SpigotConfig.ADMINCHAT_MUTED_ERROR.color()
                         .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
 
             }

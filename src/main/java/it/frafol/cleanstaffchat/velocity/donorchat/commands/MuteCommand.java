@@ -27,12 +27,12 @@ public class MuteCommand implements SimpleCommand {
         }
 
         if (commandSource.hasPermission(VelocityConfig.DONORCHAT_MUTE_PERMISSION.get(String.class))) {
-            if (!PlayerCache.getMuted().contains("true")) {
-                PlayerCache.getMuted().add("true");
+            if (!PlayerCache.getMuted_donor().contains("true")) {
+                PlayerCache.getMuted_donor().add("true");
                 DONORCHAT_MUTED.send(commandSource,
                         new Placeholder("prefix", DONORPREFIX.color()));
             } else {
-                PlayerCache.getMuted().remove("true");
+                PlayerCache.getMuted_donor().remove("true");
                 DONORCHAT_UNMUTED.send(commandSource,
                         new Placeholder("prefix", DONORPREFIX.color()));
             }

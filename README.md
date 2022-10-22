@@ -27,15 +27,20 @@ Clean StaffChat is a basic StaffChat plugin, compatible with BungeeCord, Spigot 
 » /sc (message) • Send messages in the StaffChat;
 » /sctoggle • Makes StaffChat invisible, just for you;
 » /scmute • Deactivate StaffChat globally;
+» /scafk • Toggle AFK.
+
+» /ac (message) • Send messages in the AdminChat;
+» /actoggle • Makes AdminChat invisible, just for you;
+» /acmute • Deactivate AdminChat globally;
+
+» /dc (message) • Send messages in the DonorChat;
+» /dctoggle • Makes DonorChat invisible, just for you;
+» /dcmute • Deactivate DonorChat globally;
+
 » /screload • Reloads the plugin.
 ```
 
 ## Permissions
 ```
-» /sc (message) • staffchat.use
-» /sctoggle • staffchat.toggle
-» /scmute • staffchat.mute
-» /screload • staffchat.reload
-
 (Permissions are configurable in the config.yml)
 ```

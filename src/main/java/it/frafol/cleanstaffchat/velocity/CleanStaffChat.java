@@ -66,6 +66,14 @@ public class CleanStaffChat {
         configTextFile = new TextFile(path, "config.yml");
         getLogger().info("§7Configurations loaded §asuccessfully§7!");
 
+        server.getCommandManager().register(server.getCommandManager()
+                .metaBuilder("screload")
+                .aliases("staffchatreload")
+                .aliases("cleanscreload")
+                .aliases("staffreload")
+                .aliases("cleanstaffchatreload")
+                .build(), new ReloadCommand(this));
+
         if (VelocityConfig.STAFFCHAT.get(Boolean.class)) {
 
             server.getCommandManager().register(server.getCommandManager()
@@ -82,13 +90,6 @@ public class CleanStaffChat {
                     .aliases("staffmute")
                     .aliases("cleanstaffchatmute")
                     .build(), new MuteCommand(this));
-            server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder("screload")
-                    .aliases("staffchatreload")
-                    .aliases("cleanscreload")
-                    .aliases("staffreload")
-                    .aliases("cleanstaffchatreload")
-                    .build(), new ReloadCommand(this));
             server.getCommandManager().register(server.getCommandManager()
                     .metaBuilder("sctoggle")
                     .aliases("staffchattoggle")

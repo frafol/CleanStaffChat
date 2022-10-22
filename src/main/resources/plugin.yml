@@ -1,6 +1,6 @@
 name: CleanStaffChat
 version: '${project.version}'
-main: it.frafol.cleanstaffchat.spigot.CleanStaffChat
+main: it.frafol.cleanstaffchat.bukkit.CleanStaffChat
 authors: [ frafol ]
 description: Best StaffChat plugin.
 softdepend:

@@ -1,8 +1,7 @@
-package it.frafol.cleanstaffchat.bukkit.staffchat.commands;
+package it.frafol.cleanstaffchat.bukkit.staffchat.listeners;
 
-import com.Zrips.CMI.CMI;
-import com.Zrips.CMI.Containers.CMIUser;
-import com.earth2me.essentials.Essentials;
+import com.Zrips.CMI.events.CMIAfkEnterEvent;
+import com.Zrips.CMI.events.CMIAfkKickEvent;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
@@ -10,114 +9,48 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
-public class AFKCommand implements CommandExecutor {
+public class CMIListener implements Listener {
 
     public final CleanStaffChat PLUGIN;
 
-    public AFKCommand(CleanStaffChat plugin) {
+    public CMIListener(CleanStaffChat plugin) {
         this.PLUGIN = plugin;
     }
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] strings) {
+    @EventHandler
+    public void onPlayerNoAFK(CMIAfkKickEvent event) {
 
-        if (!(command.getName().equalsIgnoreCase("scafk")
-                || command.getName().equalsIgnoreCase("staffchatafk")
-                || command.getName().equalsIgnoreCase("cleanscafk")
-                || command.getName().equalsIgnoreCase("cleanstaffchatafk")
-                || command.getName().equalsIgnoreCase("staffafk"))) {
+        final Player player = event.getPlayer();
 
-            return false;
+        if (!PlayerCache.getAfk().contains(player.getUniqueId())) {
+
+            return;
 
         }
 
-        if (!(sender instanceof Player)) {
+        if (!player.hasPermission(SpigotConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))) {
 
-            sender.sendMessage((SpigotConfig.PLAYER_ONLY.color()
-                    .replace("%prefix%", SpigotConfig.PREFIX.color())));
-
-            return false;
+            return;
 
         }
 
-        if (!SpigotConfig.STAFFCHAT_AFK_MODULE.get(Boolean.class)) {
+        if (!SpigotConfig.STAFFCHAT_NO_AFK_ONCHANGE_SERVER.get(Boolean.class)) {
 
-            sender.sendMessage((SpigotConfig.MODULE_DISABLED.color()
-                    .replace("%prefix%", SpigotConfig.PREFIX.color())));
-
-            return false;
+            return;
 
         }
 
-        if (!sender.hasPermission(SpigotConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))) {
-
-            sender.sendMessage((SpigotConfig.NO_PERMISSION.color()
-                    .replace("%prefix%", SpigotConfig.PREFIX.color())));
-
-            return false;
-
-        }
-
-        if (!PlayerCache.getAfk().contains(((Player) sender).getUniqueId())) {
-            if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
-
-                final LuckPerms api = LuckPermsProvider.get();
-
-                final User user = api.getUserManager().getUser(((Player) sender).getUniqueId());
-
-                assert user != null;
-                final String prefix = user.getCachedData().getMetaData().getPrefix();
-                final String suffix = user.getCachedData().getMetaData().getSuffix();
-                final String user_prefix = prefix == null ? "" : prefix;
-                final String user_suffix = suffix == null ? "" : suffix;
-
-                CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
-                                (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotConfig.STAFFCHAT_AFK_ON.color()
-                                .replace("%prefix%", SpigotConfig.PREFIX.color())
-                                .replace("%user%", sender.getName())
-                                .replace("%displayname%", user_prefix + sender.getName() + user_suffix)
-                                .replace("%userprefix%", user_prefix)
-                                .replace("%server%", "")
-                                .replace("%usersuffix%", user_suffix)));
-
-            } else {
-
-                CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
-                                (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotConfig.STAFFCHAT_AFK_ON.color()
-                                .replace("%prefix%", SpigotConfig.PREFIX.color())
-                                .replace("%user%", sender.getName())
-                                .replace("%userprefix%", "")
-                                .replace("%server%", "")
-                                .replace("%usersuffix%", "")
-                                .replace("%displayname%", sender.getName())));
-
-            }
-
-            PlayerCache.getAfk().add(((Player) sender).getUniqueId());
-
-            if (Bukkit.getServer().getPluginManager().getPlugin("Essentials") != null) {
-
-                
-
-            }
-
-        } else {
+        if (PlayerCache.getAfk().contains(player.getUniqueId())) {
 
             if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
 
                 final LuckPerms api = LuckPermsProvider.get();
 
-                final User user = api.getUserManager().getUser(((Player) sender).getUniqueId());
+                final User user = api.getUserManager().getUser(player.getUniqueId());
 
                 assert user != null;
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
@@ -130,10 +63,9 @@ public class AFKCommand implements CommandExecutor {
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                         .forEach(players -> players.sendMessage(SpigotConfig.STAFFCHAT_AFK_OFF.color()
                                 .replace("%prefix%", SpigotConfig.PREFIX.color())
-                                .replace("%user%", sender.getName())
-                                .replace("%displayname%", user_prefix + sender.getName() + user_suffix)
+                                .replace("%user%", player.getName())
+                                .replace("%displayname%", user_prefix + player.getName() + user_suffix)
                                 .replace("%userprefix%", user_prefix)
-                                .replace("%server%", "")
                                 .replace("%usersuffix%", user_suffix)));
 
             } else {
@@ -143,19 +75,81 @@ public class AFKCommand implements CommandExecutor {
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                         .forEach(players -> players.sendMessage(SpigotConfig.STAFFCHAT_AFK_OFF.color()
                                 .replace("%prefix%", SpigotConfig.PREFIX.color())
-                                .replace("%user%", sender.getName())
+                                .replace("%user%", player.getName())
                                 .replace("%userprefix%", "")
-                                .replace("%server%", "")
                                 .replace("%usersuffix%", "")
-                                .replace("%displayname%", sender.getName())));
+                                .replace("%displayname%", player.getName())));
 
             }
 
-            PlayerCache.getAfk().remove(((Player) sender).getUniqueId());
+            PlayerCache.getAfk().remove(player.getUniqueId());
+
+        }
+    }
+
+    @EventHandler
+    public void onPlayerInAFK(CMIAfkEnterEvent event) {
+
+        final Player player = event.getPlayer();
+
+        if (!PlayerCache.getAfk().contains(player.getUniqueId())) {
+
+            return;
 
         }
 
-        return false;
+        if (!player.hasPermission(SpigotConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))) {
 
+            return;
+
+        }
+
+        if (!SpigotConfig.STAFFCHAT_NO_AFK_ONCHANGE_SERVER.get(Boolean.class)) {
+
+            return;
+
+        }
+
+        if (PlayerCache.getAfk().contains(player.getUniqueId())) {
+
+            if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
+
+                final LuckPerms api = LuckPermsProvider.get();
+
+                final User user = api.getUserManager().getUser(player.getUniqueId());
+
+                assert user != null;
+                final String prefix = user.getCachedData().getMetaData().getPrefix();
+                final String suffix = user.getCachedData().getMetaData().getSuffix();
+                final String user_prefix = prefix == null ? "" : prefix;
+                final String user_suffix = suffix == null ? "" : suffix;
+
+                CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                                (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                        && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                        .forEach(players -> players.sendMessage(SpigotConfig.STAFFCHAT_AFK_ON.color()
+                                .replace("%prefix%", SpigotConfig.PREFIX.color())
+                                .replace("%user%", player.getName())
+                                .replace("%displayname%", user_prefix + player.getName() + user_suffix)
+                                .replace("%userprefix%", user_prefix)
+                                .replace("%usersuffix%", user_suffix)));
+
+            } else {
+
+                CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                                (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                        && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                        .forEach(players -> players.sendMessage(SpigotConfig.STAFFCHAT_AFK_ON.color()
+                                .replace("%prefix%", SpigotConfig.PREFIX.color())
+                                .replace("%user%", player.getName())
+                                .replace("%userprefix%", "")
+                                .replace("%usersuffix%", "")
+                                .replace("%displayname%", player.getName())));
+
+            }
+
+            PlayerCache.getAfk().add(player.getUniqueId());
+
+        }
     }
 }

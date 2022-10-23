@@ -89,7 +89,7 @@ public enum SpigotConfig {
     CONSOLE_CAN_TALK("settings.console_staffchat"),
     STAFFCHAT_TOGGLE_PERMISSION("settings.staffchat.staffchat_toggle_permission"),
     ADMINCHAT_TOGGLE_PERMISSION("settings.adminchat.adminchat_toggle_permission"),
-    DONORCHAT_TOGGLE_PERMISSION("settings.donorchat.adminchat_toggle_permission"),
+    DONORCHAT_TOGGLE_PERMISSION("settings.donorchat.donorchat_toggle_permission"),
 
     MODULE_DISABLED("messages.module_disabled"),
 

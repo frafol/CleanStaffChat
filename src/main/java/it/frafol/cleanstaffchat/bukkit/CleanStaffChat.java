@@ -3,6 +3,8 @@ package it.frafol.cleanstaffchat.bukkit;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import it.frafol.cleanstaffchat.bukkit.objects.TextFile;
+import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.CMIListener;
+import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.EssentialsListener;
 import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.JoinListener;
 import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.MoveListener;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.*;
@@ -64,6 +66,24 @@ public class CleanStaffChat extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new JoinListener(this), this);
             getServer().getPluginManager().registerEvents(new it.frafol.cleanstaffchat.bukkit.staffchat.listeners.ChatListener(this), this);
             getServer().getPluginManager().registerEvents(new MoveListener(this), this);
+
+            // TODO
+
+            // if (Bukkit.getServer().getPluginManager().getPlugin("CMI") != null) {
+
+                // getLogger().info("Hooking into CMI!");
+
+                // getServer().getPluginManager().registerEvents(new CMIListener(this), this);
+
+            // }
+
+            // if (Bukkit.getServer().getPluginManager().getPlugin("Essentials") != null) {
+
+                // getLogger().info("Hooking into Essentials!");
+
+                // getServer().getPluginManager().registerEvents(new EssentialsListener(this), this);
+
+            // }
 
         }
 

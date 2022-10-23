@@ -93,10 +93,10 @@ public enum VelocityConfig {
     CONSOLE_CAN_TALK("settings.console_staffchat"),
     STAFFCHAT_TOGGLE_PERMISSION("settings.staffchat.staffchat_toggle_permission"),
     ADMINCHAT_TOGGLE_PERMISSION("settings.adminchat.adminchat_toggle_permission"),
-    DONORCHAT_TOGGLE_PERMISSION("settings.donorchat.adminchat_toggle_permission"),
+    DONORCHAT_TOGGLE_PERMISSION("settings.donorchat.donorchat_toggle_permission"),
 
     STAFFCHAT_SWITCH_MODULE("modules.staffchat_switch_module"),
-    STAFFCHAT_SWITCH_ALL("settings.staff_switch_all_players"),
+    STAFFCHAT_SWITCH_ALL("settings.staffchat.staff_switch_all_players"),
     STAFF_SWITCH_MESSAGE_FORMAT("messages.staffchat.staff_switch_message_format"),
 
     MODULE_DISABLED("messages.module_disabled"),

@@ -22,12 +22,12 @@ public enum SpigotConfig {
     ADMINCHAT_MUTED_ERROR("messages.adminchat.adminchat_muted_error"),
     DONORCHAT_MUTED_ERROR("messages.donorchat.donorchat_muted_error"),
 
-    STAFFCHAT_JOIN_LEAVE_ALL("settings.staff_join_all_players"),
-    STAFFCHAT_QUIT_ALL("settings.staff_quit_all_players"),
+    STAFFCHAT_JOIN_LEAVE_ALL("settings.staffchat.staff_join_all_players"),
+    STAFFCHAT_QUIT_ALL("settings.staffchat.staff_quit_all_players"),
 
     STAFFCHAT_AFK_MODULE("modules.staffchat_afk_module"),
-    STAFFCHAT_AFK_ON("messages.staff_afk_on_message_format"),
-    STAFFCHAT_AFK_OFF("messages.staff_afk_off_message_format"),
+    STAFFCHAT_AFK_ON("messages.staffchat.staff_afk_on_message_format"),
+    STAFFCHAT_AFK_OFF("messages.staffchat.staff_afk_off_message_format"),
     STAFFCHAT_NO_AFK_ONCHANGE_SERVER("settings.staffchat.staff_disable_afk_on_move"),
     STAFFCHAT_AFK_PERMISSION("settings.staffchat.staffchat_afk_permission"),
 

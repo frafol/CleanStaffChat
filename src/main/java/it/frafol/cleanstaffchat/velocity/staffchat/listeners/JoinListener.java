@@ -2,7 +2,7 @@ package it.frafol.cleanstaffchat.velocity.staffchat.listeners;
 
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
-import com.velocitypowered.api.event.connection.LoginEvent;
+import com.velocitypowered.api.event.connection.PostLoginEvent;
 import com.velocitypowered.api.proxy.Player;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.UpdateCheck;
@@ -25,7 +25,7 @@ public class JoinListener {
     }
 
     @Subscribe
-    public void handle(LoginEvent event){
+    public void handle(PostLoginEvent event){
 
         if (event.getPlayer().hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
             if (VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {

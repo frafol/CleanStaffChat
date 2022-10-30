@@ -172,7 +172,7 @@ public class ChatListener extends ListenerAdapter {
             return;
         }
 
-        if (PlayerCache.getCooldown_discord().contains(event.getAuthor().getName())) {
+        if (PlayerCache.getCooldown_discord().contains(event.getAuthor().getId())) {
             event.getMessage().delete().queue();
             return;
         }
@@ -185,10 +185,10 @@ public class ChatListener extends ListenerAdapter {
                         new Placeholder("message", event.getMessage().getContentDisplay()),
                         new Placeholder("prefix", PREFIX.color())));
 
-        PlayerCache.getCooldown_discord().add(event.getAuthor().getName());
+        PlayerCache.getCooldown_discord().add(event.getAuthor().getId());
 
         PLUGIN.getServer().getScheduler()
-                .buildTask(PLUGIN, scheduledTask -> PlayerCache.getCooldown_discord().remove(event.getAuthor().getName()))
+                .buildTask(PLUGIN, scheduledTask -> PlayerCache.getCooldown_discord().remove(event.getAuthor().getId()))
                 .delay(DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS)
                 .schedule();
 

@@ -9,16 +9,21 @@ import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import it.frafol.cleanstaffchat.velocity.adminchat.commands.AdminChatCommand;
 import it.frafol.cleanstaffchat.velocity.donorchat.commands.DonorChatCommand;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
+import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
+import it.frafol.cleanstaffchat.velocity.objects.TextFile;
 import it.frafol.cleanstaffchat.velocity.staffchat.commands.*;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.ChatListener;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.JoinListener;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.ServerListener;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
-import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
-import it.frafol.cleanstaffchat.velocity.objects.TextFile;
 import lombok.Getter;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import javax.inject.Inject;
+import javax.security.auth.login.LoginException;
 import java.nio.file.Path;
 import java.util.logging.Logger;
 
@@ -36,6 +41,7 @@ public class CleanStaffChat {
     private final ProxyServer server;
     private final Logger logger;
     private final Path path;
+    private JDA jda;
     private TextFile configTextFile;
     private static CleanStaffChat instance;
 
@@ -56,7 +62,7 @@ public class CleanStaffChat {
     public PluginContainer container;
 
     @Subscribe
-    public void onProxyInitialization(ProxyInitializeEvent event) {
+    public void onProxyInitialization(ProxyInitializeEvent event) throws LoginException {
         instance = this;
         getLogger().info("\n§d  ___  __    ____    __    _  _    ___   ___ \n" +
                 " / __)(  )  ( ___)  /__\\  ( \\( )  / __) / __)\n" +
@@ -158,6 +164,24 @@ public class CleanStaffChat {
 
         }
 
+        if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class)) {
+
+            jda = JDABuilder.createDefault(VelocityConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
+
+            jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
+                            (VelocityConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
+                    VelocityConfig.DISCORD_ACTIVITY.get(String.class)));
+
+            if (VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                jda.addEventListener(new ChatListener(this));
+            }
+
+            if (VelocityConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                jda.addEventListener(new it.frafol.cleanstaffchat.velocity.donorchat.listeners.ChatListener(this));
+            }
+
+        }
+
         if (VelocityConfig.STATS.get(Boolean.class)) {
 
             metricsFactory.make(this, 16447);
@@ -166,7 +190,7 @@ public class CleanStaffChat {
 
         }
 
-        getLogger().warning("Some functions are not available in 1.19+ clients, this is due to Mojang's self-moderation.");
+        getLogger().warning("Some functions are not available on Velocity in 1.19+ clients, this is due to Mojang's self-moderation.");
 
         if (VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {
             new UpdateCheck(this).getVersion(version -> {
@@ -190,7 +214,14 @@ public class CleanStaffChat {
         logger.info("§7Clearing lists...");
         PlayerCache.getToggled_2().clear();
         PlayerCache.getToggled().clear();
+        PlayerCache.getToggled_donor().clear();
+        PlayerCache.getToggled_admin().clear();
+        PlayerCache.getToggled_2_donor().clear();
+        PlayerCache.getToggled_2_admin().clear();
+        PlayerCache.getCooldown_discord().clear();
         PlayerCache.getMuted().clear();
+        PlayerCache.getMuted_admin().clear();
+        PlayerCache.getMuted_donor().clear();
         PlayerCache.getAfk().clear();
 
         logger.info("§7Successfully §cdisabled§7.");

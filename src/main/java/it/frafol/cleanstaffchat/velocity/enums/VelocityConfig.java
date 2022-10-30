@@ -22,9 +22,9 @@ public enum VelocityConfig {
     ADMINCHAT_FORMAT("messages.adminchat.adminchat_format"),
     DONORCHAT_FORMAT("messages.donorchat.donorchat_format"),
 
-    STAFFCHAT_MUTED_ERROR("messages.staffchat.staffchat_muted_error"),
-    ADMINCHAT_MUTED_ERROR("messages.adminchat.adminchat_muted_error"),
-    DONORCHAT_MUTED_ERROR("messages.donorchat.donorchat_muted_error"),
+    STAFFCHAT_MUTED_ERROR("messages.chat_muted_error"),
+    ADMINCHAT_MUTED_ERROR("messages.chat_muted_error"),
+    DONORCHAT_MUTED_ERROR("messages.chat_muted_error"),
 
     STAFFCHAT_JOIN_LEAVE_ALL("settings.staffchat.staff_join_all_players"),
     STAFFCHAT_QUIT_ALL("settings.staffchat.staff_quit_all_players"),
@@ -34,6 +34,10 @@ public enum VelocityConfig {
     STAFFCHAT_AFK_OFF("messages.staffchat.staff_afk_off_message_format"),
     STAFFCHAT_NO_AFK_ONCHANGE_SERVER("settings.staffchat.staff_disable_afk_on_move"),
     STAFFCHAT_AFK_PERMISSION("settings.staffchat.staffchat_afk_permission"),
+
+    STAFFCHAT_FORMAT_DISCORD("messages.staffchat.staffchat_to_discord_format"),
+    DONORCHAT_FORMAT_DISCORD("messages.donorchat.donorchat_to_discord_format"),
+    ADMINCHAT_FORMAT_DISCORD("messages.adminchat.adminchat_to_discord_format"),
 
     STAFF_JOIN_MESSAGE("settings.staffchat.staff_join_message"),
     STAFF_QUIT_MESSAGE("settings.staffchat.staff_quit_message"),
@@ -104,6 +108,20 @@ public enum VelocityConfig {
     STATS("modules.stats"),
 
     UPDATE_CHECK("modules.update_check"),
+
+    STAFFCHAT_DISCORD_MODULE("modules.staffchat_discord_module"),
+    ADMINCHAT_DISCORD_MODULE("modules.adminchat_discord_module"),
+    DONORCHAT_DISCORD_MODULE("modules.donorchat_discord_module"),
+    DISCORD_ENABLED("discord.enabled"),
+    DISCORD_TOKEN("discord.token"),
+    DISCORD_ACTIVITY_TYPE("discord.activity_type"),
+    DISCORD_ACTIVITY("discord.activity"),
+    DISCORD_STAFF_FORMAT("messages.staffchat.staffchat_discord_format"),
+    DISCORD_DONOR_FORMAT("messages.staffchat.donorchat_discord_format"),
+    DISCORD_ADMIN_FORMAT("messages.staffchat.adminchat_discord_format"),
+    STAFF_CHANNEL_ID("discord.staffchat_channel_id"),
+    DONOR_CHANNEL_ID("discord.donorchat_channel_id"),
+    ADMIN_CHANNEL_ID("discord.adminchat_channel_id"),
 
     STAFFCHAT("settings.use_staffchat"),
     ADMINCHAT("settings.use_adminchat"),

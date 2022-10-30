@@ -82,6 +82,10 @@ messages:
     staff_afk_on_message_format: "%prefix% &7%user% is now &aAFK&7."
     staff_afk_off_message_format: "%prefix% &7%user% is no longer &aAFK&7."
 
+    # Discord Chat Format (You can use %user% and %message% only)
+    staffchat_discord_format: "%prefix% &7[&bDiscord&7] &7%user% &8» &7%message%"
+    staffchat_to_discord_format: "[STAFFCHAT] %user%: %message%"
+
   adminchat:
     # General
     prefix: "&5&lADMIN&d&lCHAT &8&l•"
@@ -99,8 +103,12 @@ messages:
     adminchat_toggled_on: "%prefix% &7The AdminChat is now &avisible&7."
     adminchat_toggled_off: "%prefix% &7The AdminChat is now &ainvisible&7."
 
-    # Chat Formats (If you use LuckPerms you can use %displayname%, %userprefix% and %usersuffix%).
+    # Chat Format (If you use LuckPerms you can use %displayname%, %userprefix% and %usersuffix%).
     adminchat_format: "%prefix% &7%userprefix% %user% &8» &7%message%" # You can use %server% on BungeeCord or Velocity.
+
+    # Discord Chat Format (You can use %user% and %message% only)
+    adminchat_discord_format: "%prefix% &7[&bDiscord&7] &7%user% &8» &7%message%"
+    adminchat_to_discord_format: "[ADMINCHAT] %user%: %message%"
 
   donorchat:
     # General
@@ -123,6 +131,10 @@ messages:
     # Chat Formats (If you use LuckPerms you can use %displayname%, %userprefix% and %usersuffix%).
     donorchat_format: "%prefix% &7%userprefix% %user% &8» &7%message%" # You can use %server% on BungeeCord or Velocity.
 
+    # Discord Chat Format (You can use %user% and %message% only)
+    donorchat_discord_format: "%prefix% &7[&bDiscord&7] &7%user% &8» &7%message%"
+    donorchat_to_discord_format: "[DONORCHAT] %user%: %message%"
+
   # Errors and reload.
   deny_color_codes: "%prefix% &cColor codes are not permitted."
   no_permission: "%prefix% &cYou don't have the permission to do this."
@@ -131,6 +143,25 @@ messages:
   reloaded: "%prefix% &7The plugin has been &areloaded&7!"
   module_disabled: "%prefix% &7This function is actually &cdisabled&7!"
 
+
+discord:
+
+  # Toggle discord support.
+  enabled: true
+
+  # Your bot's token.
+  token: ""
+
+  # Types: WATCHING, PLAYING, STREAMING.
+  activity_type: "PLAYING"
+
+  activity: "play.yourserver.net"
+
+  staffchat_channel_id: ""
+
+  adminchat_channel_id: ""
+
+  donorchat_channel_id: ""
 
 modules:
 
@@ -142,18 +173,21 @@ modules:
   staffchat_talk_module: true
   staffchat_mute_module: true
   staffchat_toggle_module: true
+  staffchat_discord_module: true
 
   adminchat_switch_module: true
   adminchat_afk_module: true
   adminchat_talk_module: true
   adminchat_mute_module: true
   adminchat_toggle_module: true
+  adminchat_discord_module: true
 
   donorchat_switch_module: true
   donorchat_afk_module: true
   donorchat_talk_module: true
   donorchat_mute_module: true
   donorchat_toggle_module: true
+  donorchat_discord_module: true
 
 
 # Enjoy.

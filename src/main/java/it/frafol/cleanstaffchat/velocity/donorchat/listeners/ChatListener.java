@@ -7,15 +7,18 @@ import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
 import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.*;
 
-public class ChatListener {
+public class ChatListener extends ListenerAdapter {
 
     public final CleanStaffChat PLUGIN;
 
@@ -152,5 +155,42 @@ public class ChatListener {
 
             }
         }
+    }
+
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+
+        if (!event.getChannel().getId().equalsIgnoreCase(VelocityConfig.DONOR_CHANNEL_ID.get(String.class))) {
+            return;
+        }
+
+        if (event.getAuthor().isBot()) {
+            return;
+        }
+
+        if (PlayerCache.getMuted_donor().contains("true")) {
+            event.getMessage().delete().queue();
+            return;
+        }
+
+        if (PlayerCache.getCooldown_discord().contains(event.getAuthor().getName())) {
+            event.getMessage().delete().queue();
+            return;
+        }
+
+        CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+                        (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
+                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                .forEach(players -> DISCORD_DONOR_FORMAT.send(players,
+                        new Placeholder("user", event.getAuthor().getName()),
+                        new Placeholder("message", event.getMessage().getContentDisplay()),
+                        new Placeholder("prefix", PREFIX.color())));
+
+        PlayerCache.getCooldown_discord().add(event.getAuthor().getName());
+
+        PLUGIN.getServer().getScheduler()
+                .buildTask(PLUGIN, scheduledTask -> PlayerCache.getCooldown_discord().remove(event.getAuthor().getName()))
+                .delay(DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS)
+                .schedule();
+
     }
 }

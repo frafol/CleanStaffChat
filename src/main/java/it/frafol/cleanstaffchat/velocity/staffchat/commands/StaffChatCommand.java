@@ -13,6 +13,7 @@ import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.Arrays;
 
@@ -152,6 +153,8 @@ public class StaffChatCommand implements SimpleCommand {
 
                     }
 
+                    final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.STAFF_CHANNEL_ID.get(String.class));
+
                     if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
                         final LuckPerms api = LuckPermsProvider.get();
@@ -192,7 +195,20 @@ public class StaffChatCommand implements SimpleCommand {
 
                     }
 
+                    if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                        assert channel != null;
+                        channel.sendMessageFormat(VelocityConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                                        .replace("%user%", sender)
+                                        .replace("%message%", message)
+                                        .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()))
+                                .queue();
+
+                    }
+
                 } else if (CONSOLE_CAN_TALK.get(Boolean.class)) {
+
+                    final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.STAFF_CHANNEL_ID.get(String.class));
 
                     if (!PlayerCache.getMuted().contains("true")) {
 
@@ -207,6 +223,17 @@ public class StaffChatCommand implements SimpleCommand {
                                         new Placeholder("usersuffix", ""),
                                         new Placeholder("server", ""),
                                         new Placeholder("prefix", PREFIX.color())));
+
+                        if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                            assert channel != null;
+                            channel.sendMessageFormat(VelocityConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                                            .replace("%user%", sender)
+                                            .replace("%message%", message)
+                                            .replace("%server%", ""))
+                                    .queue();
+
+                        }
 
                     } else {
 

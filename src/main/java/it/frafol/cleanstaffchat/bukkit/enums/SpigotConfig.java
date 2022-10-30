@@ -18,9 +18,9 @@ public enum SpigotConfig {
     ADMINCHAT_FORMAT("messages.adminchat.adminchat_format"),
     DONORCHAT_FORMAT("messages.donorchat.donorchat_format"),
 
-    STAFFCHAT_MUTED_ERROR("messages.staffchat.staffchat_muted_error"),
-    ADMINCHAT_MUTED_ERROR("messages.adminchat.adminchat_muted_error"),
-    DONORCHAT_MUTED_ERROR("messages.donorchat.donorchat_muted_error"),
+    STAFFCHAT_MUTED_ERROR("messages.chat_muted_error"),
+    ADMINCHAT_MUTED_ERROR("messages.chat_muted_error"),
+    DONORCHAT_MUTED_ERROR("messages.chat_muted_error"),
 
     STAFFCHAT_JOIN_LEAVE_ALL("settings.staffchat.staff_join_all_players"),
     STAFFCHAT_QUIT_ALL("settings.staffchat.staff_quit_all_players"),

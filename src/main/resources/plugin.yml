@@ -5,8 +5,9 @@ authors: [ frafol ]
 description: Best StaffChat plugin.
 softdepend:
   - LuckPerms
-  - Essentials
-  - CMI
+  - ServerUtils
+  - PlugManX
+  - PlugMan
 commands:
   sc:
     description: Use staffchat

@@ -3,6 +3,7 @@ package it.frafol.cleanstaffchat.bungee.adminchat.commands;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -152,6 +153,19 @@ public class AdminChatCommand extends Command {
                                         .replace("&", "§"))));
                     }
 
+                    if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class) && BungeeConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                        final TextChannel channel = CleanStaffChat.getInstance().getJda().getTextChannelById(BungeeConfig.ADMIN_CHANNEL_ID.get(String.class));
+
+                        assert channel != null;
+                        channel.sendMessageFormat(BungeeConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                                        .replace("%user%", commandsender)
+                                        .replace("%message%", message)
+                                        .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName()))
+                                .queue();
+
+                    }
+
                 } else if (BungeeConfig.CONSOLE_CAN_TALK.get(Boolean.class)) {
 
                     if (!PlayerCache.getMuted_admin().contains("true")) {
@@ -182,6 +196,19 @@ public class AdminChatCommand extends Command {
                             .replace("%usersuffix%", "")
                             .replace("%server%", "")
                             .replace("%message%", message)));
+
+                    if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class) && BungeeConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                        final TextChannel channel = CleanStaffChat.getInstance().getJda().getTextChannelById(BungeeConfig.ADMIN_CHANNEL_ID.get(String.class));
+
+                        assert channel != null;
+                        channel.sendMessageFormat(BungeeConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                                        .replace("%user%", commandsender)
+                                        .replace("%message%", message)
+                                        .replace("%server%", ""))
+                                .queue();
+
+                    }
 
                 } else {
 

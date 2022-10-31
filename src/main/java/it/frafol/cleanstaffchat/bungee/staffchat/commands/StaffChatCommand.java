@@ -1,8 +1,11 @@
 package it.frafol.cleanstaffchat.bungee.staffchat.commands;
 
+import com.velocitypowered.api.proxy.Player;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -152,6 +155,19 @@ public class StaffChatCommand extends Command {
                                         .replace("&", "§"))));
                     }
 
+                    if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class) && BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                        final TextChannel channel = CleanStaffChat.getInstance().getJda().getTextChannelById(BungeeConfig.STAFF_CHANNEL_ID.get(String.class));
+
+                        assert channel != null;
+                        channel.sendMessageFormat(BungeeConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                                        .replace("%user%", commandsender)
+                                        .replace("%message%", message)
+                                        .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName()))
+                                .queue();
+
+                    }
+
                 } else if (BungeeConfig.CONSOLE_CAN_TALK.get(Boolean.class)) {
 
                     if (!PlayerCache.getMuted().contains("true")) {
@@ -182,6 +198,19 @@ public class StaffChatCommand extends Command {
                             .replace("%usersuffix%", "")
                             .replace("%server%", "")
                             .replace("%message%", message)));
+
+                    if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class) && BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                        final TextChannel channel = CleanStaffChat.getInstance().getJda().getTextChannelById(BungeeConfig.STAFF_CHANNEL_ID.get(String.class));
+
+                        assert channel != null;
+                        channel.sendMessageFormat(BungeeConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                                        .replace("%user%", commandsender)
+                                        .replace("%message%", message)
+                                        .replace("%server%", ""))
+                                .queue();
+
+                    }
 
                 } else {
 

@@ -6,13 +6,20 @@ import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import it.frafol.cleanstaffchat.bungee.objects.TextFile;
 import it.frafol.cleanstaffchat.bungee.staffchat.commands.ReloadCommand;
+import it.frafol.cleanstaffchat.bungee.staffchat.listeners.ChatListener;
 import it.frafol.cleanstaffchat.bungee.staffchat.listeners.JoinListener;
 import it.frafol.cleanstaffchat.bungee.staffchat.listeners.ServerListener;
+import lombok.SneakyThrows;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.simpleyaml.configuration.file.YamlFile;
 
 public class CleanStaffChat extends Plugin {
 
+    private JDA jda;
     private TextFile configTextFile;
     public static CleanStaffChat instance;
 
@@ -20,6 +27,7 @@ public class CleanStaffChat extends Plugin {
         return instance;
     }
 
+    @SneakyThrows
     @Override
     public void onEnable() {
 
@@ -65,6 +73,29 @@ public class CleanStaffChat extends Plugin {
 
         getProxy().getPluginManager().registerCommand(this, new ReloadCommand());
 
+        if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class)) {
+
+            jda = JDABuilder.createDefault(BungeeConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
+
+            jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
+                            (BungeeConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
+                    BungeeConfig.DISCORD_ACTIVITY.get(String.class)));
+
+            if (BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                jda.addEventListener(new ChatListener(this));
+            }
+
+            if (BungeeConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                jda.addEventListener(new it.frafol.cleanstaffchat.bungee.donorchat.listeners.ChatListener(this));
+            }
+
+            if (BungeeConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                jda.addEventListener(new it.frafol.cleanstaffchat.bungee.adminchat.listeners.ChatListener(this));
+            }
+
+            getLogger().info("§7Hooked into Discord §asuccessfully§7!");
+
+        }
 
         if (BungeeConfig.STATS.get(Boolean.class)) {
 
@@ -86,6 +117,10 @@ public class CleanStaffChat extends Plugin {
 
     public YamlFile getConfigTextFile() {
         return getInstance().configTextFile.getConfig();
+    }
+
+    public JDA getJda() {
+        return jda;
     }
 
     @Override

@@ -3,7 +3,6 @@ package it.frafol.cleanstaffchat.velocity.staffchat.listeners;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
-import com.velocitypowered.api.proxy.Player;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
@@ -15,6 +14,8 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.concurrent.TimeUnit;
 
 import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.*;
 
@@ -160,13 +161,32 @@ public class ChatListener extends ListenerAdapter {
             return;
         }
 
+        if (event.getMessage().getContentDisplay().equalsIgnoreCase(STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class))) {
+
+            PLUGIN.getServer().getScheduler()
+                    .buildTask(PLUGIN, scheduledTask -> event.getMessage().delete().queue())
+                    .delay(5, TimeUnit.SECONDS)
+                    .schedule();
+
+            return;
+
+        }
+
         if (event.getAuthor().isBot()) {
             return;
         }
 
         if (PlayerCache.getMuted().contains("true")) {
-            event.getMessage().delete().queue();
+
+            event.getMessage().reply(STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class)).queue();
+
+            PLUGIN.getServer().getScheduler()
+                    .buildTask(PLUGIN, scheduledTask -> event.getMessage().delete().queue())
+                    .delay(5, TimeUnit.SECONDS)
+                    .schedule();
+
             return;
+
         }
 
         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter

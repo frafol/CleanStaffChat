@@ -3,6 +3,7 @@ package it.frafol.cleanstaffchat.bungee.donorchat.commands;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -169,6 +170,19 @@ public class DonorChatCommand extends Command {
                                         .replace("&", "§"))));
                     }
 
+                    if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class) && BungeeConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                        final TextChannel channel = CleanStaffChat.getInstance().getJda().getTextChannelById(BungeeConfig.DONOR_CHANNEL_ID.get(String.class));
+
+                        assert channel != null;
+                        channel.sendMessageFormat(BungeeConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                                        .replace("%user%", commandsender)
+                                        .replace("%message%", message)
+                                        .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName()))
+                                .queue();
+
+                    }
+
                     PlayerCache.getCooldown().add(((ProxiedPlayer) sender).getUniqueId());
 
                     ProxyServer.getInstance().getScheduler().schedule(plugin, () ->
@@ -206,12 +220,26 @@ public class DonorChatCommand extends Command {
                             .replace("%server%", "")
                             .replace("%message%", message)));
 
+                    if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class) && BungeeConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                        final TextChannel channel = CleanStaffChat.getInstance().getJda().getTextChannelById(BungeeConfig.DONOR_CHANNEL_ID.get(String.class));
+
+                        assert channel != null;
+                        channel.sendMessageFormat(BungeeConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                                        .replace("%user%", commandsender)
+                                        .replace("%message%", message)
+                                        .replace("%server%", ""))
+                                .queue();
+
+                    }
+
                 } else {
 
                     sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.PLAYER_ONLY.color()
                             .replace("%prefix%", BungeeConfig.DONORPREFIX.color())));
 
                 }
+
             } else {
 
                 sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.DONORCHAT_MUTED_ERROR.color()

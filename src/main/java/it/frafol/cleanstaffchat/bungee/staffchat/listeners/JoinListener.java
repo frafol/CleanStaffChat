@@ -4,6 +4,7 @@ import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.UpdateCheck;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -25,6 +26,7 @@ public class JoinListener implements Listener {
 
     @EventHandler
     public void handle(PostLoginEvent event){
+
         if (event.getPlayer().hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                 && (BungeeConfig.UPDATE_CHECK.get(Boolean.class))) {
             new UpdateCheck(PLUGIN).getVersion(version -> {
@@ -34,19 +36,26 @@ public class JoinListener implements Listener {
                 }
             });
         }
+
         if (!(CleanStaffChat.getInstance().getProxy().getPlayers().size() < 1)) {
+
             ProxiedPlayer player = event.getPlayer();
+
             if (BungeeConfig.STAFF_JOIN_MESSAGE.get(Boolean.class)) {
+
                 if (player.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                         || BungeeConfig.STAFFCHAT_JOIN_LEAVE_ALL.get(Boolean.class)) {
+
                     if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
 
                         LuckPerms api = LuckPermsProvider.get();
 
                         User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
                         assert user != null;
+
                         final String prefix = user.getCachedData().getMetaData().getPrefix();
                         final String suffix = user.getCachedData().getMetaData().getSuffix();
+
                         final String user_prefix = prefix == null ? "" : prefix;
                         final String user_suffix = suffix == null ? "" : suffix;
 
@@ -59,13 +68,28 @@ public class JoinListener implements Listener {
                                         .replace("%userprefix%", user_prefix)
                                         .replace("%usersuffix%", user_suffix)
                                         .replace("%user%", player.getName()))));
+
                     } else {
+
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                                 .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFF_JOIN_MESSAGE_FORMAT.color()
                                         .replace("%prefix%", BungeeConfig.PREFIX.color())
                                         .replace("%user%", player.getName()))));
+
+                    }
+
+                    if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class)
+                            && BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
+                            && BungeeConfig.JOIN_LEAVE_DISCORD_MODULE.get(Boolean.class)) {
+
+                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeConfig.STAFF_CHANNEL_ID.get(String.class));
+
+                        assert channel != null;
+                        channel.sendMessageFormat(BungeeConfig.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
+                                .replace("%user%", player.getName())).queue();
+
                     }
                 }
             }
@@ -73,22 +97,27 @@ public class JoinListener implements Listener {
     }
 
     @EventHandler
-    public void handle(PlayerDisconnectEvent event){
-        if (CleanStaffChat.getInstance().getProxy().getPlayers().size() >= 1) {
-            ProxiedPlayer player = event.getPlayer();
-            if (BungeeConfig.STAFF_QUIT_MESSAGE.get(Boolean.class)) {
-                if (player.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                        || BungeeConfig.STAFFCHAT_QUIT_ALL.get(Boolean.class)) {
-                    if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
+    public void handle(PlayerDisconnectEvent event) {
 
-                        LuckPerms api = LuckPermsProvider.get();
+        ProxiedPlayer player = event.getPlayer();
 
-                        User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
-                        assert user != null;
-                        final String prefix = user.getCachedData().getMetaData().getPrefix();
-                        final String suffix = user.getCachedData().getMetaData().getSuffix();
-                        final String user_prefix = prefix == null ? "" : prefix;
-                        final String user_suffix = suffix == null ? "" : suffix;
+        if (BungeeConfig.STAFF_QUIT_MESSAGE.get(Boolean.class)) {
+
+            if (player.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                    || BungeeConfig.STAFFCHAT_QUIT_ALL.get(Boolean.class)) {
+
+                if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
+
+                    LuckPerms api = LuckPermsProvider.get();
+
+                    User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
+                    assert user != null;
+                    final String prefix = user.getCachedData().getMetaData().getPrefix();
+                    final String suffix = user.getCachedData().getMetaData().getSuffix();
+                    final String user_prefix = prefix == null ? "" : prefix;
+                    final String user_suffix = suffix == null ? "" : suffix;
+
+                    if (CleanStaffChat.getInstance().getProxy().getPlayers().size() >= 1) {
 
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
@@ -99,14 +128,33 @@ public class JoinListener implements Listener {
                                         .replace("%userprefix%", user_prefix)
                                         .replace("%usersuffix%", user_suffix)
                                         .replace("%user%", player.getName()))));
-                    } else {
+
+                    }
+
+                } else {
+
+                    if (CleanStaffChat.getInstance().getProxy().getPlayers().size() >= 1) {
+
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                                 .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFF_QUIT_MESSAGE_FORMAT.color()
                                         .replace("%prefix%", BungeeConfig.PREFIX.color())
                                         .replace("%user%", player.getName()))));
+
                     }
+                }
+
+                if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class)
+                        && BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
+                        && BungeeConfig.JOIN_LEAVE_DISCORD_MODULE.get(Boolean.class)) {
+
+                    final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeConfig.STAFF_CHANNEL_ID.get(String.class));
+
+                    assert channel != null;
+                    channel.sendMessageFormat(BungeeConfig.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
+                            .replace("%user%", player.getName())).queue();
+
                 }
             }
         }

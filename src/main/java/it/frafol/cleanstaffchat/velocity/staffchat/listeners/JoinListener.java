@@ -75,9 +75,9 @@ public class JoinListener {
                                         new Placeholder("prefix", PREFIX.color())));
                     }
 
-                    final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.STAFF_CHANNEL_ID.get(String.class));
-
                     if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.STAFF_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
                         channel.sendMessageFormat(VelocityConfig.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)

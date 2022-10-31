@@ -3,6 +3,9 @@ package it.frafol.cleanstaffchat.bungee.donorchat.listeners;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -12,10 +15,11 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
-public class ChatListener implements Listener {
+public class ChatListener extends ListenerAdapter implements Listener {
 
     public final CleanStaffChat PLUGIN;
 
@@ -41,14 +45,14 @@ public class ChatListener implements Listener {
             if (PlayerCache.getCooldown().contains(((ProxiedPlayer) event.getSender()).getUniqueId())) {
                 PlayerCache.getToggled_2_donor().remove(((ProxiedPlayer) event.getSender()).getUniqueId());
                 event.setCancelled(true);
-                ((ProxiedPlayer)event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeConfig.DONORCHAT_COOLDOWN_MESSAGE.color()
+                ((ProxiedPlayer) event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeConfig.DONORCHAT_COOLDOWN_MESSAGE.color()
                         .replace("%prefix%", BungeeConfig.DONORPREFIX.color())));
                 return;
             }
 
             if (!event.getMessage().startsWith("/")) {
                 if (!(BungeeConfig.DONORCHAT_TALK_MODULE.get(Boolean.class))) {
-                    ((ProxiedPlayer)event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeConfig.MODULE_DISABLED.color()
+                    ((ProxiedPlayer) event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeConfig.MODULE_DISABLED.color()
                             .replace("%prefix%", BungeeConfig.DONORPREFIX.color())
                             .replace("&", "§")));
 
@@ -141,6 +145,70 @@ public class ChatListener implements Listener {
                 }
 
             }
+        }
+    }
+
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+
+        if (!event.getChannel().getId().equalsIgnoreCase(VelocityConfig.DONOR_CHANNEL_ID.get(String.class))) {
+            return;
+        }
+
+        if (event.getMessage().getContentDisplay().equalsIgnoreCase(BungeeConfig.DONORCHAT_COOLDOWN_ERROR_DISCORD.get(String.class))
+                || event.getMessage().getContentDisplay().equalsIgnoreCase(BungeeConfig.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class))) {
+
+            ProxyServer.getInstance().getScheduler().schedule(PLUGIN, () ->
+                    event.getMessage().delete().queue(), 5, TimeUnit.SECONDS);
+
+            return;
+
+        }
+
+        if (event.getAuthor().isBot()) {
+
+            return;
+
+        }
+
+        if (PlayerCache.getMuted_donor().contains("true")) {
+
+            event.getMessage().reply(BungeeConfig.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class)).queue();
+
+            ProxyServer.getInstance().getScheduler().schedule(PLUGIN, () ->
+                    event.getMessage().delete().queue(), 5, TimeUnit.SECONDS);
+
+            return;
+
+        }
+
+        if (PlayerCache.getCooldown_discord().contains(event.getAuthor().getId())
+                && (!BungeeConfig.COOLDOWN_BYPASS_DISCORD.get(Boolean.class))) {
+
+            event.getMessage().reply(BungeeConfig.DONORCHAT_COOLDOWN_ERROR_DISCORD.get(String.class)).queue();
+
+            ProxyServer.getInstance().getScheduler().schedule(PLUGIN, () ->
+                    event.getMessage().delete().queue(), 5, TimeUnit.SECONDS);
+
+            return;
+
+        }
+
+        CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
+                        (players -> players.hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))
+                                && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
+                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.DISCORD_DONOR_FORMAT.color()
+                        .replace("%prefix%", BungeeConfig.DONORPREFIX.color())
+                        .replace("%user%", event.getAuthor().getName())
+                        .replace("%message%", event.getMessage().getContentDisplay())
+                        .replace("&", "§"))));
+
+        if (!BungeeConfig.COOLDOWN_BYPASS_DISCORD.get(Boolean.class)) {
+
+            PlayerCache.getCooldown_discord().add(event.getAuthor().getId());
+
+            ProxyServer.getInstance().getScheduler().schedule(PLUGIN, () ->
+                    PlayerCache.getCooldown_discord().remove(event.getAuthor().getId()), BungeeConfig.DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS);
+
         }
     }
 }

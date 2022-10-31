@@ -3,6 +3,8 @@ package it.frafol.cleanstaffchat.bungee.adminchat.listeners;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -12,8 +14,11 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import org.jetbrains.annotations.NotNull;
 
-public class ChatListener implements Listener {
+import java.util.concurrent.TimeUnit;
+
+public class ChatListener extends ListenerAdapter implements Listener {
 
     public final CleanStaffChat PLUGIN;
 
@@ -120,9 +125,49 @@ public class ChatListener implements Listener {
                 } else {
 
                     PlayerCache.getToggled_2_admin().remove(((ProxiedPlayer) event.getSender()).getUniqueId());
-                }
 
+                }
             }
         }
+    }
+
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+
+        if (!event.getChannel().getId().equalsIgnoreCase(BungeeConfig.ADMIN_CHANNEL_ID.get(String.class))) {
+            return;
+        }
+
+        if (event.getMessage().getContentDisplay().equalsIgnoreCase(BungeeConfig.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class))) {
+
+            ProxyServer.getInstance().getScheduler().schedule(PLUGIN, () ->
+                    event.getMessage().delete().queue(), 5, TimeUnit.SECONDS);
+
+            return;
+
+        }
+
+        if (event.getAuthor().isBot()) {
+            return;
+        }
+
+        if (PlayerCache.getMuted_admin().contains("true")) {
+
+            event.getMessage().reply(BungeeConfig.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class)).queue();
+
+            ProxyServer.getInstance().getScheduler().schedule(PLUGIN, () ->
+                    event.getMessage().delete().queue(), 5, TimeUnit.SECONDS);
+
+            return;
+
+        }
+
+        CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
+                        (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
+                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.DISCORD_ADMIN_FORMAT.color()
+                        .replace("%prefix%", BungeeConfig.ADMINPREFIX.color())
+                        .replace("%user%", event.getAuthor().getName())
+                        .replace("%message%", event.getMessage().getContentDisplay()))));
+
     }
 }

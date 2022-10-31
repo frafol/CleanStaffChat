@@ -22,6 +22,7 @@ public enum VelocityConfig {
     ADMINCHAT_FORMAT("messages.adminchat.adminchat_format"),
     DONORCHAT_FORMAT("messages.donorchat.donorchat_format"),
 
+    STAFFCHAT_MUTED_ERROR_DISCORD("messages.chat_muted_error_discord"),
     STAFFCHAT_MUTED_ERROR("messages.chat_muted_error"),
     ADMINCHAT_MUTED_ERROR("messages.chat_muted_error"),
     DONORCHAT_MUTED_ERROR("messages.chat_muted_error"),

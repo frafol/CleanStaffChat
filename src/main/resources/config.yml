@@ -153,6 +153,7 @@ messages:
   no_permission: "%prefix% &cYou don't have the permission to do this."
   console: "%prefix% &cYou must be a player to use that command."
   chat_muted_error: "%prefix% &7Chat is actually &cmuted&7 by an operator!"
+  chat_muted_error_discord: "Chat is actually muted by an operator!"
   reloaded: "%prefix% &7The plugin has been &areloaded&7!"
   module_disabled: "%prefix% &7This function is actually &cdisabled&7!"
 

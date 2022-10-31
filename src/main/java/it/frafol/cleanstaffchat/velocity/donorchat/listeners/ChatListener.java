@@ -181,7 +181,8 @@ public class ChatListener extends ListenerAdapter {
             return;
         }
 
-        if (event.getMessage().getContentDisplay().equalsIgnoreCase(DONORCHAT_COOLDOWN_ERROR_DISCORD.get(String.class))) {
+        if (event.getMessage().getContentDisplay().equalsIgnoreCase(DONORCHAT_COOLDOWN_ERROR_DISCORD.get(String.class))
+                || event.getMessage().getContentDisplay().equalsIgnoreCase(STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class))) {
 
             PLUGIN.getServer().getScheduler()
                     .buildTask(PLUGIN, scheduledTask -> event.getMessage().delete().queue())
@@ -193,12 +194,22 @@ public class ChatListener extends ListenerAdapter {
         }
 
         if (event.getAuthor().isBot()) {
+
             return;
+
         }
 
         if (PlayerCache.getMuted_donor().contains("true")) {
-            event.getMessage().delete().queue();
+
+            event.getMessage().reply(STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class)).queue();
+
+            PLUGIN.getServer().getScheduler()
+                    .buildTask(PLUGIN, scheduledTask -> event.getMessage().delete().queue())
+                    .delay(5, TimeUnit.SECONDS)
+                    .schedule();
+
             return;
+
         }
 
         if (PlayerCache.getCooldown_discord().contains(event.getAuthor().getId())

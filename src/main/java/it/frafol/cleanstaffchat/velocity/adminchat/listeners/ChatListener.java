@@ -15,6 +15,8 @@ import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.TimeUnit;
+
 import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.*;
 
 public class ChatListener extends ListenerAdapter {
@@ -158,13 +160,32 @@ public class ChatListener extends ListenerAdapter {
             return;
         }
 
+        if (event.getMessage().getContentDisplay().equalsIgnoreCase(STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class))) {
+
+            PLUGIN.getServer().getScheduler()
+                    .buildTask(PLUGIN, scheduledTask -> event.getMessage().delete().queue())
+                    .delay(5, TimeUnit.SECONDS)
+                    .schedule();
+
+            return;
+
+        }
+
         if (event.getAuthor().isBot()) {
             return;
         }
 
-        if (PlayerCache.getMuted().contains("true")) {
-            event.getMessage().delete().queue();
+        if (PlayerCache.getMuted_admin().contains("true")) {
+
+            event.getMessage().reply(STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class)).queue();
+
+            PLUGIN.getServer().getScheduler()
+                    .buildTask(PLUGIN, scheduledTask -> event.getMessage().delete().queue())
+                    .delay(5, TimeUnit.SECONDS)
+                    .schedule();
+
             return;
+
         }
 
         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter

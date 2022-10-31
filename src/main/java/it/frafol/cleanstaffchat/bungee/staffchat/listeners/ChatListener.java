@@ -3,6 +3,9 @@ package it.frafol.cleanstaffchat.bungee.staffchat.listeners;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -12,8 +15,11 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import org.jetbrains.annotations.NotNull;
 
-public class ChatListener implements Listener {
+import java.util.concurrent.TimeUnit;
+
+public class ChatListener extends ListenerAdapter implements Listener {
 
     public final CleanStaffChat PLUGIN;
 
@@ -117,12 +123,65 @@ public class ChatListener implements Listener {
                                         .replace("&", "§"))));
                     }
 
+                    if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class) && BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeConfig.STAFF_CHANNEL_ID.get(String.class));
+
+                        assert channel != null;
+                        channel.sendMessageFormat(BungeeConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                                        .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
+                                        .replace("%message%", message)
+                                        .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName()))
+                                .queue();
+
+                    }
+
                 } else {
 
                     PlayerCache.getToggled_2().remove(((ProxiedPlayer) event.getSender()).getUniqueId());
-                }
 
+                }
             }
         }
+    }
+
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+
+        if (!event.getChannel().getId().equalsIgnoreCase(BungeeConfig.STAFF_CHANNEL_ID.get(String.class))) {
+            return;
+        }
+
+        if (event.getMessage().getContentDisplay().equalsIgnoreCase(BungeeConfig.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class))) {
+
+            ProxyServer.getInstance().getScheduler().schedule(PLUGIN, () ->
+                    event.getMessage().delete().queue(), 5, TimeUnit.SECONDS);
+
+            return;
+
+        }
+
+        if (event.getAuthor().isBot()) {
+            return;
+        }
+
+        if (PlayerCache.getMuted().contains("true")) {
+
+            event.getMessage().reply(BungeeConfig.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class)).queue();
+
+            ProxyServer.getInstance().getScheduler().schedule(PLUGIN, () ->
+                    event.getMessage().delete().queue(), 5, TimeUnit.SECONDS);
+
+            return;
+
+        }
+
+        CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
+                        (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.DISCORD_STAFF_FORMAT.color()
+                        .replace("%prefix%", BungeeConfig.PREFIX.color())
+                        .replace("%user%", event.getAuthor().getName())
+                        .replace("%message%", event.getMessage().getContentDisplay()))));
+
     }
 }

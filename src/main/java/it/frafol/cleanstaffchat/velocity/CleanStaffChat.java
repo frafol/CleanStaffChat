@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.3.2",
+        version = "1.4",
         url = "github.com/frafol",
         authors = "frafol"
 )

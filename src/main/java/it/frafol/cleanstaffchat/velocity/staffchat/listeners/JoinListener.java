@@ -9,6 +9,7 @@ import it.frafol.cleanstaffchat.velocity.UpdateCheck;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -73,33 +74,50 @@ public class JoinListener {
                                         new Placeholder("user", player.getUsername()),
                                         new Placeholder("prefix", PREFIX.color())));
                     }
+
+                    final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.STAFF_CHANNEL_ID.get(String.class));
+
+                    if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                        assert channel != null;
+                        channel.sendMessageFormat(VelocityConfig.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
+                                        .replace("%user%", player.getUsername())).queue();
+
+                    }
                 }
             }
         }
     }
 
     @Subscribe
-    public void handle(DisconnectEvent event){
-        if (CleanStaffChat.getInstance().getServer().getAllPlayers().size() >= 1) {
-            Player player = event.getPlayer();
-            if (STAFF_QUIT_MESSAGE.get(Boolean.class)) {
-                if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                        || STAFFCHAT_QUIT_ALL.get(Boolean.class)) {
-                    if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
+    public void handle(DisconnectEvent event) {
 
-                        LuckPerms api = LuckPermsProvider.get();
+        Player player = event.getPlayer();
 
-                        if (api.getUserManager().getUser(event.getPlayer().getUniqueId()) == null) {
-                            return;
-                        }
+        if (STAFF_QUIT_MESSAGE.get(Boolean.class)) {
 
-                        User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
-                        assert user != null;
+            if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                    || STAFFCHAT_QUIT_ALL.get(Boolean.class)) {
 
-                        final String prefix = user.getCachedData().getMetaData().getPrefix();
-                        final String suffix = user.getCachedData().getMetaData().getSuffix();
-                        final String user_prefix = prefix == null ? "" : prefix;
-                        final String user_suffix = suffix == null ? "" : suffix;
+                if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
+
+                    LuckPerms api = LuckPermsProvider.get();
+
+                    if (api.getUserManager().getUser(event.getPlayer().getUniqueId()) == null) {
+                        return;
+                    }
+
+                    User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
+                    assert user != null;
+
+                    final String prefix = user.getCachedData().getMetaData().getPrefix();
+                    final String suffix = user.getCachedData().getMetaData().getSuffix();
+
+                    final String user_prefix = prefix == null ? "" : prefix;
+                    final String user_suffix = suffix == null ? "" : suffix;
+
+                    if (CleanStaffChat.getInstance().getServer().getAllPlayers().size() >= 1) {
+
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -109,14 +127,34 @@ public class JoinListener {
                                         new Placeholder("userprefix", user_prefix),
                                         new Placeholder("usersuffix", user_suffix),
                                         new Placeholder("prefix", PREFIX.color())));
-                    } else {
+
+                    }
+
+                } else {
+
+                    if (CleanStaffChat.getInstance().getServer().getAllPlayers().size() >= 1) {
+
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                                 .forEach(players -> STAFF_QUIT_MESSAGE_FORMAT.send(players,
                                         new Placeholder("user", player.getUsername()),
                                         new Placeholder("prefix", PREFIX.color())));
+
                     }
+
+                }
+
+                if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class)
+                        && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
+                        && VelocityConfig.JOIN_LEAVE_DISCORD_MODULE.get(Boolean.class)) {
+
+                    final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.STAFF_CHANNEL_ID.get(String.class));
+
+                    assert channel != null;
+                    channel.sendMessageFormat(VelocityConfig.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
+                            .replace("%user%", player.getUsername())).queue();
+
                 }
             }
         }

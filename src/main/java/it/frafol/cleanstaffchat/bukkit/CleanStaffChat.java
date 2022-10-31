@@ -3,8 +3,6 @@ package it.frafol.cleanstaffchat.bukkit;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import it.frafol.cleanstaffchat.bukkit.objects.TextFile;
-import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.CMIListener;
-import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.EssentialsListener;
 import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.JoinListener;
 import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.MoveListener;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.*;

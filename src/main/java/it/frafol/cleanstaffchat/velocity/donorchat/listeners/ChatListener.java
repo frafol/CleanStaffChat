@@ -7,6 +7,7 @@ import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.luckperms.api.LuckPerms;
@@ -94,12 +95,16 @@ public class ChatListener extends ListenerAdapter {
 
                         }
 
-                        PlayerCache.getCooldown().add(event.getPlayer().getUniqueId());
+                        if (!event.getPlayer().hasPermission(COOLDOWN_BYPASS_PERMISSION.get(String.class))) {
 
-                        PLUGIN.getServer().getScheduler()
-                                .buildTask(PLUGIN, scheduledTask -> PlayerCache.getCooldown().remove(event.getPlayer().getUniqueId()))
-                                .delay(DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS)
-                                .schedule();
+                            PlayerCache.getCooldown().add(event.getPlayer().getUniqueId());
+
+                            PLUGIN.getServer().getScheduler()
+                                    .buildTask(PLUGIN, scheduledTask -> PlayerCache.getCooldown().remove(event.getPlayer().getUniqueId()))
+                                    .delay(DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS)
+                                    .schedule();
+
+                        }
 
                         if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
@@ -141,6 +146,19 @@ public class ChatListener extends ListenerAdapter {
 
                         }
 
+                        if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class) && DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                            final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.DONOR_CHANNEL_ID.get(String.class));
+
+                            assert channel != null;
+                            channel.sendMessageFormat(VelocityConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                                            .replace("%user%", sender)
+                                            .replace("%message%", message)
+                                            .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()))
+                                    .queue();
+
+                        }
+
                     } else {
 
                         DONORCHAT_MUTED_ERROR.send(event.getPlayer(),
@@ -163,6 +181,17 @@ public class ChatListener extends ListenerAdapter {
             return;
         }
 
+        if (event.getMessage().getContentDisplay().equalsIgnoreCase(DONORCHAT_COOLDOWN_ERROR_DISCORD.get(String.class))) {
+
+            PLUGIN.getServer().getScheduler()
+                    .buildTask(PLUGIN, scheduledTask -> event.getMessage().delete().queue())
+                    .delay(5, TimeUnit.SECONDS)
+                    .schedule();
+
+            return;
+
+        }
+
         if (event.getAuthor().isBot()) {
             return;
         }
@@ -172,9 +201,18 @@ public class ChatListener extends ListenerAdapter {
             return;
         }
 
-        if (PlayerCache.getCooldown_discord().contains(event.getAuthor().getId())) {
-            event.getMessage().delete().queue();
+        if (PlayerCache.getCooldown_discord().contains(event.getAuthor().getId())
+                && (!VelocityConfig.COOLDOWN_BYPASS_DISCORD.get(Boolean.class))) {
+
+            event.getMessage().reply(VelocityConfig.DONORCHAT_COOLDOWN_ERROR_DISCORD.get(String.class)).queue();
+
+            PLUGIN.getServer().getScheduler()
+                    .buildTask(PLUGIN, scheduledTask -> event.getMessage().delete().queue())
+                    .delay(5, TimeUnit.SECONDS)
+                    .schedule();
+
             return;
+
         }
 
         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
@@ -183,14 +221,17 @@ public class ChatListener extends ListenerAdapter {
                 .forEach(players -> DISCORD_DONOR_FORMAT.send(players,
                         new Placeholder("user", event.getAuthor().getName()),
                         new Placeholder("message", event.getMessage().getContentDisplay()),
-                        new Placeholder("prefix", PREFIX.color())));
+                        new Placeholder("prefix", DONORPREFIX.color())));
 
-        PlayerCache.getCooldown_discord().add(event.getAuthor().getId());
+        if (!VelocityConfig.COOLDOWN_BYPASS_DISCORD.get(Boolean.class)) {
 
-        PLUGIN.getServer().getScheduler()
-                .buildTask(PLUGIN, scheduledTask -> PlayerCache.getCooldown_discord().remove(event.getAuthor().getId()))
-                .delay(DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS)
-                .schedule();
+            PlayerCache.getCooldown_discord().add(event.getAuthor().getId());
 
+            PLUGIN.getServer().getScheduler()
+                    .buildTask(PLUGIN, scheduledTask -> PlayerCache.getCooldown_discord().remove(event.getAuthor().getId()))
+                    .delay(DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS)
+                    .schedule();
+
+        }
     }
 }

@@ -2,7 +2,6 @@ package it.frafol.cleanstaffchat.bukkit.staffchat.commands;
 
 import com.Zrips.CMI.CMI;
 import com.Zrips.CMI.Containers.CMIUser;
-import com.earth2me.essentials.Essentials;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;

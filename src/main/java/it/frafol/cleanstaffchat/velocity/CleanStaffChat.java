@@ -180,6 +180,12 @@ public class CleanStaffChat {
                 jda.addEventListener(new it.frafol.cleanstaffchat.velocity.donorchat.listeners.ChatListener(this));
             }
 
+            if (VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                jda.addEventListener(new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
+            }
+
+            getLogger().info("§7Hooked into Discord §asuccessfully§7!");
+
         }
 
         if (VelocityConfig.STATS.get(Boolean.class)) {

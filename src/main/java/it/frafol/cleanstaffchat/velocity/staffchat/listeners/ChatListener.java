@@ -3,10 +3,12 @@ package it.frafol.cleanstaffchat.velocity.staffchat.listeners;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
+import com.velocitypowered.api.proxy.Player;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.luckperms.api.LuckPerms;
@@ -120,6 +122,19 @@ public class ChatListener extends ListenerAdapter {
                                             new Placeholder("usersuffix", ""),
                                             new Placeholder("server", event.getPlayer().getCurrentServer().get().getServerInfo().getName()),
                                             new Placeholder("prefix", PREFIX.color())));
+
+                        }
+
+                        if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                            final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.STAFF_CHANNEL_ID.get(String.class));
+
+                            assert channel != null;
+                            channel.sendMessageFormat(VelocityConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                                            .replace("%user%", sender)
+                                            .replace("%message%", message)
+                                            .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()))
+                                    .queue();
 
                         }
 

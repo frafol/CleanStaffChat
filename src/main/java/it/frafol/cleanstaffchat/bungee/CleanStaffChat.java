@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.simpleyaml.configuration.file.YamlFile;
 
@@ -48,6 +49,14 @@ public class CleanStaffChat extends Plugin {
             jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
                             (BungeeConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
                     BungeeConfig.DISCORD_ACTIVITY.get(String.class)));
+
+            if (getProxy().getPluginManager().getPlugin("ServerUtils") != null) {
+
+                getLogger().warning("\n\nWARNING!" +
+                        "\n\nIntegration on Discord may give you many problems if you reload the plugin with ServerUtils." +
+                        "\nConsider performing a TOTAL RESTART to prevent issues!\n");
+
+            }
 
             getLogger().info("§7Hooked into Discord §asuccessfully§7!");
 

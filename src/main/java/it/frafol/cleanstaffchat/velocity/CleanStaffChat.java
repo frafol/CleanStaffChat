@@ -80,6 +80,15 @@ public class CleanStaffChat {
                             (VelocityConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
                     VelocityConfig.DISCORD_ACTIVITY.get(String.class)));
 
+            if (getServer().getPluginManager().isLoaded("serverutils")
+                    || getServer().getPluginManager().isLoaded("PlugManBungee")) {
+
+                getLogger().warning("\n\nWARNING!" +
+                        "\n\nIntegration on Discord may give you many problems if you reload the plugin with ServerUtils/PlugMan." +
+                        "\nConsider performing a TOTAL RESTART to prevent issues!\n");
+
+            }
+
             getLogger().info("§7Hooked into Discord §asuccessfully§7!");
 
         }

@@ -1,12 +1,12 @@
 package it.frafol.cleanstaffchat.bukkit;
 
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
+import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import it.frafol.cleanstaffchat.bukkit.objects.TextFile;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.*;
 import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.ChatListener;
 import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.JoinListener;
 import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.MoveListener;
-import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -70,6 +70,19 @@ public class CleanStaffChat extends JavaPlugin {
             jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
                             (SpigotConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
                     SpigotConfig.DISCORD_ACTIVITY.get(String.class)));
+
+            if (getServer().getPluginManager().getPlugin("ServerUtils") != null
+                    || getServer().getPluginManager().getPlugin("PlugManX") != null
+                    || getServer().getPluginManager().getPlugin("PlugManDummy") != null
+                    || getServer().getPluginManager().getPlugin("PlugMan") != null
+                    || getServer().getPluginManager().getPlugin("Plugman") != null) {
+
+
+                getLogger().warning("\n\nWARNING!" +
+                        "\n\nIntegration on Discord may give you many problems if you reload the plugin with ServerUtils/Plugman." +
+                        "\nConsider performing a TOTAL RESTART to prevent issues!\n");
+
+            }
 
             getLogger().info("Hooked into Discord successfully!");
 

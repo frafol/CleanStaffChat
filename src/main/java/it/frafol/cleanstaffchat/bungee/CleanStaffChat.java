@@ -41,6 +41,18 @@ public class CleanStaffChat extends Plugin {
         configTextFile = new TextFile(getDataFolder().toPath(), "config.yml");
         getLogger().info("§7Configurations loaded §asuccessfully§7!");
 
+        if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class)) {
+
+            jda = JDABuilder.createDefault(BungeeConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
+
+            jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
+                            (BungeeConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
+                    BungeeConfig.DISCORD_ACTIVITY.get(String.class)));
+
+            getLogger().info("§7Hooked into Discord §asuccessfully§7!");
+
+        }
+
         if (BungeeConfig.STAFFCHAT.get(Boolean.class)) {
 
             getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.staffchat.commands.StaffChatCommand());
@@ -51,6 +63,10 @@ public class CleanStaffChat extends Plugin {
             getProxy().getPluginManager().registerListener(this, new ServerListener(this));
             getProxy().getPluginManager().registerListener(this, new it.frafol.cleanstaffchat.bungee.staffchat.listeners.ChatListener(this));
 
+            if (BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeConfig.DISCORD_ENABLED.get(Boolean.class)) {
+                jda.addEventListener(new ChatListener(this));
+            }
+
         }
 
         if (BungeeConfig.ADMINCHAT.get(Boolean.class)) {
@@ -59,6 +75,10 @@ public class CleanStaffChat extends Plugin {
             getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.adminchat.commands.MuteCommand());
             getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.adminchat.commands.ToggleCommand());
             getProxy().getPluginManager().registerListener(this, new it.frafol.cleanstaffchat.bungee.adminchat.listeners.ChatListener(this));
+
+            if (BungeeConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeConfig.DISCORD_ENABLED.get(Boolean.class)) {
+                jda.addEventListener(new it.frafol.cleanstaffchat.bungee.adminchat.listeners.ChatListener(this));
+            }
 
         }
 
@@ -69,33 +89,13 @@ public class CleanStaffChat extends Plugin {
             getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.donorchat.commands.ToggleCommand());
             getProxy().getPluginManager().registerListener(this, new it.frafol.cleanstaffchat.bungee.donorchat.listeners.ChatListener(this));
 
-        }
-
-        getProxy().getPluginManager().registerCommand(this, new ReloadCommand());
-
-        if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class)) {
-
-            jda = JDABuilder.createDefault(BungeeConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
-
-            jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
-                            (BungeeConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
-                    BungeeConfig.DISCORD_ACTIVITY.get(String.class)));
-
-            if (BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
-                jda.addEventListener(new ChatListener(this));
-            }
-
-            if (BungeeConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
+            if (BungeeConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeConfig.DISCORD_ENABLED.get(Boolean.class)) {
                 jda.addEventListener(new it.frafol.cleanstaffchat.bungee.donorchat.listeners.ChatListener(this));
             }
 
-            if (BungeeConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
-                jda.addEventListener(new it.frafol.cleanstaffchat.bungee.adminchat.listeners.ChatListener(this));
-            }
-
-            getLogger().info("§7Hooked into Discord §asuccessfully§7!");
-
         }
+
+        getProxy().getPluginManager().registerCommand(this, new ReloadCommand());
 
         if (BungeeConfig.STATS.get(Boolean.class)) {
 
@@ -134,6 +134,8 @@ public class CleanStaffChat extends Plugin {
         PlayerCache.getToggled_2_admin().clear();
         PlayerCache.getToggled_2_donor().clear();
         PlayerCache.getToggled().clear();
+        PlayerCache.getCooldown().clear();
+        PlayerCache.getCooldown_discord().clear();
         PlayerCache.getToggled_admin().clear();
         PlayerCache.getToggled_donor().clear();
         PlayerCache.getMuted().clear();

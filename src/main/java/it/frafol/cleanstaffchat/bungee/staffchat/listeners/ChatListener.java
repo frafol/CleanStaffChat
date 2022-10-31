@@ -147,6 +147,12 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
 
+        if (PLUGIN.getConfigTextFile() == null) {
+
+            return;
+
+        }
+
         if (!event.getChannel().getId().equalsIgnoreCase(BungeeConfig.STAFF_CHANNEL_ID.get(String.class))) {
             return;
         }

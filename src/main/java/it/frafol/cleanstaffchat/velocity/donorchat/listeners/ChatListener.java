@@ -177,8 +177,16 @@ public class ChatListener extends ListenerAdapter {
 
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
 
-        if (!event.getChannel().getId().equalsIgnoreCase(VelocityConfig.DONOR_CHANNEL_ID.get(String.class))) {
+        if (PLUGIN.getConfigTextFile() == null) {
+
             return;
+
+        }
+
+        if (!event.getChannel().getId().equalsIgnoreCase(VelocityConfig.DONOR_CHANNEL_ID.get(String.class))) {
+
+            return;
+
         }
 
         if (event.getMessage().getContentDisplay().equalsIgnoreCase(DONORCHAT_COOLDOWN_ERROR_DISCORD.get(String.class))

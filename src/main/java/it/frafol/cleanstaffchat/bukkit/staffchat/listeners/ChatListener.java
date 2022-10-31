@@ -3,6 +3,9 @@ package it.frafol.cleanstaffchat.bukkit.staffchat.listeners;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -10,8 +13,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
-public class ChatListener implements Listener {
+public class ChatListener extends ListenerAdapter implements Listener {
 
     public final CleanStaffChat PLUGIN;
 
@@ -124,6 +129,19 @@ public class ChatListener implements Listener {
 
                     }
 
+                    if (SpigotConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotConfig.STAFF_CHANNEL_ID.get(String.class));
+
+                        assert channel != null;
+                        channel.sendMessageFormat(SpigotConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                                        .replace("%user%", event.getPlayer().getName())
+                                        .replace("%message%", message)
+                                        .replace("%server%", ""))
+                                .queue();
+
+                    }
+
                     event.setCancelled(true);
 
                 } else {
@@ -133,5 +151,67 @@ public class ChatListener implements Listener {
                 }
             }
         }
+    }
+
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+
+        if (PLUGIN.getConfigTextFile() == null) {
+
+            return;
+
+        }
+
+        if (!event.getChannel().getId().equalsIgnoreCase(SpigotConfig.STAFF_CHANNEL_ID.get(String.class))) {
+            return;
+        }
+
+        if (event.getMessage().getContentDisplay().equalsIgnoreCase(SpigotConfig.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class))) {
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+
+                    event.getMessage().delete().queue();
+                    cancel();
+
+                }
+
+            }.runTaskTimer(PLUGIN, Math.multiplyExact(5, 20), 1);
+
+            return;
+
+        }
+
+        if (event.getAuthor().isBot()) {
+            return;
+        }
+
+        if (PlayerCache.getMuted().contains("true")) {
+
+            event.getMessage().reply(SpigotConfig.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class)).queue();
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+
+                    event.getMessage().delete().queue();
+                    cancel();
+
+                }
+
+            }.runTaskTimer(PLUGIN, Math.multiplyExact(5, 20), 1);
+
+            return;
+
+        }
+
+        CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                        (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
+                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                .forEach(players -> players.sendMessage(SpigotConfig.DISCORD_STAFF_FORMAT.color()
+                        .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())
+                        .replace("%user%", event.getAuthor().getName())
+                        .replace("%message%", event.getMessage().getContentDisplay())));
+
     }
 }

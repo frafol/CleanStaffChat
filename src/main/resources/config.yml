@@ -3,7 +3,8 @@
 # ( (__  )(__  )__)  /(__)\  )  (   \__ \( (__
 #  \___)(____)(____)(__)(__)(_)\_)  (___/ \___)
 #
-# Configuration file.
+# Configuration file. Made with ❤ by frafol.
+# For support: discord.io/futuredevelopment
 
 settings:
 
@@ -60,7 +61,8 @@ settings:
 messages:
 
   staffchat:
-    # General
+
+    # General messages.
     prefix: "&5&lSTAFF&d&lCHAT &8&l•"
     arguments: "%prefix% &7Use &d/sc <message>&7."
 
@@ -94,7 +96,8 @@ messages:
       discord_quit_message_format: "[STAFFCHAT] %user% left the server."
 
   adminchat:
-    # General
+
+    # General messages.
     prefix: "&5&lADMIN&d&lCHAT &8&l•"
     arguments: "%prefix% &7Use &d/ac <message>&7."
 
@@ -120,7 +123,8 @@ messages:
       adminchat_to_discord_format: "[ADMINCHAT] %user%: %message%"
 
   donorchat:
-    # General
+
+    # General messages.
     prefix: "&5&lDONOR&d&lCHAT &8&l•"
     arguments: "%prefix% &7Use &d/dc <message>&7."
     cooldown: "%prefix% &7Please wait to be able to reuse this &dchat&7."
@@ -158,24 +162,31 @@ messages:
   module_disabled: "%prefix% &7This function is actually &cdisabled&7!"
 
 
-discord:
+discord: # The Discord Integration is an experimental feature, report all problems on our Discord.
 
-  # Toggle discord support.
+  # Toggle discord feature.
   enabled: false
 
-  # Your bot's token.
+  # Your Discord bot's token.
   token: ""
 
   # Types: WATCHING, PLAYING, STREAMING.
   activity_type: "PLAYING"
 
+  # The Discord bot's activity.
   activity: "play.yourserver.net"
 
+  # To use staffchat with Discord, enter the ID of the chat where you want messages to be sent.
   staffchat_channel_id: ""
 
+  # To use adminchat with Discord, enter the ID of the chat where you want messages to be sent.
   adminchat_channel_id: ""
 
+  # To use donorchat with Discord, enter the ID of the chat where you want messages to be sent.
   donorchat_channel_id: ""
+
+  # NOTE: If you do not want to use a certain chat, disable it from modules.
+  # You will not have to enter any channel ids if you deactivate them.
 
 modules:
 

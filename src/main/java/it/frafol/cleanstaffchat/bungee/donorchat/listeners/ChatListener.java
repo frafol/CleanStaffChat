@@ -3,7 +3,7 @@ package it.frafol.cleanstaffchat.bungee.donorchat.listeners;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.luckperms.api.LuckPerms;
@@ -94,10 +94,14 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                     }
 
-                    PlayerCache.getCooldown().add(((ProxiedPlayer) event.getSender()).getUniqueId());
+                    if (!((ProxiedPlayer) event.getSender()).hasPermission(BungeeConfig.COOLDOWN_BYPASS_PERMISSION.get(String.class))) {
 
-                    ProxyServer.getInstance().getScheduler().schedule(PLUGIN, () ->
-                            PlayerCache.getCooldown().remove(((ProxiedPlayer) event.getSender()).getUniqueId()), BungeeConfig.DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS);
+                        PlayerCache.getCooldown().add(((ProxiedPlayer) event.getSender()).getUniqueId());
+
+                        ProxyServer.getInstance().getScheduler().schedule(PLUGIN, () ->
+                                PlayerCache.getCooldown().remove(((ProxiedPlayer) event.getSender()).getUniqueId()), BungeeConfig.DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS);
+
+                    }
 
                     if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
 
@@ -138,6 +142,19 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                         .replace("&", "§"))));
                     }
 
+                    if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class) && BungeeConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeConfig.DONOR_CHANNEL_ID.get(String.class));
+
+                        assert channel != null;
+                        channel.sendMessageFormat(BungeeConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                                        .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
+                                        .replace("%message%", message)
+                                        .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName()))
+                                .queue();
+
+                    }
+
                 } else {
 
                     PlayerCache.getToggled_2_donor().remove(((ProxiedPlayer) event.getSender()).getUniqueId());
@@ -150,7 +167,13 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
 
-        if (!event.getChannel().getId().equalsIgnoreCase(VelocityConfig.DONOR_CHANNEL_ID.get(String.class))) {
+        if (PLUGIN.getConfigTextFile() == null) {
+
+            return;
+
+        }
+
+        if (!event.getChannel().getId().equalsIgnoreCase(BungeeConfig.DONOR_CHANNEL_ID.get(String.class))) {
             return;
         }
 

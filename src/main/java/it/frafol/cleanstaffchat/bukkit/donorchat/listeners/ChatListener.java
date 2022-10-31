@@ -3,6 +3,9 @@ package it.frafol.cleanstaffchat.bukkit.donorchat.listeners;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -11,8 +14,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
-public class ChatListener implements Listener {
+public class ChatListener extends ListenerAdapter implements Listener {
 
     public final CleanStaffChat PLUGIN;
 
@@ -99,18 +103,22 @@ public class ChatListener implements Listener {
                         }
                     }
 
-                    PlayerCache.getCooldown().add(event.getPlayer().getUniqueId());
+                    if (event.getPlayer().hasPermission(SpigotConfig.COOLDOWN_BYPASS_PERMISSION.get(String.class))) {
 
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
+                        PlayerCache.getCooldown().add(event.getPlayer().getUniqueId());
 
-                            PlayerCache.getCooldown().remove(event.getPlayer().getUniqueId());
-                            cancel();
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
 
-                        }
+                                PlayerCache.getCooldown().remove(event.getPlayer().getUniqueId());
+                                cancel();
 
-                    }.runTaskTimer(PLUGIN, Math.multiplyExact(SpigotConfig.DONOR_TIMER.get(Integer.class), 20), 1);
+                            }
+
+                        }.runTaskTimer(PLUGIN, Math.multiplyExact(SpigotConfig.DONOR_TIMER.get(Integer.class), 20), 1);
+
+                    }
 
                     if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
 
@@ -151,6 +159,19 @@ public class ChatListener implements Listener {
 
                     }
 
+                    if (SpigotConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotConfig.DONOR_CHANNEL_ID.get(String.class));
+
+                        assert channel != null;
+                        channel.sendMessageFormat(SpigotConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                                        .replace("%user%", event.getPlayer().getName())
+                                        .replace("%message%", message)
+                                        .replace("%server%", ""))
+                                .queue();
+
+                    }
+
                     event.setCancelled(true);
 
                 } else {
@@ -159,6 +180,108 @@ public class ChatListener implements Listener {
 
                 }
             }
+        }
+    }
+
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+
+        if (PLUGIN.getConfigTextFile() == null) {
+
+            return;
+
+        }
+
+        if (!event.getChannel().getId().equalsIgnoreCase(SpigotConfig.DONOR_CHANNEL_ID.get(String.class))) {
+            return;
+        }
+
+        if (event.getMessage().getContentDisplay().equalsIgnoreCase(SpigotConfig.DONORCHAT_COOLDOWN_ERROR_DISCORD.get(String.class))
+                || event.getMessage().getContentDisplay().equalsIgnoreCase(SpigotConfig.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class))) {
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+
+                    event.getMessage().delete().queue();
+                    cancel();
+
+                }
+
+            }.runTaskTimer(PLUGIN, Math.multiplyExact(5, 20), 1);
+
+            return;
+
+        }
+
+        if (event.getAuthor().isBot()) {
+
+            return;
+
+        }
+
+        if (PlayerCache.getMuted_donor().contains("true")) {
+
+            event.getMessage().reply(SpigotConfig.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class)).queue();
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+
+                    event.getMessage().delete().queue();
+                    cancel();
+
+                }
+
+            }.runTaskTimer(PLUGIN, Math.multiplyExact(5, 20), 1);
+
+            return;
+
+        }
+
+        if (PlayerCache.getCooldown_discord().contains(event.getAuthor().getId())
+                && (!SpigotConfig.COOLDOWN_BYPASS_DISCORD.get(Boolean.class))) {
+
+            event.getMessage().reply(SpigotConfig.DONORCHAT_COOLDOWN_ERROR_DISCORD.get(String.class)).queue();
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+
+                    event.getMessage().delete().queue();
+                    cancel();
+
+                }
+
+            }.runTaskTimer(PLUGIN, Math.multiplyExact(5, 20), 1);
+
+            return;
+
+        }
+
+        CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                        (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
+                                && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
+                .forEach(players -> players.sendMessage((SpigotConfig.DISCORD_DONOR_FORMAT.color()
+                        .replace("%prefix%", SpigotConfig.DONORPREFIX.color())
+                        .replace("%user%", event.getAuthor().getName())
+                        .replace("%message%", event.getMessage().getContentDisplay())
+                        .replace("&", "§"))));
+
+        if (!SpigotConfig.COOLDOWN_BYPASS_DISCORD.get(Boolean.class)) {
+
+            PlayerCache.getCooldown_discord().add(event.getAuthor().getId());
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+
+                    PlayerCache.getCooldown_discord().remove(event.getAuthor().getId());
+                    cancel();
+
+                }
+
+            }.runTaskTimer(PLUGIN, Math.multiplyExact(SpigotConfig.DONOR_TIMER.get(Integer.class), 20), 1);
+
         }
     }
 }

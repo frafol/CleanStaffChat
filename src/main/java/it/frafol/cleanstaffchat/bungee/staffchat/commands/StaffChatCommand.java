@@ -1,10 +1,8 @@
 package it.frafol.cleanstaffchat.bungee.staffchat.commands;
 
-import com.velocitypowered.api.proxy.Player;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;

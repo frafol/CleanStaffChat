@@ -43,4 +43,7 @@ public class PlayerCache {
     @Getter
     private final List<String> muted_donor = Lists.newArrayList();
 
+    @Getter
+    private final List<String> cooldown_discord = Lists.newArrayList();
+
 }

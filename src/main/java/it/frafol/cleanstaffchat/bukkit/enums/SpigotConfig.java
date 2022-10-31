@@ -31,10 +31,19 @@ public enum SpigotConfig {
     STAFFCHAT_NO_AFK_ONCHANGE_SERVER("settings.staffchat.staff_disable_afk_on_move"),
     STAFFCHAT_AFK_PERMISSION("settings.staffchat.staffchat_afk_permission"),
 
+    STAFFCHAT_FORMAT_DISCORD("messages.staffchat.discord.staffchat_to_discord_format"),
+    DONORCHAT_FORMAT_DISCORD("messages.donorchat.discord.donorchat_to_discord_format"),
+    ADMINCHAT_FORMAT_DISCORD("messages.adminchat.discord.adminchat_to_discord_format"),
+
     STAFF_JOIN_MESSAGE("settings.staffchat.staff_join_message"),
     STAFF_QUIT_MESSAGE("settings.staffchat.staff_quit_message"),
+    STAFF_DISCORD_JOIN_MESSAGE_FORMAT("messages.staffchat.discord.discord_join_message_format"),
+    STAFF_DISCORD_QUIT_MESSAGE_FORMAT("messages.staffchat.discord.discord_quit_message_format"),
     STAFF_JOIN_MESSAGE_FORMAT("messages.staffchat.staff_join_message_format"),
     STAFF_QUIT_MESSAGE_FORMAT("messages.staffchat.staff_quit_message_format"),
+    COOLDOWN_BYPASS_DISCORD("settings.donorchat.donorchat_discord_cooldown_bypass"),
+    COOLDOWN_BYPASS_PERMISSION("settings.donorchat.donorchat_cooldown_bypass_permission"),
+    JOIN_LEAVE_DISCORD_MODULE("modules.staffchat_discord_join_leave_module"),
 
     STAFFCHAT_USE_PERMISSION("settings.staffchat.staffchat_use_permission"),
     ADMINCHAT_USE_PERMISSION("settings.adminchat.adminchat_use_permission"),
@@ -96,6 +105,23 @@ public enum SpigotConfig {
     STATS("modules.stats"),
 
     UPDATE_CHECK("modules.update_check"),
+
+    STAFFCHAT_DISCORD_MODULE("modules.staffchat_discord_module"),
+    ADMINCHAT_DISCORD_MODULE("modules.adminchat_discord_module"),
+    DONORCHAT_DISCORD_MODULE("modules.donorchat_discord_module"),
+    DISCORD_ENABLED("discord.enabled"),
+    DISCORD_TOKEN("discord.token"),
+    DISCORD_ACTIVITY_TYPE("discord.activity_type"),
+    STAFFCHAT_MUTED_ERROR_DISCORD("messages.chat_muted_error_discord"),
+    DISCORD_ACTIVITY("discord.activity"),
+    DISCORD_STAFF_FORMAT("messages.staffchat.discord.staffchat_discord_format"),
+    DISCORD_DONOR_FORMAT("messages.donorchat.discord.donorchat_discord_format"),
+    DISCORD_ADMIN_FORMAT("messages.adminchat.discord.adminchat_discord_format"),
+    STAFF_CHANNEL_ID("discord.staffchat_channel_id"),
+    DONOR_CHANNEL_ID("discord.donorchat_channel_id"),
+    ADMIN_CHANNEL_ID("discord.adminchat_channel_id"),
+
+    DONORCHAT_COOLDOWN_ERROR_DISCORD("messages.donorchat.discord.discord_cooldown_message"),
 
     STAFFCHAT("settings.use_staffchat"),
     ADMINCHAT("settings.use_adminchat"),

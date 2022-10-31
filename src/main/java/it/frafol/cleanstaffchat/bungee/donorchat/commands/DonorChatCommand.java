@@ -183,11 +183,14 @@ public class DonorChatCommand extends Command {
 
                     }
 
-                    PlayerCache.getCooldown().add(((ProxiedPlayer) sender).getUniqueId());
+                    if (!sender.hasPermission(BungeeConfig.COOLDOWN_BYPASS_PERMISSION.get(String.class))) {
 
-                    ProxyServer.getInstance().getScheduler().schedule(plugin, () ->
-                            PlayerCache.getCooldown().remove(((ProxiedPlayer) sender).getUniqueId()), BungeeConfig.DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS);
+                        PlayerCache.getCooldown().add(((ProxiedPlayer) sender).getUniqueId());
 
+                        ProxyServer.getInstance().getScheduler().schedule(plugin, () ->
+                                PlayerCache.getCooldown().remove(((ProxiedPlayer) sender).getUniqueId()), BungeeConfig.DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS);
+
+                    }
 
                 } else if (BungeeConfig.CONSOLE_CAN_TALK.get(Boolean.class)) {
 

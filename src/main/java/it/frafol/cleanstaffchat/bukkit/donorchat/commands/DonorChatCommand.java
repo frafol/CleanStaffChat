@@ -3,6 +3,7 @@ package it.frafol.cleanstaffchat.bukkit.donorchat.commands;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -196,19 +197,35 @@ public class DonorChatCommand implements CommandExecutor {
 
                     }
 
-                    PlayerCache.getCooldown().add(((Player) sender).getUniqueId());
+                    if (SpigotConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
+                        final TextChannel channel = plugin.getJda().getTextChannelById(SpigotConfig.DONOR_CHANNEL_ID.get(String.class));
 
-                            PlayerCache.getCooldown().remove(((Player) sender).getUniqueId());
-                            cancel();
+                        assert channel != null;
+                        channel.sendMessageFormat(SpigotConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                                        .replace("%user%", commandsender)
+                                        .replace("%message%", message)
+                                        .replace("%server%", ""))
+                                .queue();
 
-                        }
+                    }
 
-                    }.runTaskTimer(plugin, Math.multiplyExact(SpigotConfig.DONOR_TIMER.get(Integer.class), 20), 1);
+                    if (!sender.hasPermission(SpigotConfig.COOLDOWN_BYPASS_PERMISSION.get(String.class))) {
 
+                        PlayerCache.getCooldown().add(((Player) sender).getUniqueId());
+
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+
+                                PlayerCache.getCooldown().remove(((Player) sender).getUniqueId());
+                                cancel();
+
+                            }
+
+                        }.runTaskTimer(plugin, Math.multiplyExact(SpigotConfig.DONOR_TIMER.get(Integer.class), 20), 1);
+
+                    }
 
                 } else if (SpigotConfig.CONSOLE_CAN_TALK.get(Boolean.class)) {
 
@@ -243,6 +260,19 @@ public class DonorChatCommand implements CommandExecutor {
                             .replace("%usersuffix%", "")
                             .replace("%server%", "")
                             .replace("%message%", message)));
+
+                    if (SpigotConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                        final TextChannel channel = plugin.getJda().getTextChannelById(SpigotConfig.DONOR_CHANNEL_ID.get(String.class));
+
+                        assert channel != null;
+                        channel.sendMessageFormat(SpigotConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                                        .replace("%user%", commandsender)
+                                        .replace("%message%", message)
+                                        .replace("%server%", ""))
+                                .queue();
+
+                    }
 
                     return false;
 

@@ -3,6 +3,7 @@ package it.frafol.cleanstaffchat.bukkit.staffchat.commands;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -187,6 +188,19 @@ public class StaffChatCommand implements CommandExecutor {
 
                     }
 
+                    if (SpigotConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                        final TextChannel channel = plugin.getJda().getTextChannelById(SpigotConfig.STAFF_CHANNEL_ID.get(String.class));
+
+                        assert channel != null;
+                        channel.sendMessageFormat(SpigotConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                                        .replace("%user%", commandsender)
+                                        .replace("%message%", message)
+                                        .replace("%server%", ""))
+                                .queue();
+
+                    }
+
                 } else if (SpigotConfig.CONSOLE_CAN_TALK.get(Boolean.class)) {
 
                     if (!PlayerCache.getMuted().contains("true")) {
@@ -220,6 +234,19 @@ public class StaffChatCommand implements CommandExecutor {
                             .replace("%usersuffix%", "")
                             .replace("%server%", "")
                             .replace("%message%", message)));
+
+                    if (SpigotConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                        final TextChannel channel = plugin.getJda().getTextChannelById(SpigotConfig.STAFF_CHANNEL_ID.get(String.class));
+
+                        assert channel != null;
+                        channel.sendMessageFormat(SpigotConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                                        .replace("%user%", commandsender)
+                                        .replace("%message%", message)
+                                        .replace("%server%", ""))
+                                .queue();
+
+                    }
 
                     return false;
 

@@ -157,6 +157,12 @@ public class ChatListener extends ListenerAdapter {
 
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
 
+        if (PLUGIN.getConfigTextFile() == null) {
+
+            return;
+
+        }
+
         if (!event.getChannel().getId().equalsIgnoreCase(VelocityConfig.STAFF_CHANNEL_ID.get(String.class))) {
             return;
         }

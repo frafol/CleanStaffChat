@@ -9,7 +9,7 @@ import net.md_5.bungee.api.plugin.Command;
 public class MuteCommand extends Command {
 
     public MuteCommand() {
-        super("scmute","","staffchatmute","cleanscmute","cleanstaffchatmute", "staffmute");
+        super("acmute","","adminchatmute","adminmute");
     }
 
     @Override

@@ -3,6 +3,7 @@ package it.frafol.cleanstaffchat.bungee.adminchat.listeners;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.luckperms.api.LuckPerms;
@@ -122,6 +123,19 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                         .replace("&", "§"))));
                     }
 
+                    if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class) && BungeeConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeConfig.ADMIN_CHANNEL_ID.get(String.class));
+
+                        assert channel != null;
+                        channel.sendMessageFormat(BungeeConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                                        .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
+                                        .replace("%message%", message)
+                                        .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName()))
+                                .queue();
+
+                    }
+
                 } else {
 
                     PlayerCache.getToggled_2_admin().remove(((ProxiedPlayer) event.getSender()).getUniqueId());
@@ -132,6 +146,12 @@ public class ChatListener extends ListenerAdapter implements Listener {
     }
 
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+
+        if (PLUGIN.getConfigTextFile() == null) {
+
+            return;
+
+        }
 
         if (!event.getChannel().getId().equalsIgnoreCase(BungeeConfig.ADMIN_CHANNEL_ID.get(String.class))) {
             return;

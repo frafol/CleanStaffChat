@@ -72,6 +72,18 @@ public class CleanStaffChat {
         configTextFile = new TextFile(path, "config.yml");
         getLogger().info("§7Configurations loaded §asuccessfully§7!");
 
+        if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class)) {
+
+            jda = JDABuilder.createDefault(VelocityConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
+
+            jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
+                            (VelocityConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
+                    VelocityConfig.DISCORD_ACTIVITY.get(String.class)));
+
+            getLogger().info("§7Hooked into Discord §asuccessfully§7!");
+
+        }
+
         server.getCommandManager().register(server.getCommandManager()
                 .metaBuilder("screload")
                 .aliases("staffchatreload")
@@ -116,6 +128,10 @@ public class CleanStaffChat {
             server.getEventManager().register(this, new ServerListener(this));
             server.getEventManager().register(this, new ChatListener(this));
 
+            if (VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityConfig.DISCORD_ENABLED.get(Boolean.class)) {
+                jda.addEventListener(new ChatListener(this));
+            }
+
         }
 
         if (VelocityConfig.DONORCHAT.get(Boolean.class)) {
@@ -138,6 +154,10 @@ public class CleanStaffChat {
                     .build(), new it.frafol.cleanstaffchat.velocity.donorchat.commands.ToggleCommand(this));
 
             server.getEventManager().register(this, new it.frafol.cleanstaffchat.velocity.donorchat.listeners.ChatListener(this));
+
+            if (VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityConfig.DISCORD_ENABLED.get(Boolean.class)) {
+                jda.addEventListener(new it.frafol.cleanstaffchat.velocity.donorchat.listeners.ChatListener(this));
+            }
 
         }
 
@@ -162,29 +182,9 @@ public class CleanStaffChat {
 
             server.getEventManager().register(this, new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
 
-        }
-
-        if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class)) {
-
-            jda = JDABuilder.createDefault(VelocityConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
-
-            jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
-                            (VelocityConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
-                    VelocityConfig.DISCORD_ACTIVITY.get(String.class)));
-
-            if (VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
-                jda.addEventListener(new ChatListener(this));
-            }
-
-            if (VelocityConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
-                jda.addEventListener(new it.frafol.cleanstaffchat.velocity.donorchat.listeners.ChatListener(this));
-            }
-
-            if (VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
+            if (VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityConfig.DISCORD_ENABLED.get(Boolean.class)) {
                 jda.addEventListener(new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
             }
-
-            getLogger().info("§7Hooked into Discord §asuccessfully§7!");
 
         }
 

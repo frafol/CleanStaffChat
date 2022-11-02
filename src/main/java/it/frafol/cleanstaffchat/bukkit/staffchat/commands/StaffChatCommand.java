@@ -3,6 +3,7 @@ package it.frafol.cleanstaffchat.bukkit.staffchat.commands;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -13,6 +14,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.util.Arrays;
 
 public class StaffChatCommand implements CommandExecutor {
@@ -193,12 +195,32 @@ public class StaffChatCommand implements CommandExecutor {
                         final TextChannel channel = plugin.getJda().getTextChannelById(SpigotConfig.STAFF_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
-                        channel.sendMessageFormat(SpigotConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
-                                        .replace("%user%", commandsender)
-                                        .replace("%message%", message)
-                                        .replace("%server%", ""))
-                                .queue();
 
+                        if (SpigotConfig.USE_EMBED.get(Boolean.class)) {
+
+                            EmbedBuilder embed = new EmbedBuilder();
+
+                            embed.setTitle(SpigotConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+
+                            embed.setDescription(SpigotConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                                    .replace("%user%", commandsender)
+                                    .replace("%message%", message)
+                                    .replace("%server%", ""));
+
+                            embed.setColor(Color.RED);
+                            embed.setFooter("Powered by CleanStaffChat");
+
+                            channel.sendMessageEmbeds(embed.build()).queue();
+
+                        } else {
+
+                            channel.sendMessageFormat(SpigotConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                                            .replace("%user%", commandsender)
+                                            .replace("%message%", message)
+                                            .replace("%server%", ""))
+                                    .queue();
+
+                        }
                     }
 
                 } else if (SpigotConfig.CONSOLE_CAN_TALK.get(Boolean.class)) {
@@ -240,12 +262,32 @@ public class StaffChatCommand implements CommandExecutor {
                         final TextChannel channel = plugin.getJda().getTextChannelById(SpigotConfig.STAFF_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
-                        channel.sendMessageFormat(SpigotConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
-                                        .replace("%user%", commandsender)
-                                        .replace("%message%", message)
-                                        .replace("%server%", ""))
-                                .queue();
 
+                        if (SpigotConfig.USE_EMBED.get(Boolean.class)) {
+
+                            EmbedBuilder embed = new EmbedBuilder();
+
+                            embed.setTitle(SpigotConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+
+                            embed.setDescription(SpigotConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                                    .replace("%user%", commandsender)
+                                    .replace("%message%", message)
+                                    .replace("%server%", ""));
+
+                            embed.setColor(Color.RED);
+                            embed.setFooter("Powered by CleanStaffChat");
+
+                            channel.sendMessageEmbeds(embed.build()).queue();
+
+                        } else {
+
+                            channel.sendMessageFormat(SpigotConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                                            .replace("%user%", commandsender)
+                                            .replace("%message%", message)
+                                            .replace("%server%", ""))
+                                    .queue();
+
+                        }
                     }
 
                     return false;

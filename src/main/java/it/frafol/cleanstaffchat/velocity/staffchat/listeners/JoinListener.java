@@ -9,11 +9,14 @@ import it.frafol.cleanstaffchat.velocity.UpdateCheck;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
+
+import java.awt.*;
 
 import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.*;
 
@@ -80,9 +83,28 @@ public class JoinListener {
                         final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.STAFF_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
-                        channel.sendMessageFormat(VelocityConfig.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
-                                        .replace("%user%", player.getUsername())).queue();
 
+                        if (VelocityConfig.USE_EMBED.get(Boolean.class)) {
+
+                            EmbedBuilder embed = new EmbedBuilder();
+
+                            embed.setTitle(VelocityConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+
+                            embed.setDescription(VelocityConfig.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
+                                    .replace("%user%", player.getUsername()));
+
+                            embed.setColor(Color.YELLOW);
+                            embed.setFooter("Powered by CleanStaffChat");
+
+                            channel.sendMessageEmbeds(embed.build()).queue();
+
+                        } else {
+
+                            channel.sendMessageFormat(VelocityConfig.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
+                                    .replace("%user%", player.getUsername()))
+                                    .queue();
+
+                        }
                     }
                 }
             }
@@ -152,9 +174,28 @@ public class JoinListener {
                     final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.STAFF_CHANNEL_ID.get(String.class));
 
                     assert channel != null;
-                    channel.sendMessageFormat(VelocityConfig.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
-                            .replace("%user%", player.getUsername())).queue();
 
+                    if (VelocityConfig.USE_EMBED.get(Boolean.class)) {
+
+                        EmbedBuilder embed = new EmbedBuilder();
+
+                        embed.setTitle(VelocityConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+
+                        embed.setDescription(VelocityConfig.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
+                                .replace("%user%", player.getUsername()));
+
+                        embed.setColor(Color.YELLOW);
+                        embed.setFooter("Powered by CleanStaffChat");
+
+                        channel.sendMessageEmbeds(embed.build()).queue();
+
+                    } else {
+
+                        channel.sendMessageFormat(VelocityConfig.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
+                                        .replace("%user%", player.getUsername()))
+                                .queue();
+
+                    }
                 }
             }
         }

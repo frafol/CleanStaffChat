@@ -9,12 +9,14 @@ import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 
+import java.awt.*;
 import java.util.Arrays;
 
 import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.*;
@@ -198,12 +200,32 @@ public class AdminChatCommand implements SimpleCommand {
                         final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.ADMIN_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
-                        channel.sendMessageFormat(VelocityConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
-                                        .replace("%user%", sender)
-                                        .replace("%message%", message)
-                                        .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()))
-                                .queue();
 
+                        if (VelocityConfig.USE_EMBED.get(Boolean.class)) {
+
+                            EmbedBuilder embed = new EmbedBuilder();
+
+                            embed.setTitle(VelocityConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
+
+                            embed.setDescription(VelocityConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                                    .replace("%user%", sender)
+                                    .replace("%message%", message)
+                                    .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()));
+
+                            embed.setColor(Color.RED);
+                            embed.setFooter("Powered by CleanStaffChat");
+
+                            channel.sendMessageEmbeds(embed.build()).queue();
+
+                        } else {
+
+                            channel.sendMessageFormat(VelocityConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                                            .replace("%user%", sender)
+                                            .replace("%message%", message)
+                                            .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()))
+                                    .queue();
+
+                        }
                     }
 
                 } else if (CONSOLE_CAN_TALK.get(Boolean.class)) {
@@ -227,12 +249,32 @@ public class AdminChatCommand implements SimpleCommand {
                             final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.ADMIN_CHANNEL_ID.get(String.class));
 
                             assert channel != null;
-                            channel.sendMessageFormat(VelocityConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
-                                            .replace("%user%", sender)
-                                            .replace("%message%", message)
-                                            .replace("%server%", ""))
-                                    .queue();
 
+                            if (VelocityConfig.USE_EMBED.get(Boolean.class)) {
+
+                                EmbedBuilder embed = new EmbedBuilder();
+
+                                embed.setTitle(VelocityConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
+
+                                embed.setDescription(VelocityConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                                        .replace("%user%", sender)
+                                        .replace("%message%", message)
+                                        .replace("%server%", ""));
+
+                                embed.setColor(Color.RED);
+                                embed.setFooter("Powered by CleanStaffChat");
+
+                                channel.sendMessageEmbeds(embed.build()).queue();
+
+                            } else {
+
+                                channel.sendMessageFormat(VelocityConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                                                .replace("%user%", sender)
+                                                .replace("%message%", message)
+                                                .replace("%server%", ""))
+                                        .queue();
+
+                            }
                         }
 
                     } else {

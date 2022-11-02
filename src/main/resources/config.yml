@@ -90,10 +90,10 @@ messages:
 
       # Discord Chat Formats (You can use %user% and %message% only)
       staffchat_discord_format: "%prefix% &7[&bDiscord&7] &7%user% &8» &7%message%"
-      staffchat_to_discord_format: "[STAFFCHAT] %user%: %message%"
+      staffchat_to_discord_format: "%user% » %message%"
 
-      discord_join_message_format: "[STAFFCHAT] %user% joined the server."
-      discord_quit_message_format: "[STAFFCHAT] %user% left the server."
+      discord_join_message_format: "%user% joined the server."
+      discord_quit_message_format: "%user% left the server."
 
   adminchat:
 
@@ -120,7 +120,7 @@ messages:
 
       # Discord Chat Format (You can use %user% and %message% only)
       adminchat_discord_format: "%prefix% &7[&bDiscord&7] &7%user% &8» &7%message%"
-      adminchat_to_discord_format: "[ADMINCHAT] %user%: %message%"
+      adminchat_to_discord_format: "%user% » %message%"
 
   donorchat:
 
@@ -148,7 +148,7 @@ messages:
 
       # Discord Chat Format (You can use %user% and %message% only)
       donorchat_discord_format: "%prefix% &7[&bDiscord&7] &7%user% &8» &7%message%"
-      donorchat_to_discord_format: "[DONORCHAT] %user%: %message%"
+      donorchat_to_discord_format: "%user% » %message%"
 
       discord_cooldown_message: "You have to wait some seconds to send another message."
 
@@ -187,6 +187,14 @@ discord: # The Discord Integration is an experimental feature, report all proble
 
   # NOTE: If you do not want to use a certain chat, disable it from modules.
   # You will not have to enter any channel ids if you deactivate them.
+
+  # Use embeds instead of messages.
+  use_embeds: true
+
+  # The 'title' of the embed message sent on Discord.
+  staffchat_embed_title: "StaffChat"
+  adminchat_embed_title: "AdminChat"
+  donorchat_embed_title: "DonorChat"
 
 modules:
 

@@ -3,6 +3,7 @@ package it.frafol.cleanstaffchat.bungee.adminchat.listeners;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -17,6 +18,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
 public class ChatListener extends ListenerAdapter implements Listener {
@@ -128,12 +130,32 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeConfig.ADMIN_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
-                        channel.sendMessageFormat(BungeeConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
-                                        .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
-                                        .replace("%message%", message)
-                                        .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName()))
-                                .queue();
 
+                        if (BungeeConfig.USE_EMBED.get(Boolean.class)) {
+
+                            EmbedBuilder embed = new EmbedBuilder();
+
+                            embed.setTitle(BungeeConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
+
+                            embed.setDescription(BungeeConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                                    .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
+                                    .replace("%message%", message)
+                                    .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName()));
+
+                            embed.setColor(Color.RED);
+                            embed.setFooter("Powered by CleanStaffChat");
+
+                            channel.sendMessageEmbeds(embed.build()).queue();
+
+                        } else {
+
+                            channel.sendMessageFormat(BungeeConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                                            .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
+                                            .replace("%message%", message)
+                                            .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName()))
+                                    .queue();
+
+                        }
                     }
 
                 } else {

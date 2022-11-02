@@ -4,6 +4,7 @@ import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.UpdateCheck;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -15,6 +16,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import java.awt.*;
 
 public class JoinListener implements Listener {
 
@@ -100,9 +103,27 @@ public class JoinListener implements Listener {
                         final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotConfig.STAFF_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
-                        channel.sendMessageFormat(SpigotConfig.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
-                                .replace("%user%", player.getName())).queue();
 
+                        if (SpigotConfig.USE_EMBED.get(Boolean.class)) {
+
+                            EmbedBuilder embed = new EmbedBuilder();
+
+                            embed.setTitle(SpigotConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+
+                            embed.setDescription(SpigotConfig.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
+                                    .replace("%user%", player.getName()));
+
+                            embed.setColor(Color.YELLOW);
+                            embed.setFooter("Powered by CleanStaffChat");
+
+                            channel.sendMessageEmbeds(embed.build()).queue();
+
+                        } else {
+
+                            channel.sendMessageFormat(SpigotConfig.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
+                                    .replace("%user%", player.getName())).queue();
+
+                        }
                     }
 
                 }
@@ -176,9 +197,27 @@ public class JoinListener implements Listener {
                     final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotConfig.STAFF_CHANNEL_ID.get(String.class));
 
                     assert channel != null;
-                    channel.sendMessageFormat(SpigotConfig.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
-                            .replace("%user%", player.getName())).queue();
 
+                    if (SpigotConfig.USE_EMBED.get(Boolean.class)) {
+
+                        EmbedBuilder embed = new EmbedBuilder();
+
+                        embed.setTitle(SpigotConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+
+                        embed.setDescription(SpigotConfig.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
+                                .replace("%user%", player.getName()));
+
+                        embed.setColor(Color.YELLOW);
+                        embed.setFooter("Powered by CleanStaffChat");
+
+                        channel.sendMessageEmbeds(embed.build()).queue();
+
+                    } else {
+
+                        channel.sendMessageFormat(SpigotConfig.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
+                                .replace("%user%", player.getName())).queue();
+
+                    }
                 }
 
             }

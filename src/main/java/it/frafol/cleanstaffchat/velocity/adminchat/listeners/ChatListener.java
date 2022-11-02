@@ -7,6 +7,7 @@ import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -15,6 +16,7 @@ import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
 import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.*;
@@ -130,12 +132,32 @@ public class ChatListener extends ListenerAdapter {
                         if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
                             assert channel != null;
-                            channel.sendMessageFormat(VelocityConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
-                                            .replace("%user%", sender)
-                                            .replace("%message%", message)
-                                            .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()))
-                                    .queue();
 
+                            if (VelocityConfig.USE_EMBED.get(Boolean.class)) {
+
+                                EmbedBuilder embed = new EmbedBuilder();
+
+                                embed.setTitle(VelocityConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
+
+                                embed.setDescription(VelocityConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                                        .replace("%user%", sender)
+                                        .replace("%message%", message)
+                                        .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()));
+
+                                embed.setColor(Color.RED);
+                                embed.setFooter("Powered by CleanStaffChat");
+
+                                channel.sendMessageEmbeds(embed.build()).queue();
+
+                            } else {
+
+                                channel.sendMessageFormat(VelocityConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                                                .replace("%user%", sender)
+                                                .replace("%message%", message)
+                                                .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()))
+                                        .queue();
+
+                            }
                         }
 
                     } else {

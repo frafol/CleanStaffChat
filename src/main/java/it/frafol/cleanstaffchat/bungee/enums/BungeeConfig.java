@@ -4,6 +4,12 @@ import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 
 public enum BungeeConfig {
 
+    USE_EMBED("discord.use_embeds"),
+
+    STAFFCHAT_EMBED_TITLE("discord.staffchat_embed_title"),
+    ADMINCHAT_EMBED_TITLE("discord.adminchat_embed_title"),
+    DONORCHAT_EMBED_TITLE("discord.donorchat_embed_title"),
+
     PLAYER_ONLY("messages.console"),
 
     NO_PERMISSION("messages.no_permission"),

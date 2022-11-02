@@ -3,6 +3,7 @@ package it.frafol.cleanstaffchat.bungee.adminchat.commands;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -13,6 +14,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
+import java.awt.*;
 import java.util.Arrays;
 
 public class AdminChatCommand extends Command {
@@ -158,12 +160,32 @@ public class AdminChatCommand extends Command {
                         final TextChannel channel = CleanStaffChat.getInstance().getJda().getTextChannelById(BungeeConfig.ADMIN_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
-                        channel.sendMessageFormat(BungeeConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
-                                        .replace("%user%", commandsender)
-                                        .replace("%message%", message)
-                                        .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName()))
-                                .queue();
 
+                        if (BungeeConfig.USE_EMBED.get(Boolean.class)) {
+
+                            EmbedBuilder embed = new EmbedBuilder();
+
+                            embed.setTitle(BungeeConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
+
+                            embed.setDescription(BungeeConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                                    .replace("%user%", commandsender)
+                                    .replace("%message%", message)
+                                    .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName()));
+
+                            embed.setColor(Color.RED);
+                            embed.setFooter("Powered by CleanStaffChat");
+
+                            channel.sendMessageEmbeds(embed.build()).queue();
+
+                        } else {
+
+                            channel.sendMessageFormat(BungeeConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                                            .replace("%user%", commandsender)
+                                            .replace("%message%", message)
+                                            .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName()))
+                                    .queue();
+
+                        }
                     }
 
                 } else if (BungeeConfig.CONSOLE_CAN_TALK.get(Boolean.class)) {
@@ -202,12 +224,32 @@ public class AdminChatCommand extends Command {
                         final TextChannel channel = CleanStaffChat.getInstance().getJda().getTextChannelById(BungeeConfig.ADMIN_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
-                        channel.sendMessageFormat(BungeeConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
-                                        .replace("%user%", commandsender)
-                                        .replace("%message%", message)
-                                        .replace("%server%", ""))
-                                .queue();
 
+                        if (BungeeConfig.USE_EMBED.get(Boolean.class)) {
+
+                            EmbedBuilder embed = new EmbedBuilder();
+
+                            embed.setTitle(BungeeConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
+
+                            embed.setDescription(BungeeConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                                    .replace("%user%", commandsender)
+                                    .replace("%message%", message)
+                                    .replace("%server%", ""));
+
+                            embed.setColor(Color.RED);
+                            embed.setFooter("Powered by CleanStaffChat");
+
+                            channel.sendMessageEmbeds(embed.build()).queue();
+
+                        } else {
+
+                            channel.sendMessageFormat(BungeeConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                                            .replace("%user%", commandsender)
+                                            .replace("%message%", message)
+                                            .replace("%server%", ""))
+                                    .queue();
+
+                        }
                     }
 
                 } else {

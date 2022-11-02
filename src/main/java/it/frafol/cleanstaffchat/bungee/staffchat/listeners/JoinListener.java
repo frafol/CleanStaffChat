@@ -4,6 +4,7 @@ import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.UpdateCheck;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -15,6 +16,8 @@ import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+
+import java.awt.*;
 
 public class JoinListener implements Listener {
 
@@ -87,9 +90,27 @@ public class JoinListener implements Listener {
                         final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeConfig.STAFF_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
-                        channel.sendMessageFormat(BungeeConfig.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
-                                .replace("%user%", player.getName())).queue();
 
+                        if (BungeeConfig.USE_EMBED.get(Boolean.class)) {
+
+                            EmbedBuilder embed = new EmbedBuilder();
+
+                            embed.setTitle(BungeeConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+
+                            embed.setDescription(BungeeConfig.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
+                                    .replace("%user%", player.getName()));
+
+                            embed.setColor(Color.YELLOW);
+                            embed.setFooter("Powered by CleanStaffChat");
+
+                            channel.sendMessageEmbeds(embed.build()).queue();
+
+                        } else {
+
+                            channel.sendMessageFormat(BungeeConfig.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
+                                    .replace("%user%", player.getName())).queue();
+
+                        }
                     }
                 }
             }
@@ -146,15 +167,33 @@ public class JoinListener implements Listener {
                 }
 
                 if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class)
-                        && BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
-                        && BungeeConfig.JOIN_LEAVE_DISCORD_MODULE.get(Boolean.class)) {
+                            && BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
+                            && BungeeConfig.JOIN_LEAVE_DISCORD_MODULE.get(Boolean.class)) {
 
                     final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeConfig.STAFF_CHANNEL_ID.get(String.class));
 
                     assert channel != null;
-                    channel.sendMessageFormat(BungeeConfig.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
-                            .replace("%user%", player.getName())).queue();
 
+                    if (BungeeConfig.USE_EMBED.get(Boolean.class)) {
+
+                        EmbedBuilder embed = new EmbedBuilder();
+
+                        embed.setTitle(BungeeConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+
+                        embed.setDescription(BungeeConfig.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
+                                .replace("%user%", player.getName()));
+
+                        embed.setColor(Color.YELLOW);
+                        embed.setFooter("Powered by CleanStaffChat");
+
+                        channel.sendMessageEmbeds(embed.build()).queue();
+
+                    } else {
+
+                        channel.sendMessageFormat(BungeeConfig.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
+                                .replace("%user%", player.getName())).queue();
+
+                    }
                 }
             }
         }

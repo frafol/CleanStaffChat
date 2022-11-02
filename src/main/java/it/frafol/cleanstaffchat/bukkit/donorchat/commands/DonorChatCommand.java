@@ -3,6 +3,7 @@ package it.frafol.cleanstaffchat.bukkit.donorchat.commands;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -15,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.util.Arrays;
 
 public class DonorChatCommand implements CommandExecutor {
@@ -202,12 +204,32 @@ public class DonorChatCommand implements CommandExecutor {
                         final TextChannel channel = plugin.getJda().getTextChannelById(SpigotConfig.DONOR_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
-                        channel.sendMessageFormat(SpigotConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
-                                        .replace("%user%", commandsender)
-                                        .replace("%message%", message)
-                                        .replace("%server%", ""))
-                                .queue();
 
+                        if (SpigotConfig.USE_EMBED.get(Boolean.class)) {
+
+                            EmbedBuilder embed = new EmbedBuilder();
+
+                            embed.setTitle(SpigotConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
+
+                            embed.setDescription(SpigotConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                                    .replace("%user%", commandsender)
+                                    .replace("%message%", message)
+                                    .replace("%server%", ""));
+
+                            embed.setColor(Color.RED);
+                            embed.setFooter("Powered by CleanStaffChat");
+
+                            channel.sendMessageEmbeds(embed.build()).queue();
+
+                        } else {
+
+                            channel.sendMessageFormat(SpigotConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                                            .replace("%user%", commandsender)
+                                            .replace("%message%", message)
+                                            .replace("%server%", ""))
+                                    .queue();
+
+                        }
                     }
 
                     if (!sender.hasPermission(SpigotConfig.COOLDOWN_BYPASS_PERMISSION.get(String.class))) {
@@ -266,12 +288,32 @@ public class DonorChatCommand implements CommandExecutor {
                         final TextChannel channel = plugin.getJda().getTextChannelById(SpigotConfig.DONOR_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
-                        channel.sendMessageFormat(SpigotConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
-                                        .replace("%user%", commandsender)
-                                        .replace("%message%", message)
-                                        .replace("%server%", ""))
-                                .queue();
 
+                        if (SpigotConfig.USE_EMBED.get(Boolean.class)) {
+
+                            EmbedBuilder embed = new EmbedBuilder();
+
+                            embed.setTitle(SpigotConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
+
+                            embed.setDescription(SpigotConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                                    .replace("%user%", commandsender)
+                                    .replace("%message%", message)
+                                    .replace("%server%", ""));
+
+                            embed.setColor(Color.RED);
+                            embed.setFooter("Powered by CleanStaffChat");
+
+                            channel.sendMessageEmbeds(embed.build()).queue();
+
+                        } else {
+
+                            channel.sendMessageFormat(SpigotConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                                            .replace("%user%", commandsender)
+                                            .replace("%message%", message)
+                                            .replace("%server%", ""))
+                                    .queue();
+
+                        }
                     }
 
                     return false;

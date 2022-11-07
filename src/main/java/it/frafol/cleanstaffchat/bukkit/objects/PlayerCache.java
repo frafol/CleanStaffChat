@@ -1,49 +1,48 @@
 package it.frafol.cleanstaffchat.bukkit.objects;
 
-import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.UUID;
 
 @UtilityClass
 public class PlayerCache {
 
     @Getter
-    private final List<UUID> toggled = Lists.newArrayList();
+    private final HashSet<UUID> toggled = new HashSet<>();
 
     @Getter
-    private final List<UUID> toggled_2 = Lists.newArrayList();
+    private final HashSet<UUID> toggled_2 = new HashSet<>();
 
     @Getter
-    private final List<UUID> toggled_admin = Lists.newArrayList();
+    private final HashSet<UUID> toggled_admin = new HashSet<>();
 
     @Getter
-    private final List<UUID> toggled_2_admin = Lists.newArrayList();
+    private final HashSet<UUID> toggled_2_admin = new HashSet<>();
 
     @Getter
-    private final List<UUID> toggled_donor = Lists.newArrayList();
+    private final HashSet<UUID> toggled_donor = new HashSet<>();
 
     @Getter
-    private final List<UUID> toggled_2_donor = Lists.newArrayList();
+    private final HashSet<UUID> toggled_2_donor = new HashSet<>();
 
     @Getter
-    private final List<UUID> afk = Lists.newArrayList();
+    private final HashSet<UUID> afk = new HashSet<>();
 
     @Getter
-    private final List<UUID> cooldown = Lists.newArrayList();
+    private final HashSet<UUID> cooldown = new HashSet<>();
 
     @Getter
-    private final List<String> muted = Lists.newArrayList();
+    private final HashSet<String> muted = new HashSet<>();
 
     @Getter
-    private final List<String> muted_admin = Lists.newArrayList();
+    private final HashSet<String> muted_admin = new HashSet<>();
 
     @Getter
-    private final List<String> muted_donor = Lists.newArrayList();
+    private final HashSet<String> muted_donor = new HashSet<>();
 
     @Getter
-    private final List<String> cooldown_discord = Lists.newArrayList();
+    private final HashSet<String> cooldown_discord = new HashSet<>();
 
 }

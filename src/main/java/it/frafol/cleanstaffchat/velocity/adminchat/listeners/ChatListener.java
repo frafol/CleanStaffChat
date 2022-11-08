@@ -34,7 +34,6 @@ public class ChatListener extends ListenerAdapter {
 
         final String message = event.getMessage();
         final String sender = event.getPlayer().getUsername();
-        final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.ADMIN_CHANNEL_ID.get(String.class));
 
         if (PlayerCache.getToggled_2_admin().contains(event.getPlayer().getUniqueId())) {
 
@@ -131,6 +130,7 @@ public class ChatListener extends ListenerAdapter {
 
                         if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
+                            final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.ADMIN_CHANNEL_ID.get(String.class));
                             assert channel != null;
 
                             if (VelocityConfig.USE_EMBED.get(Boolean.class)) {

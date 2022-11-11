@@ -3,6 +3,8 @@ package it.frafol.cleanstaffchat.bungee.staffchat.listeners;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.UpdateCheck;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
+import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
+import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -65,8 +67,8 @@ public class JoinListener implements Listener {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFF_JOIN_MESSAGE_FORMAT.color()
-                                        .replace("%prefix%", BungeeConfig.PREFIX.color())
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
+                                        .replace("%prefix%", BungeeMessages.PREFIX.color())
                                         .replace("%displayname%", user_prefix + player.getName() + user_suffix)
                                         .replace("%userprefix%", user_prefix)
                                         .replace("%usersuffix%", user_suffix)
@@ -77,27 +79,27 @@ public class JoinListener implements Listener {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFF_JOIN_MESSAGE_FORMAT.color()
-                                        .replace("%prefix%", BungeeConfig.PREFIX.color())
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
+                                        .replace("%prefix%", BungeeMessages.PREFIX.color())
                                         .replace("%user%", player.getName()))));
 
                     }
 
-                    if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class)
+                    if (BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
                             && BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
                             && BungeeConfig.JOIN_LEAVE_DISCORD_MODULE.get(Boolean.class)) {
 
-                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeConfig.STAFF_CHANNEL_ID.get(String.class));
+                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
 
-                        if (BungeeConfig.USE_EMBED.get(Boolean.class)) {
+                        if (BungeeDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                             EmbedBuilder embed = new EmbedBuilder();
 
-                            embed.setTitle(BungeeConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+                            embed.setTitle(BungeeDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
-                            embed.setDescription(BungeeConfig.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
+                            embed.setDescription(BungeeMessages.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
                                     .replace("%user%", player.getName()));
 
                             embed.setColor(Color.YELLOW);
@@ -107,7 +109,7 @@ public class JoinListener implements Listener {
 
                         } else {
 
-                            channel.sendMessageFormat(BungeeConfig.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
+                            channel.sendMessageFormat(BungeeMessages.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
                                     .replace("%user%", player.getName())).queue();
 
                         }
@@ -143,8 +145,8 @@ public class JoinListener implements Listener {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFF_QUIT_MESSAGE_FORMAT.color()
-                                        .replace("%prefix%", BungeeConfig.PREFIX.color())
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFF_QUIT_MESSAGE_FORMAT.color()
+                                        .replace("%prefix%", BungeeMessages.PREFIX.color())
                                         .replace("%displayname%", user_prefix + player.getName() + user_suffix)
                                         .replace("%userprefix%", user_prefix)
                                         .replace("%usersuffix%", user_suffix)
@@ -159,28 +161,28 @@ public class JoinListener implements Listener {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFF_QUIT_MESSAGE_FORMAT.color()
-                                        .replace("%prefix%", BungeeConfig.PREFIX.color())
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFF_QUIT_MESSAGE_FORMAT.color()
+                                        .replace("%prefix%", BungeeMessages.PREFIX.color())
                                         .replace("%user%", player.getName()))));
 
                     }
                 }
 
-                if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class)
+                if (BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
                             && BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
                             && BungeeConfig.JOIN_LEAVE_DISCORD_MODULE.get(Boolean.class)) {
 
-                    final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeConfig.STAFF_CHANNEL_ID.get(String.class));
+                    final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
                     assert channel != null;
 
-                    if (BungeeConfig.USE_EMBED.get(Boolean.class)) {
+                    if (BungeeDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                         EmbedBuilder embed = new EmbedBuilder();
 
-                        embed.setTitle(BungeeConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+                        embed.setTitle(BungeeDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
-                        embed.setDescription(BungeeConfig.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
+                        embed.setDescription(BungeeMessages.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
                                 .replace("%user%", player.getName()));
 
                         embed.setColor(Color.YELLOW);
@@ -190,7 +192,7 @@ public class JoinListener implements Listener {
 
                     } else {
 
-                        channel.sendMessageFormat(BungeeConfig.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
+                        channel.sendMessageFormat(BungeeMessages.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
                                 .replace("%user%", player.getName())).queue();
 
                     }

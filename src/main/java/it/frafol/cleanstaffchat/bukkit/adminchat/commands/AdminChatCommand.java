@@ -2,6 +2,8 @@ package it.frafol.cleanstaffchat.bukkit.adminchat.commands;
 
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -28,20 +30,12 @@ public class AdminChatCommand implements CommandExecutor {
     @Override
     public boolean onCommand(org.bukkit.command.@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] strings) {
 
-        if (!command.getName().equalsIgnoreCase("ac")
-                || command.getName().equalsIgnoreCase("adminchat")
-                || command.getName().equalsIgnoreCase("admin")) {
-
-            return false;
-
-        }
-
         if (strings.length == 0) {
 
             if (!(sender instanceof Player)) {
 
-                sender.sendMessage((SpigotConfig.ADMINARGUMENTS.color()
-                        .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
+                sender.sendMessage((SpigotMessages.ADMINARGUMENTS.color()
+                        .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())));
 
                 return false;
 
@@ -55,8 +49,8 @@ public class AdminChatCommand implements CommandExecutor {
 
                     if (!(SpigotConfig.ADMINCHAT_TALK_MODULE.get(Boolean.class))) {
 
-                        sender.sendMessage((SpigotConfig.ADMINARGUMENTS.color()
-                                .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
+                        sender.sendMessage((SpigotMessages.ADMINARGUMENTS.color()
+                                .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())));
 
                         return false;
 
@@ -66,13 +60,13 @@ public class AdminChatCommand implements CommandExecutor {
 
                         PlayerCache.getToggled_2_admin().add(player.getUniqueId());
 
-                        sender.sendMessage((SpigotConfig.ADMINCHAT_TALK_ENABLED.color()
-                                .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
+                        sender.sendMessage((SpigotMessages.ADMINCHAT_TALK_ENABLED.color()
+                                .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())));
 
                     } else {
 
-                        sender.sendMessage((SpigotConfig.ADMINARGUMENTS.color()
-                                .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
+                        sender.sendMessage((SpigotMessages.ADMINARGUMENTS.color()
+                                .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())));
 
                         return false;
 
@@ -84,8 +78,8 @@ public class AdminChatCommand implements CommandExecutor {
 
                     PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
 
-                    sender.sendMessage((SpigotConfig.ADMINCHAT_TALK_DISABLED.color()
-                            .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
+                    sender.sendMessage((SpigotMessages.ADMINCHAT_TALK_DISABLED.color()
+                            .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())));
 
                     return false;
 
@@ -138,8 +132,8 @@ public class AdminChatCommand implements CommandExecutor {
                                 message.contains("&o") ||
                                 message.contains("&r")) {
 
-                            sender.sendMessage(SpigotConfig.COLOR_CODES.color()
-                                    .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())
+                            sender.sendMessage(SpigotMessages.COLOR_CODES.color()
+                                    .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
                                     .replace("&", "§"));
 
                             return false;
@@ -161,8 +155,8 @@ public class AdminChatCommand implements CommandExecutor {
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                         (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(SpigotConfig.ADMINCHAT_FORMAT.color()
-                                        .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())
+                                .forEach(players -> players.sendMessage(SpigotMessages.ADMINCHAT_FORMAT.color()
+                                        .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%displayname%", user_prefix + commandsender + user_suffix)
                                         .replace("%message%", message)
@@ -176,8 +170,8 @@ public class AdminChatCommand implements CommandExecutor {
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                         (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(SpigotConfig.ADMINCHAT_FORMAT.color()
-                                        .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())
+                                .forEach(players -> players.sendMessage(SpigotMessages.ADMINCHAT_FORMAT.color()
+                                        .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%userprefix%", "")
                                         .replace("%usersuffix%", "")
@@ -188,19 +182,19 @@ public class AdminChatCommand implements CommandExecutor {
 
                     }
 
-                    if (SpigotConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                    if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
-                        final TextChannel channel = plugin.getJda().getTextChannelById(SpigotConfig.ADMIN_CHANNEL_ID.get(String.class));
+                        final TextChannel channel = plugin.getJda().getTextChannelById(SpigotDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
 
-                        if (SpigotConfig.USE_EMBED.get(Boolean.class)) {
+                        if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                             EmbedBuilder embed = new EmbedBuilder();
 
-                            embed.setTitle(SpigotConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
+                            embed.setTitle(SpigotDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
 
-                            embed.setDescription(SpigotConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                            embed.setDescription(SpigotMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                                     .replace("%user%", commandsender)
                                     .replace("%message%", message)
                                     .replace("%server%", ""));
@@ -212,7 +206,7 @@ public class AdminChatCommand implements CommandExecutor {
 
                         } else {
 
-                            channel.sendMessageFormat(SpigotConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                            channel.sendMessageFormat(SpigotMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                                             .replace("%user%", commandsender)
                                             .replace("%message%", message)
                                             .replace("%server%", ""))
@@ -228,8 +222,8 @@ public class AdminChatCommand implements CommandExecutor {
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                         (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage((SpigotConfig.ADMINCHAT_FORMAT.color()
-                                        .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())
+                                .forEach(players -> players.sendMessage((SpigotMessages.ADMINCHAT_FORMAT.color()
+                                        .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%userprefix%", "")
                                         .replace("%usersuffix%", "")
@@ -239,15 +233,15 @@ public class AdminChatCommand implements CommandExecutor {
 
                     } else {
 
-                        sender.sendMessage((SpigotConfig.ADMINCHAT_MUTED_ERROR.color()
-                                .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
+                        sender.sendMessage((SpigotMessages.ADMINCHAT_MUTED_ERROR.color()
+                                .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())));
 
                         return false;
 
                     }
 
-                    sender.sendMessage((SpigotConfig.ADMINCHAT_FORMAT.color()
-                            .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())
+                    sender.sendMessage((SpigotMessages.ADMINCHAT_FORMAT.color()
+                            .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
                             .replace("%user%", commandsender)
                             .replace("%displayname%", commandsender)
                             .replace("%userprefix%", "")
@@ -255,19 +249,19 @@ public class AdminChatCommand implements CommandExecutor {
                             .replace("%server%", "")
                             .replace("%message%", message)));
 
-                    if (SpigotConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                    if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
-                        final TextChannel channel = plugin.getJda().getTextChannelById(SpigotConfig.ADMIN_CHANNEL_ID.get(String.class));
+                        final TextChannel channel = plugin.getJda().getTextChannelById(SpigotDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
 
-                        if (SpigotConfig.USE_EMBED.get(Boolean.class)) {
+                        if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                             EmbedBuilder embed = new EmbedBuilder();
 
-                            embed.setTitle(SpigotConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
+                            embed.setTitle(SpigotDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
 
-                            embed.setDescription(SpigotConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                            embed.setDescription(SpigotMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                                     .replace("%user%", commandsender)
                                     .replace("%message%", message)
                                     .replace("%server%", ""));
@@ -279,7 +273,7 @@ public class AdminChatCommand implements CommandExecutor {
 
                         } else {
 
-                            channel.sendMessageFormat(SpigotConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                            channel.sendMessageFormat(SpigotMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                                             .replace("%user%", commandsender)
                                             .replace("%message%", message)
                                             .replace("%server%", ""))
@@ -292,8 +286,8 @@ public class AdminChatCommand implements CommandExecutor {
 
                 } else {
 
-                    sender.sendMessage((SpigotConfig.PLAYER_ONLY.color()
-                            .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
+                    sender.sendMessage((SpigotMessages.PLAYER_ONLY.color()
+                            .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())));
 
                 }
 
@@ -301,8 +295,8 @@ public class AdminChatCommand implements CommandExecutor {
 
             } else {
 
-                sender.sendMessage((SpigotConfig.ADMINCHAT_MUTED_ERROR.color()
-                        .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
+                sender.sendMessage((SpigotMessages.ADMINCHAT_MUTED_ERROR.color()
+                        .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())));
 
             }
 
@@ -310,8 +304,8 @@ public class AdminChatCommand implements CommandExecutor {
 
         } else {
 
-            sender.sendMessage((SpigotConfig.NO_PERMISSION.color()
-                    .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())));
+            sender.sendMessage((SpigotMessages.NO_PERMISSION.color()
+                    .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())));
 
         }
 

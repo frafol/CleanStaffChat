@@ -7,6 +7,8 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityDiscordConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -40,7 +42,7 @@ public class AdminChatCommand implements SimpleCommand {
 
             if (!(commandSource instanceof Player)) {
 
-                ADMINARGUMENTS.send(commandSource, new Placeholder("prefix", ADMINPREFIX.color()));
+                VelocityMessages.ADMINARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
 
                 return;
 
@@ -53,7 +55,7 @@ public class AdminChatCommand implements SimpleCommand {
                 if (((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19
                         || ((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19_1) {
 
-                    ADMINARGUMENTS.send(commandSource, new Placeholder("prefix", ADMINPREFIX.color()));
+                    VelocityMessages.ADMINARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
 
                     return;
 
@@ -61,7 +63,7 @@ public class AdminChatCommand implements SimpleCommand {
 
                 if (!(ADMINCHAT_TALK_MODULE.get(Boolean.class))) {
 
-                    ADMINARGUMENTS.send(commandSource, new Placeholder("prefix", ADMINPREFIX.color()));
+                    VelocityMessages.ADMINARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
 
                     return;
 
@@ -74,15 +76,15 @@ public class AdminChatCommand implements SimpleCommand {
 
                         PlayerCache.getToggled_2_admin().add(player.getUniqueId());
 
-                        ADMINCHAT_TALK_ENABLED.send(commandSource,
-                                new Placeholder("prefix", ADMINPREFIX.color()));
+                        VelocityMessages.ADMINCHAT_TALK_ENABLED.send(commandSource,
+                                new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
 
                         return;
 
                     } else {
 
-                        ADMINARGUMENTS.send(commandSource,
-                                new Placeholder("prefix", ADMINPREFIX.color()));
+                        VelocityMessages.ADMINARGUMENTS.send(commandSource,
+                                new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
 
                     }
 
@@ -90,8 +92,8 @@ public class AdminChatCommand implements SimpleCommand {
 
                     PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
 
-                    ADMINCHAT_TALK_DISABLED.send(commandSource,
-                            new Placeholder("prefix", ADMINPREFIX.color()));
+                    VelocityMessages.ADMINCHAT_TALK_DISABLED.send(commandSource,
+                            new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
 
                     return;
 
@@ -141,8 +143,8 @@ public class AdminChatCommand implements SimpleCommand {
                                 message.contains("&o") ||
                                 message.contains("&r")) {
 
-                            COLOR_CODES.send(commandSource,
-                                    new Placeholder("prefix", ADMINPREFIX.color()));
+                            VelocityMessages.COLOR_CODES.send(commandSource,
+                                    new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
 
                             return;
 
@@ -170,44 +172,44 @@ public class AdminChatCommand implements SimpleCommand {
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                                .forEach(players -> ADMINCHAT_FORMAT.send(players,
+                                .forEach(players -> VelocityMessages.ADMINCHAT_FORMAT.send(players,
                                         new Placeholder("user", sender),
                                         new Placeholder("message", message),
                                         new Placeholder("displayname", user_prefix + sender + user_suffix),
                                         new Placeholder("userprefix", user_prefix),
                                         new Placeholder("usersuffix", user_suffix),
                                         new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
-                                        new Placeholder("prefix", ADMINPREFIX.color())));
+                                        new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color())));
 
                     } else {
 
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                                .forEach(players -> ADMINCHAT_FORMAT.send(players,
+                                .forEach(players -> VelocityMessages.ADMINCHAT_FORMAT.send(players,
                                         new Placeholder("user", sender),
                                         new Placeholder("message", message),
                                         new Placeholder("displayname", sender),
                                         new Placeholder("userprefix", ""),
                                         new Placeholder("usersuffix", ""),
                                         new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
-                                        new Placeholder("prefix", ADMINPREFIX.color())));
+                                        new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color())));
 
                     }
 
-                    if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                    if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
-                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.ADMIN_CHANNEL_ID.get(String.class));
+                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
 
-                        if (VelocityConfig.USE_EMBED.get(Boolean.class)) {
+                        if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                             EmbedBuilder embed = new EmbedBuilder();
 
-                            embed.setTitle(VelocityConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
+                            embed.setTitle(VelocityDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
 
-                            embed.setDescription(VelocityConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                            embed.setDescription(VelocityMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                                     .replace("%user%", sender)
                                     .replace("%message%", message)
                                     .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()));
@@ -219,7 +221,7 @@ public class AdminChatCommand implements SimpleCommand {
 
                         } else {
 
-                            channel.sendMessageFormat(VelocityConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                            channel.sendMessageFormat(VelocityMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                                             .replace("%user%", sender)
                                             .replace("%message%", message)
                                             .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()))
@@ -235,28 +237,28 @@ public class AdminChatCommand implements SimpleCommand {
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                                .forEach(players -> ADMINCHAT_FORMAT.send(players,
+                                .forEach(players -> VelocityMessages.ADMINCHAT_FORMAT.send(players,
                                         new Placeholder("user", sender),
                                         new Placeholder("message", message),
                                         new Placeholder("displayname", sender),
                                         new Placeholder("userprefix", ""),
                                         new Placeholder("usersuffix", ""),
                                         new Placeholder("server", ""),
-                                        new Placeholder("prefix", ADMINPREFIX.color())));
+                                        new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color())));
 
-                        if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                        if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
-                            final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.ADMIN_CHANNEL_ID.get(String.class));
+                            final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
 
                             assert channel != null;
 
-                            if (VelocityConfig.USE_EMBED.get(Boolean.class)) {
+                            if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                                 EmbedBuilder embed = new EmbedBuilder();
 
-                                embed.setTitle(VelocityConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
+                                embed.setTitle(VelocityDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
 
-                                embed.setDescription(VelocityConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                                embed.setDescription(VelocityMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                                         .replace("%user%", sender)
                                         .replace("%message%", message)
                                         .replace("%server%", ""));
@@ -268,7 +270,7 @@ public class AdminChatCommand implements SimpleCommand {
 
                             } else {
 
-                                channel.sendMessageFormat(VelocityConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                                channel.sendMessageFormat(VelocityMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                                                 .replace("%user%", sender)
                                                 .replace("%message%", message)
                                                 .replace("%server%", ""))
@@ -279,38 +281,38 @@ public class AdminChatCommand implements SimpleCommand {
 
                     } else {
 
-                        ADMINCHAT_MUTED_ERROR.send(commandSource,
-                                new Placeholder("prefix", ADMINPREFIX.color()));
+                        VelocityMessages.ADMINCHAT_MUTED_ERROR.send(commandSource,
+                                new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
 
                     }
 
-                    ADMINCHAT_FORMAT.send(commandSource,
+                    VelocityMessages.ADMINCHAT_FORMAT.send(commandSource,
                             new Placeholder("user", sender),
                             new Placeholder("message", message),
                             new Placeholder("displayname", sender),
                             new Placeholder("userprefix", ""),
                             new Placeholder("usersuffix", ""),
                             new Placeholder("server", ""),
-                            new Placeholder("prefix", ADMINPREFIX.color()));
+                            new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
 
                 } else {
 
-                    PLAYER_ONLY.send(commandSource,
-                            new Placeholder("prefix", ADMINPREFIX.color()));
+                    VelocityMessages.PLAYER_ONLY.send(commandSource,
+                            new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
 
                 }
 
             } else {
 
-                ADMINCHAT_MUTED_ERROR.send(commandSource,
-                        new Placeholder("prefix", ADMINPREFIX.color()));
+                VelocityMessages.ADMINCHAT_MUTED_ERROR.send(commandSource,
+                        new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
 
             }
 
         } else {
 
-            NO_PERMISSION.send(commandSource,
-                    new Placeholder("prefix", ADMINPREFIX.color()));
+            VelocityMessages.NO_PERMISSION.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
 
         }
     }

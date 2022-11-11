@@ -1,7 +1,10 @@
 package it.frafol.cleanstaffchat.bungee.staffchat.commands;
 
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
+import it.frafol.cleanstaffchat.bungee.enums.BungeeCommandsConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
+import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
+import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -21,7 +24,7 @@ public class StaffChatCommand extends Command {
 
     public StaffChatCommand() {
 
-        super("sc","","staffchat","cleansc","cleanstaffchat","staff");
+        super(BungeeCommandsConfig.STAFFCHAT.getStringList().get(0),"", BungeeCommandsConfig.STAFFCHAT.getStringList().toArray(new String[0]));
 
     }
 
@@ -31,8 +34,8 @@ public class StaffChatCommand extends Command {
         if (args.length == 0) {
 
             if (!(sender instanceof ProxiedPlayer)) {
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.ARGUMENTS.color()
-                        .replace("%prefix%", BungeeConfig.PREFIX.color())));
+                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ARGUMENTS.color()
+                        .replace("%prefix%", BungeeMessages.PREFIX.color())));
                 return;
             }
 
@@ -42,23 +45,23 @@ public class StaffChatCommand extends Command {
 
                 if (!PlayerCache.getToggled_2().contains(player.getUniqueId())) {
                     if (!(BungeeConfig.STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
-                        sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.ARGUMENTS.color()
-                                .replace("%prefix%", BungeeConfig.PREFIX.color())));
+                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ARGUMENTS.color()
+                                .replace("%prefix%", BungeeMessages.PREFIX.color())));
                         return;
                     }
                     if (!PlayerCache.getMuted().contains("true")) {
                         PlayerCache.getToggled_2().add(player.getUniqueId());
-                        sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFFCHAT_TALK_ENABLED.color()
-                                .replace("%prefix%", BungeeConfig.PREFIX.color())));
+                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_TALK_ENABLED.color()
+                                .replace("%prefix%", BungeeMessages.PREFIX.color())));
                         return;
                     } else {
-                        sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.ARGUMENTS.color()
-                                .replace("%prefix%", BungeeConfig.PREFIX.color())));
+                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ARGUMENTS.color()
+                                .replace("%prefix%", BungeeMessages.PREFIX.color())));
                     }
                 } else if (PlayerCache.getToggled_2().contains(player.getUniqueId())) {
                     PlayerCache.getToggled_2().remove(player.getUniqueId());
-                    sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFFCHAT_TALK_DISABLED.color()
-                            .replace("%prefix%", BungeeConfig.PREFIX.color())));
+                    sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_TALK_DISABLED.color()
+                            .replace("%prefix%", BungeeMessages.PREFIX.color())));
                     return;
                 }
 
@@ -105,8 +108,8 @@ public class StaffChatCommand extends Command {
                                 message.contains("&o") ||
                                 message.contains("&r")) {
 
-                            sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.COLOR_CODES.color()
-                                    .replace("%prefix%", BungeeConfig.PREFIX.color())
+                            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.COLOR_CODES.color()
+                                    .replace("%prefix%", BungeeMessages.PREFIX.color())
                                     .replace("&", "§")));
 
                             return;
@@ -129,8 +132,8 @@ public class StaffChatCommand extends Command {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFFCHAT_FORMAT.color()
-                                        .replace("%prefix%", BungeeConfig.PREFIX.color())
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_FORMAT.color()
+                                        .replace("%prefix%", BungeeMessages.PREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%message%", message)
                                         .replace("%displayname%", user_prefix + commandsender + user_suffix)
@@ -144,8 +147,8 @@ public class StaffChatCommand extends Command {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFFCHAT_FORMAT.color()
-                                        .replace("%prefix%", BungeeConfig.PREFIX.color())
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_FORMAT.color()
+                                        .replace("%prefix%", BungeeMessages.PREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%userprefix%", "")
                                         .replace("%displayname%", commandsender)
@@ -155,19 +158,19 @@ public class StaffChatCommand extends Command {
                                         .replace("&", "§"))));
                     }
 
-                    if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class) && BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                    if (BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
-                        final TextChannel channel = CleanStaffChat.getInstance().getJda().getTextChannelById(BungeeConfig.STAFF_CHANNEL_ID.get(String.class));
+                        final TextChannel channel = CleanStaffChat.getInstance().getJda().getTextChannelById(BungeeDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
 
-                        if (BungeeConfig.USE_EMBED.get(Boolean.class)) {
+                        if (BungeeDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                             EmbedBuilder embed = new EmbedBuilder();
 
-                            embed.setTitle(BungeeConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+                            embed.setTitle(BungeeDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
-                            embed.setDescription(BungeeConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                            embed.setDescription(BungeeMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                     .replace("%user%", commandsender)
                                     .replace("%message%", message)
                                     .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName()));
@@ -179,7 +182,7 @@ public class StaffChatCommand extends Command {
 
                         } else {
 
-                            channel.sendMessageFormat(BungeeConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                            channel.sendMessageFormat(BungeeMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                             .replace("%user%", commandsender)
                                             .replace("%message%", message)
                                             .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName()))
@@ -194,8 +197,8 @@ public class StaffChatCommand extends Command {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFFCHAT_FORMAT.color()
-                                        .replace("%prefix%", BungeeConfig.PREFIX.color())
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_FORMAT.color()
+                                        .replace("%prefix%", BungeeMessages.PREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%userprefix%", "")
                                         .replace("%usersuffix%", "")
@@ -205,13 +208,13 @@ public class StaffChatCommand extends Command {
 
                     } else {
 
-                        sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFFCHAT_MUTED_ERROR.color()
-                                .replace("%prefix%", BungeeConfig.PREFIX.color())));
+                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_MUTED_ERROR.color()
+                                .replace("%prefix%", BungeeMessages.PREFIX.color())));
 
                     }
 
-                    sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFFCHAT_FORMAT.color()
-                            .replace("%prefix%", BungeeConfig.PREFIX.color())
+                    sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_FORMAT.color()
+                            .replace("%prefix%", BungeeMessages.PREFIX.color())
                             .replace("%user%", commandsender)
                             .replace("%displayname%", commandsender)
                             .replace("%userprefix%", "")
@@ -219,19 +222,19 @@ public class StaffChatCommand extends Command {
                             .replace("%server%", "")
                             .replace("%message%", message)));
 
-                    if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class) && BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                    if (BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
-                        final TextChannel channel = CleanStaffChat.getInstance().getJda().getTextChannelById(BungeeConfig.STAFF_CHANNEL_ID.get(String.class));
+                        final TextChannel channel = CleanStaffChat.getInstance().getJda().getTextChannelById(BungeeDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
 
-                        if (BungeeConfig.USE_EMBED.get(Boolean.class)) {
+                        if (BungeeDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                             EmbedBuilder embed = new EmbedBuilder();
 
-                            embed.setTitle(BungeeConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+                            embed.setTitle(BungeeDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
-                            embed.setDescription(BungeeConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                            embed.setDescription(BungeeMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                     .replace("%user%", commandsender)
                                     .replace("%message%", message)
                                     .replace("%server%", ""));
@@ -243,7 +246,7 @@ public class StaffChatCommand extends Command {
 
                         } else {
 
-                            channel.sendMessageFormat(BungeeConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                            channel.sendMessageFormat(BungeeMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                             .replace("%user%", commandsender)
                                             .replace("%message%", message)
                                             .replace("%server%", ""))
@@ -254,21 +257,21 @@ public class StaffChatCommand extends Command {
 
                 } else {
 
-                    sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.PLAYER_ONLY.color()
-                            .replace("%prefix%", BungeeConfig.PREFIX.color())));
+                    sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.PLAYER_ONLY.color()
+                            .replace("%prefix%", BungeeMessages.PREFIX.color())));
 
                 }
             } else {
 
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.STAFFCHAT_MUTED_ERROR.color()
-                        .replace("%prefix%", BungeeConfig.PREFIX.color())));
+                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_MUTED_ERROR.color()
+                        .replace("%prefix%", BungeeMessages.PREFIX.color())));
 
             }
 
         } else {
 
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeConfig.NO_PERMISSION.color()
-                    .replace("%prefix%", BungeeConfig.PREFIX.color())));
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
+                    .replace("%prefix%", BungeeMessages.PREFIX.color())));
 
         }
     }

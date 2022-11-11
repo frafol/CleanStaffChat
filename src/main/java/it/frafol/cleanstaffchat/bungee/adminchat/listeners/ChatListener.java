@@ -2,6 +2,8 @@ package it.frafol.cleanstaffchat.bungee.adminchat.listeners;
 
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
+import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
+import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -38,15 +40,15 @@ public class ChatListener extends ListenerAdapter implements Listener {
             if (PlayerCache.getMuted_admin().contains("true")) {
                 PlayerCache.getToggled_2_admin().remove(((ProxiedPlayer) event.getSender()).getUniqueId());
                 event.setCancelled(true);
-                ((ProxiedPlayer)event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeConfig.ADMINCHAT_MUTED_ERROR.color()
-                        .replace("%prefix%", BungeeConfig.ADMINPREFIX.color())));
+                ((ProxiedPlayer)event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_MUTED_ERROR.color()
+                        .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
                 return;
             }
 
             if (!event.getMessage().startsWith("/")) {
                 if (!(BungeeConfig.ADMINCHAT_TALK_MODULE.get(Boolean.class))) {
-                    ((ProxiedPlayer)event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeConfig.MODULE_DISABLED.color()
-                            .replace("%prefix%", BungeeConfig.ADMINPREFIX.color())
+                    ((ProxiedPlayer)event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeMessages.MODULE_DISABLED.color()
+                            .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                             .replace("&", "§")));
 
                 } else if (((ProxiedPlayer) event.getSender()).hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))) {
@@ -77,8 +79,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                 message.contains("&o") ||
                                 message.contains("&r")) {
 
-                            ((ProxiedPlayer) event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeConfig.COLOR_CODES.color()
-                                    .replace("%prefix%", BungeeConfig.ADMINPREFIX.color())
+                            ((ProxiedPlayer) event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeMessages.COLOR_CODES.color()
+                                    .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                                     .replace("&", "§")));
 
                             return;
@@ -100,8 +102,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.ADMINCHAT_FORMAT.color()
-                                        .replace("%prefix%", BungeeConfig.ADMINPREFIX.color())
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_FORMAT.color()
+                                        .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                                         .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
                                         .replace("%message%", message)
                                         .replace("%displayname%", user_prefix + ((ProxiedPlayer) event.getSender()).getName() + user_suffix)
@@ -115,8 +117,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.ADMINCHAT_FORMAT.color()
-                                        .replace("%prefix%", BungeeConfig.ADMINPREFIX.color())
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_FORMAT.color()
+                                        .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                                         .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
                                         .replace("%message%", message)
                                         .replace("%userprefix%", "")
@@ -125,19 +127,19 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                         .replace("&", "§"))));
                     }
 
-                    if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class) && BungeeConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                    if (BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && BungeeConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
-                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeConfig.ADMIN_CHANNEL_ID.get(String.class));
+                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
 
-                        if (BungeeConfig.USE_EMBED.get(Boolean.class)) {
+                        if (BungeeDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                             EmbedBuilder embed = new EmbedBuilder();
 
-                            embed.setTitle(BungeeConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
+                            embed.setTitle(BungeeDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
 
-                            embed.setDescription(BungeeConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                            embed.setDescription(BungeeMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                                     .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
                                     .replace("%message%", message)
                                     .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName()));
@@ -149,7 +151,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                         } else {
 
-                            channel.sendMessageFormat(BungeeConfig.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                            channel.sendMessageFormat(BungeeMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                                             .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
                                             .replace("%message%", message)
                                             .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName()))
@@ -175,11 +177,11 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
         }
 
-        if (!event.getChannel().getId().equalsIgnoreCase(BungeeConfig.ADMIN_CHANNEL_ID.get(String.class))) {
+        if (!event.getChannel().getId().equalsIgnoreCase(BungeeDiscordConfig.ADMIN_CHANNEL_ID.get(String.class))) {
             return;
         }
 
-        if (event.getMessage().getContentDisplay().equalsIgnoreCase(BungeeConfig.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class))) {
+        if (event.getMessage().getContentDisplay().equalsIgnoreCase(BungeeMessages.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class))) {
 
             ProxyServer.getInstance().getScheduler().schedule(PLUGIN, () ->
                     event.getMessage().delete().queue(), 5, TimeUnit.SECONDS);
@@ -194,7 +196,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
         if (PlayerCache.getMuted_admin().contains("true")) {
 
-            event.getMessage().reply(BungeeConfig.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class)).queue();
+            event.getMessage().reply(BungeeMessages.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class)).queue();
 
             ProxyServer.getInstance().getScheduler().schedule(PLUGIN, () ->
                     event.getMessage().delete().queue(), 5, TimeUnit.SECONDS);
@@ -206,8 +208,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                         (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeConfig.DISCORD_ADMIN_FORMAT.color()
-                        .replace("%prefix%", BungeeConfig.ADMINPREFIX.color())
+                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DISCORD_ADMIN_FORMAT.color()
+                        .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                         .replace("%user%", event.getAuthor().getName())
                         .replace("%message%", event.getMessage().getContentDisplay()))));
 

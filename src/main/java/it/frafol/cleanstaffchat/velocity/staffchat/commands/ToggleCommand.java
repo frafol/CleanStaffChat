@@ -5,6 +5,7 @@ import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 
@@ -22,12 +23,12 @@ public class ToggleCommand implements SimpleCommand {
     public void execute(Invocation invocation) {
         CommandSource commandSource = invocation.source();
         if (!(STAFFCHAT_TOGGLE_MODULE.get(Boolean.class))) {
-            MODULE_DISABLED.send(commandSource, new Placeholder("prefix", PREFIX.color()));
+            VelocityMessages.MODULE_DISABLED.send(commandSource, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
             return;
         }
 
         if (!(commandSource instanceof Player)) {
-            PLAYER_ONLY.send(commandSource, new Placeholder("prefix", PREFIX.color()));
+            VelocityMessages.PLAYER_ONLY.send(commandSource, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
             return;
         }
 
@@ -36,16 +37,16 @@ public class ToggleCommand implements SimpleCommand {
         if (player.hasPermission(VelocityConfig.STAFFCHAT_TOGGLE_PERMISSION.get(String.class))) {
             if (!PlayerCache.getToggled().contains(player.getUniqueId())) {
                 PlayerCache.getToggled().add(player.getUniqueId());
-                STAFFCHAT_TOGGLED_OFF.send(commandSource,
-                        new Placeholder("prefix", PREFIX.color()));
+                VelocityMessages.STAFFCHAT_TOGGLED_OFF.send(commandSource,
+                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
             } else {
                 PlayerCache.getToggled().remove(player.getUniqueId());
-                STAFFCHAT_TOGGLED_ON.send(commandSource,
-                        new Placeholder("prefix", PREFIX.color()));
+                VelocityMessages.STAFFCHAT_TOGGLED_ON.send(commandSource,
+                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
             }
         } else {
-            NO_PERMISSION.send(commandSource,
-                    new Placeholder("prefix", PREFIX.color()));
+            VelocityMessages.NO_PERMISSION.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.PREFIX.color()));
         }
     }
 }

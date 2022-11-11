@@ -3,6 +3,8 @@ package it.frafol.cleanstaffchat.bukkit.staffchat.listeners;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.UpdateCheck;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -69,8 +71,8 @@ public class JoinListener implements Listener {
                                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                                 (players -> players.hasPermission
                                                         (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
-                                        .forEach(players -> players.sendMessage(SpigotConfig.STAFF_JOIN_MESSAGE_FORMAT.color()
-                                                .replace("%prefix%", SpigotConfig.PREFIX.color())
+                                        .forEach(players -> players.sendMessage(SpigotMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
+                                                .replace("%prefix%", SpigotMessages.PREFIX.color())
                                                 .replace("%displayname%", user_prefix + player.getName() + user_suffix)
                                                 .replace("%userprefix%", user_prefix)
                                                 .replace("%usersuffix%", user_suffix)
@@ -88,29 +90,29 @@ public class JoinListener implements Listener {
                                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                                 (players -> players.hasPermission
                                                         (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
-                                        .forEach(players -> players.sendMessage(SpigotConfig.STAFF_JOIN_MESSAGE_FORMAT.color()
-                                                .replace("%prefix%", SpigotConfig.PREFIX.color())
+                                        .forEach(players -> players.sendMessage(SpigotMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
+                                                .replace("%prefix%", SpigotMessages.PREFIX.color())
                                                 .replace("%user%", player.getName())));
 
                             }
                         }
                     }
 
-                    if (SpigotConfig.DISCORD_ENABLED.get(Boolean.class)
+                    if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
                             && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
                             && SpigotConfig.JOIN_LEAVE_DISCORD_MODULE.get(Boolean.class)) {
 
-                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotConfig.STAFF_CHANNEL_ID.get(String.class));
+                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
 
-                        if (SpigotConfig.USE_EMBED.get(Boolean.class)) {
+                        if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                             EmbedBuilder embed = new EmbedBuilder();
 
-                            embed.setTitle(SpigotConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+                            embed.setTitle(SpigotDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
-                            embed.setDescription(SpigotConfig.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
+                            embed.setDescription(SpigotMessages.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
                                     .replace("%user%", player.getName()));
 
                             embed.setColor(Color.YELLOW);
@@ -120,7 +122,7 @@ public class JoinListener implements Listener {
 
                         } else {
 
-                            channel.sendMessageFormat(SpigotConfig.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
+                            channel.sendMessageFormat(SpigotMessages.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
                                     .replace("%user%", player.getName())).queue();
 
                         }
@@ -162,8 +164,8 @@ public class JoinListener implements Listener {
                                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                                 (players -> players.hasPermission
                                                         (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
-                                        .forEach(players -> players.sendMessage(SpigotConfig.STAFF_QUIT_MESSAGE_FORMAT.color()
-                                                .replace("%prefix%", SpigotConfig.PREFIX.color())
+                                        .forEach(players -> players.sendMessage(SpigotMessages.STAFF_QUIT_MESSAGE_FORMAT.color()
+                                                .replace("%prefix%", SpigotMessages.PREFIX.color())
                                                 .replace("%displayname%", user_prefix + player.getName() + user_suffix)
                                                 .replace("%userprefix%", user_prefix)
                                                 .replace("%usersuffix%", user_suffix)
@@ -181,8 +183,8 @@ public class JoinListener implements Listener {
                                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                                 (players -> players.hasPermission
                                                         (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
-                                        .forEach(players -> players.sendMessage(SpigotConfig.STAFF_QUIT_MESSAGE_FORMAT.color()
-                                                .replace("%prefix%", SpigotConfig.PREFIX.color())
+                                        .forEach(players -> players.sendMessage(SpigotMessages.STAFF_QUIT_MESSAGE_FORMAT.color()
+                                                .replace("%prefix%", SpigotMessages.PREFIX.color())
                                                 .replace("%user%", player.getName())));
 
                             }
@@ -190,21 +192,21 @@ public class JoinListener implements Listener {
                     }
                 }
 
-                if (SpigotConfig.DISCORD_ENABLED.get(Boolean.class)
+                if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
                         && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
                         && SpigotConfig.JOIN_LEAVE_DISCORD_MODULE.get(Boolean.class)) {
 
-                    final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotConfig.STAFF_CHANNEL_ID.get(String.class));
+                    final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
                     assert channel != null;
 
-                    if (SpigotConfig.USE_EMBED.get(Boolean.class)) {
+                    if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                         EmbedBuilder embed = new EmbedBuilder();
 
-                        embed.setTitle(SpigotConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+                        embed.setTitle(SpigotDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
-                        embed.setDescription(SpigotConfig.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
+                        embed.setDescription(SpigotMessages.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
                                 .replace("%user%", player.getName()));
 
                         embed.setColor(Color.YELLOW);
@@ -214,7 +216,7 @@ public class JoinListener implements Listener {
 
                     } else {
 
-                        channel.sendMessageFormat(SpigotConfig.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
+                        channel.sendMessageFormat(SpigotMessages.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
                                 .replace("%user%", player.getName())).queue();
 
                     }

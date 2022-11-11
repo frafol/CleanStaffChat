@@ -1,7 +1,10 @@
 package it.frafol.cleanstaffchat.bukkit.donorchat.commands;
 
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotCommandsConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -30,20 +33,12 @@ public class DonorChatCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] strings) {
 
-        if (!command.getName().equalsIgnoreCase("dc")
-                || command.getName().equalsIgnoreCase("donorchat")
-                || command.getName().equalsIgnoreCase("donor")) {
-
-            return false;
-
-        }
-
         if (strings.length == 0) {
 
             if (!(sender instanceof Player)) {
 
-                sender.sendMessage((SpigotConfig.DONORARGUMENTS.color()
-                        .replace("%prefix%", SpigotConfig.DONORPREFIX.color())));
+                sender.sendMessage((SpigotMessages.DONORARGUMENTS.color()
+                        .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
 
                 return false;
 
@@ -57,8 +52,8 @@ public class DonorChatCommand implements CommandExecutor {
 
                     if (!(SpigotConfig.DONORCHAT_TALK_MODULE.get(Boolean.class))) {
 
-                        sender.sendMessage((SpigotConfig.DONORARGUMENTS.color()
-                                .replace("%prefix%", SpigotConfig.DONORPREFIX.color())));
+                        sender.sendMessage((SpigotMessages.DONORARGUMENTS.color()
+                                .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
 
                         return false;
 
@@ -68,13 +63,13 @@ public class DonorChatCommand implements CommandExecutor {
 
                         PlayerCache.getToggled_2_donor().add(player.getUniqueId());
 
-                        sender.sendMessage((SpigotConfig.DONORCHAT_TALK_ENABLED.color()
-                                .replace("%prefix%", SpigotConfig.DONORPREFIX.color())));
+                        sender.sendMessage((SpigotMessages.DONORCHAT_TALK_ENABLED.color()
+                                .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
 
                     } else {
 
-                        sender.sendMessage((SpigotConfig.DONORARGUMENTS.color()
-                                .replace("%prefix%", SpigotConfig.DONORPREFIX.color())));
+                        sender.sendMessage((SpigotMessages.DONORARGUMENTS.color()
+                                .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
 
                         return false;
 
@@ -86,8 +81,8 @@ public class DonorChatCommand implements CommandExecutor {
 
                     PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
 
-                    sender.sendMessage((SpigotConfig.DONORCHAT_TALK_DISABLED.color()
-                            .replace("%prefix%", SpigotConfig.DONORPREFIX.color())));
+                    sender.sendMessage((SpigotMessages.DONORCHAT_TALK_DISABLED.color()
+                            .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
 
                     return false;
 
@@ -140,8 +135,8 @@ public class DonorChatCommand implements CommandExecutor {
                                 message.contains("&o") ||
                                 message.contains("&r")) {
 
-                            sender.sendMessage(SpigotConfig.COLOR_CODES.color()
-                                    .replace("%prefix%", SpigotConfig.DONORPREFIX.color())
+                            sender.sendMessage(SpigotMessages.COLOR_CODES.color()
+                                    .replace("%prefix%", SpigotMessages.DONORPREFIX.color())
                                     .replace("&", "§"));
 
                             return false;
@@ -151,8 +146,8 @@ public class DonorChatCommand implements CommandExecutor {
 
                     if (PlayerCache.getCooldown().contains(((Player) sender).getUniqueId())) {
 
-                        sender.sendMessage(SpigotConfig.DONORCHAT_COOLDOWN_MESSAGE.color()
-                                .replace("%prefix%", SpigotConfig.DONORPREFIX.color()));
+                        sender.sendMessage(SpigotMessages.DONORCHAT_COOLDOWN_MESSAGE.color()
+                                .replace("%prefix%", SpigotMessages.DONORPREFIX.color()));
 
                         return false;
 
@@ -172,8 +167,8 @@ public class DonorChatCommand implements CommandExecutor {
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                         (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(SpigotConfig.DONORCHAT_FORMAT.color()
-                                        .replace("%prefix%", SpigotConfig.DONORPREFIX.color())
+                                .forEach(players -> players.sendMessage(SpigotMessages.DONORCHAT_FORMAT.color()
+                                        .replace("%prefix%", SpigotMessages.DONORPREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%displayname%", user_prefix + commandsender + user_suffix)
                                         .replace("%message%", message)
@@ -187,8 +182,8 @@ public class DonorChatCommand implements CommandExecutor {
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                         (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(SpigotConfig.DONORCHAT_FORMAT.color()
-                                        .replace("%prefix%", SpigotConfig.DONORPREFIX.color())
+                                .forEach(players -> players.sendMessage(SpigotMessages.DONORCHAT_FORMAT.color()
+                                        .replace("%prefix%", SpigotMessages.DONORPREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%userprefix%", "")
                                         .replace("%usersuffix%", "")
@@ -199,19 +194,19 @@ public class DonorChatCommand implements CommandExecutor {
 
                     }
 
-                    if (SpigotConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                    if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
-                        final TextChannel channel = plugin.getJda().getTextChannelById(SpigotConfig.DONOR_CHANNEL_ID.get(String.class));
+                        final TextChannel channel = plugin.getJda().getTextChannelById(SpigotDiscordConfig.DONOR_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
 
-                        if (SpigotConfig.USE_EMBED.get(Boolean.class)) {
+                        if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                             EmbedBuilder embed = new EmbedBuilder();
 
-                            embed.setTitle(SpigotConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
+                            embed.setTitle(SpigotDiscordConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
 
-                            embed.setDescription(SpigotConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                            embed.setDescription(SpigotMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                                     .replace("%user%", commandsender)
                                     .replace("%message%", message)
                                     .replace("%server%", ""));
@@ -223,7 +218,7 @@ public class DonorChatCommand implements CommandExecutor {
 
                         } else {
 
-                            channel.sendMessageFormat(SpigotConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                            channel.sendMessageFormat(SpigotMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                                             .replace("%user%", commandsender)
                                             .replace("%message%", message)
                                             .replace("%server%", ""))
@@ -256,8 +251,8 @@ public class DonorChatCommand implements CommandExecutor {
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                         (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage((SpigotConfig.DONORCHAT_FORMAT.color()
-                                        .replace("%prefix%", SpigotConfig.DONORPREFIX.color())
+                                .forEach(players -> players.sendMessage((SpigotMessages.DONORCHAT_FORMAT.color()
+                                        .replace("%prefix%", SpigotMessages.DONORPREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%userprefix%", "")
                                         .replace("%usersuffix%", "")
@@ -267,15 +262,15 @@ public class DonorChatCommand implements CommandExecutor {
 
                     } else {
 
-                        sender.sendMessage((SpigotConfig.DONORCHAT_MUTED_ERROR.color()
-                                .replace("%prefix%", SpigotConfig.DONORPREFIX.color())));
+                        sender.sendMessage((SpigotMessages.DONORCHAT_MUTED_ERROR.color()
+                                .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
 
                         return false;
 
                     }
 
-                    sender.sendMessage((SpigotConfig.DONORCHAT_FORMAT.color()
-                            .replace("%prefix%", SpigotConfig.DONORPREFIX.color())
+                    sender.sendMessage((SpigotMessages.DONORCHAT_FORMAT.color()
+                            .replace("%prefix%", SpigotMessages.DONORPREFIX.color())
                             .replace("%user%", commandsender)
                             .replace("%displayname%", commandsender)
                             .replace("%userprefix%", "")
@@ -283,19 +278,19 @@ public class DonorChatCommand implements CommandExecutor {
                             .replace("%server%", "")
                             .replace("%message%", message)));
 
-                    if (SpigotConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                    if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
-                        final TextChannel channel = plugin.getJda().getTextChannelById(SpigotConfig.DONOR_CHANNEL_ID.get(String.class));
+                        final TextChannel channel = plugin.getJda().getTextChannelById(SpigotDiscordConfig.DONOR_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
 
-                        if (SpigotConfig.USE_EMBED.get(Boolean.class)) {
+                        if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                             EmbedBuilder embed = new EmbedBuilder();
 
-                            embed.setTitle(SpigotConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
+                            embed.setTitle(SpigotDiscordConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
 
-                            embed.setDescription(SpigotConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                            embed.setDescription(SpigotMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                                     .replace("%user%", commandsender)
                                     .replace("%message%", message)
                                     .replace("%server%", ""));
@@ -307,7 +302,7 @@ public class DonorChatCommand implements CommandExecutor {
 
                         } else {
 
-                            channel.sendMessageFormat(SpigotConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                            channel.sendMessageFormat(SpigotMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                                             .replace("%user%", commandsender)
                                             .replace("%message%", message)
                                             .replace("%server%", ""))
@@ -320,8 +315,8 @@ public class DonorChatCommand implements CommandExecutor {
 
                 } else {
 
-                    sender.sendMessage((SpigotConfig.PLAYER_ONLY.color()
-                            .replace("%prefix%", SpigotConfig.DONORPREFIX.color())));
+                    sender.sendMessage((SpigotMessages.PLAYER_ONLY.color()
+                            .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
 
                 }
 
@@ -329,8 +324,8 @@ public class DonorChatCommand implements CommandExecutor {
 
             } else {
 
-                sender.sendMessage((SpigotConfig.DONORCHAT_MUTED_ERROR.color()
-                        .replace("%prefix%", SpigotConfig.DONORPREFIX.color())));
+                sender.sendMessage((SpigotMessages.DONORCHAT_MUTED_ERROR.color()
+                        .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
 
             }
 
@@ -338,8 +333,8 @@ public class DonorChatCommand implements CommandExecutor {
 
         } else {
 
-            sender.sendMessage((SpigotConfig.NO_PERMISSION.color()
-                    .replace("%prefix%", SpigotConfig.DONORPREFIX.color())));
+            sender.sendMessage((SpigotMessages.NO_PERMISSION.color()
+                    .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
 
         }
 

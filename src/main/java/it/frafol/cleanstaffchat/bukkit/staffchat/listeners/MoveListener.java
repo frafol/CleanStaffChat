@@ -2,6 +2,7 @@ package it.frafol.cleanstaffchat.bukkit.staffchat.listeners;
 
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -60,8 +61,8 @@ public class MoveListener implements Listener {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotConfig.STAFFCHAT_AFK_OFF.color()
-                                .replace("%prefix%", SpigotConfig.PREFIX.color())
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_OFF.color()
+                                .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", player.getName())
                                 .replace("%displayname%", user_prefix + player.getName() + user_suffix)
                                 .replace("%userprefix%", user_prefix)
@@ -72,8 +73,8 @@ public class MoveListener implements Listener {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotConfig.STAFFCHAT_AFK_OFF.color()
-                                .replace("%prefix%", SpigotConfig.PREFIX.color())
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_OFF.color()
+                                .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", player.getName())
                                 .replace("%userprefix%", "")
                                 .replace("%usersuffix%", "")

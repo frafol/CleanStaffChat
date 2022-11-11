@@ -6,15 +6,13 @@ import com.velocitypowered.api.proxy.Player;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.UpdateCheck;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
-
-import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.PREFIX;
-import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.STAFFCHAT_AFK_OFF;
 
 public class ServerListener {
 
@@ -67,24 +65,24 @@ public class ServerListener {
                     CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                     (players -> players.hasPermission(VelocityConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))
                                             && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                            .forEach(players -> STAFFCHAT_AFK_OFF.send(players,
+                            .forEach(players -> VelocityMessages.STAFFCHAT_AFK_OFF.send(players,
                                     new Placeholder("user", event.getPlayer().getUsername()),
                                     new Placeholder("displayname", user_prefix + event.getPlayer() + user_suffix),
                                     new Placeholder("userprefix", user_prefix),
                                     new Placeholder("usersuffix", user_suffix),
-                                    new Placeholder("prefix", PREFIX.color())));
+                                    new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
                 } else {
 
                     CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                     (players -> players.hasPermission(VelocityConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))
                                             && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                            .forEach(players -> STAFFCHAT_AFK_OFF.send(players,
+                            .forEach(players -> VelocityMessages.STAFFCHAT_AFK_OFF.send(players,
                                     new Placeholder("user", event.getPlayer().getUsername()),
                                     new Placeholder("displayname", event.getPlayer().getUsername()),
                                     new Placeholder("userprefix", ""),
                                     new Placeholder("usersuffix", ""),
-                                    new Placeholder("prefix", PREFIX.color())));
+                                    new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
                 }
 
@@ -117,9 +115,9 @@ public class ServerListener {
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> VelocityConfig.STAFF_SWITCH_MESSAGE_FORMAT.send(players,
+                                .forEach(players -> VelocityMessages.STAFF_SWITCH_MESSAGE_FORMAT.send(players,
                                         new Placeholder("user", player.getUsername()),
-                                        new Placeholder("prefix", VelocityConfig.PREFIX.color()),
+                                        new Placeholder("prefix", VelocityMessages.PREFIX.color()),
                                         new Placeholder("userprefix", user_prefix),
                                         new Placeholder("usersuffix", user_suffix),
                                         new Placeholder("displayname", user_prefix + player.getUsername() + user_suffix),
@@ -130,9 +128,9 @@ public class ServerListener {
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> VelocityConfig.STAFF_SWITCH_MESSAGE_FORMAT.send(players,
+                                .forEach(players -> VelocityMessages.STAFF_SWITCH_MESSAGE_FORMAT.send(players,
                                         new Placeholder("user", player.getUsername()),
-                                        new Placeholder("prefix", VelocityConfig.PREFIX.color()),
+                                        new Placeholder("prefix", VelocityMessages.PREFIX.color()),
                                         new Placeholder("server", event.getServer().getServerInfo().getName())));
 
                     }

@@ -5,6 +5,8 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityDiscordConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -41,7 +43,7 @@ public class ChatListener extends ListenerAdapter {
 
                 if (!(STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
 
-                    MODULE_DISABLED.send(event.getPlayer(), new Placeholder("prefix", PREFIX.color()));
+                    VelocityMessages.MODULE_DISABLED.send(event.getPlayer(), new Placeholder("prefix", VelocityMessages.PREFIX.color()));
 
                     return;
 
@@ -75,8 +77,8 @@ public class ChatListener extends ListenerAdapter {
                                     message.contains("&o") ||
                                     message.contains("&r")) {
 
-                                COLOR_CODES.send(event.getPlayer(),
-                                        new Placeholder("prefix", PREFIX.color()));
+                                VelocityMessages.COLOR_CODES.send(event.getPlayer(),
+                                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
 
                                 return;
                             }
@@ -103,44 +105,44 @@ public class ChatListener extends ListenerAdapter {
                             CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                             (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                     && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                    .forEach(players -> STAFFCHAT_FORMAT.send(players,
+                                    .forEach(players -> VelocityMessages.STAFFCHAT_FORMAT.send(players,
                                             new Placeholder("user", sender),
                                             new Placeholder("message", message),
                                             new Placeholder("displayname", user_prefix + sender + user_suffix),
                                             new Placeholder("userprefix", user_prefix),
                                             new Placeholder("usersuffix", user_suffix),
                                             new Placeholder("server", event.getPlayer().getCurrentServer().get().getServerInfo().getName()),
-                                            new Placeholder("prefix", PREFIX.color())));
+                                            new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
                         } else {
 
                             CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                             (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                     && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                    .forEach(players -> STAFFCHAT_FORMAT.send(players,
+                                    .forEach(players -> VelocityMessages.STAFFCHAT_FORMAT.send(players,
                                             new Placeholder("user", sender),
                                             new Placeholder("message", message),
                                             new Placeholder("displayname", sender),
                                             new Placeholder("userprefix", ""),
                                             new Placeholder("usersuffix", ""),
                                             new Placeholder("server", event.getPlayer().getCurrentServer().get().getServerInfo().getName()),
-                                            new Placeholder("prefix", PREFIX.color())));
+                                            new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
                         }
 
-                        if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                        if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
-                            final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.STAFF_CHANNEL_ID.get(String.class));
+                            final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
                             assert channel != null;
 
-                            if (VelocityConfig.USE_EMBED.get(Boolean.class)) {
+                            if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                                 EmbedBuilder embed = new EmbedBuilder();
 
-                                embed.setTitle(VelocityConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+                                embed.setTitle(VelocityDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
-                                embed.setDescription(VelocityConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                                embed.setDescription(VelocityMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                         .replace("%user%", sender)
                                         .replace("%message%", message)
                                         .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()));
@@ -152,7 +154,7 @@ public class ChatListener extends ListenerAdapter {
 
                             } else {
 
-                                channel.sendMessageFormat(VelocityConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                                channel.sendMessageFormat(VelocityMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                                 .replace("%user%", sender)
                                                 .replace("%message%", message)
                                                 .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()))
@@ -163,8 +165,8 @@ public class ChatListener extends ListenerAdapter {
 
                     } else {
 
-                        STAFFCHAT_MUTED_ERROR.send(event.getPlayer(),
-                                new Placeholder("prefix", PREFIX.color()));
+                        VelocityMessages.STAFFCHAT_MUTED_ERROR.send(event.getPlayer(),
+                                new Placeholder("prefix", VelocityMessages.PREFIX.color()));
 
                     }
                 }
@@ -179,17 +181,17 @@ public class ChatListener extends ListenerAdapter {
 
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
 
-        if (PLUGIN.getConfigTextFile() == null) {
+        if (PLUGIN.getConfigTextFile() == null || PLUGIN.getMessagesTextFile() == null) {
 
             return;
 
         }
 
-        if (!event.getChannel().getId().equalsIgnoreCase(VelocityConfig.STAFF_CHANNEL_ID.get(String.class))) {
+        if (!event.getChannel().getId().equalsIgnoreCase(VelocityDiscordConfig.STAFF_CHANNEL_ID.get(String.class))) {
             return;
         }
 
-        if (event.getMessage().getContentDisplay().equalsIgnoreCase(STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class))) {
+        if (event.getMessage().getContentDisplay().equalsIgnoreCase(VelocityMessages.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class))) {
 
             PLUGIN.getServer().getScheduler()
                     .buildTask(PLUGIN, scheduledTask -> event.getMessage().delete().queue())
@@ -206,7 +208,7 @@ public class ChatListener extends ListenerAdapter {
 
         if (PlayerCache.getMuted().contains("true")) {
 
-            event.getMessage().reply(STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class)).queue();
+            event.getMessage().reply(VelocityMessages.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class)).queue();
 
             PLUGIN.getServer().getScheduler()
                     .buildTask(PLUGIN, scheduledTask -> event.getMessage().delete().queue())
@@ -220,10 +222,10 @@ public class ChatListener extends ListenerAdapter {
         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                         (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                .forEach(players -> DISCORD_STAFF_FORMAT.send(players,
+                .forEach(players -> VelocityMessages.DISCORD_STAFF_FORMAT.send(players,
                         new Placeholder("user", event.getAuthor().getName()),
                         new Placeholder("message", event.getMessage().getContentDisplay()),
-                        new Placeholder("prefix", PREFIX.color())));
+                        new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
     }
 }

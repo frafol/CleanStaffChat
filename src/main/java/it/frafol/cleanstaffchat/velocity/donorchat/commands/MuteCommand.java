@@ -4,6 +4,7 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 
@@ -22,23 +23,23 @@ public class MuteCommand implements SimpleCommand {
         CommandSource commandSource = invocation.source();
 
         if (!(DONORCHAT_MUTE_MODULE.get(Boolean.class))) {
-            MODULE_DISABLED.send(commandSource, new Placeholder("prefix", DONORPREFIX.color()));
+            VelocityMessages.MODULE_DISABLED.send(commandSource, new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
             return;
         }
 
         if (commandSource.hasPermission(VelocityConfig.DONORCHAT_MUTE_PERMISSION.get(String.class))) {
             if (!PlayerCache.getMuted_donor().contains("true")) {
                 PlayerCache.getMuted_donor().add("true");
-                DONORCHAT_MUTED.send(commandSource,
-                        new Placeholder("prefix", DONORPREFIX.color()));
+                VelocityMessages.DONORCHAT_MUTED.send(commandSource,
+                        new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
             } else {
                 PlayerCache.getMuted_donor().remove("true");
-                DONORCHAT_UNMUTED.send(commandSource,
-                        new Placeholder("prefix", DONORPREFIX.color()));
+                VelocityMessages.DONORCHAT_UNMUTED.send(commandSource,
+                        new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
             }
         } else {
-            NO_PERMISSION.send(commandSource,
-                    new Placeholder("prefix", DONORPREFIX.color()));
+            VelocityMessages.NO_PERMISSION.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
         }
     }
 }

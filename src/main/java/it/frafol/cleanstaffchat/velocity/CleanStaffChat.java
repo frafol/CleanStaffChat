@@ -9,7 +9,9 @@ import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import it.frafol.cleanstaffchat.velocity.adminchat.commands.AdminChatCommand;
 import it.frafol.cleanstaffchat.velocity.donorchat.commands.DonorChatCommand;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityCommandsConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityDiscordConfig;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import it.frafol.cleanstaffchat.velocity.objects.TextFile;
 import it.frafol.cleanstaffchat.velocity.staffchat.commands.*;
@@ -31,7 +33,7 @@ import java.util.logging.Logger;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.5.1",
+        version = "1.6",
         url = "github.com/frafol",
         authors = "frafol"
 )
@@ -43,6 +45,9 @@ public class CleanStaffChat {
     private final Path path;
     private JDA jda;
     private TextFile configTextFile;
+    private TextFile messagesTextFile;
+    private TextFile discordTextFile;
+    private TextFile aliasesTextFile;
     private static CleanStaffChat instance;
 
     public static CleanStaffChat getInstance() {
@@ -70,74 +75,74 @@ public class CleanStaffChat {
                 " \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)\n");
 
         configTextFile = new TextFile(path, "config.yml");
-        getLogger().info("§7Configurations loaded §asuccessfully§7!");
+        messagesTextFile = new TextFile(path, "messages.yml");
+        discordTextFile = new TextFile(path, "discord.yml");
+        aliasesTextFile = new TextFile(path, "aliases.yml");
+        getLogger().info("§7Configurations loaded §dsuccessfully§7!");
 
-        if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class)) {
+        if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
 
-            jda = JDABuilder.createDefault(VelocityConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
+            jda = JDABuilder.createDefault(VelocityDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
 
             jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
-                            (VelocityConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
-                    VelocityConfig.DISCORD_ACTIVITY.get(String.class)));
+                            (VelocityDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
+                    VelocityDiscordConfig.DISCORD_ACTIVITY.get(String.class)));
 
-            if (getServer().getPluginManager().isLoaded("serverutils")
-                    || getServer().getPluginManager().isLoaded("PlugManBungee")) {
+            if (getServer().getPluginManager().isLoaded("serverutils")) {
 
-                getLogger().warning("\n\nWARNING!" +
-                        "\n\nIntegration on Discord may give you many problems if you reload the plugin with ServerUtils/PlugMan." +
-                        "\nConsider performing a TOTAL RESTART to prevent issues!\n");
+                getLogger().warning("\n§f\n§e§lWARNING!" +
+                        "\n§f\n§7Integration on Discord may give you many problems if you reload the plugin with ServerUtils." +
+                        "\n§7Consider performing a §d§lTOTAL RESTART to prevent issues!\n");
 
             }
 
-            getLogger().info("§7Hooked into Discord §asuccessfully§7!");
+            getLogger().info("§7Hooked into Discord §dsuccessfully§7!");
 
         }
 
         server.getCommandManager().register(server.getCommandManager()
                 .metaBuilder("screload")
-                .aliases("staffchatreload")
-                .aliases("cleanscreload")
-                .aliases("staffreload")
-                .aliases("cleanstaffchatreload")
+                .aliases("staffchatreload", "staffreload", "cleanscreload", "cleanstaffchatreload")
                 .build(), new ReloadCommand(this));
 
         if (VelocityConfig.STAFFCHAT.get(Boolean.class)) {
 
+            final String[] aliases_staffchat = VelocityCommandsConfig.STAFFCHAT.getStringList().toArray(new String[0]);
+
             server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder("sc")
-                    .aliases("staffchat")
-                    .aliases("cleansc")
-                    .aliases("staff")
-                    .aliases("cleanstaffchat")
+                    .metaBuilder(VelocityCommandsConfig.STAFFCHAT.getStringList().get(0))
+                    .aliases(aliases_staffchat)
                     .build(), new StaffChatCommand(this));
+
+
+            final String[] aliases_staffchatmute = VelocityCommandsConfig.STAFFCHAT_MUTE.getStringList().toArray(new String[0]);
+
             server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder("scmute")
-                    .aliases("staffchatmute")
-                    .aliases("cleanscmute")
-                    .aliases("staffmute")
-                    .aliases("cleanstaffchatmute")
+                    .metaBuilder(VelocityCommandsConfig.STAFFCHAT_MUTE.getStringList().get(0))
+                    .aliases(aliases_staffchatmute)
                     .build(), new MuteCommand(this));
+
+
+            final String[] aliases_staffchattoggle = VelocityCommandsConfig.STAFFCHAT_TOGGLE.getStringList().toArray(new String[0]);
+
             server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder("sctoggle")
-                    .aliases("staffchattoggle")
-                    .aliases("staffchatoggle")
-                    .aliases("cleansctoggle")
-                    .aliases("stafftoggle")
-                    .aliases("cleanstaffchattoggle")
+                    .metaBuilder(VelocityCommandsConfig.STAFFCHAT_TOGGLE.getStringList().get(0))
+                    .aliases(aliases_staffchattoggle)
                     .build(), new ToggleCommand(this));
+
+
+            final String[] aliases_staffchatafk = VelocityCommandsConfig.STAFFCHAT_AFK.getStringList().toArray(new String[0]);
+
             server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder("scafk")
-                    .aliases("staffchatafk")
-                    .aliases("staffafk")
-                    .aliases("cleanscafk")
-                    .aliases("cleanstaffchatafk")
+                    .metaBuilder(VelocityCommandsConfig.STAFFCHAT_AFK.getStringList().get(0))
+                    .aliases(aliases_staffchatafk)
                     .build(), new AFKCommand(this));
 
             server.getEventManager().register(this, new JoinListener(this));
             server.getEventManager().register(this, new ServerListener(this));
             server.getEventManager().register(this, new ChatListener(this));
 
-            if (VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            if (VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
                 jda.addEventListener(new ChatListener(this));
             }
 
@@ -145,26 +150,30 @@ public class CleanStaffChat {
 
         if (VelocityConfig.DONORCHAT.get(Boolean.class)) {
 
+            final String[] aliases_donorchat = VelocityCommandsConfig.DONORCHAT.getStringList().toArray(new String[0]);
+
             server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder("dc")
-                    .aliases("donorchat")
-                    .aliases("donor")
+                    .metaBuilder(VelocityCommandsConfig.DONORCHAT.getStringList().get(0))
+                    .aliases(aliases_donorchat)
                     .build(), new DonorChatCommand(this));
+
+            final String[] aliases_donormute = VelocityCommandsConfig.DONORCHAT_MUTE.getStringList().toArray(new String[0]);
+
             server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder("dcmute")
-                    .aliases("donorchatmute")
-                    .aliases("donormute")
+                    .metaBuilder(VelocityCommandsConfig.DONORCHAT_MUTE.getStringList().get(0))
+                    .aliases(aliases_donormute)
                     .build(), new it.frafol.cleanstaffchat.velocity.donorchat.commands.MuteCommand(this));
+
+            final String[] aliases_donortoggle = VelocityCommandsConfig.DONORCHAT_TOGGLE.getStringList().toArray(new String[0]);
+
             server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder("dctoggle")
-                    .aliases("donorchattoggle")
-                    .aliases("donorchatoggle")
-                    .aliases("donortoggle")
+                    .metaBuilder(VelocityCommandsConfig.DONORCHAT_TOGGLE.getStringList().get(0))
+                    .aliases(aliases_donortoggle)
                     .build(), new it.frafol.cleanstaffchat.velocity.donorchat.commands.ToggleCommand(this));
 
             server.getEventManager().register(this, new it.frafol.cleanstaffchat.velocity.donorchat.listeners.ChatListener(this));
 
-            if (VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            if (VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
                 jda.addEventListener(new it.frafol.cleanstaffchat.velocity.donorchat.listeners.ChatListener(this));
             }
 
@@ -172,26 +181,30 @@ public class CleanStaffChat {
 
         if (VelocityConfig.ADMINCHAT.get(Boolean.class)) {
 
+            final String[] aliases_adminchat = VelocityCommandsConfig.ADMINCHAT.getStringList().toArray(new String[0]);
+
             server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder("ac")
-                    .aliases("adminchat")
-                    .aliases("admin")
+                    .metaBuilder(VelocityCommandsConfig.ADMINCHAT.getStringList().get(0))
+                    .aliases(aliases_adminchat)
                     .build(), new AdminChatCommand(this));
+
+            final String[] aliases_adminchatmute = VelocityCommandsConfig.ADMINCHAT_MUTE.getStringList().toArray(new String[0]);
+
             server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder("acmute")
-                    .aliases("adminchatmute")
-                    .aliases("adminmute")
+                    .metaBuilder(VelocityCommandsConfig.ADMINCHAT_MUTE.getStringList().get(0))
+                    .aliases(aliases_adminchatmute)
                     .build(), new it.frafol.cleanstaffchat.velocity.adminchat.commands.MuteCommand(this));
+
+            final String[] aliases_adminchattoggle = VelocityCommandsConfig.ADMINCHAT_TOGGLE.getStringList().toArray(new String[0]);
+
             server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder("actoggle")
-                    .aliases("adminchattoggle")
-                    .aliases("adminchatoggle")
-                    .aliases("admintoggle")
+                    .metaBuilder(VelocityCommandsConfig.ADMINCHAT_TOGGLE.getStringList().get(0))
+                    .aliases(aliases_adminchattoggle)
                     .build(), new it.frafol.cleanstaffchat.velocity.adminchat.commands.ToggleCommand(this));
 
             server.getEventManager().register(this, new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
 
-            if (VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            if (VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
                 jda.addEventListener(new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
             }
 
@@ -201,7 +214,7 @@ public class CleanStaffChat {
 
             metricsFactory.make(this, 16447);
 
-            getLogger().info("§7Metrics loaded §asuccessfully§7!");
+            getLogger().info("§7Metrics loaded §dsuccessfully§7!");
 
         }
 
@@ -217,7 +230,7 @@ public class CleanStaffChat {
             });
         }
 
-        getLogger().info("§7Plugin successfully §aenabled§7!");
+        getLogger().info("§7Plugin successfully &denabled§7!");
     }
 
     @Subscribe
@@ -239,6 +252,6 @@ public class CleanStaffChat {
         PlayerCache.getMuted_donor().clear();
         PlayerCache.getAfk().clear();
 
-        logger.info("§7Successfully §cdisabled§7.");
+        logger.info("§7Successfully §ddisabled§7.");
     }
 }

@@ -2,6 +2,7 @@ package it.frafol.cleanstaffchat.bukkit.staffchat.commands;
 
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -36,8 +37,8 @@ public class AFKCommand implements CommandExecutor {
 
         if (!(sender instanceof Player)) {
 
-            sender.sendMessage((SpigotConfig.PLAYER_ONLY.color()
-                    .replace("%prefix%", SpigotConfig.PREFIX.color())));
+            sender.sendMessage((SpigotMessages.PLAYER_ONLY.color()
+                    .replace("%prefix%", SpigotMessages.PREFIX.color())));
 
             return false;
 
@@ -45,8 +46,8 @@ public class AFKCommand implements CommandExecutor {
 
         if (!SpigotConfig.STAFFCHAT_AFK_MODULE.get(Boolean.class)) {
 
-            sender.sendMessage((SpigotConfig.MODULE_DISABLED.color()
-                    .replace("%prefix%", SpigotConfig.PREFIX.color())));
+            sender.sendMessage((SpigotMessages.MODULE_DISABLED.color()
+                    .replace("%prefix%", SpigotMessages.PREFIX.color())));
 
             return false;
 
@@ -54,8 +55,8 @@ public class AFKCommand implements CommandExecutor {
 
         if (!sender.hasPermission(SpigotConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))) {
 
-            sender.sendMessage((SpigotConfig.NO_PERMISSION.color()
-                    .replace("%prefix%", SpigotConfig.PREFIX.color())));
+            sender.sendMessage((SpigotMessages.NO_PERMISSION.color()
+                    .replace("%prefix%", SpigotMessages.PREFIX.color())));
 
             return false;
 
@@ -77,8 +78,8 @@ public class AFKCommand implements CommandExecutor {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotConfig.STAFFCHAT_AFK_ON.color()
-                                .replace("%prefix%", SpigotConfig.PREFIX.color())
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_ON.color()
+                                .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", sender.getName())
                                 .replace("%displayname%", user_prefix + sender.getName() + user_suffix)
                                 .replace("%userprefix%", user_prefix)
@@ -90,8 +91,8 @@ public class AFKCommand implements CommandExecutor {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotConfig.STAFFCHAT_AFK_ON.color()
-                                .replace("%prefix%", SpigotConfig.PREFIX.color())
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_ON.color()
+                                .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", sender.getName())
                                 .replace("%userprefix%", "")
                                 .replace("%server%", "")
@@ -101,12 +102,6 @@ public class AFKCommand implements CommandExecutor {
             }
 
             PlayerCache.getAfk().add(((Player) sender).getUniqueId());
-
-            if (Bukkit.getServer().getPluginManager().getPlugin("Essentials") != null) {
-
-                
-
-            }
 
         } else {
 
@@ -125,8 +120,8 @@ public class AFKCommand implements CommandExecutor {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotConfig.STAFFCHAT_AFK_OFF.color()
-                                .replace("%prefix%", SpigotConfig.PREFIX.color())
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_OFF.color()
+                                .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", sender.getName())
                                 .replace("%displayname%", user_prefix + sender.getName() + user_suffix)
                                 .replace("%userprefix%", user_prefix)
@@ -138,8 +133,8 @@ public class AFKCommand implements CommandExecutor {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotConfig.STAFFCHAT_AFK_OFF.color()
-                                .replace("%prefix%", SpigotConfig.PREFIX.color())
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_OFF.color()
+                                .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", sender.getName())
                                 .replace("%userprefix%", "")
                                 .replace("%server%", "")

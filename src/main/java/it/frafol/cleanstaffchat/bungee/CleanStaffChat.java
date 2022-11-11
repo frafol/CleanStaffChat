@@ -3,6 +3,7 @@ package it.frafol.cleanstaffchat.bungee;
 import it.frafol.cleanstaffchat.bungee.adminchat.commands.AdminChatCommand;
 import it.frafol.cleanstaffchat.bungee.donorchat.commands.DonorChatCommand;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
+import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import it.frafol.cleanstaffchat.bungee.objects.TextFile;
 import it.frafol.cleanstaffchat.bungee.staffchat.commands.ReloadCommand;
@@ -21,6 +22,9 @@ public class CleanStaffChat extends Plugin {
 
     private JDA jda;
     private TextFile configTextFile;
+    private TextFile messagesTextFile;
+    private TextFile discordTextFile;
+    private TextFile aliasesTextFile;
     public static CleanStaffChat instance;
 
     public static CleanStaffChat getInstance() {
@@ -39,25 +43,39 @@ public class CleanStaffChat extends Plugin {
                 " \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)\n");
 
         configTextFile = new TextFile(getDataFolder().toPath(), "config.yml");
-        getLogger().info("§7Configurations loaded §asuccessfully§7!");
+        messagesTextFile = new TextFile(getDataFolder().toPath(), "messages.yml");
+        discordTextFile = new TextFile(getDataFolder().toPath(), "discord.yml");
+        aliasesTextFile = new TextFile(getDataFolder().toPath(), "aliases.yml");
+        getLogger().info("§7Configurations loaded §dsuccessfully§7!");
 
-        if (BungeeConfig.DISCORD_ENABLED.get(Boolean.class)) {
+        if (BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
 
-            jda = JDABuilder.createDefault(BungeeConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
+            jda = JDABuilder.createDefault(BungeeDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
 
             jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
-                            (BungeeConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
-                    BungeeConfig.DISCORD_ACTIVITY.get(String.class)));
+                            (BungeeDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
+                    BungeeDiscordConfig.DISCORD_ACTIVITY.get(String.class)));
 
-            if (getProxy().getPluginManager().getPlugin("ServerUtils") != null) {
+            if (getProxy().getPluginManager().getPlugin("ServerUtils") != null
+                    || getProxy().getPluginManager().getPlugin("PlugManBungee") != null) {
 
-                getLogger().warning("\n\nWARNING!" +
-                        "\n\nIntegration on Discord may give you many problems if you reload the plugin with ServerUtils." +
-                        "\nConsider performing a TOTAL RESTART to prevent issues!\n");
+                if (getProxy().getPluginManager().getPlugin("ServerUtils") != null ) {
+
+                    getLogger().warning("\n§f\n§e§lWARNING!" +
+                            "\n§f\n§7Integration on Discord may give you many problems if you reload the plugin with ServerUtils." +
+                            "\n§7Consider performing a §d§lTOTAL RESTART to prevent issues!\n");
+
+                } else {
+
+                    getLogger().warning("\n§f\n§e§lWARNING!" +
+                            "\n§f\n§7Integration on Discord may give you many problems if you reload the plugin with PlugManBungee." +
+                            "\n§7Consider performing a §d§lTOTAL RESTART to prevent issues!\n");
+
+                }
 
             }
 
-            getLogger().info("§7Hooked into Discord §asuccessfully§7!");
+            getLogger().info("§7Hooked into Discord §dsuccessfully§7!");
 
         }
 
@@ -71,7 +89,7 @@ public class CleanStaffChat extends Plugin {
             getProxy().getPluginManager().registerListener(this, new ServerListener(this));
             getProxy().getPluginManager().registerListener(this, new it.frafol.cleanstaffchat.bungee.staffchat.listeners.ChatListener(this));
 
-            if (BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            if (BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
                 jda.addEventListener(new ChatListener(this));
             }
 
@@ -84,7 +102,7 @@ public class CleanStaffChat extends Plugin {
             getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.adminchat.commands.ToggleCommand());
             getProxy().getPluginManager().registerListener(this, new it.frafol.cleanstaffchat.bungee.adminchat.listeners.ChatListener(this));
 
-            if (BungeeConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            if (BungeeConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
                 jda.addEventListener(new it.frafol.cleanstaffchat.bungee.adminchat.listeners.ChatListener(this));
             }
 
@@ -97,7 +115,7 @@ public class CleanStaffChat extends Plugin {
             getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.donorchat.commands.ToggleCommand());
             getProxy().getPluginManager().registerListener(this, new it.frafol.cleanstaffchat.bungee.donorchat.listeners.ChatListener(this));
 
-            if (BungeeConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            if (BungeeConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
                 jda.addEventListener(new it.frafol.cleanstaffchat.bungee.donorchat.listeners.ChatListener(this));
             }
 
@@ -120,11 +138,23 @@ public class CleanStaffChat extends Plugin {
             });
         }
 
-        getLogger().info("§7Plugin successfully §aenabled§7!");
+        getLogger().info("§7Plugin successfully §denabled§7!");
     }
 
     public YamlFile getConfigTextFile() {
         return getInstance().configTextFile.getConfig();
+    }
+
+    public YamlFile getMessagesTextFile() {
+        return getInstance().messagesTextFile.getConfig();
+    }
+
+    public YamlFile getDiscordTextFile() {
+        return getInstance().discordTextFile.getConfig();
+    }
+
+    public YamlFile getAliasesTextFile() {
+        return getInstance().aliasesTextFile.getConfig();
     }
 
     public JDA getJda() {
@@ -151,6 +181,7 @@ public class CleanStaffChat extends Plugin {
         PlayerCache.getMuted_donor().clear();
         PlayerCache.getAfk().clear();
 
-        getLogger().info("§7Successfully §cdisabled§7.");
+        getLogger().info("§7Successfully §ddisabled§7.");
     }
+
 }

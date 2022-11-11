@@ -7,6 +7,8 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityDiscordConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -40,7 +42,7 @@ public class StaffChatCommand implements SimpleCommand {
 
             if (!(commandSource instanceof Player)) {
 
-                ARGUMENTS.send(commandSource, new Placeholder("prefix", PREFIX.color()));
+                VelocityMessages.ARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
 
                 return;
 
@@ -53,7 +55,7 @@ public class StaffChatCommand implements SimpleCommand {
                 if (((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19
                         || ((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19_1) {
 
-                    ARGUMENTS.send(commandSource, new Placeholder("prefix", PREFIX.color()));
+                    VelocityMessages.ARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
 
                     return;
 
@@ -61,7 +63,7 @@ public class StaffChatCommand implements SimpleCommand {
 
                 if (!(STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
 
-                    ARGUMENTS.send(commandSource, new Placeholder("prefix", PREFIX.color()));
+                    VelocityMessages.ARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
 
                     return;
 
@@ -74,15 +76,15 @@ public class StaffChatCommand implements SimpleCommand {
 
                         PlayerCache.getToggled_2().add(player.getUniqueId());
 
-                        STAFFCHAT_TALK_ENABLED.send(commandSource,
-                                new Placeholder("prefix", PREFIX.color()));
+                        VelocityMessages.STAFFCHAT_TALK_ENABLED.send(commandSource,
+                                new Placeholder("prefix", VelocityMessages.PREFIX.color()));
 
                         return;
 
                     } else {
 
-                        ARGUMENTS.send(commandSource,
-                                new Placeholder("prefix", PREFIX.color()));
+                        VelocityMessages.ARGUMENTS.send(commandSource,
+                                new Placeholder("prefix", VelocityMessages.PREFIX.color()));
 
                     }
 
@@ -90,8 +92,8 @@ public class StaffChatCommand implements SimpleCommand {
 
                     PlayerCache.getToggled_2().remove(player.getUniqueId());
 
-                    STAFFCHAT_TALK_DISABLED.send(commandSource,
-                            new Placeholder("prefix", PREFIX.color()));
+                    VelocityMessages.STAFFCHAT_TALK_DISABLED.send(commandSource,
+                            new Placeholder("prefix", VelocityMessages.PREFIX.color()));
 
                     return;
 
@@ -141,8 +143,8 @@ public class StaffChatCommand implements SimpleCommand {
                                 message.contains("&o") ||
                                 message.contains("&r")) {
 
-                            COLOR_CODES.send(commandSource,
-                                    new Placeholder("prefix", PREFIX.color()));
+                            VelocityMessages.COLOR_CODES.send(commandSource,
+                                    new Placeholder("prefix", VelocityMessages.PREFIX.color()));
 
                             return;
 
@@ -170,44 +172,44 @@ public class StaffChatCommand implements SimpleCommand {
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> STAFFCHAT_FORMAT.send(players,
+                                .forEach(players -> VelocityMessages.STAFFCHAT_FORMAT.send(players,
                                         new Placeholder("user", sender),
                                         new Placeholder("message", message),
                                         new Placeholder("displayname", user_prefix + sender + user_suffix),
                                         new Placeholder("userprefix", user_prefix),
                                         new Placeholder("usersuffix", user_suffix),
                                         new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
-                                        new Placeholder("prefix", PREFIX.color())));
+                                        new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
                     } else {
 
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> STAFFCHAT_FORMAT.send(players,
+                                .forEach(players -> VelocityMessages.STAFFCHAT_FORMAT.send(players,
                                         new Placeholder("user", sender),
                                         new Placeholder("message", message),
                                         new Placeholder("displayname", sender),
                                         new Placeholder("userprefix", ""),
                                         new Placeholder("usersuffix", ""),
                                         new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
-                                        new Placeholder("prefix", PREFIX.color())));
+                                        new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
                     }
 
-                    if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                    if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
-                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.STAFF_CHANNEL_ID.get(String.class));
+                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
 
-                        if (VelocityConfig.USE_EMBED.get(Boolean.class)) {
+                        if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                             EmbedBuilder embed = new EmbedBuilder();
 
-                            embed.setTitle(VelocityConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+                            embed.setTitle(VelocityDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
-                            embed.setDescription(VelocityConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                            embed.setDescription(VelocityMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                     .replace("%user%", sender)
                                     .replace("%message%", message)
                                     .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()));
@@ -219,7 +221,7 @@ public class StaffChatCommand implements SimpleCommand {
 
                         } else {
 
-                            channel.sendMessageFormat(VelocityConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                            channel.sendMessageFormat(VelocityMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                             .replace("%user%", sender)
                                             .replace("%message%", message)
                                             .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()))
@@ -235,28 +237,28 @@ public class StaffChatCommand implements SimpleCommand {
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> STAFFCHAT_FORMAT.send(players,
+                                .forEach(players -> VelocityMessages.STAFFCHAT_FORMAT.send(players,
                                         new Placeholder("user", sender),
                                         new Placeholder("message", message),
                                         new Placeholder("displayname", sender),
                                         new Placeholder("userprefix", ""),
                                         new Placeholder("usersuffix", ""),
                                         new Placeholder("server", ""),
-                                        new Placeholder("prefix", PREFIX.color())));
+                                        new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
-                        if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                        if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
-                            final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.STAFF_CHANNEL_ID.get(String.class));
+                            final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
                             assert channel != null;
 
-                            if (VelocityConfig.USE_EMBED.get(Boolean.class)) {
+                            if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                                 EmbedBuilder embed = new EmbedBuilder();
 
-                                embed.setTitle(VelocityConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+                                embed.setTitle(VelocityDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
-                                embed.setDescription(VelocityConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                                embed.setDescription(VelocityMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                         .replace("%user%", sender)
                                         .replace("%message%", message)
                                         .replace("%server%", ""));
@@ -268,7 +270,7 @@ public class StaffChatCommand implements SimpleCommand {
 
                             } else {
 
-                                channel.sendMessageFormat(VelocityConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                                channel.sendMessageFormat(VelocityMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                                 .replace("%user%", sender)
                                                 .replace("%message%", message)
                                                 .replace("%server%", ""))
@@ -280,38 +282,38 @@ public class StaffChatCommand implements SimpleCommand {
 
                     } else {
 
-                        STAFFCHAT_MUTED_ERROR.send(commandSource,
-                                new Placeholder("prefix", PREFIX.color()));
+                        VelocityMessages.STAFFCHAT_MUTED_ERROR.send(commandSource,
+                                new Placeholder("prefix", VelocityMessages.PREFIX.color()));
 
                     }
 
-                    STAFFCHAT_FORMAT.send(commandSource,
+                    VelocityMessages.STAFFCHAT_FORMAT.send(commandSource,
                             new Placeholder("user", sender),
                             new Placeholder("message", message),
                             new Placeholder("displayname", sender),
                             new Placeholder("userprefix", ""),
                             new Placeholder("usersuffix", ""),
                             new Placeholder("server", ""),
-                            new Placeholder("prefix", PREFIX.color()));
+                            new Placeholder("prefix", VelocityMessages.PREFIX.color()));
 
                 } else {
 
-                    PLAYER_ONLY.send(commandSource,
-                            new Placeholder("prefix", PREFIX.color()));
+                    VelocityMessages.PLAYER_ONLY.send(commandSource,
+                            new Placeholder("prefix", VelocityMessages.PREFIX.color()));
 
                 }
 
             } else {
 
-                STAFFCHAT_MUTED_ERROR.send(commandSource,
-                        new Placeholder("prefix", PREFIX.color()));
+                VelocityMessages.STAFFCHAT_MUTED_ERROR.send(commandSource,
+                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
 
             }
 
         } else {
 
-            NO_PERMISSION.send(commandSource,
-                    new Placeholder("prefix", PREFIX.color()));
+            VelocityMessages.NO_PERMISSION.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.PREFIX.color()));
 
         }
     }

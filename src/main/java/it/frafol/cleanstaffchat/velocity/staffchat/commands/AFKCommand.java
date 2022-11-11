@@ -5,13 +5,12 @@ import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
-
-import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.*;
 
 public class AFKCommand implements SimpleCommand {
 
@@ -27,13 +26,13 @@ public class AFKCommand implements SimpleCommand {
         CommandSource commandSource = invocation.source();
 
         if (!(commandSource instanceof Player)) {
-            PLAYER_ONLY.send(commandSource, new Placeholder("prefix", PREFIX.color()));
+            VelocityMessages.PLAYER_ONLY.send(commandSource, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
             return;
         }
 
         if (!VelocityConfig.STAFFCHAT_AFK_MODULE.get(Boolean.class)) {
 
-            MODULE_DISABLED.send(commandSource, new Placeholder("prefix", PREFIX.color()));
+            VelocityMessages.MODULE_DISABLED.send(commandSource, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
 
             return;
 
@@ -41,7 +40,7 @@ public class AFKCommand implements SimpleCommand {
 
         if (!commandSource.hasPermission(VelocityConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))) {
 
-            NO_PERMISSION.send(commandSource, new Placeholder("prefix", PREFIX.color()));
+            VelocityMessages.NO_PERMISSION.send(commandSource, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
 
             return;
 
@@ -69,26 +68,26 @@ public class AFKCommand implements SimpleCommand {
                 CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                 (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> STAFFCHAT_AFK_ON.send(players,
+                        .forEach(players -> VelocityMessages.STAFFCHAT_AFK_ON.send(players,
                                 new Placeholder("user", ((Player) commandSource).getUsername()),
                                 new Placeholder("displayname", user_prefix + commandSource + user_suffix),
                                 new Placeholder("userprefix", user_prefix),
                                 new Placeholder("usersuffix", user_suffix),
                                 new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
-                                new Placeholder("prefix", PREFIX.color())));
+                                new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
             } else {
 
                 CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                 (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> STAFFCHAT_AFK_ON.send(players,
+                        .forEach(players -> VelocityMessages.STAFFCHAT_AFK_ON.send(players,
                                 new Placeholder("user", ((Player) commandSource).getUsername()),
                                 new Placeholder("displayname", ((Player) commandSource).getUsername()),
                                 new Placeholder("userprefix", ""),
                                 new Placeholder("usersuffix", ""),
                                 new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
-                                new Placeholder("prefix", PREFIX.color())));
+                                new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
             }
 
@@ -111,26 +110,26 @@ public class AFKCommand implements SimpleCommand {
                 CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                 (players -> players.hasPermission(VelocityConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> STAFFCHAT_AFK_OFF.send(players,
+                        .forEach(players -> VelocityMessages.STAFFCHAT_AFK_OFF.send(players,
                                 new Placeholder("user", ((Player) commandSource).getUsername()),
                                 new Placeholder("displayname", user_prefix + commandSource + user_suffix),
                                 new Placeholder("userprefix", user_prefix),
                                 new Placeholder("usersuffix", user_suffix),
                                 new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
-                                new Placeholder("prefix", PREFIX.color())));
+                                new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
             } else {
 
                 CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                 (players -> players.hasPermission(VelocityConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> STAFFCHAT_AFK_OFF.send(players,
+                        .forEach(players -> VelocityMessages.STAFFCHAT_AFK_OFF.send(players,
                                 new Placeholder("user", ((Player) commandSource).getUsername()),
                                 new Placeholder("displayname", ((Player) commandSource).getUsername()),
                                 new Placeholder("userprefix", ""),
                                 new Placeholder("usersuffix", ""),
                                 new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
-                                new Placeholder("prefix", PREFIX.color())));
+                                new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
             }
 

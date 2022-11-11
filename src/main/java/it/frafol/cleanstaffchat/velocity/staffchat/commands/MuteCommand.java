@@ -4,6 +4,7 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 
@@ -22,23 +23,23 @@ public class MuteCommand implements SimpleCommand {
         CommandSource commandSource = invocation.source();
 
         if (!(STAFFCHAT_MUTE_MODULE.get(Boolean.class))) {
-            MODULE_DISABLED.send(commandSource, new Placeholder("prefix", PREFIX.color()));
+            VelocityMessages.MODULE_DISABLED.send(commandSource, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
             return;
         }
 
         if (commandSource.hasPermission(VelocityConfig.STAFFCHAT_MUTE_PERMISSION.get(String.class))) {
             if (!PlayerCache.getMuted().contains("true")) {
                 PlayerCache.getMuted().add("true");
-                STAFFCHAT_MUTED.send(commandSource,
-                        new Placeholder("prefix", PREFIX.color()));
+                VelocityMessages.STAFFCHAT_MUTED.send(commandSource,
+                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
             } else {
                 PlayerCache.getMuted().remove("true");
-                STAFFCHAT_UNMUTED.send(commandSource,
-                        new Placeholder("prefix", PREFIX.color()));
+                VelocityMessages.STAFFCHAT_UNMUTED.send(commandSource,
+                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
             }
         } else {
-            NO_PERMISSION.send(commandSource,
-                    new Placeholder("prefix", PREFIX.color()));
+            VelocityMessages.NO_PERMISSION.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.PREFIX.color()));
         }
     }
 }

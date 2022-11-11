@@ -2,6 +2,7 @@ package it.frafol.cleanstaffchat.bukkit.donorchat.commands;
 
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -17,46 +18,42 @@ public class MuteCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String s, String[] strings) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] strings) {
 
-        if (command.getName().equalsIgnoreCase("dcmute")
-                || command.getName().equalsIgnoreCase("donorchatmute")
-                || command.getName().equalsIgnoreCase("donormute")) {
+        if (!(SpigotConfig.DONORCHAT_MUTE_MODULE.get(Boolean.class))) {
 
-            if (!(SpigotConfig.DONORCHAT_MUTE_MODULE.get(Boolean.class))) {
+            sender.sendMessage((SpigotMessages.MODULE_DISABLED.color()
+                    .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
 
-                sender.sendMessage((SpigotConfig.MODULE_DISABLED.color()
-                        .replace("%prefix%", SpigotConfig.DONORPREFIX.color())));
+        }
 
-            }
+        if (sender.hasPermission(SpigotConfig.DONORCHAT_MUTE_PERMISSION.get(String.class))) {
 
-            if (sender.hasPermission(SpigotConfig.DONORCHAT_MUTE_PERMISSION.get(String.class))) {
+            if (!PlayerCache.getMuted().contains("true")) {
 
-                if (!PlayerCache.getMuted().contains("true")) {
+                PlayerCache.getMuted().add("true");
 
-                    PlayerCache.getMuted().add("true");
-
-                    sender.sendMessage((SpigotConfig.DONORCHAT_MUTED.color()
-                            .replace("%prefix%", SpigotConfig.DONORPREFIX.color())));
-
-                } else {
-
-                    PlayerCache.getMuted().remove("true");
-
-                    sender.sendMessage((SpigotConfig.DONORCHAT_UNMUTED.color()
-                            .replace("%prefix%", SpigotConfig.DONORPREFIX.color())));
-                }
+                sender.sendMessage((SpigotMessages.DONORCHAT_MUTED.color()
+                        .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
 
             } else {
 
-                sender.sendMessage((SpigotConfig.NO_PERMISSION.color()
-                        .replace("%prefix%", SpigotConfig.DONORPREFIX.color())));
+                PlayerCache.getMuted().remove("true");
 
-
+                sender.sendMessage((SpigotMessages.DONORCHAT_UNMUTED.color()
+                        .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
             }
+
+        } else {
+
+            sender.sendMessage((SpigotMessages.NO_PERMISSION.color()
+                    .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
+
+
         }
 
         return false;
 
     }
+
 }

@@ -21,9 +21,6 @@ commands:
   screload:
     description: Reload staffchat
     aliases: [staffchatreload, cleanscreload, cleanstaffchatreload, staffreload]
-  scafk:
-    description: Send AFK message
-    aliases: [staffchatafk, cleanscafk, cleanstaffchatafk, staffafk]
   dc:
     description: Use staffchat
     aliases: [donorchat, donor]

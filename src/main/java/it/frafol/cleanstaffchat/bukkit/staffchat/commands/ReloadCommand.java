@@ -2,6 +2,7 @@ package it.frafol.cleanstaffchat.bukkit.staffchat.commands;
 
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
 import it.frafol.cleanstaffchat.bukkit.objects.TextFile;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -28,13 +29,13 @@ public class ReloadCommand implements CommandExecutor {
 
                 TextFile.reloadAll();
 
-                sender.sendMessage((SpigotConfig.RELOADED.color()
-                        .replace("%prefix%", SpigotConfig.PREFIX.color())));
+                sender.sendMessage((SpigotMessages.RELOADED.color()
+                        .replace("%prefix%", SpigotMessages.PREFIX.color())));
 
             } else {
 
-                sender.sendMessage((SpigotConfig.NO_PERMISSION.color()
-                        .replace("%prefix%", SpigotConfig.PREFIX.color())));
+                sender.sendMessage((SpigotMessages.NO_PERMISSION.color()
+                        .replace("%prefix%", SpigotMessages.PREFIX.color())));
 
             }
         }

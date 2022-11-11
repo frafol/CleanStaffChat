@@ -2,6 +2,8 @@ package it.frafol.cleanstaffchat.bukkit.staffchat.commands;
 
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -23,27 +25,18 @@ public class StaffChatCommand implements CommandExecutor {
 
     public StaffChatCommand(CleanStaffChat plugin) {
         this.plugin = plugin;
+
     }
 
     @Override
-    public boolean onCommand(org.bukkit.command.@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] strings) {
-
-        if (!command.getName().equalsIgnoreCase("sc")
-                || command.getName().equalsIgnoreCase("staffchat")
-                || command.getName().equalsIgnoreCase("cleansc")
-                || command.getName().equalsIgnoreCase("cleanstaffchat")
-                || command.getName().equalsIgnoreCase("staff")) {
-
-            return false;
-
-        }
+    public boolean onCommand(org.bukkit.command.@NotNull CommandSender sender, Command command, @NotNull String s, String[] strings) {
 
         if (strings.length == 0) {
 
             if (!(sender instanceof Player)) {
 
-                sender.sendMessage((SpigotConfig.ARGUMENTS.color()
-                        .replace("%prefix%", SpigotConfig.PREFIX.color())));
+                sender.sendMessage((SpigotMessages.ARGUMENTS.color()
+                        .replace("%prefix%", SpigotMessages.PREFIX.color())));
 
                 return false;
 
@@ -57,8 +50,8 @@ public class StaffChatCommand implements CommandExecutor {
 
                     if (!(SpigotConfig.STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
 
-                        sender.sendMessage((SpigotConfig.ARGUMENTS.color()
-                                .replace("%prefix%", SpigotConfig.PREFIX.color())));
+                        sender.sendMessage((SpigotMessages.ARGUMENTS.color()
+                                .replace("%prefix%", SpigotMessages.PREFIX.color())));
 
                         return false;
 
@@ -68,13 +61,13 @@ public class StaffChatCommand implements CommandExecutor {
 
                         PlayerCache.getToggled_2().add(player.getUniqueId());
 
-                        sender.sendMessage((SpigotConfig.STAFFCHAT_TALK_ENABLED.color()
-                                .replace("%prefix%", SpigotConfig.PREFIX.color())));
+                        sender.sendMessage((SpigotMessages.STAFFCHAT_TALK_ENABLED.color()
+                                .replace("%prefix%", SpigotMessages.PREFIX.color())));
 
                     } else {
 
-                        sender.sendMessage((SpigotConfig.ARGUMENTS.color()
-                                .replace("%prefix%", SpigotConfig.PREFIX.color())));
+                        sender.sendMessage((SpigotMessages.ARGUMENTS.color()
+                                .replace("%prefix%", SpigotMessages.PREFIX.color())));
 
                         return false;
 
@@ -86,8 +79,8 @@ public class StaffChatCommand implements CommandExecutor {
 
                     PlayerCache.getToggled_2().remove(player.getUniqueId());
 
-                    sender.sendMessage((SpigotConfig.STAFFCHAT_TALK_DISABLED.color()
-                            .replace("%prefix%", SpigotConfig.PREFIX.color())));
+                    sender.sendMessage((SpigotMessages.STAFFCHAT_TALK_DISABLED.color()
+                            .replace("%prefix%", SpigotMessages.PREFIX.color())));
 
                     return false;
 
@@ -140,8 +133,8 @@ public class StaffChatCommand implements CommandExecutor {
                                 message.contains("&o") ||
                                 message.contains("&r")) {
 
-                            sender.sendMessage(SpigotConfig.COLOR_CODES.color()
-                                    .replace("%prefix%", SpigotConfig.PREFIX.color())
+                            sender.sendMessage(SpigotMessages.COLOR_CODES.color()
+                                    .replace("%prefix%", SpigotMessages.PREFIX.color())
                                     .replace("&", "§"));
 
                             return false;
@@ -163,8 +156,8 @@ public class StaffChatCommand implements CommandExecutor {
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                         (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(SpigotConfig.STAFFCHAT_FORMAT.color()
-                                        .replace("%prefix%", SpigotConfig.PREFIX.color())
+                                .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color()
+                                        .replace("%prefix%", SpigotMessages.PREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%displayname%", user_prefix + commandsender + user_suffix)
                                         .replace("%message%", message)
@@ -178,8 +171,8 @@ public class StaffChatCommand implements CommandExecutor {
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                         (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(SpigotConfig.STAFFCHAT_FORMAT.color()
-                                        .replace("%prefix%", SpigotConfig.PREFIX.color())
+                                .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color()
+                                        .replace("%prefix%", SpigotMessages.PREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%userprefix%", "")
                                         .replace("%usersuffix%", "")
@@ -190,19 +183,19 @@ public class StaffChatCommand implements CommandExecutor {
 
                     }
 
-                    if (SpigotConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                    if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
-                        final TextChannel channel = plugin.getJda().getTextChannelById(SpigotConfig.STAFF_CHANNEL_ID.get(String.class));
+                        final TextChannel channel = plugin.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
 
-                        if (SpigotConfig.USE_EMBED.get(Boolean.class)) {
+                        if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                             EmbedBuilder embed = new EmbedBuilder();
 
-                            embed.setTitle(SpigotConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+                            embed.setTitle(SpigotDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
-                            embed.setDescription(SpigotConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                            embed.setDescription(SpigotMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                     .replace("%user%", commandsender)
                                     .replace("%message%", message)
                                     .replace("%server%", ""));
@@ -214,7 +207,7 @@ public class StaffChatCommand implements CommandExecutor {
 
                         } else {
 
-                            channel.sendMessageFormat(SpigotConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                            channel.sendMessageFormat(SpigotMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                             .replace("%user%", commandsender)
                                             .replace("%message%", message)
                                             .replace("%server%", ""))
@@ -230,8 +223,8 @@ public class StaffChatCommand implements CommandExecutor {
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                         (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage((SpigotConfig.STAFFCHAT_FORMAT.color()
-                                        .replace("%prefix%", SpigotConfig.PREFIX.color())
+                                .forEach(players -> players.sendMessage((SpigotMessages.STAFFCHAT_FORMAT.color()
+                                        .replace("%prefix%", SpigotMessages.PREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%userprefix%", "")
                                         .replace("%usersuffix%", "")
@@ -241,15 +234,15 @@ public class StaffChatCommand implements CommandExecutor {
 
                     } else {
 
-                        sender.sendMessage((SpigotConfig.STAFFCHAT_MUTED_ERROR.color()
-                                .replace("%prefix%", SpigotConfig.PREFIX.color())));
+                        sender.sendMessage((SpigotMessages.STAFFCHAT_MUTED_ERROR.color()
+                                .replace("%prefix%", SpigotMessages.PREFIX.color())));
 
                         return false;
 
                     }
 
-                    sender.sendMessage((SpigotConfig.STAFFCHAT_FORMAT.color()
-                            .replace("%prefix%", SpigotConfig.PREFIX.color())
+                    sender.sendMessage((SpigotMessages.STAFFCHAT_FORMAT.color()
+                            .replace("%prefix%", SpigotMessages.PREFIX.color())
                             .replace("%user%", commandsender)
                             .replace("%displayname%", commandsender)
                             .replace("%userprefix%", "")
@@ -257,19 +250,19 @@ public class StaffChatCommand implements CommandExecutor {
                             .replace("%server%", "")
                             .replace("%message%", message)));
 
-                    if (SpigotConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                    if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
-                        final TextChannel channel = plugin.getJda().getTextChannelById(SpigotConfig.STAFF_CHANNEL_ID.get(String.class));
+                        final TextChannel channel = plugin.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
 
-                        if (SpigotConfig.USE_EMBED.get(Boolean.class)) {
+                        if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                             EmbedBuilder embed = new EmbedBuilder();
 
-                            embed.setTitle(SpigotConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+                            embed.setTitle(SpigotDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
-                            embed.setDescription(SpigotConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                            embed.setDescription(SpigotMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                     .replace("%user%", commandsender)
                                     .replace("%message%", message)
                                     .replace("%server%", ""));
@@ -281,7 +274,7 @@ public class StaffChatCommand implements CommandExecutor {
 
                         } else {
 
-                            channel.sendMessageFormat(SpigotConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                            channel.sendMessageFormat(SpigotMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                             .replace("%user%", commandsender)
                                             .replace("%message%", message)
                                             .replace("%server%", ""))
@@ -294,8 +287,8 @@ public class StaffChatCommand implements CommandExecutor {
 
                 } else {
 
-                    sender.sendMessage((SpigotConfig.PLAYER_ONLY.color()
-                            .replace("%prefix%", SpigotConfig.PREFIX.color())));
+                    sender.sendMessage((SpigotMessages.PLAYER_ONLY.color()
+                            .replace("%prefix%", SpigotMessages.PREFIX.color())));
 
                 }
 
@@ -303,8 +296,8 @@ public class StaffChatCommand implements CommandExecutor {
 
             } else {
 
-                sender.sendMessage((SpigotConfig.STAFFCHAT_MUTED_ERROR.color()
-                        .replace("%prefix%", SpigotConfig.PREFIX.color())));
+                sender.sendMessage((SpigotMessages.STAFFCHAT_MUTED_ERROR.color()
+                        .replace("%prefix%", SpigotMessages.PREFIX.color())));
 
             }
 
@@ -312,8 +305,8 @@ public class StaffChatCommand implements CommandExecutor {
 
         } else {
 
-            sender.sendMessage((SpigotConfig.NO_PERMISSION.color()
-                    .replace("%prefix%", SpigotConfig.PREFIX.color())));
+            sender.sendMessage((SpigotMessages.NO_PERMISSION.color()
+                    .replace("%prefix%", SpigotMessages.PREFIX.color())));
 
         }
 

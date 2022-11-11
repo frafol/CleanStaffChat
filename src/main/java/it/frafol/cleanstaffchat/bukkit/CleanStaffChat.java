@@ -1,6 +1,8 @@
 package it.frafol.cleanstaffchat.bukkit;
 
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotCommandsConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import it.frafol.cleanstaffchat.bukkit.objects.TextFile;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.*;
@@ -22,6 +24,9 @@ public class CleanStaffChat extends JavaPlugin {
 
     private JDA jda;
     private TextFile configTextFile;
+    private TextFile messagesTextFile;
+    private TextFile discordTextFile;
+    private TextFile aliasesTextFile;
     private static CleanStaffChat instance;
 
     public static CleanStaffChat getInstance() {
@@ -59,17 +64,20 @@ public class CleanStaffChat extends JavaPlugin {
         }
 
         configTextFile = new TextFile(getDataFolder().toPath(), "config.yml");
+        messagesTextFile = new TextFile(getDataFolder().toPath(), "messages.yml");
+        discordTextFile = new TextFile(getDataFolder().toPath(), "discord.yml");
+        aliasesTextFile = new TextFile(getDataFolder().toPath(), "aliases.yml");
         getLogger().info("Configurations loaded successfully!");
 
         Objects.requireNonNull(getCommand("screload")).setExecutor(new ReloadCommand(this));
 
-        if (SpigotConfig.DISCORD_ENABLED.get(Boolean.class)) {
+        if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
 
-            jda = JDABuilder.createDefault(SpigotConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
+            jda = JDABuilder.createDefault(SpigotDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
 
             jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
-                            (SpigotConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
-                    SpigotConfig.DISCORD_ACTIVITY.get(String.class)));
+                            (SpigotDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
+                    SpigotDiscordConfig.DISCORD_ACTIVITY.get(String.class)));
 
             if (getServer().getPluginManager().getPlugin("ServerUtils") != null
                     || getServer().getPluginManager().getPlugin("PlugManX") != null
@@ -77,10 +85,19 @@ public class CleanStaffChat extends JavaPlugin {
                     || getServer().getPluginManager().getPlugin("PlugMan") != null
                     || getServer().getPluginManager().getPlugin("Plugman") != null) {
 
+                if (getServer().getPluginManager().getPlugin("ServerUtils") != null) {
 
-                getLogger().warning("\n\nWARNING!" +
-                        "\n\nIntegration on Discord may give you many problems if you reload the plugin with ServerUtils/Plugman." +
-                        "\nConsider performing a TOTAL RESTART to prevent issues!\n");
+                    getLogger().warning("\n \nWARNING!" +
+                            "\n \nIntegration on Discord may give you many problems if you reload the plugin with ServerUtils." +
+                            "\nConsider performing a TOTAL RESTART to prevent issues!\n");
+
+                } else {
+
+                    getLogger().warning("\n \nWARNING!" +
+                            "\n \nIntegration on Discord may give you many problems if you reload the plugin with Plugman." +
+                            "\nConsider performing a TOTAL RESTART to prevent issues!\n");
+
+                }
 
             }
 
@@ -90,15 +107,17 @@ public class CleanStaffChat extends JavaPlugin {
 
         if (SpigotConfig.STAFFCHAT.get(Boolean.class)) {
 
-            Objects.requireNonNull(getCommand("scmute")).setExecutor(new MuteCommand(this));
-            Objects.requireNonNull(getCommand("sctoggle")).setExecutor(new ToggleCommand(this));
-            Objects.requireNonNull(getCommand("sc")).setExecutor(new StaffChatCommand(this));
-            Objects.requireNonNull(getCommand("scafk")).setExecutor(new AFKCommand(this));
+
+            Objects.requireNonNull(getCommand(SpigotCommandsConfig.STAFFCHAT_MUTE.getStringList().get(0))).setExecutor(new MuteCommand(this));
+            Objects.requireNonNull(getCommand(SpigotCommandsConfig.STAFFCHAT_TOGGLE.getStringList().get(0))).setExecutor(new ToggleCommand(this));
+            Objects.requireNonNull(getCommand(SpigotCommandsConfig.STAFFCHAT.getStringList().get(0))).setExecutor(new StaffChatCommand(this));
+            Objects.requireNonNull(getCommand(SpigotCommandsConfig.STAFFCHAT_AFK.getStringList().get(0))).setExecutor(new MuteCommand(this));
+
             getServer().getPluginManager().registerEvents(new JoinListener(this), this);
             getServer().getPluginManager().registerEvents(new it.frafol.cleanstaffchat.bukkit.staffchat.listeners.ChatListener(this), this);
             getServer().getPluginManager().registerEvents(new MoveListener(this), this);
 
-            if (SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class) && SpigotConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            if (SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class) && SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
                 jda.addEventListener(new ChatListener(this));
             }
 
@@ -106,12 +125,12 @@ public class CleanStaffChat extends JavaPlugin {
 
         if (SpigotConfig.DONORCHAT.get(Boolean.class)) {
 
-            Objects.requireNonNull(getCommand("dcmute")).setExecutor(new it.frafol.cleanstaffchat.bukkit.donorchat.commands.MuteCommand(this));
-            Objects.requireNonNull(getCommand("dctoggle")).setExecutor(new it.frafol.cleanstaffchat.bukkit.donorchat.commands.ToggleCommand(this));
-            Objects.requireNonNull(getCommand("dc")).setExecutor(new it.frafol.cleanstaffchat.bukkit.donorchat.commands.DonorChatCommand(this));
+            Objects.requireNonNull(getCommand(SpigotCommandsConfig.DONORCHAT_MUTE.getStringList().get(0))).setExecutor(new it.frafol.cleanstaffchat.bukkit.donorchat.commands.MuteCommand(this));
+            Objects.requireNonNull(getCommand(SpigotCommandsConfig.DONORCHAT_TOGGLE.getStringList().get(0))).setExecutor(new it.frafol.cleanstaffchat.bukkit.donorchat.commands.ToggleCommand(this));
+            Objects.requireNonNull(getCommand(SpigotCommandsConfig.DONORCHAT.getStringList().get(0))).setExecutor(new it.frafol.cleanstaffchat.bukkit.donorchat.commands.DonorChatCommand(this));
             getServer().getPluginManager().registerEvents(new it.frafol.cleanstaffchat.bukkit.donorchat.listeners.ChatListener(this), this);
 
-            if (SpigotConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class) && SpigotConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            if (SpigotConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class) && SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
                 jda.addEventListener(new it.frafol.cleanstaffchat.bukkit.donorchat.listeners.ChatListener(this));
             }
 
@@ -119,12 +138,12 @@ public class CleanStaffChat extends JavaPlugin {
 
         if (SpigotConfig.ADMINCHAT.get(Boolean.class)) {
 
-            Objects.requireNonNull(getCommand("acmute")).setExecutor(new it.frafol.cleanstaffchat.bukkit.adminchat.commands.MuteCommand(this));
-            Objects.requireNonNull(getCommand("actoggle")).setExecutor(new it.frafol.cleanstaffchat.bukkit.adminchat.commands.ToggleCommand(this));
-            Objects.requireNonNull(getCommand("ac")).setExecutor(new it.frafol.cleanstaffchat.bukkit.adminchat.commands.AdminChatCommand(this));
+            Objects.requireNonNull(getCommand(SpigotCommandsConfig.ADMINCHAT_MUTE.getStringList().get(0))).setExecutor(new it.frafol.cleanstaffchat.bukkit.adminchat.commands.MuteCommand(this));
+            Objects.requireNonNull(getCommand(SpigotCommandsConfig.ADMINCHAT_TOGGLE.getStringList().get(0))).setExecutor(new it.frafol.cleanstaffchat.bukkit.adminchat.commands.ToggleCommand(this));
+            Objects.requireNonNull(getCommand(SpigotCommandsConfig.ADMINCHAT.getStringList().get(0))).setExecutor(new it.frafol.cleanstaffchat.bukkit.adminchat.commands.AdminChatCommand(this));
             getServer().getPluginManager().registerEvents(new it.frafol.cleanstaffchat.bukkit.adminchat.listeners.ChatListener(this), this);
 
-            if (SpigotConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class) && SpigotConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            if (SpigotConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class) && SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
                 jda.addEventListener(new it.frafol.cleanstaffchat.bukkit.adminchat.listeners.ChatListener(this));
             }
 
@@ -157,6 +176,17 @@ public class CleanStaffChat extends JavaPlugin {
         return getInstance().configTextFile.getConfig();
     }
 
+    public YamlFile getMessagesTextFile() {
+        return getInstance().messagesTextFile.getConfig();
+    }
+
+    public YamlFile getDiscordTextFile() {
+        return getInstance().discordTextFile.getConfig();
+    }
+
+    public YamlFile getAliasesTextFile() {
+        return getInstance().aliasesTextFile.getConfig();
+    }
 
     @Override
     public void onDisable() {

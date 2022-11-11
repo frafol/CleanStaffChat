@@ -7,6 +7,8 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityDiscordConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -41,7 +43,7 @@ public class DonorChatCommand implements SimpleCommand {
 
             if (!(commandSource instanceof Player)) {
 
-                DONORARGUMENTS.send(commandSource, new Placeholder("prefix", DONORPREFIX.color()));
+                VelocityMessages.DONORARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 
                 return;
 
@@ -54,7 +56,7 @@ public class DonorChatCommand implements SimpleCommand {
                 if (((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19
                         || ((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19_1) {
 
-                    DONORARGUMENTS.send(commandSource, new Placeholder("prefix", DONORPREFIX.color()));
+                    VelocityMessages.DONORARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 
                     return;
 
@@ -62,7 +64,7 @@ public class DonorChatCommand implements SimpleCommand {
 
                 if (!(DONORCHAT_TALK_MODULE.get(Boolean.class))) {
 
-                    DONORARGUMENTS.send(commandSource, new Placeholder("prefix", DONORPREFIX.color()));
+                    VelocityMessages.DONORARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 
                     return;
 
@@ -75,15 +77,15 @@ public class DonorChatCommand implements SimpleCommand {
 
                         PlayerCache.getToggled_2_donor().add(player.getUniqueId());
 
-                        DONORCHAT_TALK_ENABLED.send(commandSource,
-                                new Placeholder("prefix", DONORPREFIX.color()));
+                        VelocityMessages.DONORCHAT_TALK_ENABLED.send(commandSource,
+                                new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 
                         return;
 
                     } else {
 
-                        DONORARGUMENTS.send(commandSource,
-                                new Placeholder("prefix", DONORPREFIX.color()));
+                        VelocityMessages.DONORARGUMENTS.send(commandSource,
+                                new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 
                     }
 
@@ -91,8 +93,8 @@ public class DonorChatCommand implements SimpleCommand {
 
                     PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
 
-                    DONORCHAT_TALK_DISABLED.send(commandSource,
-                            new Placeholder("prefix", DONORPREFIX.color()));
+                    VelocityMessages.DONORCHAT_TALK_DISABLED.send(commandSource,
+                            new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 
                     return;
 
@@ -114,8 +116,8 @@ public class DonorChatCommand implements SimpleCommand {
 
         if (commandSource instanceof Player && PlayerCache.getCooldown().contains(((Player) commandSource).getUniqueId())) {
 
-            DONORCHAT_COOLDOWN_MESSAGE.send(commandSource,
-                    new Placeholder("prefix", DONORPREFIX.color()));
+            VelocityMessages.DONORCHAT_COOLDOWN_MESSAGE.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 
             return;
 
@@ -151,8 +153,8 @@ public class DonorChatCommand implements SimpleCommand {
                                 message.contains("&o") ||
                                 message.contains("&r")) {
 
-                            COLOR_CODES.send(commandSource,
-                                    new Placeholder("prefix", DONORPREFIX.color()));
+                            VelocityMessages.COLOR_CODES.send(commandSource,
+                                    new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 
                             return;
 
@@ -191,44 +193,44 @@ public class DonorChatCommand implements SimpleCommand {
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                                .forEach(players -> DONORCHAT_FORMAT.send(players,
+                                .forEach(players -> VelocityMessages.DONORCHAT_FORMAT.send(players,
                                         new Placeholder("user", sender),
                                         new Placeholder("message", message),
                                         new Placeholder("displayname", user_prefix + sender + user_suffix),
                                         new Placeholder("userprefix", user_prefix),
                                         new Placeholder("usersuffix", user_suffix),
                                         new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
-                                        new Placeholder("prefix", DONORPREFIX.color())));
+                                        new Placeholder("prefix", VelocityMessages.DONORPREFIX.color())));
 
                     } else {
 
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                                .forEach(players -> DONORCHAT_FORMAT.send(players,
+                                .forEach(players -> VelocityMessages.DONORCHAT_FORMAT.send(players,
                                         new Placeholder("user", sender),
                                         new Placeholder("message", message),
                                         new Placeholder("displayname", sender),
                                         new Placeholder("userprefix", ""),
                                         new Placeholder("usersuffix", ""),
                                         new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
-                                        new Placeholder("prefix", DONORPREFIX.color())));
+                                        new Placeholder("prefix", VelocityMessages.DONORPREFIX.color())));
 
                     }
 
-                    if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                    if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
-                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.DONOR_CHANNEL_ID.get(String.class));
+                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityDiscordConfig.DONOR_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
 
-                        if (VelocityConfig.USE_EMBED.get(Boolean.class)) {
+                        if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                             EmbedBuilder embed = new EmbedBuilder();
 
-                            embed.setTitle(VelocityConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
+                            embed.setTitle(VelocityDiscordConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
 
-                            embed.setDescription(VelocityConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                            embed.setDescription(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                                     .replace("%user%", sender)
                                     .replace("%message%", message)
                                     .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()));
@@ -240,7 +242,7 @@ public class DonorChatCommand implements SimpleCommand {
 
                         } else {
 
-                            channel.sendMessageFormat(VelocityConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                            channel.sendMessageFormat(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                                             .replace("%user%", sender)
                                             .replace("%message%", message)
                                             .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()))
@@ -256,28 +258,28 @@ public class DonorChatCommand implements SimpleCommand {
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                                .forEach(players -> DONORCHAT_FORMAT.send(players,
+                                .forEach(players -> VelocityMessages.DONORCHAT_FORMAT.send(players,
                                         new Placeholder("user", sender),
                                         new Placeholder("message", message),
                                         new Placeholder("displayname", sender),
                                         new Placeholder("userprefix", ""),
                                         new Placeholder("usersuffix", ""),
                                         new Placeholder("server", ""),
-                                        new Placeholder("prefix", DONORPREFIX.color())));
+                                        new Placeholder("prefix", VelocityMessages.DONORPREFIX.color())));
 
-                        if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                        if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
-                            final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.DONOR_CHANNEL_ID.get(String.class));
+                            final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityDiscordConfig.DONOR_CHANNEL_ID.get(String.class));
 
                             assert channel != null;
 
-                            if (VelocityConfig.USE_EMBED.get(Boolean.class)) {
+                            if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                                 EmbedBuilder embed = new EmbedBuilder();
 
-                                embed.setTitle(VelocityConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
+                                embed.setTitle(VelocityDiscordConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
 
-                                embed.setDescription(VelocityConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                                embed.setDescription(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                                         .replace("%user%", sender)
                                         .replace("%message%", message)
                                         .replace("%server%", ""));
@@ -289,7 +291,7 @@ public class DonorChatCommand implements SimpleCommand {
 
                             } else {
 
-                                channel.sendMessageFormat(VelocityConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                                channel.sendMessageFormat(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                                                 .replace("%user%", sender)
                                                 .replace("%message%", message)
                                                 .replace("%server%", ""))
@@ -300,38 +302,38 @@ public class DonorChatCommand implements SimpleCommand {
 
                     } else {
 
-                        DONORCHAT_MUTED_ERROR.send(commandSource,
-                                new Placeholder("prefix", DONORPREFIX.color()));
+                        VelocityMessages.DONORCHAT_MUTED_ERROR.send(commandSource,
+                                new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 
                     }
 
-                    DONORCHAT_FORMAT.send(commandSource,
+                    VelocityMessages.DONORCHAT_FORMAT.send(commandSource,
                             new Placeholder("user", sender),
                             new Placeholder("message", message),
                             new Placeholder("displayname", sender),
                             new Placeholder("userprefix", ""),
                             new Placeholder("usersuffix", ""),
                             new Placeholder("server", ""),
-                            new Placeholder("prefix", DONORPREFIX.color()));
+                            new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 
                 } else {
 
-                    PLAYER_ONLY.send(commandSource,
-                            new Placeholder("prefix", DONORPREFIX.color()));
+                    VelocityMessages.PLAYER_ONLY.send(commandSource,
+                            new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 
                 }
 
             } else {
 
-                DONORCHAT_MUTED_ERROR.send(commandSource,
-                        new Placeholder("prefix", DONORPREFIX.color()));
+                VelocityMessages.DONORCHAT_MUTED_ERROR.send(commandSource,
+                        new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 
             }
 
         } else {
 
-            NO_PERMISSION.send(commandSource,
-                    new Placeholder("prefix", DONORPREFIX.color()));
+            VelocityMessages.NO_PERMISSION.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 
         }
     }

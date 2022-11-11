@@ -5,6 +5,8 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityDiscordConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -39,7 +41,7 @@ public class ChatListener extends ListenerAdapter {
 
             if (PlayerCache.getCooldown().contains(event.getPlayer().getUniqueId())) {
 
-                DONORCHAT_COOLDOWN_MESSAGE.send(event.getPlayer(), new Placeholder("prefix", DONORPREFIX.color()));
+                VelocityMessages.DONORCHAT_COOLDOWN_MESSAGE.send(event.getPlayer(), new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
                 event.setResult(PlayerChatEvent.ChatResult.denied());
 
                 return;
@@ -50,7 +52,7 @@ public class ChatListener extends ListenerAdapter {
 
                 if (!(DONORCHAT_TALK_MODULE.get(Boolean.class))) {
 
-                    MODULE_DISABLED.send(event.getPlayer(), new Placeholder("prefix", DONORPREFIX.color()));
+                    VelocityMessages.MODULE_DISABLED.send(event.getPlayer(), new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 
                     return;
 
@@ -84,8 +86,8 @@ public class ChatListener extends ListenerAdapter {
                                     message.contains("&o") ||
                                     message.contains("&r")) {
 
-                                COLOR_CODES.send(event.getPlayer(),
-                                        new Placeholder("prefix", DONORPREFIX.color()));
+                                VelocityMessages.COLOR_CODES.send(event.getPlayer(),
+                                        new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 
                                 return;
                             }
@@ -123,44 +125,44 @@ public class ChatListener extends ListenerAdapter {
                             CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                             (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                                     && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                                    .forEach(players -> DONORCHAT_FORMAT.send(players,
+                                    .forEach(players -> VelocityMessages.DONORCHAT_FORMAT.send(players,
                                             new Placeholder("user", sender),
                                             new Placeholder("message", message),
                                             new Placeholder("displayname", user_prefix + sender + user_suffix),
                                             new Placeholder("userprefix", user_prefix),
                                             new Placeholder("usersuffix", user_suffix),
                                             new Placeholder("server", event.getPlayer().getCurrentServer().get().getServerInfo().getName()),
-                                            new Placeholder("prefix", DONORPREFIX.color())));
+                                            new Placeholder("prefix", VelocityMessages.DONORPREFIX.color())));
 
                         } else {
 
                             CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                             (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                                     && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                                    .forEach(players -> DONORCHAT_FORMAT.send(players,
+                                    .forEach(players -> VelocityMessages.DONORCHAT_FORMAT.send(players,
                                             new Placeholder("user", sender),
                                             new Placeholder("message", message),
                                             new Placeholder("displayname", sender),
                                             new Placeholder("userprefix", ""),
                                             new Placeholder("usersuffix", ""),
                                             new Placeholder("server", event.getPlayer().getCurrentServer().get().getServerInfo().getName()),
-                                            new Placeholder("prefix", DONORPREFIX.color())));
+                                            new Placeholder("prefix", VelocityMessages.DONORPREFIX.color())));
 
                         }
 
-                        if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class) && DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                        if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
-                            final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.DONOR_CHANNEL_ID.get(String.class));
+                            final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityDiscordConfig.DONOR_CHANNEL_ID.get(String.class));
 
                             assert channel != null;
 
-                            if (VelocityConfig.USE_EMBED.get(Boolean.class)) {
+                            if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                                 EmbedBuilder embed = new EmbedBuilder();
 
-                                embed.setTitle(VelocityConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
+                                embed.setTitle(VelocityDiscordConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
 
-                                embed.setDescription(VelocityConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                                embed.setDescription(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                                         .replace("%user%", sender)
                                         .replace("%message%", message)
                                         .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()));
@@ -172,7 +174,7 @@ public class ChatListener extends ListenerAdapter {
 
                             } else {
 
-                                channel.sendMessageFormat(VelocityConfig.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                                channel.sendMessageFormat(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                                                 .replace("%user%", sender)
                                                 .replace("%message%", message)
                                                 .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()))
@@ -183,8 +185,8 @@ public class ChatListener extends ListenerAdapter {
 
                     } else {
 
-                        DONORCHAT_MUTED_ERROR.send(event.getPlayer(),
-                                new Placeholder("prefix", DONORPREFIX.color()));
+                        VelocityMessages.DONORCHAT_MUTED_ERROR.send(event.getPlayer(),
+                                new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 
                     }
                 }
@@ -199,20 +201,20 @@ public class ChatListener extends ListenerAdapter {
 
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
 
-        if (PLUGIN.getConfigTextFile() == null) {
+        if (PLUGIN.getConfigTextFile() == null || PLUGIN.getMessagesTextFile() == null) {
 
             return;
 
         }
 
-        if (!event.getChannel().getId().equalsIgnoreCase(VelocityConfig.DONOR_CHANNEL_ID.get(String.class))) {
+        if (!event.getChannel().getId().equalsIgnoreCase(VelocityDiscordConfig.DONOR_CHANNEL_ID.get(String.class))) {
 
             return;
 
         }
 
-        if (event.getMessage().getContentDisplay().equalsIgnoreCase(DONORCHAT_COOLDOWN_ERROR_DISCORD.get(String.class))
-                || event.getMessage().getContentDisplay().equalsIgnoreCase(STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class))) {
+        if (event.getMessage().getContentDisplay().equalsIgnoreCase(VelocityMessages.DONORCHAT_COOLDOWN_ERROR_DISCORD.get(String.class))
+                || event.getMessage().getContentDisplay().equalsIgnoreCase(VelocityMessages.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class))) {
 
             PLUGIN.getServer().getScheduler()
                     .buildTask(PLUGIN, scheduledTask -> event.getMessage().delete().queue())
@@ -231,7 +233,7 @@ public class ChatListener extends ListenerAdapter {
 
         if (PlayerCache.getMuted_donor().contains("true")) {
 
-            event.getMessage().reply(STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class)).queue();
+            event.getMessage().reply(VelocityMessages.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class)).queue();
 
             PLUGIN.getServer().getScheduler()
                     .buildTask(PLUGIN, scheduledTask -> event.getMessage().delete().queue())
@@ -245,7 +247,7 @@ public class ChatListener extends ListenerAdapter {
         if (PlayerCache.getCooldown_discord().contains(event.getAuthor().getId())
                 && (!VelocityConfig.COOLDOWN_BYPASS_DISCORD.get(Boolean.class))) {
 
-            event.getMessage().reply(VelocityConfig.DONORCHAT_COOLDOWN_ERROR_DISCORD.get(String.class)).queue();
+            event.getMessage().reply(VelocityMessages.DONORCHAT_COOLDOWN_ERROR_DISCORD.get(String.class)).queue();
 
             PLUGIN.getServer().getScheduler()
                     .buildTask(PLUGIN, scheduledTask -> event.getMessage().delete().queue())
@@ -259,10 +261,10 @@ public class ChatListener extends ListenerAdapter {
         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                         (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                .forEach(players -> DISCORD_DONOR_FORMAT.send(players,
+                .forEach(players -> VelocityMessages.DISCORD_DONOR_FORMAT.send(players,
                         new Placeholder("user", event.getAuthor().getName()),
                         new Placeholder("message", event.getMessage().getContentDisplay()),
-                        new Placeholder("prefix", DONORPREFIX.color())));
+                        new Placeholder("prefix", VelocityMessages.DONORPREFIX.color())));
 
         if (!VelocityConfig.COOLDOWN_BYPASS_DISCORD.get(Boolean.class)) {
 

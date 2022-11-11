@@ -2,6 +2,8 @@ package it.frafol.cleanstaffchat.bukkit.staffchat.listeners;
 
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -38,8 +40,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                 event.setCancelled(true);
 
-                event.getPlayer().sendMessage(SpigotConfig.STAFFCHAT_MUTED_ERROR.color()
-                        .replace("%prefix%", SpigotConfig.PREFIX.color()));
+                event.getPlayer().sendMessage(SpigotMessages.STAFFCHAT_MUTED_ERROR.color()
+                        .replace("%prefix%", SpigotMessages.PREFIX.color()));
 
                 return;
 
@@ -49,8 +51,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                 if (!(SpigotConfig.STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
 
-                    event.getPlayer().sendMessage((SpigotConfig.MODULE_DISABLED.color()
-                            .replace("%prefix%", SpigotConfig.PREFIX.color())
+                    event.getPlayer().sendMessage((SpigotMessages.MODULE_DISABLED.color()
+                            .replace("%prefix%", SpigotMessages.PREFIX.color())
                             .replace("&", "§")));
 
                 } else if (event.getPlayer().hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
@@ -82,8 +84,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                 message.contains("&o") ||
                                 message.contains("&r")) {
 
-                            event.getPlayer().sendMessage(SpigotConfig.COLOR_CODES.color()
-                                    .replace("%prefix%", SpigotConfig.PREFIX.color())
+                            event.getPlayer().sendMessage(SpigotMessages.COLOR_CODES.color()
+                                    .replace("%prefix%", SpigotMessages.PREFIX.color())
                                     .replace("&", "§"));
 
                             event.setCancelled(true);
@@ -108,8 +110,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                         (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(SpigotConfig.STAFFCHAT_FORMAT.color()
-                                        .replace("%prefix%", SpigotConfig.PREFIX.color())
+                                .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color()
+                                        .replace("%prefix%", SpigotMessages.PREFIX.color())
                                         .replace("%user%", event.getPlayer().getName())
                                         .replace("%message%", event.getMessage())
                                         .replace("%displayname%", user_prefix + event.getPlayer().getName() + user_suffix)
@@ -123,8 +125,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                         (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(SpigotConfig.STAFFCHAT_FORMAT.color()
-                                        .replace("%prefix%", SpigotConfig.PREFIX.color())
+                                .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color()
+                                        .replace("%prefix%", SpigotMessages.PREFIX.color())
                                         .replace("%user%", event.getPlayer().getName())
                                         .replace("%message%", event.getMessage())
                                         .replace("%server%", "")
@@ -132,19 +134,19 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                     }
 
-                    if (SpigotConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                    if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
-                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotConfig.STAFF_CHANNEL_ID.get(String.class));
+                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
 
-                        if (SpigotConfig.USE_EMBED.get(Boolean.class)) {
+                        if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                             EmbedBuilder embed = new EmbedBuilder();
 
-                            embed.setTitle(SpigotConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+                            embed.setTitle(SpigotDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
-                            embed.setDescription(SpigotConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                            embed.setDescription(SpigotMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                     .replace("%user%", event.getPlayer().getName())
                                     .replace("%message%", message)
                                     .replace("%server%", ""));
@@ -156,7 +158,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                         } else {
 
-                            channel.sendMessageFormat(SpigotConfig.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                            channel.sendMessageFormat(SpigotMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                             .replace("%user%", event.getPlayer().getName())
                                             .replace("%message%", message)
                                             .replace("%server%", ""))
@@ -184,11 +186,11 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
         }
 
-        if (!event.getChannel().getId().equalsIgnoreCase(SpigotConfig.STAFF_CHANNEL_ID.get(String.class))) {
+        if (!event.getChannel().getId().equalsIgnoreCase(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class))) {
             return;
         }
 
-        if (event.getMessage().getContentDisplay().equalsIgnoreCase(SpigotConfig.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class))) {
+        if (event.getMessage().getContentDisplay().equalsIgnoreCase(SpigotMessages.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class))) {
 
             new BukkitRunnable() {
                 @Override
@@ -211,7 +213,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
         if (PlayerCache.getMuted().contains("true")) {
 
-            event.getMessage().reply(SpigotConfig.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class)).queue();
+            event.getMessage().reply(SpigotMessages.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class)).queue();
 
             new BukkitRunnable() {
                 @Override
@@ -231,8 +233,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                         (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                .forEach(players -> players.sendMessage(SpigotConfig.DISCORD_STAFF_FORMAT.color()
-                        .replace("%prefix%", SpigotConfig.ADMINPREFIX.color())
+                .forEach(players -> players.sendMessage(SpigotMessages.DISCORD_STAFF_FORMAT.color()
+                        .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
                         .replace("%user%", event.getAuthor().getName())
                         .replace("%message%", event.getMessage().getContentDisplay())));
 

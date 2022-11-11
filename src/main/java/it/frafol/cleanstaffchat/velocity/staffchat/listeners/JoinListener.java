@@ -7,6 +7,8 @@ import com.velocitypowered.api.proxy.Player;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.UpdateCheck;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityDiscordConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -63,34 +65,34 @@ public class JoinListener {
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> STAFF_JOIN_MESSAGE_FORMAT.send(players,
+                                .forEach(players -> VelocityMessages.STAFF_JOIN_MESSAGE_FORMAT.send(players,
                                         new Placeholder("user", player.getUsername()),
                                         new Placeholder("displayname", user_prefix + player.getUsername() + user_suffix),
                                         new Placeholder("userprefix", user_prefix),
                                         new Placeholder("usersuffix", user_suffix),
-                                        new Placeholder("prefix", PREFIX.color())));
+                                        new Placeholder("prefix", VelocityMessages.PREFIX.color())));
                     } else {
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> STAFF_JOIN_MESSAGE_FORMAT.send(players,
+                                .forEach(players -> VelocityMessages.STAFF_JOIN_MESSAGE_FORMAT.send(players,
                                         new Placeholder("user", player.getUsername()),
-                                        new Placeholder("prefix", PREFIX.color())));
+                                        new Placeholder("prefix", VelocityMessages.PREFIX.color())));
                     }
 
-                    if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                    if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
 
-                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.STAFF_CHANNEL_ID.get(String.class));
+                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
                         assert channel != null;
 
-                        if (VelocityConfig.USE_EMBED.get(Boolean.class)) {
+                        if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                             EmbedBuilder embed = new EmbedBuilder();
 
-                            embed.setTitle(VelocityConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+                            embed.setTitle(VelocityDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
-                            embed.setDescription(VelocityConfig.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
+                            embed.setDescription(VelocityMessages.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
                                     .replace("%user%", player.getUsername()));
 
                             embed.setColor(Color.YELLOW);
@@ -100,7 +102,7 @@ public class JoinListener {
 
                         } else {
 
-                            channel.sendMessageFormat(VelocityConfig.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
+                            channel.sendMessageFormat(VelocityMessages.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
                                     .replace("%user%", player.getUsername()))
                                     .queue();
 
@@ -143,12 +145,12 @@ public class JoinListener {
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> STAFF_QUIT_MESSAGE_FORMAT.send(players,
+                                .forEach(players -> VelocityMessages.STAFF_QUIT_MESSAGE_FORMAT.send(players,
                                         new Placeholder("user", player.getUsername()),
                                         new Placeholder("displayname", user_prefix + player.getUsername() + user_suffix),
                                         new Placeholder("userprefix", user_prefix),
                                         new Placeholder("usersuffix", user_suffix),
-                                        new Placeholder("prefix", PREFIX.color())));
+                                        new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
                     }
 
@@ -159,29 +161,29 @@ public class JoinListener {
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> STAFF_QUIT_MESSAGE_FORMAT.send(players,
+                                .forEach(players -> VelocityMessages.STAFF_QUIT_MESSAGE_FORMAT.send(players,
                                         new Placeholder("user", player.getUsername()),
-                                        new Placeholder("prefix", PREFIX.color())));
+                                        new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
                     }
 
                 }
 
-                if (VelocityConfig.DISCORD_ENABLED.get(Boolean.class)
+                if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
                         && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
                         && VelocityConfig.JOIN_LEAVE_DISCORD_MODULE.get(Boolean.class)) {
 
-                    final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityConfig.STAFF_CHANNEL_ID.get(String.class));
+                    final TextChannel channel = PLUGIN.getJda().getTextChannelById(VelocityDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
                     assert channel != null;
 
-                    if (VelocityConfig.USE_EMBED.get(Boolean.class)) {
+                    if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                         EmbedBuilder embed = new EmbedBuilder();
 
-                        embed.setTitle(VelocityConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+                        embed.setTitle(VelocityDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
-                        embed.setDescription(VelocityConfig.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
+                        embed.setDescription(VelocityMessages.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
                                 .replace("%user%", player.getUsername()));
 
                         embed.setColor(Color.YELLOW);
@@ -191,7 +193,7 @@ public class JoinListener {
 
                     } else {
 
-                        channel.sendMessageFormat(VelocityConfig.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
+                        channel.sendMessageFormat(VelocityMessages.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
                                         .replace("%user%", player.getUsername()))
                                 .queue();
 

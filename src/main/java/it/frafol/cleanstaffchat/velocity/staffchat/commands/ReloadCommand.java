@@ -4,10 +4,9 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.TextFile;
-
-import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.*;
 
 public class ReloadCommand implements SimpleCommand {
 
@@ -23,11 +22,11 @@ public class ReloadCommand implements SimpleCommand {
 
         if (commandSource.hasPermission(VelocityConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class))) {
             TextFile.reloadAll();
-            RELOADED.send(commandSource,
-                    new Placeholder("prefix", PREFIX.color()));
+            VelocityMessages.RELOADED.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.PREFIX.color()));
         } else {
-            NO_PERMISSION.send(commandSource,
-                    new Placeholder("prefix", PREFIX.color()));
+            VelocityMessages.NO_PERMISSION.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.PREFIX.color()));
         }
     }
 }

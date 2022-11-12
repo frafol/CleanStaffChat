@@ -6,7 +6,7 @@
 
     <groupId>it.frafol</groupId>
     <artifactId>cleanstaffchat</artifactId>
-    <version>1.5</version>
+    <version>1.6</version>
     <packaging>jar</packaging>
 
     <name>CleanStaffChat</name>
@@ -40,6 +40,12 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>net.byteflux.libby</pattern>
+                                    <shadedPattern>it.frafol.libs.net.byteflux.libby</shadedPattern>
+                                </relocation>
+                            </relocations>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                         </configuration>
                     </execution>
@@ -64,6 +70,10 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
+            <id>AlessioDP</id>
+            <url>https://repo.alessiodp.com/releases/</url>
+        </repository>
+        <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
@@ -81,6 +91,21 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>net.byteflux</groupId>
+            <artifactId>libby-bukkit</artifactId>
+            <version>1.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>net.byteflux</groupId>
+            <artifactId>libby-velocity</artifactId>
+            <version>1.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>net.byteflux</groupId>
+            <artifactId>libby-bungee</artifactId>
+            <version>1.1.5</version>
+        </dependency>
+        <dependency>
             <groupId>net.luckperms</groupId>
             <artifactId>api</artifactId>
             <version>5.4</version>
@@ -90,17 +115,13 @@
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
             <version>5.0.0-alpha.14</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>club.minnced</groupId>
-                    <artifactId>opus-java</artifactId>
-                </exclusion>
-            </exclusions>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>me.carleslc.Simple-YAML</groupId>
             <artifactId>Simple-Yaml</artifactId>
             <version>1.7.2</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -125,7 +146,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.19-R0.1-SNAPSHOT</version>
+            <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

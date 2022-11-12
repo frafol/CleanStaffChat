@@ -78,7 +78,6 @@ public class CleanStaffChat {
                 .groupId("me{}carleslc{}Simple-YAML")
                 .artifactId("Simple-Yaml")
                 .version("1.7.2")
-                .isolatedLoad(true)
                 .build();
 
         Library discord = Library.builder()
@@ -262,7 +261,7 @@ public class CleanStaffChat {
             });
         }
 
-        getLogger().info("§7Plugin successfully &denabled§7!");
+        getLogger().info("§7Plugin successfully §denabled§7!");
     }
 
     @Subscribe

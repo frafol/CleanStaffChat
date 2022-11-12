@@ -3,6 +3,7 @@ package it.frafol.cleanstaffchat.velocity;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
+import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
@@ -12,6 +13,7 @@ import it.frafol.cleanstaffchat.velocity.donorchat.commands.DonorChatCommand;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityCommandsConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityDiscordConfig;
+import it.frafol.cleanstaffchat.velocity.objects.JdaBuilder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import it.frafol.cleanstaffchat.velocity.objects.TextFile;
 import it.frafol.cleanstaffchat.velocity.staffchat.commands.*;
@@ -19,21 +21,20 @@ import it.frafol.cleanstaffchat.velocity.staffchat.listeners.ChatListener;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.JoinListener;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.ServerListener;
 import lombok.Getter;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.byteflux.libby.Library;
+import net.byteflux.libby.VelocityLibraryManager;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.security.auth.login.LoginException;
 import java.nio.file.Path;
-import java.util.logging.Logger;
 
 @Getter
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
         version = "1.6",
+        dependencies = {@Dependency(id = "luckperms", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
 )
@@ -43,7 +44,7 @@ public class CleanStaffChat {
     private final ProxyServer server;
     private final Logger logger;
     private final Path path;
-    private JDA jda;
+    private JdaBuilder jda;
     private TextFile configTextFile;
     private TextFile messagesTextFile;
     private TextFile discordTextFile;
@@ -60,15 +61,40 @@ public class CleanStaffChat {
         this.logger = logger;
         this.path = path;
         this.metricsFactory = metricsFactory;
-    }
 
+    }
 
     @Inject
     public PluginContainer container;
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) throws LoginException {
+
         instance = this;
+
+        VelocityLibraryManager<CleanStaffChat> velocityLibraryManager = new VelocityLibraryManager<>(getLogger(), path, getServer().getPluginManager(), this);
+
+        Library yaml = Library.builder()
+                .groupId("me{}carleslc{}Simple-YAML")
+                .artifactId("Simple-Yaml")
+                .version("1.7.2")
+                .isolatedLoad(true)
+                .build();
+
+        Library discord = Library.builder()
+                .groupId("net{}dv8tion")
+                .artifactId("JDA")
+                .version("5.0.0-alpha.14")
+                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-alpha.14/JDA-5.0.0-alpha.14-withDependencies-min.jar")
+                .build();
+
+        velocityLibraryManager.addMavenCentral();
+        velocityLibraryManager.addJitPack();
+        velocityLibraryManager.loadLibrary(yaml);
+        velocityLibraryManager.loadLibrary(discord);
+
+        jda = new JdaBuilder();
+
         getLogger().info("\n§d  ___  __    ____    __    _  _    ___   ___ \n" +
                 " / __)(  )  ( ___)  /__\\  ( \\( )  / __) / __)\n" +
                 "( (__  )(__  )__)  /(__)\\  )  (   \\__ \\( (__ \n" +
@@ -82,15 +108,15 @@ public class CleanStaffChat {
 
         if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
 
-            jda = JDABuilder.createDefault(VelocityDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
+            jda.startJDA();
 
-            jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
+            jda.getJda().getPresence().setActivity(net.dv8tion.jda.api.entities.Activity.of(net.dv8tion.jda.api.entities.Activity.ActivityType.valueOf
                             (VelocityDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
                     VelocityDiscordConfig.DISCORD_ACTIVITY.get(String.class)));
 
             if (getServer().getPluginManager().isLoaded("serverutils")) {
 
-                getLogger().warning("\n§f\n§e§lWARNING!" +
+                getLogger().warn("\n§f\n§e§lWARNING!" +
                         "\n§f\n§7Integration on Discord may give you many problems if you reload the plugin with ServerUtils." +
                         "\n§7Consider performing a §d§lTOTAL RESTART to prevent issues!\n");
 
@@ -143,7 +169,9 @@ public class CleanStaffChat {
             server.getEventManager().register(this, new ChatListener(this));
 
             if (VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-                jda.addEventListener(new ChatListener(this));
+
+                jda.getJda().addEventListener(new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
+
             }
 
         }
@@ -174,7 +202,9 @@ public class CleanStaffChat {
             server.getEventManager().register(this, new it.frafol.cleanstaffchat.velocity.donorchat.listeners.ChatListener(this));
 
             if (VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-                jda.addEventListener(new it.frafol.cleanstaffchat.velocity.donorchat.listeners.ChatListener(this));
+
+                jda.getJda().addEventListener(new it.frafol.cleanstaffchat.velocity.donorchat.listeners.ChatListener(this));
+
             }
 
         }
@@ -205,7 +235,9 @@ public class CleanStaffChat {
             server.getEventManager().register(this, new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
 
             if (VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-                jda.addEventListener(new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
+
+                jda.getJda().addEventListener(new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
+
             }
 
         }
@@ -218,13 +250,13 @@ public class CleanStaffChat {
 
         }
 
-        getLogger().warning("Some functions are not available on Velocity in 1.19+ clients, this is due to Mojang's self-moderation.");
+        getLogger().warn("Some functions are not available on Velocity in 1.19+ clients, this is due to Mojang's self-moderation.");
 
         if (VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {
             new UpdateCheck(this).getVersion(version -> {
                 if (container.getDescription().getVersion().isPresent()) {
                     if (!container.getDescription().getVersion().get().equals(version)) {
-                        getLogger().warning("There is a new update available, download it on SpigotMC!");
+                        getLogger().warn("There is a new update available, download it on SpigotMC!");
                     }
                 }
             });

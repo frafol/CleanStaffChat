@@ -11,6 +11,8 @@ import it.frafol.cleanstaffchat.bungee.staffchat.listeners.ChatListener;
 import it.frafol.cleanstaffchat.bungee.staffchat.listeners.JoinListener;
 import it.frafol.cleanstaffchat.bungee.staffchat.listeners.ServerListener;
 import lombok.SneakyThrows;
+import net.byteflux.libby.BungeeLibraryManager;
+import net.byteflux.libby.Library;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -36,6 +38,26 @@ public class CleanStaffChat extends Plugin {
     public void onEnable() {
 
         instance = this;
+
+        BungeeLibraryManager bungeeLibraryManager = new BungeeLibraryManager(this);
+
+        Library yaml = Library.builder()
+                .groupId("me{}carleslc{}Simple-YAML")
+                .artifactId("Simple-Yaml")
+                .version("1.7.2")
+                .build();
+
+        Library discord = Library.builder()
+                .groupId("net{}dv8tion")
+                .artifactId("JDA")
+                .version("5.0.0-alpha.14")
+                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-alpha.14/JDA-5.0.0-alpha.14-withDependencies-min.jar")
+                .build();
+
+        bungeeLibraryManager.addMavenCentral();
+        bungeeLibraryManager.addJitPack();
+        bungeeLibraryManager.loadLibrary(discord);
+        bungeeLibraryManager.loadLibrary(yaml);
 
         getLogger().info("\n§d  ___  __    ____    __    _  _    ___   ___ \n" +
                 " / __)(  )  ( ___)  /__\\  ( \\( )  / __) / __)\n" +

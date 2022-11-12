@@ -28,7 +28,7 @@ public class UpdateCheck {
                     consumer.accept(scanner.next());
                 }
             } catch (IOException exception) {
-                PLUGIN.getLogger().severe("Unable to check for updates: " + exception.getMessage());
+                PLUGIN.getLogger().error("Unable to check for updates: " + exception.getMessage());
             }
         }).schedule();
     }

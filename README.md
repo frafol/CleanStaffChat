@@ -10,16 +10,17 @@ Clean StaffChat is a basic StaffChat plugin, compatible with BungeeCord, Spigot 
 » Possibility to deactivate StaffChat globally;
 » Possibility of not seeing StaffChat personally;
 » Possibility to talk in StaffChat without doing commands;
-» Staff join / exit messages.
+» AFK System.
+» Admin Chat System (Deactivable).
+» Donor Chat System (Deactivable).
+» Discord Integration (Experimental).
 ```
 
 ## Velocity, BungeeCord and Spigot compatibility is here.
 ```
-» BungeeCord 1.7-1.19 & forks
+» BungeeCord 1.7 - 1.19 & forks
 » Velocity 3.1.2
-» Spigot 1.7.10-1.19.2 & forks
-
-(Aegis should work but you won't get support as it is a crappy proxy and can cause several problems)
+» Spigot 1.7 - 1.19.2 & forks
 ```
 
 ## Commands
@@ -38,6 +39,8 @@ Clean StaffChat is a basic StaffChat plugin, compatible with BungeeCord, Spigot 
 » /dcmute • Deactivate DonorChat globally;
 
 » /screload • Reloads the plugin.
+
+All commands are configurable in file aliases.yml!
 ```
 
 ## Permissions

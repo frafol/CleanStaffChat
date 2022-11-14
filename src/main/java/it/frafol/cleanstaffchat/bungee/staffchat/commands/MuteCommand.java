@@ -32,7 +32,7 @@ public class MuteCommand extends Command {
 
                 final String final_message = "set.staffchat.mute";
 
-                if (!it.frafol.cleanstaffchat.velocity.objects.PlayerCache.getMuted().contains("true")) {
+                if (!PlayerCache.getMuted().contains("true")) {
                     sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_MUTED.color()
                             .replace("%prefix%", BungeeMessages.PREFIX.color())));
                 } else {

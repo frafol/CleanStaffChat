@@ -1,4 +1,12 @@
-redis:
+#   ___  __    ____    __    _  _    ___   ___
+#  / __)(  )  ( ___)  /__\  ( \( )  / __) / __)
+# ( (__  )(__  )__)  /(__)\  )  (   \__ \( (__
+#  \___)(____)(____)(__)(__)(_)\_)  (___/ \___)
+#
+# RedisBungee file. Made with ❤ by frafol.
+# For support: discord.io/futuredevelopment
 
-  # Enable RedisBungee support. This is an experimental feature, report all errors on discord.io/futuredevelopment.
+# NOTE: This feature is in alpha, report all errors on discord.io/futuredevelopment.
+redis:
+  # Toggle RedisBungee Hook (Compatible with BungeeCord and Velocity)
   enabled: false

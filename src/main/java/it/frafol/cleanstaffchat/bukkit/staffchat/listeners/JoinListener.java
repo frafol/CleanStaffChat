@@ -33,7 +33,7 @@ public class JoinListener implements Listener {
     public void handle(PlayerJoinEvent event) {
 
         if (event.getPlayer().hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                && (SpigotConfig.UPDATE_CHECK.get(Boolean.class))) {
+                && (SpigotConfig.UPDATE_CHECK.get(Boolean.class)) && !PLUGIN.getDescription().getVersion().contains("alpha")) {
             new UpdateCheck(PLUGIN).getVersion(version -> {
                 if (!PLUGIN.getDescription().getVersion().equals(version)) {
                     event.getPlayer().sendMessage(ChatColor.YELLOW + "[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz");

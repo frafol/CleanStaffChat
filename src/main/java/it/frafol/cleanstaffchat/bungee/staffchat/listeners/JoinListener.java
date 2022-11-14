@@ -33,7 +33,7 @@ public class JoinListener implements Listener {
     public void handle(PostLoginEvent event){
 
         if (event.getPlayer().hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                && (BungeeConfig.UPDATE_CHECK.get(Boolean.class))) {
+                && (BungeeConfig.UPDATE_CHECK.get(Boolean.class)) && !PLUGIN.getDescription().getVersion().contains("alpha")) {
             new UpdateCheck(PLUGIN).getVersion(version -> {
                 if (!PLUGIN.getDescription().getVersion().equals(version)) {
                     event.getPlayer().sendMessage(TextComponent.fromLegacyText("[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz"));
@@ -123,6 +123,8 @@ public class JoinListener implements Listener {
     public void handle(PlayerDisconnectEvent event) {
 
         ProxiedPlayer player = event.getPlayer();
+
+        PlayerCache.getAfk().remove(player.getUniqueId());
 
         if (BungeeConfig.STAFF_QUIT_MESSAGE.get(Boolean.class)) {
 

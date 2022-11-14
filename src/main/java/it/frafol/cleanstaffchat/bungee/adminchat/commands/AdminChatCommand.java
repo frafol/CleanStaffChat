@@ -1,10 +1,8 @@
 package it.frafol.cleanstaffchat.bungee.adminchat.commands;
 
+import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeCommandsConfig;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
+import it.frafol.cleanstaffchat.bungee.enums.*;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -129,6 +127,26 @@ public class AdminChatCommand extends Command {
                         final String user_prefix = prefix == null ? "" : prefix;
                         final String user_suffix = suffix == null ? "" : suffix;
 
+                        if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+                            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                            final String final_message = BungeeMessages.ADMINCHAT_FORMAT.get(String.class)
+                                    .replace("%user%", commandsender)
+                                    .replace("%message%", message)
+                                    .replace("%displayname%", user_prefix + commandsender + user_suffix)
+                                    .replace("%userprefix%", user_prefix)
+                                    .replace("%usersuffix%", user_suffix)
+                                    .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
+                                    .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
+                                    .replace("&", "§");
+
+                            redisBungeeAPI.sendChannelMessage("CleanStaffChat-AdminMessage-RedisBungee", final_message);
+
+                            return;
+
+                        }
+
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
@@ -143,6 +161,26 @@ public class AdminChatCommand extends Command {
                                         .replace("&", "§"))));
 
                     } else {
+
+                        if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+                            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                            final String final_message = BungeeMessages.ADMINCHAT_FORMAT.get(String.class)
+                                    .replace("%user%", commandsender)
+                                    .replace("%message%", message)
+                                    .replace("%displayname%", commandsender)
+                                    .replace("%userprefix%", "")
+                                    .replace("%usersuffix%", "")
+                                    .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
+                                    .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
+                                    .replace("&", "§");
+
+                            redisBungeeAPI.sendChannelMessage("CleanStaffChat-AdminMessage-RedisBungee", final_message);
+
+                            return;
+
+                        }
 
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
@@ -194,6 +232,27 @@ public class AdminChatCommand extends Command {
                 } else if (BungeeConfig.CONSOLE_CAN_TALK.get(Boolean.class)) {
 
                     if (!PlayerCache.getMuted_admin().contains("true")) {
+
+                        if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+                            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                            final String final_message = BungeeMessages.ADMINCHAT_FORMAT.get(String.class)
+                                    .replace("%user%", commandsender)
+                                    .replace("%message%", message)
+                                    .replace("%displayname%", commandsender)
+                                    .replace("%userprefix%", "")
+                                    .replace("%usersuffix%", "")
+                                    .replace("%server%", "")
+                                    .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
+                                    .replace("&", "§");
+
+                            redisBungeeAPI.sendChannelMessage("CleanStaffChat-AdminMessage-RedisBungee", final_message);
+
+                            return;
+
+                        }
+
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))

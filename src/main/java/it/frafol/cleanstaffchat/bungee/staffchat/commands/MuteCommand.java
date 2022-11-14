@@ -1,10 +1,13 @@
 package it.frafol.cleanstaffchat.bungee.staffchat.commands;
 
+import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeCommandsConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
+import it.frafol.cleanstaffchat.bungee.enums.BungeeRedis;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 
@@ -23,7 +26,23 @@ public class MuteCommand extends Command {
         }
 
         if (sender.hasPermission(BungeeConfig.STAFFCHAT_MUTE_PERMISSION.get(String.class))) {
-            if (!PlayerCache.getMuted().contains("true")) {
+            if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+                final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                final String final_message = "set.staffchat.mute";
+
+                if (!it.frafol.cleanstaffchat.velocity.objects.PlayerCache.getMuted().contains("true")) {
+                    sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_MUTED.color()
+                            .replace("%prefix%", BungeeMessages.PREFIX.color())));
+                } else {
+                    sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_UNMUTED.color()
+                            .replace("%prefix%", BungeeMessages.PREFIX.color())));
+                }
+
+                redisBungeeAPI.sendChannelMessage("CleanStaffChat-MuteStaffChat-RedisBungee", final_message);
+
+            } else if (!PlayerCache.getMuted().contains("true")) {
                 PlayerCache.getMuted().add("true");
                 sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_MUTED.color()
                         .replace("%prefix%", BungeeMessages.PREFIX.color())));

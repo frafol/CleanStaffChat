@@ -1,0 +1,4 @@
+redis:
+
+  # Enable RedisBungee support. This is an experimental feature, report all errors on discord.io/futuredevelopment.
+  enabled: false

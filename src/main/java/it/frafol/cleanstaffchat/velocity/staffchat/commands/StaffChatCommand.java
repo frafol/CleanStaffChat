@@ -1,5 +1,6 @@
 package it.frafol.cleanstaffchat.velocity.staffchat.commands;
 
+import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.network.ProtocolVersion;
@@ -9,6 +10,7 @@ import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityDiscordConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityRedis;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -169,6 +171,27 @@ public class StaffChatCommand implements SimpleCommand {
                         final String user_prefix = prefix == null ? "" : prefix;
                         final String user_suffix = suffix == null ? "" : suffix;
 
+                        if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+                            final String final_message = VelocityMessages.STAFFCHAT_FORMAT.get(String.class)
+                                    .replace("%user%", sender)
+                                    .replace("%message%", message)
+                                    .replace("%displayname%", user_prefix + sender + user_suffix)
+                                    .replace("%userprefix%", user_prefix)
+                                    .replace("%usersuffix%", user_suffix)
+                                    .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName())
+                                    .replace("%prefix%", VelocityMessages.PREFIX.color())
+                                    .replace("&", "§");
+
+
+                            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                            redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffMessage-RedisBungee", final_message);
+
+                            return;
+
+                        }
+
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -182,6 +205,26 @@ public class StaffChatCommand implements SimpleCommand {
                                         new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
                     } else {
+
+                        if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+                            final String final_message = VelocityMessages.STAFFCHAT_FORMAT.get(String.class)
+                                    .replace("%user%", sender)
+                                    .replace("%message%", message)
+                                    .replace("%displayname%", sender)
+                                    .replace("%userprefix%", "")
+                                    .replace("%usersuffix%", "")
+                                    .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName())
+                                    .replace("%prefix%", VelocityMessages.PREFIX.color())
+                                    .replace("&", "§");
+
+                            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                            redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffMessage-RedisBungee", final_message);
+
+                            return;
+
+                        }
 
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
@@ -233,6 +276,26 @@ public class StaffChatCommand implements SimpleCommand {
                 } else if (CONSOLE_CAN_TALK.get(Boolean.class)) {
 
                     if (!PlayerCache.getMuted().contains("true")) {
+
+                        if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+                            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                            final String final_message = VelocityMessages.STAFFCHAT_FORMAT.get(String.class)
+                                    .replace("%user%", sender)
+                                    .replace("%message%", message)
+                                    .replace("%displayname%", sender)
+                                    .replace("%userprefix%", "")
+                                    .replace("%usersuffix%", "")
+                                    .replace("%server%", "")
+                                    .replace("%prefix%", VelocityMessages.PREFIX.color())
+                                    .replace("&", "§");
+
+                            redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffMessage-RedisBungee", final_message);
+
+                            return;
+
+                        }
 
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))

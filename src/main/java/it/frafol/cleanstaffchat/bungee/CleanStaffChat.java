@@ -1,9 +1,12 @@
 package it.frafol.cleanstaffchat.bungee;
 
+import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import it.frafol.cleanstaffchat.bungee.adminchat.commands.AdminChatCommand;
 import it.frafol.cleanstaffchat.bungee.donorchat.commands.DonorChatCommand;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
+import it.frafol.cleanstaffchat.bungee.enums.BungeeRedis;
+import it.frafol.cleanstaffchat.bungee.hooks.RedisListener;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import it.frafol.cleanstaffchat.bungee.objects.TextFile;
 import it.frafol.cleanstaffchat.bungee.staffchat.commands.ReloadCommand;
@@ -27,6 +30,7 @@ public class CleanStaffChat extends Plugin {
     private TextFile messagesTextFile;
     private TextFile discordTextFile;
     private TextFile aliasesTextFile;
+    private TextFile redisTextFile;
     public static CleanStaffChat instance;
 
     public static CleanStaffChat getInstance() {
@@ -68,6 +72,7 @@ public class CleanStaffChat extends Plugin {
         messagesTextFile = new TextFile(getDataFolder().toPath(), "messages.yml");
         discordTextFile = new TextFile(getDataFolder().toPath(), "discord.yml");
         aliasesTextFile = new TextFile(getDataFolder().toPath(), "aliases.yml");
+        redisTextFile = new TextFile(getDataFolder().toPath(), "redis.yml");
         getLogger().info("§7Configurations loaded §dsuccessfully§7!");
 
         if (BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
@@ -145,14 +150,34 @@ public class CleanStaffChat extends Plugin {
 
         getProxy().getPluginManager().registerCommand(this, new ReloadCommand());
 
-        if (BungeeConfig.STATS.get(Boolean.class)) {
+        if (BungeeRedis.REDIS_ENABLE.get(Boolean.class) && getProxy().getPluginManager().getPlugin("RedisBungee") != null) {
+
+            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+            getProxy().getPluginManager().registerListener(this, new RedisListener(this));
+
+            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffMessage-RedisBungee");
+            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-AdminMessage-RedisBungee");
+            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-DonorMessage-RedisBungee");
+            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffAFKMessage-RedisBungee");
+            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffOtherMessage-RedisBungee");
+            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffAFKMessage-RedisBungee");
+            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteStaffChat-RedisBungee");
+            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteAdminChat-RedisBungee");
+            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteDonorChat-RedisBungee");
+
+            getLogger().info("§7Hooked into RedisBungee §dsuccessfully§7!");
+
+        }
+
+        if (BungeeConfig.STATS.get(Boolean.class) && !getDescription().getVersion().contains("alpha")) {
 
             new Metrics(this, 16449);
 
             getLogger().info("§7Metrics loaded §asuccessfully§7!");
         }
 
-        if (BungeeConfig.UPDATE_CHECK.get(Boolean.class)) {
+        if (BungeeConfig.UPDATE_CHECK.get(Boolean.class) && !getDescription().getVersion().contains("alpha")) {
             new UpdateCheck(this).getVersion(version -> {
                 if (!this.getDescription().getVersion().equals(version)) {
                     getLogger().warning("§eThere is a new update available, download it on SpigotMC!");
@@ -177,6 +202,10 @@ public class CleanStaffChat extends Plugin {
 
     public YamlFile getAliasesTextFile() {
         return getInstance().aliasesTextFile.getConfig();
+    }
+
+    public YamlFile getRedisTextFile() {
+        return getInstance().redisTextFile.getConfig();
     }
 
     public JDA getJda() {

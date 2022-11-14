@@ -170,14 +170,14 @@ public class CleanStaffChat extends JavaPlugin {
 
         }
 
-        if (SpigotConfig.STATS.get(Boolean.class)) {
+        if (SpigotConfig.STATS.get(Boolean.class) && !getDescription().getVersion().contains("alpha")) {
 
             new Metrics(this, 16448);
 
             getLogger().info("Metrics loaded successfully!");
         }
 
-        if (SpigotConfig.UPDATE_CHECK.get(Boolean.class)) {
+        if (SpigotConfig.UPDATE_CHECK.get(Boolean.class) && !getDescription().getVersion().contains("alpha")) {
             new UpdateCheck(this).getVersion(version -> {
                 if (!this.getDescription().getVersion().equals(version)) {
                     getLogger().warning("There is a new update available, download it on SpigotMC!");

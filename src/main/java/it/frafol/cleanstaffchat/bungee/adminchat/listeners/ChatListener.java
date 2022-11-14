@@ -1,9 +1,11 @@
 package it.frafol.cleanstaffchat.bungee.adminchat.listeners;
 
+import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
+import it.frafol.cleanstaffchat.bungee.enums.BungeeRedis;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -205,13 +207,27 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
         }
 
-        CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
-                        (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
-                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DISCORD_ADMIN_FORMAT.color()
-                        .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
-                        .replace("%user%", event.getAuthor().getName())
-                        .replace("%message%", event.getMessage().getContentDisplay()))));
+        if (PLUGIN.getProxy().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
+            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+            final String final_message = BungeeMessages.DISCORD_ADMIN_FORMAT.get(String.class)
+                    .replace("%user%", event.getAuthor().getName())
+                    .replace("%message%", event.getMessage().getContentDisplay())
+                    .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
+                    .replace("&", "§");
+
+            redisBungeeAPI.sendChannelMessage("CleanStaffChat-AdminMessage-RedisBungee", final_message);
+
+        } else {
+
+            CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
+                            (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
+                                    && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                    .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DISCORD_ADMIN_FORMAT.color()
+                            .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
+                            .replace("%user%", event.getAuthor().getName())
+                            .replace("%message%", event.getMessage().getContentDisplay()))));
+        }
     }
 }

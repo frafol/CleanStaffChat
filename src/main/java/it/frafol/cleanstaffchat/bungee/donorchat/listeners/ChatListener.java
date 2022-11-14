@@ -1,9 +1,11 @@
 package it.frafol.cleanstaffchat.bungee.donorchat.listeners;
 
+import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
+import it.frafol.cleanstaffchat.bungee.enums.BungeeRedis;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -240,14 +242,29 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
         }
 
-        CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
-                        (players -> players.hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))
-                                && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DISCORD_DONOR_FORMAT.color()
-                        .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
-                        .replace("%user%", event.getAuthor().getName())
-                        .replace("%message%", event.getMessage().getContentDisplay())
-                        .replace("&", "§"))));
+        if (PLUGIN.getProxy().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+            final String final_message = BungeeMessages.DISCORD_DONOR_FORMAT.get(String.class)
+                    .replace("%user%", event.getAuthor().getName())
+                    .replace("%message%", event.getMessage().getContentDisplay())
+                    .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
+                    .replace("&", "§");
+
+            redisBungeeAPI.sendChannelMessage("CleanStaffChat-DonorMessage-RedisBungee", final_message);
+
+        } else {
+
+            CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
+                            (players -> players.hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))
+                                    && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
+                    .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DISCORD_DONOR_FORMAT.color()
+                            .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
+                            .replace("%user%", event.getAuthor().getName())
+                            .replace("%message%", event.getMessage().getContentDisplay())
+                            .replace("&", "§"))));
+        }
 
         if (!BungeeConfig.COOLDOWN_BYPASS_DISCORD.get(Boolean.class)) {
 

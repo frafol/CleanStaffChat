@@ -1,5 +1,6 @@
 package it.frafol.cleanstaffchat.velocity;
 
+import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
@@ -13,12 +14,14 @@ import it.frafol.cleanstaffchat.velocity.donorchat.commands.DonorChatCommand;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityCommandsConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityDiscordConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityRedis;
 import it.frafol.cleanstaffchat.velocity.objects.JdaBuilder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import it.frafol.cleanstaffchat.velocity.objects.TextFile;
 import it.frafol.cleanstaffchat.velocity.staffchat.commands.*;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.ChatListener;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.JoinListener;
+import it.frafol.cleanstaffchat.velocity.hooks.RedisListener;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.ServerListener;
 import lombok.Getter;
 import net.byteflux.libby.Library;
@@ -33,8 +36,8 @@ import java.nio.file.Path;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.6",
-        dependencies = {@Dependency(id = "luckperms", optional = true)},
+        version = "1.7",
+        dependencies = {@Dependency(id = "redisbungee", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
 )
@@ -49,11 +52,14 @@ public class CleanStaffChat {
     private TextFile messagesTextFile;
     private TextFile discordTextFile;
     private TextFile aliasesTextFile;
+    private TextFile redisTextFile;
     private static CleanStaffChat instance;
 
     public static CleanStaffChat getInstance() {
         return instance;
     }
+
+    public static String Version = "1.7-alpha";
 
     @Inject
     public CleanStaffChat(ProxyServer server, Logger logger, @DataDirectory Path path, Metrics.Factory metricsFactory) {
@@ -103,7 +109,9 @@ public class CleanStaffChat {
         messagesTextFile = new TextFile(path, "messages.yml");
         discordTextFile = new TextFile(path, "discord.yml");
         aliasesTextFile = new TextFile(path, "aliases.yml");
+        redisTextFile = new TextFile(path, "redis.yml");
         getLogger().info("§7Configurations loaded §dsuccessfully§7!");
+
 
         if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
 
@@ -241,7 +249,27 @@ public class CleanStaffChat {
 
         }
 
-        if (VelocityConfig.STATS.get(Boolean.class)) {
+        if (VelocityRedis.REDIS_ENABLE.get(Boolean.class) && getServer().getPluginManager().isLoaded("redisbungee")) {
+
+            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+            server.getEventManager().register(this, new RedisListener(this));
+
+            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffMessage-RedisBungee");
+            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-AdminMessage-RedisBungee");
+            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-DonorMessage-RedisBungee");
+            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffAFKMessage-RedisBungee");
+            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffOtherMessage-RedisBungee");
+            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffAFKMessage-RedisBungee");
+            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteStaffChat-RedisBungee");
+            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteAdminChat-RedisBungee");
+            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteDonorChat-RedisBungee");
+
+            getLogger().info("§7Hooked into RedisBungee §dsuccessfully§7!");
+
+        }
+
+        if (VelocityConfig.STATS.get(Boolean.class) && !Version.contains("alpha")) {
 
             metricsFactory.make(this, 16447);
 
@@ -251,7 +279,7 @@ public class CleanStaffChat {
 
         getLogger().warn("Some functions are not available on Velocity in 1.19+ clients, this is due to Mojang's self-moderation.");
 
-        if (VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {
+        if (VelocityConfig.UPDATE_CHECK.get(Boolean.class) && !Version.contains("alpha")) {
             new UpdateCheck(this).getVersion(version -> {
                 if (container.getDescription().getVersion().isPresent()) {
                     if (!container.getDescription().getVersion().get().equals(version)) {
@@ -262,6 +290,7 @@ public class CleanStaffChat {
         }
 
         getLogger().info("§7Plugin successfully §denabled§7!");
+
     }
 
     @Subscribe

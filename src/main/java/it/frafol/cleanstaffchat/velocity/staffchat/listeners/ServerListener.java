@@ -28,7 +28,7 @@ public class ServerListener {
         if (!event.getPreviousServer().isPresent()) {
 
             if (event.getPlayer().hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                    && (VelocityConfig.UPDATE_CHECK.get(Boolean.class))) {
+                    && (VelocityConfig.UPDATE_CHECK.get(Boolean.class)) && !CleanStaffChat.Version.contains("alpha")) {
 
                 new UpdateCheck(PLUGIN).getVersion(version -> {
 

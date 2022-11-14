@@ -1,5 +1,6 @@
 package it.frafol.cleanstaffchat.velocity.staffchat.listeners;
 
+import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
@@ -9,6 +10,7 @@ import it.frafol.cleanstaffchat.velocity.UpdateCheck;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityDiscordConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityRedis;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -34,7 +36,7 @@ public class JoinListener {
     public void handle(PostLoginEvent event){
 
         if (event.getPlayer().hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
-            if (VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {
+            if (VelocityConfig.UPDATE_CHECK.get(Boolean.class) && !CleanStaffChat.Version.contains("alpha")) {
                 new UpdateCheck(PLUGIN).getVersion(version -> {
                     if (PLUGIN.container.getDescription().getVersion().isPresent()) {
                         if (!PLUGIN.container.getDescription().getVersion().get().equals(version)) {
@@ -62,6 +64,26 @@ public class JoinListener {
                         final String suffix = user.getCachedData().getMetaData().getSuffix();
                         final String user_prefix = prefix == null ? "" : prefix;
                         final String user_suffix = suffix == null ? "" : suffix;
+
+                        if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+                            final String final_message = VelocityMessages.STAFF_JOIN_MESSAGE_FORMAT.get(String.class)
+                                    .replace("%user%", player.getUsername())
+                                    .replace("%displayname%", user_prefix + player.getUsername() + user_suffix)
+                                    .replace("%userprefix%", user_prefix)
+                                    .replace("%usersuffix%", user_suffix)
+                                    .replace("%prefix%", VelocityMessages.PREFIX.color())
+                                    .replace("&", "§");
+
+
+                            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                            redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffOtherMessage-RedisBungee", final_message);
+
+                            return;
+
+                        }
+
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -71,13 +93,35 @@ public class JoinListener {
                                         new Placeholder("userprefix", user_prefix),
                                         new Placeholder("usersuffix", user_suffix),
                                         new Placeholder("prefix", VelocityMessages.PREFIX.color())));
+
                     } else {
+
+                        if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+                            final String final_message = VelocityMessages.STAFF_JOIN_MESSAGE_FORMAT.get(String.class)
+                                    .replace("%user%", player.getUsername())
+                                    .replace("%displayname%", player.getUsername())
+                                    .replace("%userprefix%", "")
+                                    .replace("%usersuffix%", "")
+                                    .replace("%prefix%", VelocityMessages.PREFIX.color())
+                                    .replace("&", "§");
+
+
+                            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                            redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffOtherMessage-RedisBungee", final_message);
+
+                            return;
+
+                        }
+
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                                 .forEach(players -> VelocityMessages.STAFF_JOIN_MESSAGE_FORMAT.send(players,
                                         new Placeholder("user", player.getUsername()),
                                         new Placeholder("prefix", VelocityMessages.PREFIX.color())));
+
                     }
 
                     if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
@@ -118,6 +162,8 @@ public class JoinListener {
 
         Player player = event.getPlayer();
 
+        PlayerCache.getAfk().remove(player.getUniqueId());
+
         if (STAFF_QUIT_MESSAGE.get(Boolean.class)) {
 
             if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
@@ -140,6 +186,25 @@ public class JoinListener {
                     final String user_prefix = prefix == null ? "" : prefix;
                     final String user_suffix = suffix == null ? "" : suffix;
 
+                    if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+                        final String final_message = VelocityMessages.STAFF_QUIT_MESSAGE_FORMAT.get(String.class)
+                                .replace("%user%", player.getUsername())
+                                .replace("%displayname%", user_prefix + player.getUsername() + user_suffix)
+                                .replace("%userprefix%", user_prefix)
+                                .replace("%usersuffix%", user_suffix)
+                                .replace("%prefix%", VelocityMessages.PREFIX.color())
+                                .replace("&", "§");
+
+
+                        final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                        redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffOtherMessage-RedisBungee", final_message);
+
+                        return;
+
+                    }
+
                     if (CleanStaffChat.getInstance().getServer().getAllPlayers().size() >= 1) {
 
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
@@ -155,6 +220,25 @@ public class JoinListener {
                     }
 
                 } else {
+
+                    if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+                        final String final_message = VelocityMessages.STAFF_QUIT_MESSAGE_FORMAT.get(String.class)
+                                .replace("%user%", player.getUsername())
+                                .replace("%displayname%", player.getUsername())
+                                .replace("%userprefix%", "")
+                                .replace("%usersuffix%", "")
+                                .replace("%prefix%", VelocityMessages.PREFIX.color())
+                                .replace("&", "§");
+
+
+                        final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                        redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffOtherMessage-RedisBungee", final_message);
+
+                        return;
+
+                    }
 
                     if (CleanStaffChat.getInstance().getServer().getAllPlayers().size() >= 1) {
 

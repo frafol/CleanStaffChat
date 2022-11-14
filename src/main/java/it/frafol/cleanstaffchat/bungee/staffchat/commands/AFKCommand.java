@@ -1,9 +1,11 @@
 package it.frafol.cleanstaffchat.bungee.staffchat.commands;
 
+import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeCommandsConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
+import it.frafol.cleanstaffchat.bungee.enums.BungeeRedis;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -60,6 +62,25 @@ public class AFKCommand extends Command {
                 final String user_prefix = prefix == null ? "" : prefix;
                 final String user_suffix = suffix == null ? "" : suffix;
 
+                if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+                    final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                    final String final_message = BungeeMessages.STAFFCHAT_AFK_ON.get(String.class)
+                            .replace("%user%", sender.getName())
+                            .replace("%displayname%", user_prefix + sender.getName() + user_suffix)
+                            .replace("%userprefix%", user_prefix)
+                            .replace("%usersuffix%", user_suffix)
+                            .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
+                            .replace("%prefix%", BungeeMessages.PREFIX.color())
+                            .replace("&", "§");
+
+                    redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffAFKMessage-RedisBungee", final_message);
+
+                    return;
+
+                }
+
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -72,6 +93,25 @@ public class AFKCommand extends Command {
                                 .replace("%usersuffix%", user_suffix))));
 
             } else {
+
+                if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+                    final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                    final String final_message = BungeeMessages.STAFFCHAT_AFK_ON.get(String.class)
+                            .replace("%user%", sender.getName())
+                            .replace("%displayname%", sender.getName())
+                            .replace("%userprefix%", "")
+                            .replace("%usersuffix%", "")
+                            .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
+                            .replace("%prefix%", BungeeMessages.PREFIX.color())
+                            .replace("&", "§");
+
+                    redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffAFKMessage-RedisBungee", final_message);
+
+                    return;
+
+                }
 
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
@@ -102,6 +142,25 @@ public class AFKCommand extends Command {
                 final String user_prefix = prefix == null ? "" : prefix;
                 final String user_suffix = suffix == null ? "" : suffix;
 
+                if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+                    final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                    final String final_message = BungeeMessages.STAFFCHAT_AFK_OFF.get(String.class)
+                            .replace("%user%", sender.getName())
+                            .replace("%displayname%", user_prefix + sender.getName() + user_suffix)
+                            .replace("%userprefix%", user_prefix)
+                            .replace("%usersuffix%", user_suffix)
+                            .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
+                            .replace("%prefix%", BungeeMessages.PREFIX.color())
+                            .replace("&", "§");
+
+                    redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffAFKMessage-RedisBungee", final_message);
+
+                    return;
+
+                }
+
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -114,6 +173,25 @@ public class AFKCommand extends Command {
                                 .replace("%usersuffix%", user_suffix))));
 
             } else {
+
+                if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+                    final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                    final String final_message = BungeeMessages.STAFFCHAT_AFK_OFF.get(String.class)
+                            .replace("%user%", sender.getName())
+                            .replace("%displayname%", sender.getName())
+                            .replace("%userprefix%", "")
+                            .replace("%usersuffix%", "")
+                            .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
+                            .replace("%prefix%", BungeeMessages.PREFIX.color())
+                            .replace("&", "§");
+
+                    redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffAFKMessage-RedisBungee", final_message);
+
+                    return;
+
+                }
 
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))

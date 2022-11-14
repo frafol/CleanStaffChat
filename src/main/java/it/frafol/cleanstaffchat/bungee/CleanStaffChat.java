@@ -106,6 +106,8 @@ public class CleanStaffChat extends Plugin {
 
         }
 
+        getProxy().getPluginManager().registerCommand(this, new ReloadCommand());
+
         if (BungeeConfig.STAFFCHAT.get(Boolean.class)) {
 
             getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.staffchat.commands.StaffChatCommand());
@@ -148,7 +150,9 @@ public class CleanStaffChat extends Plugin {
 
         }
 
-        getProxy().getPluginManager().registerCommand(this, new ReloadCommand());
+        if (BungeeRedis.REDIS_ENABLE.get(Boolean.class) && getProxy().getPluginManager().getPlugin("RedisBungee") == null) {
+            getLogger().severe("RedisBungee was not found.");
+        }
 
         if (BungeeRedis.REDIS_ENABLE.get(Boolean.class) && getProxy().getPluginManager().getPlugin("RedisBungee") != null) {
 

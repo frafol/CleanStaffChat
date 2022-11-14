@@ -249,6 +249,10 @@ public class CleanStaffChat {
 
         }
 
+        if (VelocityRedis.REDIS_ENABLE.get(Boolean.class) && !getServer().getPluginManager().isLoaded("redisbungee")) {
+            getLogger().error("RedisBungee was not found.");
+        }
+
         if (VelocityRedis.REDIS_ENABLE.get(Boolean.class) && getServer().getPluginManager().isLoaded("redisbungee")) {
 
             final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();

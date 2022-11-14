@@ -32,7 +32,7 @@ public class MuteCommand extends Command {
 
                 final String final_message = "set.adminchat.mute";
 
-                if (!PlayerCache.getMuted().contains("true")) {
+                if (!PlayerCache.getMuted_admin().contains("true")) {
                     sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_MUTED.color()
                             .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
                 } else {

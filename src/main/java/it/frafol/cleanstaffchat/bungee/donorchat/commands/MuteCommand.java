@@ -33,7 +33,7 @@ public class MuteCommand extends Command {
 
                 final String final_message = "set.donorchat.mute";
 
-                if (!PlayerCache.getMuted().contains("true")) {
+                if (!PlayerCache.getMuted_donor().contains("true")) {
                     sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_MUTED.color()
                             .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
                 } else {

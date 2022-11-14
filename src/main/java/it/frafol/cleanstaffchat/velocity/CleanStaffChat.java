@@ -59,7 +59,7 @@ public class CleanStaffChat {
         return instance;
     }
 
-    public static String Version = "1.7-alpha";
+    public static String Version = "1.7";
 
     @Inject
     public CleanStaffChat(ProxyServer server, Logger logger, @DataDirectory Path path, Metrics.Factory metricsFactory) {

@@ -40,7 +40,7 @@ public class MuteCommand extends Command {
                             .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
                 }
 
-                redisBungeeAPI.sendChannelMessage("CleanStaffChat-MuteAdminnChat-RedisBungee", final_message);
+                redisBungeeAPI.sendChannelMessage("CleanStaffChat-MuteAdminChat-RedisBungee", final_message);
 
             } else if (!PlayerCache.getMuted_admin().contains("true")) {
                 PlayerCache.getMuted_admin().add("true");

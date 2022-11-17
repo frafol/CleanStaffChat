@@ -68,11 +68,7 @@ public class CleanStaffChat extends Plugin {
                 "( (__  )(__  )__)  /(__)\\  )  (   \\__ \\( (__ \n" +
                 " \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)\n");
 
-        configTextFile = new TextFile(getDataFolder().toPath(), "config.yml");
-        messagesTextFile = new TextFile(getDataFolder().toPath(), "messages.yml");
-        discordTextFile = new TextFile(getDataFolder().toPath(), "discord.yml");
-        aliasesTextFile = new TextFile(getDataFolder().toPath(), "aliases.yml");
-        redisTextFile = new TextFile(getDataFolder().toPath(), "redis.yml");
+        loadFiles();
         getLogger().info("§7Configurations loaded §dsuccessfully§7!");
 
         if (BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
@@ -110,65 +106,31 @@ public class CleanStaffChat extends Plugin {
 
         if (BungeeConfig.STAFFCHAT.get(Boolean.class)) {
 
-            getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.staffchat.commands.StaffChatCommand());
-            getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.staffchat.commands.MuteCommand());
-            getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.staffchat.commands.ToggleCommand());
-            getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.staffchat.commands.AFKCommand());
-            getProxy().getPluginManager().registerListener(this, new JoinListener(this));
-            getProxy().getPluginManager().registerListener(this, new ServerListener(this));
-            getProxy().getPluginManager().registerListener(this, new it.frafol.cleanstaffchat.bungee.staffchat.listeners.ChatListener(this));
-
-            if (BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-                jda.addEventListener(new ChatListener(this));
-            }
+            registerStaffChat();
 
         }
 
         if (BungeeConfig.ADMINCHAT.get(Boolean.class)) {
 
-            getProxy().getPluginManager().registerCommand(this, new AdminChatCommand());
-            getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.adminchat.commands.MuteCommand());
-            getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.adminchat.commands.ToggleCommand());
-            getProxy().getPluginManager().registerListener(this, new it.frafol.cleanstaffchat.bungee.adminchat.listeners.ChatListener(this));
-
-            if (BungeeConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-                jda.addEventListener(new it.frafol.cleanstaffchat.bungee.adminchat.listeners.ChatListener(this));
-            }
+            registerAdminChat();
 
         }
 
         if (BungeeConfig.DONORCHAT.get(Boolean.class)) {
 
-            getProxy().getPluginManager().registerCommand(this, new DonorChatCommand(this));
-            getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.donorchat.commands.MuteCommand());
-            getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.donorchat.commands.ToggleCommand());
-            getProxy().getPluginManager().registerListener(this, new it.frafol.cleanstaffchat.bungee.donorchat.listeners.ChatListener(this));
-
-            if (BungeeConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-                jda.addEventListener(new it.frafol.cleanstaffchat.bungee.donorchat.listeners.ChatListener(this));
-            }
+            registerDonorChat();
 
         }
 
         if (BungeeRedis.REDIS_ENABLE.get(Boolean.class) && getProxy().getPluginManager().getPlugin("RedisBungee") == null) {
-            getLogger().severe("RedisBungee was not found.");
+
+            getLogger().severe("RedisBungee was not found, the RedisBungee hook won't work.");
+
         }
 
         if (BungeeRedis.REDIS_ENABLE.get(Boolean.class) && getProxy().getPluginManager().getPlugin("RedisBungee") != null) {
 
-            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
-            getProxy().getPluginManager().registerListener(this, new RedisListener(this));
-
-            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffMessage-RedisBungee");
-            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-AdminMessage-RedisBungee");
-            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-DonorMessage-RedisBungee");
-            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffAFKMessage-RedisBungee");
-            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffOtherMessage-RedisBungee");
-            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffAFKMessage-RedisBungee");
-            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteStaffChat-RedisBungee");
-            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteAdminChat-RedisBungee");
-            redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteDonorChat-RedisBungee");
+            registerRedisBungee();
 
             getLogger().info("§7Hooked into RedisBungee §dsuccessfully§7!");
 
@@ -182,11 +144,9 @@ public class CleanStaffChat extends Plugin {
         }
 
         if (BungeeConfig.UPDATE_CHECK.get(Boolean.class) && !getDescription().getVersion().contains("alpha")) {
-            new UpdateCheck(this).getVersion(version -> {
-                if (!this.getDescription().getVersion().equals(version)) {
-                    getLogger().warning("§eThere is a new update available, download it on SpigotMC!");
-                }
-            });
+
+            UpdateChecker();
+
         }
 
         getLogger().info("§7Plugin successfully §denabled§7!");
@@ -223,6 +183,14 @@ public class CleanStaffChat extends Plugin {
         configTextFile = null;
 
         getLogger().info("§7Clearing lists...");
+        clearCache();
+
+        getLogger().info("§7Successfully §ddisabled§7.");
+    }
+
+
+    private void clearCache() {
+
         PlayerCache.getToggled_2().clear();
         PlayerCache.getToggled_2_admin().clear();
         PlayerCache.getToggled_2_donor().clear();
@@ -236,7 +204,86 @@ public class CleanStaffChat extends Plugin {
         PlayerCache.getMuted_donor().clear();
         PlayerCache.getAfk().clear();
 
-        getLogger().info("§7Successfully §ddisabled§7.");
+    }
+
+    private void UpdateChecker() {
+
+        new UpdateCheck(this).getVersion(version -> {
+            if (!this.getDescription().getVersion().equals(version)) {
+                getLogger().warning("§eThere is a new update available, download it on SpigotMC!");
+            }
+        });
+
+    }
+
+    private void registerRedisBungee() {
+
+        final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+        getProxy().getPluginManager().registerListener(this, new RedisListener(this));
+
+        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffMessage-RedisBungee");
+        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-AdminMessage-RedisBungee");
+        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-DonorMessage-RedisBungee");
+        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffAFKMessage-RedisBungee");
+        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffOtherMessage-RedisBungee");
+        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffAFKMessage-RedisBungee");
+        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteStaffChat-RedisBungee");
+        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteAdminChat-RedisBungee");
+        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteDonorChat-RedisBungee");
+
+    }
+
+    private void registerDonorChat() {
+
+        getProxy().getPluginManager().registerCommand(this, new DonorChatCommand(this));
+        getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.donorchat.commands.MuteCommand());
+        getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.donorchat.commands.ToggleCommand());
+        getProxy().getPluginManager().registerListener(this, new it.frafol.cleanstaffchat.bungee.donorchat.listeners.ChatListener(this));
+
+        if (BungeeConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            jda.addEventListener(new it.frafol.cleanstaffchat.bungee.donorchat.listeners.ChatListener(this));
+        }
+
+    }
+
+    private void registerAdminChat() {
+
+        getProxy().getPluginManager().registerCommand(this, new AdminChatCommand());
+        getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.adminchat.commands.MuteCommand());
+        getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.adminchat.commands.ToggleCommand());
+        getProxy().getPluginManager().registerListener(this, new it.frafol.cleanstaffchat.bungee.adminchat.listeners.ChatListener(this));
+
+        if (BungeeConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            jda.addEventListener(new it.frafol.cleanstaffchat.bungee.adminchat.listeners.ChatListener(this));
+        }
+
+    }
+
+    private void registerStaffChat() {
+
+        getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.staffchat.commands.StaffChatCommand());
+        getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.staffchat.commands.MuteCommand());
+        getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.staffchat.commands.ToggleCommand());
+        getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.staffchat.commands.AFKCommand());
+        getProxy().getPluginManager().registerListener(this, new JoinListener(this));
+        getProxy().getPluginManager().registerListener(this, new ServerListener(this));
+        getProxy().getPluginManager().registerListener(this, new it.frafol.cleanstaffchat.bungee.staffchat.listeners.ChatListener(this));
+
+        if (BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            jda.addEventListener(new ChatListener(this));
+        }
+
+    }
+
+    private void loadFiles() {
+
+        configTextFile = new TextFile(getDataFolder().toPath(), "config.yml");
+        messagesTextFile = new TextFile(getDataFolder().toPath(), "messages.yml");
+        discordTextFile = new TextFile(getDataFolder().toPath(), "discord.yml");
+        aliasesTextFile = new TextFile(getDataFolder().toPath(), "aliases.yml");
+        redisTextFile = new TextFile(getDataFolder().toPath(), "redis.yml");
+
     }
 
 }

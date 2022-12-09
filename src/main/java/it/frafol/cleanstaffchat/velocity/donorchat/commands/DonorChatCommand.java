@@ -56,7 +56,8 @@ public class DonorChatCommand implements SimpleCommand {
                 Player player = (Player) commandSource;
 
                 if (((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19
-                        || ((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19_1) {
+                        || ((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19_1
+                        || ((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19_3) {
 
                     VelocityMessages.DONORARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 

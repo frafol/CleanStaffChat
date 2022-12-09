@@ -55,7 +55,8 @@ public class AdminChatCommand implements SimpleCommand {
                 Player player = (Player) commandSource;
 
                 if (((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19
-                        || ((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19_1) {
+                        || ((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19_1
+                        || ((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19_3) {
 
                     VelocityMessages.ADMINARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
 

@@ -57,7 +57,7 @@ public class CleanStaffChat extends JavaPlugin {
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.0.0-alpha.14")
+                .version("5.0.0-beta.2")
                 .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-alpha.14/JDA-5.0.0-alpha.14-withDependencies-min.jar")
                 .build();
 
@@ -164,7 +164,7 @@ public class CleanStaffChat extends JavaPlugin {
 
             getServer().getPluginManager().registerEvents(new it.frafol.cleanstaffchat.bukkit.adminchat.listeners.ChatListener(this), this);
 
-            if (SpigotConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class) && SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            if (SpigotConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
                 jda.addEventListener(new it.frafol.cleanstaffchat.bukkit.adminchat.listeners.ChatListener(this));
             }
 

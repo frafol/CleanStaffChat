@@ -37,7 +37,7 @@ import java.nio.file.Path;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.7.1",
+        version = "1.7.2",
         dependencies = {@Dependency(id = "redisbungee", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
@@ -60,7 +60,7 @@ public class CleanStaffChat {
         return instance;
     }
 
-    public static String Version = "1.7.1";
+    public static String Version = "1.7.2";
 
     @Inject
     public CleanStaffChat(ProxyServer server, Logger logger, @DataDirectory Path path, Metrics.Factory metricsFactory) {
@@ -90,7 +90,7 @@ public class CleanStaffChat {
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.0.0-alpha.14")
+                .version("5.0.0-beta.2")
                 .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-alpha.14/JDA-5.0.0-alpha.14-withDependencies-min.jar")
                 .build();
 
@@ -296,9 +296,9 @@ public class CleanStaffChat {
         server.getEventManager().register(this, new ServerListener(this));
         server.getEventManager().register(this, new ChatListener(this));
 
-        if (VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+        if (VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
 
-            jda.getJda().addEventListener(new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
+            jda.getJda().addEventListener(new it.frafol.cleanstaffchat.velocity.staffchat.listeners.ChatListener(this));
 
         }
     }
@@ -329,7 +329,7 @@ public class CleanStaffChat {
 
         server.getEventManager().register(this, new it.frafol.cleanstaffchat.velocity.donorchat.listeners.ChatListener(this));
 
-        if (VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+        if (VelocityConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
 
             jda.getJda().addEventListener(new it.frafol.cleanstaffchat.velocity.donorchat.listeners.ChatListener(this));
 

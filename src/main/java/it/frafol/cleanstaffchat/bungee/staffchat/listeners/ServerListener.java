@@ -103,6 +103,7 @@ public class ServerListener implements Listener {
                                         .replace("%displayname%", user_prefix + player.getName() + user_suffix)
                                         .replace("%userprefix%", user_prefix)
                                         .replace("%usersuffix%", user_suffix)
+                                        .replace("%serverbefore%", event.getFrom().getName())
                                         .replace("%server%", player.getServer().getInfo().getName()))));
 
                     } else {
@@ -113,6 +114,7 @@ public class ServerListener implements Listener {
                                 .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFF_SWITCH_MESSAGE_FORMAT.color()
                                         .replace("%prefix%", BungeeMessages.PREFIX.color())
                                         .replace("%user%", player.getName())
+                                        .replace("%serverbefore%", event.getFrom().getName())
                                         .replace("%server%", player.getServer().getInfo().getName()))));
 
                     }

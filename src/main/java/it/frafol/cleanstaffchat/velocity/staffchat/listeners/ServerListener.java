@@ -121,6 +121,7 @@ public class ServerListener {
                                         new Placeholder("userprefix", user_prefix),
                                         new Placeholder("usersuffix", user_suffix),
                                         new Placeholder("displayname", user_prefix + player.getUsername() + user_suffix),
+                                        new Placeholder("serverbefore", event.getPreviousServer().get().getServerInfo().getName()),
                                         new Placeholder("server", event.getServer().getServerInfo().getName())));
 
                     } else {
@@ -131,6 +132,7 @@ public class ServerListener {
                                 .forEach(players -> VelocityMessages.STAFF_SWITCH_MESSAGE_FORMAT.send(players,
                                         new Placeholder("user", player.getUsername()),
                                         new Placeholder("prefix", VelocityMessages.PREFIX.color()),
+                                        new Placeholder("serverbefore", event.getPreviousServer().get().getServerInfo().getName()),
                                         new Placeholder("server", event.getServer().getServerInfo().getName())));
 
                     }

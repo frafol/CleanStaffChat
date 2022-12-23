@@ -1,10 +1,12 @@
 package it.frafol.cleanstaffchat.bungee.staffchat.listeners;
 
+import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.UpdateCheck;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
+import it.frafol.cleanstaffchat.bungee.enums.BungeeRedis;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -44,7 +46,7 @@ public class JoinListener implements Listener {
 
         if (!(CleanStaffChat.getInstance().getProxy().getPlayers().size() < 1)) {
 
-            ProxiedPlayer player = event.getPlayer();
+            final ProxiedPlayer player = event.getPlayer();
 
             if (BungeeConfig.STAFF_JOIN_MESSAGE.get(Boolean.class)) {
 
@@ -64,6 +66,26 @@ public class JoinListener implements Listener {
                         final String user_prefix = prefix == null ? "" : prefix;
                         final String user_suffix = suffix == null ? "" : suffix;
 
+                        if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+                            final String final_message = BungeeMessages.STAFF_JOIN_MESSAGE_FORMAT.get(String.class)
+                                    .replace("%user%", player.getName())
+                                    .replace("%displayname%", user_prefix + player.getName() + user_suffix)
+                                    .replace("%userprefix%", user_prefix)
+                                    .replace("%usersuffix%", user_suffix)
+                                    .replace("%prefix%", BungeeMessages.PREFIX.color())
+                                    .replace("%server%", player.getServer().getInfo().getName())
+                                    .replace("&", "§");
+
+
+                            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                            redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffOtherMessage-RedisBungee", final_message);
+
+                            return;
+
+                        }
+
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -72,15 +94,40 @@ public class JoinListener implements Listener {
                                         .replace("%displayname%", user_prefix + player.getName() + user_suffix)
                                         .replace("%userprefix%", user_prefix)
                                         .replace("%usersuffix%", user_suffix)
+                                        .replace("%server%", player.getServer().getInfo().getName())
                                         .replace("%user%", player.getName()))));
 
                     } else {
+
+                        if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+                            final String final_message = BungeeMessages.STAFF_JOIN_MESSAGE_FORMAT.get(String.class)
+                                    .replace("%user%", player.getName())
+                                    .replace("%displayname%", player.getName())
+                                    .replace("%userprefix%", "")
+                                    .replace("%usersuffix%", "")
+                                    .replace("%prefix%", BungeeMessages.PREFIX.color())
+                                    .replace("%server%", player.getServer().getInfo().getName())
+                                    .replace("&", "§");
+
+
+                            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                            redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffOtherMessage-RedisBungee", final_message);
+
+                            return;
+
+                        }
 
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                                 .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
                                         .replace("%prefix%", BungeeMessages.PREFIX.color())
+                                        .replace("%server%", player.getServer().getInfo().getName())
+                                        .replace("%displayname%", player.getName())
+                                        .replace("%userprefix%", "")
+                                        .replace("%usersuffix%", "")
                                         .replace("%user%", player.getName()))));
 
                     }
@@ -122,7 +169,7 @@ public class JoinListener implements Listener {
     @EventHandler
     public void handle(PlayerDisconnectEvent event) {
 
-        ProxiedPlayer player = event.getPlayer();
+        final ProxiedPlayer player = event.getPlayer();
 
         PlayerCache.getAfk().remove(player.getUniqueId());
 
@@ -142,6 +189,26 @@ public class JoinListener implements Listener {
                     final String user_prefix = prefix == null ? "" : prefix;
                     final String user_suffix = suffix == null ? "" : suffix;
 
+                    if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+                        final String final_message = BungeeMessages.STAFF_QUIT_MESSAGE_FORMAT.get(String.class)
+                                .replace("%user%", player.getName())
+                                .replace("%displayname%", user_prefix + player.getName() + user_suffix)
+                                .replace("%userprefix%", user_prefix)
+                                .replace("%usersuffix%", user_suffix)
+                                .replace("%prefix%", BungeeMessages.PREFIX.color())
+                                .replace("%server%", player.getServer().getInfo().getName())
+                                .replace("&", "§");
+
+
+                        final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                        redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffOtherMessage-RedisBungee", final_message);
+
+                        return;
+
+                    }
+
                     if (CleanStaffChat.getInstance().getProxy().getPlayers().size() >= 1) {
 
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
@@ -152,11 +219,32 @@ public class JoinListener implements Listener {
                                         .replace("%displayname%", user_prefix + player.getName() + user_suffix)
                                         .replace("%userprefix%", user_prefix)
                                         .replace("%usersuffix%", user_suffix)
+                                        .replace("%server%", player.getServer().getInfo().getName())
                                         .replace("%user%", player.getName()))));
 
                     }
 
                 } else {
+
+                    if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+                        final String final_message = BungeeMessages.STAFF_QUIT_MESSAGE_FORMAT.get(String.class)
+                                .replace("%user%", player.getName())
+                                .replace("%displayname%", player.getName())
+                                .replace("%userprefix%", "")
+                                .replace("%usersuffix%", "")
+                                .replace("%prefix%", BungeeMessages.PREFIX.color())
+                                .replace("%server%", player.getServer().getInfo().getName())
+                                .replace("&", "§");
+
+
+                        final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                        redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffOtherMessage-RedisBungee", final_message);
+
+                        return;
+
+                    }
 
                     if (CleanStaffChat.getInstance().getProxy().getPlayers().size() >= 1) {
 
@@ -165,6 +253,10 @@ public class JoinListener implements Listener {
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                                 .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFF_QUIT_MESSAGE_FORMAT.color()
                                         .replace("%prefix%", BungeeMessages.PREFIX.color())
+                                        .replace("%server%", player.getServer().getInfo().getName())
+                                        .replace("%displayname%", player.getName())
+                                        .replace("%userprefix%", "")
+                                        .replace("%usersuffix%", "")
                                         .replace("%user%", player.getName()))));
 
                     }

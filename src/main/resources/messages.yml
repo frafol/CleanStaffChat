@@ -28,9 +28,14 @@ messages:
 
     # Chat Formats (If you use LuckPerms you can use %displayname%, %userprefix% and %usersuffix%).
     staffchat_format: "%prefix% &7%userprefix% %user% &8» &7%message%" # You can use %server% on BungeeCord or Velocity.
+
+    # You can use %server% on BungeeCord or Velocity.
     staff_join_message_format: "%prefix% &7[&a+&7] &f&d%user%"
     staff_quit_message_format: "%prefix% &7[&c-&7] &f&d%user%"
+
     staff_switch_message_format: "%prefix% &7%user% &8(&d%serverbefore% &e➜ &d%server%&8)" # This won't work if you run your plugin on bukkit.
+
+    # You can use %server% on BungeeCord or Velocity.
     staff_afk_on_message_format: "%prefix% &7%user% is now &aAFK&7."
     staff_afk_off_message_format: "%prefix% &7%user% is no longer &aAFK&7."
 

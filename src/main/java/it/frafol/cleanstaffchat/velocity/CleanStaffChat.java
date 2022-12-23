@@ -37,7 +37,7 @@ import java.nio.file.Path;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.7.2",
+        version = "1.7.3",
         dependencies = {@Dependency(id = "redisbungee", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
@@ -60,7 +60,7 @@ public class CleanStaffChat {
         return instance;
     }
 
-    public static String Version = "1.7.2";
+    public static String Version = "1.7.3";
 
     @Inject
     public CleanStaffChat(ProxyServer server, Logger logger, @DataDirectory Path path, Metrics.Factory metricsFactory) {

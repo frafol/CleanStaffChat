@@ -19,6 +19,7 @@ import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -33,7 +34,7 @@ public class JoinListener {
     }
 
     @Subscribe
-    public void handle(PostLoginEvent event){
+    public void handle(@NotNull PostLoginEvent event){
 
         if (event.getPlayer().hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
             if (VelocityConfig.UPDATE_CHECK.get(Boolean.class) && !CleanStaffChat.Version.contains("alpha")) {
@@ -49,7 +50,11 @@ public class JoinListener {
         }
 
         if (!(CleanStaffChat.getInstance().getServer().getAllPlayers().size() < 1)) {
-            Player player = event.getPlayer();
+
+            final Player player = event.getPlayer();
+
+            assert (player.getCurrentServer().isPresent());
+
             if (STAFF_JOIN_MESSAGE.get(Boolean.class)) {
                 if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                         || STAFFCHAT_JOIN_LEAVE_ALL.get(Boolean.class)) {
@@ -73,6 +78,7 @@ public class JoinListener {
                                     .replace("%userprefix%", user_prefix)
                                     .replace("%usersuffix%", user_suffix)
                                     .replace("%prefix%", VelocityMessages.PREFIX.color())
+                                    .replace("%server%", player.getCurrentServer().get().getServerInfo().getName())
                                     .replace("&", "§");
 
 
@@ -104,6 +110,7 @@ public class JoinListener {
                                     .replace("%userprefix%", "")
                                     .replace("%usersuffix%", "")
                                     .replace("%prefix%", VelocityMessages.PREFIX.color())
+                                    .replace("%server%", player.getCurrentServer().get().getServerInfo().getName())
                                     .replace("&", "§");
 
 
@@ -158,9 +165,11 @@ public class JoinListener {
     }
 
     @Subscribe
-    public void handle(DisconnectEvent event) {
+    public void handle(@NotNull DisconnectEvent event) {
 
-        Player player = event.getPlayer();
+        final Player player = event.getPlayer();
+
+        assert (player.getCurrentServer().isPresent());
 
         PlayerCache.getAfk().remove(player.getUniqueId());
 
@@ -194,6 +203,7 @@ public class JoinListener {
                                 .replace("%userprefix%", user_prefix)
                                 .replace("%usersuffix%", user_suffix)
                                 .replace("%prefix%", VelocityMessages.PREFIX.color())
+                                .replace("%server%", player.getCurrentServer().get().getServerInfo().getName())
                                 .replace("&", "§");
 
 
@@ -215,6 +225,7 @@ public class JoinListener {
                                         new Placeholder("displayname", user_prefix + player.getUsername() + user_suffix),
                                         new Placeholder("userprefix", user_prefix),
                                         new Placeholder("usersuffix", user_suffix),
+                                        new Placeholder("server", player.getCurrentServer().get().getServerInfo().getName()),
                                         new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
                     }
@@ -229,6 +240,7 @@ public class JoinListener {
                                 .replace("%userprefix%", "")
                                 .replace("%usersuffix%", "")
                                 .replace("%prefix%", VelocityMessages.PREFIX.color())
+                                .replace("%server%", player.getCurrentServer().get().getServerInfo().getName())
                                 .replace("&", "§");
 
 
@@ -247,6 +259,7 @@ public class JoinListener {
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                                 .forEach(players -> VelocityMessages.STAFF_QUIT_MESSAGE_FORMAT.send(players,
                                         new Placeholder("user", player.getUsername()),
+                                        new Placeholder("server", player.getCurrentServer().get().getServerInfo().getName()),
                                         new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
                     }

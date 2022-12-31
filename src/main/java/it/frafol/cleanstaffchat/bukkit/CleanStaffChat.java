@@ -3,7 +3,6 @@ package it.frafol.cleanstaffchat.bukkit;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotCommandsConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
-import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import it.frafol.cleanstaffchat.bukkit.objects.TextFile;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.CommandBase;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl.ReloadCommand;
@@ -278,19 +277,6 @@ public class CleanStaffChat extends JavaPlugin {
         getLogger().info("Deleting instances...");
         instance = null;
         configTextFile = null;
-
-        getLogger().info("Clearing lists...");
-        PlayerCache.getToggled_2().clear();
-        PlayerCache.getToggled().clear();
-        PlayerCache.getToggled_donor().clear();
-        PlayerCache.getToggled_admin().clear();
-        PlayerCache.getToggled_2_donor().clear();
-        PlayerCache.getToggled_2_admin().clear();
-        PlayerCache.getCooldown_discord().clear();
-        PlayerCache.getMuted().clear();
-        PlayerCache.getMuted_admin().clear();
-        PlayerCache.getMuted_donor().clear();
-        PlayerCache.getAfk().clear();
 
         getLogger().info("Successfully disabled.");
     }

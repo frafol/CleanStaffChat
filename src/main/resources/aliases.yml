@@ -21,8 +21,8 @@ aliases:
     toggle:
       - "staffchattoggle"
       - "staffchatoggle"
-      - "actoggle"
-      - "admintoggle"
+      - "sctoggle"
+      - "stafftoggle"
       - "cleansctoggle"
       - "cleanstaffchattoggle"
 

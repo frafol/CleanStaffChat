@@ -17,7 +17,6 @@ import it.frafol.cleanstaffchat.velocity.enums.VelocityDiscordConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityRedis;
 import it.frafol.cleanstaffchat.velocity.hooks.RedisListener;
 import it.frafol.cleanstaffchat.velocity.objects.JdaBuilder;
-import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import it.frafol.cleanstaffchat.velocity.objects.TextFile;
 import it.frafol.cleanstaffchat.velocity.staffchat.commands.*;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.ChatListener;
@@ -195,10 +194,6 @@ public class CleanStaffChat {
         instance = null;
         configTextFile = null;
 
-        logger.info("§7Clearing lists...");
-
-        clearCache();
-
         logger.info("§7Successfully §ddisabled§7.");
     }
 
@@ -209,22 +204,6 @@ public class CleanStaffChat {
         discordTextFile = new TextFile(path, "discord.yml");
         aliasesTextFile = new TextFile(path, "aliases.yml");
         redisTextFile = new TextFile(path, "redis.yml");
-
-    }
-
-    private void clearCache() {
-
-        PlayerCache.getToggled_2().clear();
-        PlayerCache.getToggled().clear();
-        PlayerCache.getToggled_donor().clear();
-        PlayerCache.getToggled_admin().clear();
-        PlayerCache.getToggled_2_donor().clear();
-        PlayerCache.getToggled_2_admin().clear();
-        PlayerCache.getCooldown_discord().clear();
-        PlayerCache.getMuted().clear();
-        PlayerCache.getMuted_admin().clear();
-        PlayerCache.getMuted_donor().clear();
-        PlayerCache.getAfk().clear();
 
     }
 

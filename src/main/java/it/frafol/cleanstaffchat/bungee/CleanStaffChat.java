@@ -7,7 +7,6 @@ import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeRedis;
 import it.frafol.cleanstaffchat.bungee.hooks.RedisListener;
-import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import it.frafol.cleanstaffchat.bungee.objects.TextFile;
 import it.frafol.cleanstaffchat.bungee.staffchat.commands.ReloadCommand;
 import it.frafol.cleanstaffchat.bungee.staffchat.listeners.ChatListener;
@@ -182,28 +181,7 @@ public class CleanStaffChat extends Plugin {
         instance = null;
         configTextFile = null;
 
-        getLogger().info("§7Clearing lists...");
-        clearCache();
-
         getLogger().info("§7Successfully §ddisabled§7.");
-    }
-
-
-    private void clearCache() {
-
-        PlayerCache.getToggled_2().clear();
-        PlayerCache.getToggled_2_admin().clear();
-        PlayerCache.getToggled_2_donor().clear();
-        PlayerCache.getToggled().clear();
-        PlayerCache.getCooldown().clear();
-        PlayerCache.getCooldown_discord().clear();
-        PlayerCache.getToggled_admin().clear();
-        PlayerCache.getToggled_donor().clear();
-        PlayerCache.getMuted().clear();
-        PlayerCache.getMuted_admin().clear();
-        PlayerCache.getMuted_donor().clear();
-        PlayerCache.getAfk().clear();
-
     }
 
     private void UpdateChecker() {

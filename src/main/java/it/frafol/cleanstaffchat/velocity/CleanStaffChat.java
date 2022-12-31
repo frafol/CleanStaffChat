@@ -37,7 +37,7 @@ import java.nio.file.Path;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.7.3",
+        version = "1.7.4",
         dependencies = {@Dependency(id = "redisbungee", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
@@ -60,7 +60,7 @@ public class CleanStaffChat {
         return instance;
     }
 
-    public static String Version = "1.7.3";
+    public static String Version = "1.7.4";
 
     @Inject
     public CleanStaffChat(ProxyServer server, Logger logger, @DataDirectory Path path, Metrics.Factory metricsFactory) {
@@ -91,7 +91,7 @@ public class CleanStaffChat {
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
                 .version("5.0.0-beta.2")
-                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-alpha.14/JDA-5.0.0-alpha.14-withDependencies-min.jar")
+                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.2/JDA-5.0.0-beta.2-withDependencies-min.jar")
                 .build();
 
         velocityLibraryManager.addMavenCentral();

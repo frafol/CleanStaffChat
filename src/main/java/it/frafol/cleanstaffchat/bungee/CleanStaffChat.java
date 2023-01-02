@@ -47,7 +47,7 @@ public class CleanStaffChat extends Plugin {
         Library yaml = Library.builder()
                 .groupId("me{}carleslc{}Simple-YAML")
                 .artifactId("Simple-Yaml")
-                .version("1.7.2")
+                .version("1.8.3")
                 .build();
 
         Library discord = Library.builder()

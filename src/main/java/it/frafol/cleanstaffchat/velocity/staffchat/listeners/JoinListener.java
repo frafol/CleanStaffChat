@@ -169,9 +169,11 @@ public class JoinListener {
 
         final Player player = event.getPlayer();
 
-        assert (player.getCurrentServer().isPresent());
-
         PlayerCache.getAfk().remove(player.getUniqueId());
+
+        if (!player.getCurrentServer().isPresent()) {
+            return;
+        }
 
         if (STAFF_QUIT_MESSAGE.get(Boolean.class)) {
 

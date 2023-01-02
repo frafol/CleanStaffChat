@@ -173,6 +173,10 @@ public class JoinListener implements Listener {
 
         PlayerCache.getAfk().remove(player.getUniqueId());
 
+        if (player.getServer() == null) {
+            return;
+        }
+
         if (BungeeConfig.STAFF_QUIT_MESSAGE.get(Boolean.class)) {
 
             if (player.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))

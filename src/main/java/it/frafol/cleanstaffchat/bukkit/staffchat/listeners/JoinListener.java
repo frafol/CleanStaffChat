@@ -44,7 +44,7 @@ public class JoinListener implements Listener {
 
         if (!(CleanStaffChat.getInstance().getServer().getOnlinePlayers().size() < 1)) {
 
-            Player player = event.getPlayer();
+            final Player player = event.getPlayer();
 
             if (SpigotConfig.STAFF_JOIN_MESSAGE.get(Boolean.class)) {
 
@@ -136,7 +136,7 @@ public class JoinListener implements Listener {
     @EventHandler
     public void handle(PlayerQuitEvent event) {
 
-        Player player = event.getPlayer();
+        final Player player = event.getPlayer();
 
         if (SpigotConfig.STAFF_QUIT_MESSAGE.get(Boolean.class)) {
 

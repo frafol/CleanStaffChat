@@ -7,6 +7,10 @@ import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeRedis;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
+import me.TechsCode.UltraPermissions.UltraPermissions;
+import me.TechsCode.UltraPermissions.UltraPermissionsAPI;
+import me.TechsCode.UltraPermissions.storage.collection.UserList;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -23,6 +27,7 @@ import net.md_5.bungee.event.EventHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public class ChatListener extends ListenerAdapter implements Listener {
@@ -120,6 +125,26 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         final String user_prefix = prefix == null ? "" : prefix;
                         final String user_suffix = suffix == null ? "" : suffix;
 
+                        if ((ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class))) {
+
+                            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                            final String final_message = VelocityMessages.DONORCHAT_FORMAT.get(String.class)
+                                    .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
+                                    .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
+                                    .replace("%message%", message)
+                                    .replace("%displayname%", user_prefix + ((ProxiedPlayer) event.getSender()).getName() + user_suffix)
+                                    .replace("%userprefix%", user_prefix)
+                                    .replace("%usersuffix%", user_suffix)
+                                    .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
+                                    .replace("&", "§");
+
+                            redisBungeeAPI.sendChannelMessage("CleanStaffChat-DonorMessage-RedisBungee", final_message);
+
+                            return;
+
+                        }
+
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
@@ -132,8 +157,78 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                         .replace("%usersuffix%", user_suffix)
                                         .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
                                         .replace("&", "§"))));
+                    }
+
+                    if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {
+
+                        final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
+                        final UserList userList = ultraPermissionsAPI.getUsers();
+
+                        if (!userList.uuid(((ProxiedPlayer) event.getSender()).getUniqueId()).isPresent()) {
+                            return;
+                        }
+
+                        final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(((ProxiedPlayer) event.getSender()).getUniqueId()).get();
+
+                        final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
+                        final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
+                        final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
+                        final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+
+                        if ((ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class))) {
+
+                            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                            final String final_message = BungeeMessages.DONORCHAT_FORMAT.get(String.class)
+                                    .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
+                                    .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
+                                    .replace("%message%", message)
+                                    .replace("%displayname%", ultraPermissionsUserPrefixFinal + ((ProxiedPlayer) event.getSender()).getName() + ultraPermissionsUserSuffixFinal)
+                                    .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
+                                    .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
+                                    .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
+                                    .replace("&", "§");
+
+                            redisBungeeAPI.sendChannelMessage("CleanStaffChat-DonorMessage-RedisBungee", final_message);
+
+                            return;
+
+                        }
+
+                        CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
+                                        (players -> players.hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))
+                                                && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_FORMAT.color()
+                                        .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
+                                        .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
+                                        .replace("%message%", message)
+                                        .replace("%displayname%", ultraPermissionsUserPrefixFinal + ((ProxiedPlayer) event.getSender()).getName() + ultraPermissionsUserSuffixFinal)
+                                        .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
+                                        .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
+                                        .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
+                                        .replace("&", "§"))));
 
                     } else {
+
+                        if ((ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class))) {
+
+                            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                            final String final_message = BungeeMessages.DONORCHAT_FORMAT.get(String.class)
+                                    .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
+                                    .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
+                                    .replace("%message%", message)
+                                    .replace("%displayname%", ((ProxiedPlayer) event.getSender()).getName())
+                                    .replace("%userprefix%", "")
+                                    .replace("%usersuffix%", "")
+                                    .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
+                                    .replace("&", "§");
+
+                            redisBungeeAPI.sendChannelMessage("CleanStaffChat-DonorMessage-RedisBungee", final_message);
+
+                            return;
+
+                        }
 
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))

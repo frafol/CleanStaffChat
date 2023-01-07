@@ -5,3 +5,4 @@ author: frafol
 softDepends:
   - RedisBungee
   - LuckPerms
+  - UltraPermissions

@@ -18,6 +18,7 @@ public class TextFile {
 
     @SneakyThrows
     public TextFile(Path path, String fileName) {
+
         if (!Files.exists(path)) {
             Files.createDirectory(path);
         }
@@ -37,7 +38,9 @@ public class TextFile {
 
     }
 
-    public YamlFile getConfig() {return yamlFile;}
+    public YamlFile getConfig() {
+        return yamlFile;
+    }
 
     @SneakyThrows
     public void reload() {

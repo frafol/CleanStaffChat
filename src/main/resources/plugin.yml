@@ -5,3 +5,4 @@ authors: [ frafol ]
 description: Best StaffChat plugin.
 softdepend:
   - LuckPerms
+  - UltraPermissions

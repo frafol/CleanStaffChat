@@ -142,9 +142,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                         .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
                                         .replace("&", "§"))));
 
-                    }
-
-                    if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {
+                    } else if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {
 
                         final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
                         final UserList userList = ultraPermissionsAPI.getUsers();
@@ -212,7 +210,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                         final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
 
-                        assert channel != null;
+                        if (channel == null) {return;}
 
                         if (BungeeDiscordConfig.USE_EMBED.get(Boolean.class)) {
 

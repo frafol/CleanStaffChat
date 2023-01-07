@@ -166,7 +166,7 @@ public class AdminChatCommand implements SimpleCommand {
 
                         final User user = api.getUserManager().getUser(((Player) commandSource).getUniqueId());
 
-                        assert user != null;
+                        if (user == null) {return;}
                         final String prefix = user.getCachedData().getMetaData().getPrefix();
                         final String suffix = user.getCachedData().getMetaData().getSuffix();
                         final String user_prefix = prefix == null ? "" : prefix;
@@ -244,7 +244,7 @@ public class AdminChatCommand implements SimpleCommand {
 
                         final TextChannel channel = PLUGIN.getJda().JdaWorker().getTextChannelById(VelocityDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
 
-                        assert channel != null;
+                        if (channel == null) {return;}
 
                         if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
@@ -313,7 +313,7 @@ public class AdminChatCommand implements SimpleCommand {
 
                             final TextChannel channel = PLUGIN.getJda().JdaWorker().getTextChannelById(VelocityDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
 
-                            assert channel != null;
+                            if (channel == null) {return;}
 
                             if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
 

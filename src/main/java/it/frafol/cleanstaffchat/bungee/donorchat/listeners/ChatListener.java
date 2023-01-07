@@ -7,7 +7,6 @@ import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeRedis;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import me.TechsCode.UltraPermissions.UltraPermissions;
 import me.TechsCode.UltraPermissions.UltraPermissionsAPI;
 import me.TechsCode.UltraPermissions.storage.collection.UserList;
@@ -119,7 +118,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         LuckPerms api = LuckPermsProvider.get();
 
                         User user = api.getUserManager().getUser(((ProxiedPlayer) event.getSender()).getUniqueId());
-                        assert user != null;
+                        if (user == null) {return;}
                         final String prefix = user.getCachedData().getMetaData().getPrefix();
                         final String suffix = user.getCachedData().getMetaData().getSuffix();
                         final String user_prefix = prefix == null ? "" : prefix;
@@ -129,7 +128,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                             final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
 
-                            final String final_message = VelocityMessages.DONORCHAT_FORMAT.get(String.class)
+                            final String final_message = BungeeMessages.DONORCHAT_FORMAT.get(String.class)
                                     .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
                                     .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
                                     .replace("%message%", message)
@@ -157,9 +156,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                         .replace("%usersuffix%", user_suffix)
                                         .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
                                         .replace("&", "§"))));
-                    }
-
-                    if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {
+                        
+                    } else if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {
 
                         final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
                         final UserList userList = ultraPermissionsAPI.getUsers();
@@ -247,7 +245,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                         final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeDiscordConfig.DONOR_CHANNEL_ID.get(String.class));
 
-                        assert channel != null;
+                        if (channel == null) {return;}
 
                         if (BungeeDiscordConfig.USE_EMBED.get(Boolean.class)) {
 

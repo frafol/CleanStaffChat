@@ -26,7 +26,7 @@ messages:
     staffchat_toggled_on: "%prefix% &7The StaffChat is now &avisible&7."
     staffchat_toggled_off: "%prefix% &7The StaffChat is now &ainvisible&7."
 
-    # Chat Formats (If you use LuckPerms you can use %displayname%, %userprefix% and %usersuffix%).
+    # Chat Formats (If you use LuckPerms/UltraPermissions you can use %displayname%, %userprefix% and %usersuffix%).
     staffchat_format: "%prefix% &7%userprefix% %user% &8» &7%message%" # You can use %server% on BungeeCord or Velocity.
 
     # You can use %server% on BungeeCord or Velocity.
@@ -66,7 +66,7 @@ messages:
     adminchat_toggled_on: "%prefix% &7The AdminChat is now &avisible&7."
     adminchat_toggled_off: "%prefix% &7The AdminChat is now &ainvisible&7."
 
-    # Chat Format (If you use LuckPerms you can use %displayname%, %userprefix% and %usersuffix%).
+    # Chat Format (If you use LuckPerms/UltraPermissions you can use %displayname%, %userprefix% and %usersuffix%).
     adminchat_format: "%prefix% &7%userprefix% %user% &8» &7%message%" # You can use %server% on BungeeCord or Velocity.
 
     discord:
@@ -94,7 +94,7 @@ messages:
     donorchat_toggled_on: "%prefix% &7The DonorChat is now &avisible&7."
     donorchat_toggled_off: "%prefix% &7The DonorChat is now &ainvisible&7."
 
-    # Chat Formats (If you use LuckPerms you can use %displayname%, %userprefix% and %usersuffix%).
+    # Chat Formats (If you use LuckPerms/UltraPermissions you can use %displayname%, %userprefix% and %usersuffix%).
     donorchat_format: "%prefix% &7%userprefix% %user% &8» &7%message%" # You can use %server% on BungeeCord or Velocity.
 
     discord:

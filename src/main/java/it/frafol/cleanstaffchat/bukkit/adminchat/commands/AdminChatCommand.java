@@ -6,6 +6,9 @@ import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.CommandBase;
+import me.TechsCode.UltraPermissions.UltraPermissions;
+import me.TechsCode.UltraPermissions.UltraPermissionsAPI;
+import me.TechsCode.UltraPermissions.storage.collection.UserList;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.luckperms.api.LuckPerms;
@@ -19,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class AdminChatCommand extends CommandBase {
 
@@ -140,7 +144,11 @@ public class AdminChatCommand extends CommandBase {
                         LuckPerms api = LuckPermsProvider.get();
 
                         User user = api.getUserManager().getUser(((Player) sender).getUniqueId());
-                        assert user != null;
+
+                        if (user == null) {
+                            return false;
+                        }
+
                         final String prefix = user.getCachedData().getMetaData().getPrefix();
                         final String suffix = user.getCachedData().getMetaData().getSuffix();
                         final String user_prefix = prefix == null ? "" : prefix;
@@ -156,6 +164,35 @@ public class AdminChatCommand extends CommandBase {
                                         .replace("%message%", message)
                                         .replace("%userprefix%", user_prefix)
                                         .replace("%usersuffix%", user_suffix)
+                                        .replace("%server%", "")
+                                        .replace("&", "§")));
+
+                    } else if (Bukkit.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {
+
+                        final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
+                        final UserList userList = ultraPermissionsAPI.getUsers();
+
+                        if (!userList.uuid(((Player) sender).getUniqueId()).isPresent()) {
+                            return false;
+                        }
+
+                        final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(((Player) sender).getUniqueId()).get();
+
+                        final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
+                        final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
+                        final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
+                        final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+
+                        CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                                        (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
+                                                && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
+                                .forEach(players -> players.sendMessage(SpigotMessages.ADMINCHAT_FORMAT.color()
+                                        .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
+                                        .replace("%user%", commandsender)
+                                        .replace("%displayname%", ultraPermissionsUserPrefixFinal + commandsender + ultraPermissionsUserSuffixFinal)
+                                        .replace("%message%", message)
+                                        .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
+                                        .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
                                         .replace("%server%", "")
                                         .replace("&", "§")));
 
@@ -180,7 +217,7 @@ public class AdminChatCommand extends CommandBase {
 
                         final TextChannel channel = plugin.getJda().getTextChannelById(SpigotDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
 
-                        assert channel != null;
+                        if (channel == null) {return false;}
 
                         if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
@@ -247,7 +284,7 @@ public class AdminChatCommand extends CommandBase {
 
                         final TextChannel channel = plugin.getJda().getTextChannelById(SpigotDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
 
-                        assert channel != null;
+                        if (channel == null) {return false;}
 
                         if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 

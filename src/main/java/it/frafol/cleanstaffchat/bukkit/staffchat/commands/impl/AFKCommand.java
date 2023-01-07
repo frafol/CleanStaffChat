@@ -5,6 +5,9 @@ import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.CommandBase;
+import me.TechsCode.UltraPermissions.UltraPermissions;
+import me.TechsCode.UltraPermissions.UltraPermissionsAPI;
+import me.TechsCode.UltraPermissions.storage.collection.UserList;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -13,6 +16,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
+import java.util.Optional;
 
 public class AFKCommand extends CommandBase {
 
@@ -52,7 +56,7 @@ public class AFKCommand extends CommandBase {
 
                 final User user = api.getUserManager().getUser(player.getUniqueId());
 
-                assert user != null;
+                if (user == null) {return false;}
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
                 final String user_prefix = prefix == null ? "" : prefix;
@@ -68,6 +72,34 @@ public class AFKCommand extends CommandBase {
                                 .replace("%userprefix%", user_prefix)
                                 .replace("%server%", "")
                                 .replace("%usersuffix%", user_suffix)));
+
+            } else if (Bukkit.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {
+
+                final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
+                final UserList userList = ultraPermissionsAPI.getUsers();
+
+                if (!userList.uuid(((Player) sender).getUniqueId()).isPresent()) {
+                    return false;
+                }
+
+                final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(((Player) sender).getUniqueId()).get();
+
+                final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
+                final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
+                final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
+                final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+
+                CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                                (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                        && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_ON.color()
+                                .replace("%prefix%", SpigotMessages.PREFIX.color())
+                                .replace("%user%", player.getName())
+                                .replace("%displayname%", ultraPermissionsUserPrefixFinal + player.getName() + ultraPermissionsUserSuffixFinal)
+                                .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
+                                .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
+                                .replace("%server%", "")
+                                .replace("&", "§")));
 
             } else {
 
@@ -94,7 +126,7 @@ public class AFKCommand extends CommandBase {
 
                 final User user = api.getUserManager().getUser(player.getUniqueId());
 
-                assert user != null;
+                if (user == null) {return false;}
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
                 final String user_prefix = prefix == null ? "" : prefix;
@@ -110,6 +142,34 @@ public class AFKCommand extends CommandBase {
                                 .replace("%userprefix%", user_prefix)
                                 .replace("%server%", "")
                                 .replace("%usersuffix%", user_suffix)));
+
+            } else if (Bukkit.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {
+
+                final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
+                final UserList userList = ultraPermissionsAPI.getUsers();
+
+                if (!userList.uuid(((Player) sender).getUniqueId()).isPresent()) {
+                    return false;
+                }
+
+                final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(((Player) sender).getUniqueId()).get();
+
+                final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
+                final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
+                final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
+                final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+
+                CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                                (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                        && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_OFF.color()
+                                .replace("%prefix%", SpigotMessages.PREFIX.color())
+                                .replace("%user%", player.getName())
+                                .replace("%displayname%", ultraPermissionsUserPrefixFinal + player.getName() + ultraPermissionsUserSuffixFinal)
+                                .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
+                                .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
+                                .replace("%server%", "")
+                                .replace("&", "§")));
 
             } else {
 

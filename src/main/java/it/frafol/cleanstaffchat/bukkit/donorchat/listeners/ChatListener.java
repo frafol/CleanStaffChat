@@ -5,6 +5,9 @@ import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
+import me.TechsCode.UltraPermissions.UltraPermissions;
+import me.TechsCode.UltraPermissions.UltraPermissionsAPI;
+import me.TechsCode.UltraPermissions.storage.collection.UserList;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -20,6 +23,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.Optional;
 
 public class ChatListener extends ListenerAdapter implements Listener {
 
@@ -131,7 +135,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                         final User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
 
-                        assert user != null;
+                        if (user == null) {return;}
                         final String prefix = user.getCachedData().getMetaData().getPrefix();
                         final String suffix = user.getCachedData().getMetaData().getSuffix();
                         final String user_prefix = prefix == null ? "" : prefix;
@@ -148,6 +152,35 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                         .replace("%userprefix%", user_prefix)
                                         .replace("%server%", "")
                                         .replace("%usersuffix%", user_suffix)
+                                        .replace("&", "§")));
+
+                    } else if (Bukkit.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {
+
+                        final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
+                        final UserList userList = ultraPermissionsAPI.getUsers();
+
+                        if (!userList.uuid(event.getPlayer().getUniqueId()).isPresent()) {
+                            return;
+                        }
+
+                        final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(event.getPlayer().getUniqueId()).get();
+
+                        final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
+                        final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
+                        final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
+                        final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+
+                        CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                                        (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
+                                                && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
+                                .forEach(players -> players.sendMessage(SpigotMessages.DONORCHAT_FORMAT.color()
+                                        .replace("%prefix%", SpigotMessages.DONORPREFIX.color())
+                                        .replace("%user%", event.getPlayer().getName())
+                                        .replace("%displayname%", ultraPermissionsUserPrefixFinal + event.getPlayer().getName() + ultraPermissionsUserSuffixFinal)
+                                        .replace("%message%", message)
+                                        .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
+                                        .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
+                                        .replace("%server%", "")
                                         .replace("&", "§")));
 
                     } else {
@@ -168,7 +201,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                         final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotDiscordConfig.DONOR_CHANNEL_ID.get(String.class));
 
-                        assert channel != null;
+                        if (channel == null) {return;}
 
                         if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 

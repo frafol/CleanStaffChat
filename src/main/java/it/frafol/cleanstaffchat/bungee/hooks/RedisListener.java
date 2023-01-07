@@ -59,13 +59,23 @@ public class RedisListener implements Listener {
 
         }
 
-        if (event.getChannel().equals("CleanStaffChat-StaffOtherMessage-RedisBungee")
-                || event.getChannel().equals("CleanStaffChat-StaffAFKMessage-RedisBungee")) {
+        if (event.getChannel().equals("CleanStaffChat-StaffOtherMessage-RedisBungee")) {
 
             final String player_message = event.getMessage();
 
             CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                             (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                    && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                    .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(player_message)));
+
+        }
+
+        if (event.getChannel().equals("CleanStaffChat-StaffAFKMessage-RedisBungee")) {
+
+            final String player_message = event.getMessage();
+
+            CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
+                            (players -> players.hasPermission(BungeeConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))
                                     && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                     .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(player_message)));
 

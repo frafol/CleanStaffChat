@@ -85,7 +85,7 @@ public class StaffChatCommand extends CommandBase {
 
             } else {
 
-                if (SpigotConfig.HIDE_ADVERTS.get(Boolean.class) != null && SpigotConfig.HIDE_ADVERTS.get(Boolean.class)) {
+                if (SpigotConfig.HIDE_ADVERTS.get(Boolean.class) != null && !SpigotConfig.HIDE_ADVERTS.get(Boolean.class)) {
                     sender.sendMessage(("§7This server is using §dCleanStaffChat §7by §dfrafol§7."));
                 }
 

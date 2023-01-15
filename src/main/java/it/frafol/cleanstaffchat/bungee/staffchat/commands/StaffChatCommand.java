@@ -69,7 +69,7 @@ public class StaffChatCommand extends Command {
 
             } else {
 
-                if (BungeeConfig.HIDE_ADVERTS.get(Boolean.class) != null && BungeeConfig.HIDE_ADVERTS.get(Boolean.class)) {
+                if (BungeeConfig.HIDE_ADVERTS.get(Boolean.class) != null && !BungeeConfig.HIDE_ADVERTS.get(Boolean.class)) {
                     sender.sendMessage(TextComponent.fromLegacyText("§7This server is using §dCleanStaffChat §7by §dfrafol§7."));
                 }
 

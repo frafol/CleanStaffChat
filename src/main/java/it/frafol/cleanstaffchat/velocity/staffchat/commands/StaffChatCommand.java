@@ -104,7 +104,9 @@ public class StaffChatCommand implements SimpleCommand {
 
             } else {
 
-                commandSource.sendMessage(Component.text("§7This server is using §dCleanStaffChat §7by §dfrafol§7."));
+                if (HIDE_ADVERTS.get(Boolean.class) != null && HIDE_ADVERTS.get(Boolean.class)) {
+                    commandSource.sendMessage(Component.text("§7This server is using §dCleanStaffChat §7by §dfrafol§7."));
+                }
 
                 return;
 

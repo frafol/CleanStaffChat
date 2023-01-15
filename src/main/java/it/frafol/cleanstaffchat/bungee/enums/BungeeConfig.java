@@ -7,6 +7,8 @@ public enum BungeeConfig {
     STAFFCHAT_JOIN_LEAVE_ALL("settings.staffchat.staff_join_all_players"),
     STAFFCHAT_QUIT_ALL("settings.staffchat.staff_quit_all_players"),
 
+    HIDE_ADVERTS("settings.hide_advertisements"),
+
     STAFFCHAT_AFK_MODULE("modules.staffchat_afk_module"),
     STAFFCHAT_NO_AFK_ONCHANGE_SERVER("settings.staffchat.staff_disable_afk_on_move"),
     STAFFCHAT_AFK_PERMISSION("settings.staffchat.staffchat_afk_permission"),

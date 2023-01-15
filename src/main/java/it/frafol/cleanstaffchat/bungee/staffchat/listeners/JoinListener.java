@@ -23,6 +23,7 @@ import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Optional;
@@ -36,7 +37,7 @@ public class JoinListener implements Listener {
     }
 
     @EventHandler
-    public void handle(PostLoginEvent event){
+    public void handle(@NotNull PostLoginEvent event){
 
         if (event.getPlayer().hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                 && (BungeeConfig.UPDATE_CHECK.get(Boolean.class)) && !PLUGIN.getDescription().getVersion().contains("alpha")) {
@@ -81,7 +82,6 @@ public class JoinListener implements Listener {
                                     .replace("%userprefix%", user_prefix)
                                     .replace("%usersuffix%", user_suffix)
                                     .replace("%prefix%", BungeeMessages.PREFIX.color())
-                                    .replace("%server%", player.getServer().getInfo().getName())
                                     .replace("&", "§");
 
 
@@ -101,7 +101,6 @@ public class JoinListener implements Listener {
                                         .replace("%displayname%", user_prefix + player.getName() + user_suffix)
                                         .replace("%userprefix%", user_prefix)
                                         .replace("%usersuffix%", user_suffix)
-                                        .replace("%server%", player.getServer().getInfo().getName())
                                         .replace("%user%", player.getName()))));
 
                     } else if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {
@@ -148,7 +147,6 @@ public class JoinListener implements Listener {
                                         .replace("%displayname%", ultraPermissionsUserPrefixFinal + player.getName() + ultraPermissionsUserSuffixFinal)
                                         .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
                                         .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
-                                        .replace("%server%", player.getServer().getInfo().getName())
                                         .replace("%user%", player.getName()))));
 
                     } else {
@@ -161,7 +159,6 @@ public class JoinListener implements Listener {
                                     .replace("%userprefix%", "")
                                     .replace("%usersuffix%", "")
                                     .replace("%prefix%", BungeeMessages.PREFIX.color())
-                                    .replace("%server%", player.getServer().getInfo().getName())
                                     .replace("&", "§");
 
 
@@ -221,7 +218,7 @@ public class JoinListener implements Listener {
     }
 
     @EventHandler
-    public void handle(PlayerDisconnectEvent event) {
+    public void handle(@NotNull PlayerDisconnectEvent event) {
 
         final ProxiedPlayer player = event.getPlayer();
 

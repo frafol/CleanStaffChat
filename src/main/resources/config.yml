@@ -18,6 +18,9 @@ settings:
   use_adminchat: true
   use_donorchat: true
 
+  # Hides the (This server is using CleanStaffChat by frafol) message.
+  hide_advertisements: false
+
   staffchat:
 
     # Activating these options, staff members will receive a message when another staff member enters/leaves the server.

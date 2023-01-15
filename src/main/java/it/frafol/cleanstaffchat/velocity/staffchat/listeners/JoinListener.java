@@ -78,7 +78,6 @@ public class JoinListener {
                                     .replace("%userprefix%", user_prefix)
                                     .replace("%usersuffix%", user_suffix)
                                     .replace("%prefix%", VelocityMessages.PREFIX.color())
-                                    .replace("%server%", player.getCurrentServer().get().getServerInfo().getName())
                                     .replace("&", "§");
 
 
@@ -110,7 +109,6 @@ public class JoinListener {
                                     .replace("%userprefix%", "")
                                     .replace("%usersuffix%", "")
                                     .replace("%prefix%", VelocityMessages.PREFIX.color())
-                                    .replace("%server%", player.getCurrentServer().get().getServerInfo().getName())
                                     .replace("&", "§");
 
 
@@ -205,7 +203,6 @@ public class JoinListener {
                                 .replace("%userprefix%", user_prefix)
                                 .replace("%usersuffix%", user_suffix)
                                 .replace("%prefix%", VelocityMessages.PREFIX.color())
-                                .replace("%server%", player.getCurrentServer().get().getServerInfo().getName())
                                 .replace("&", "§");
 
 
@@ -227,7 +224,6 @@ public class JoinListener {
                                         new Placeholder("displayname", user_prefix + player.getUsername() + user_suffix),
                                         new Placeholder("userprefix", user_prefix),
                                         new Placeholder("usersuffix", user_suffix),
-                                        new Placeholder("server", player.getCurrentServer().get().getServerInfo().getName()),
                                         new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
                     }
@@ -242,7 +238,6 @@ public class JoinListener {
                                 .replace("%userprefix%", "")
                                 .replace("%usersuffix%", "")
                                 .replace("%prefix%", VelocityMessages.PREFIX.color())
-                                .replace("%server%", player.getCurrentServer().get().getServerInfo().getName())
                                 .replace("&", "§");
 
 
@@ -261,7 +256,6 @@ public class JoinListener {
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                                 .forEach(players -> VelocityMessages.STAFF_QUIT_MESSAGE_FORMAT.send(players,
                                         new Placeholder("user", player.getUsername()),
-                                        new Placeholder("server", player.getCurrentServer().get().getServerInfo().getName()),
                                         new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
                     }

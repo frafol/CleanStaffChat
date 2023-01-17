@@ -11,6 +11,7 @@ import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityRedis;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
+import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -56,28 +57,7 @@ public class ChatListener extends ListenerAdapter {
                     if (!PlayerCache.getMuted().contains("true")) {
 
                         if (PREVENT_COLOR_CODES.get(Boolean.class)) {
-                            if (message.contains("&0") ||
-                                    message.contains("&1") ||
-                                    message.contains("&2") ||
-                                    message.contains("&3") ||
-                                    message.contains("&4") ||
-                                    message.contains("&5") ||
-                                    message.contains("&6") ||
-                                    message.contains("&7") ||
-                                    message.contains("&8") ||
-                                    message.contains("&9") ||
-                                    message.contains("&a") ||
-                                    message.contains("&b") ||
-                                    message.contains("&c") ||
-                                    message.contains("&d") ||
-                                    message.contains("&e") ||
-                                    message.contains("&f") ||
-                                    message.contains("&k") ||
-                                    message.contains("&l") ||
-                                    message.contains("&m") ||
-                                    message.contains("&n") ||
-                                    message.contains("&o") ||
-                                    message.contains("&r")) {
+                            if (ChatUtil.hasColorCodes(message)) {
 
                                 VelocityMessages.COLOR_CODES.send(event.getPlayer(),
                                         new Placeholder("prefix", VelocityMessages.PREFIX.color()));

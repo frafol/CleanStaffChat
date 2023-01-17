@@ -19,19 +19,19 @@ public class ReloadCommand extends CommandBase {
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
 
-            if (sender.hasPermission(SpigotConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class))) {
+        if (!sender.hasPermission(SpigotConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class))) {
 
-                TextFile.reloadAll();
+            sender.sendMessage((SpigotMessages.NO_PERMISSION.color()
+                    .replace("%prefix%", SpigotMessages.PREFIX.color())));
 
-                sender.sendMessage((SpigotMessages.RELOADED.color()
-                        .replace("%prefix%", SpigotMessages.PREFIX.color())));
+            return false;
 
-            } else {
+        }
 
-                sender.sendMessage((SpigotMessages.NO_PERMISSION.color()
-                        .replace("%prefix%", SpigotMessages.PREFIX.color())));
+        TextFile.reloadAll();
 
-            }
+        sender.sendMessage((SpigotMessages.RELOADED.color()
+                .replace("%prefix%", SpigotMessages.PREFIX.color())));
 
         return false;
 

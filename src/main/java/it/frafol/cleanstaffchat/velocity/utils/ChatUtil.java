@@ -4,12 +4,13 @@ import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class ChatUtil {
     private static final CleanStaffChat instance = CleanStaffChat.getInstance();
 
-    public String getString(VelocityMessages velocityMessages) {
+    public String getString(@NotNull VelocityMessages velocityMessages) {
         return instance.getMessagesTextFile().getConfig().getString(velocityMessages.getPath());
     }
 
@@ -21,7 +22,7 @@ public class ChatUtil {
         return color(getString(velocityMessages, placeholders));
     }
 
-    public String applyPlaceholder(String s, Placeholder... placeholders) {
+    public String applyPlaceholder(String s, Placeholder @NotNull ... placeholders) {
         for (Placeholder placeholder : placeholders) {
             s = s.replace(placeholder.getKey(), placeholder.getValue());
         }
@@ -29,9 +30,35 @@ public class ChatUtil {
         return s;
     }
 
-    public String color(String s) {
+    public String color(@NotNull String s) {
 
         return s.replace("&", "§");
+
+    }
+
+    public boolean hasColorCodes(@NotNull String message) {
+        return message.contains("&0") ||
+                message.contains("&1") ||
+                message.contains("&2") ||
+                message.contains("&3") ||
+                message.contains("&4") ||
+                message.contains("&5") ||
+                message.contains("&6") ||
+                message.contains("&7") ||
+                message.contains("&8") ||
+                message.contains("&9") ||
+                message.contains("&a") ||
+                message.contains("&b") ||
+                message.contains("&c") ||
+                message.contains("&d") ||
+                message.contains("&e") ||
+                message.contains("&f") ||
+                message.contains("&k") ||
+                message.contains("&l") ||
+                message.contains("&m") ||
+                message.contains("&n") ||
+                message.contains("&o") ||
+                message.contains("&r");
 
     }
 }

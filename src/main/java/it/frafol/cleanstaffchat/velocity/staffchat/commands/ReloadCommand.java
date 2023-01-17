@@ -7,6 +7,7 @@ import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.TextFile;
+import org.jetbrains.annotations.NotNull;
 
 public class ReloadCommand implements SimpleCommand {
 
@@ -17,16 +18,22 @@ public class ReloadCommand implements SimpleCommand {
     }
 
     @Override
-    public void execute(Invocation invocation) {
-        CommandSource commandSource = invocation.source();
+    public void execute(@NotNull Invocation invocation) {
 
-        if (commandSource.hasPermission(VelocityConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class))) {
-            TextFile.reloadAll();
-            VelocityMessages.RELOADED.send(commandSource,
-                    new Placeholder("prefix", VelocityMessages.PREFIX.color()));
-        } else {
+        final CommandSource commandSource = invocation.source();
+
+        if (!commandSource.hasPermission(VelocityConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class))) {
+
             VelocityMessages.NO_PERMISSION.send(commandSource,
                     new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+
+            return;
         }
+
+        TextFile.reloadAll();
+
+        VelocityMessages.RELOADED.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+
     }
 }

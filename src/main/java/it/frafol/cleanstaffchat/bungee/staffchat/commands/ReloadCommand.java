@@ -6,6 +6,7 @@ import it.frafol.cleanstaffchat.bungee.objects.TextFile;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
+import org.jetbrains.annotations.NotNull;
 
 public class ReloadCommand extends Command {
 
@@ -14,14 +15,21 @@ public class ReloadCommand extends Command {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
-        if (sender.hasPermission(BungeeConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class))) {
-            TextFile.reloadAll();
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.RELOADED.color()
-                    .replace("%prefix%", BungeeMessages.PREFIX.color())));
-        } else {
+    public void execute(@NotNull CommandSender sender, String[] args) {
+
+        if (!sender.hasPermission(BungeeConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class))) {
+
             sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
+
+            return;
+
         }
+
+        TextFile.reloadAll();
+
+        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.RELOADED.color()
+                .replace("%prefix%", BungeeMessages.PREFIX.color())));
+
     }
 }

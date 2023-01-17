@@ -59,6 +59,7 @@ settings:
     donorchat_cooldown_bypass_permission: "donorchat.bypass"
 
   # By activating this option, you will not be able to send messages with formatting codes (&c, &f etc.).
+  # Can also fix blank messages.
   prevent_color_codes: false
 
 modules:

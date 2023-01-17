@@ -53,8 +53,8 @@ public class CleanStaffChat extends Plugin {
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.0.0-beta.2")
-                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.2/JDA-5.0.0-beta.2-withDependencies-min.jar")
+                .version("5.0.0-beta.3")
+                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.3/JDA-5.0.0-beta.3-withDependencies-min.jar")
                 .build();
 
         bungeeLibraryManager.addMavenCentral();

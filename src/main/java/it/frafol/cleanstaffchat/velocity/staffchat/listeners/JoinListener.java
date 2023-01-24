@@ -3,7 +3,7 @@ package it.frafol.cleanstaffchat.velocity.staffchat.listeners;
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
-import com.velocitypowered.api.event.connection.PostLoginEvent;
+import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.proxy.Player;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.UpdateCheck;
@@ -34,14 +34,21 @@ public class JoinListener {
     }
 
     @Subscribe
-    public void handle(@NotNull PostLoginEvent event){
+    @SuppressWarnings("UnstableApiUsage")
+    public void handle(@NotNull ServerPostConnectEvent event){
 
-        if (event.getPlayer().hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
+        if (event.getPreviousServer() != null) {
+            return;
+        }
+
+        final Player player = event.getPlayer();
+
+        if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
             if (VelocityConfig.UPDATE_CHECK.get(Boolean.class) && !CleanStaffChat.Version.contains("alpha")) {
                 new UpdateCheck(PLUGIN).getVersion(version -> {
                     if (PLUGIN.container.getDescription().getVersion().isPresent()) {
                         if (!PLUGIN.container.getDescription().getVersion().get().equals(version)) {
-                            event.getPlayer().sendMessage(Component.text("§e[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz"));
+                            player.sendMessage(Component.text("§e[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz"));
                             PLUGIN.getLogger().warn("There is a new update available, download it on SpigotMC!");
                         }
                     }
@@ -51,20 +58,24 @@ public class JoinListener {
 
         if (!(CleanStaffChat.getInstance().getServer().getAllPlayers().size() < 1)) {
 
-            final Player player = event.getPlayer();
-
-            assert (player.getCurrentServer().isPresent());
-
             if (STAFF_JOIN_MESSAGE.get(Boolean.class)) {
                 if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                         || STAFFCHAT_JOIN_LEAVE_ALL.get(Boolean.class)) {
+
+                    if (!player.getCurrentServer().isPresent()) {
+                        return;
+                    }
+
                     if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
                         final LuckPerms api = LuckPermsProvider.get();
 
-                        final User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
+                        final User user = api.getUserManager().getUser(player.getUniqueId());
 
-                        if (user == null) {return;}
+                        if (user == null) {
+                            return;
+                        }
+
                         final String prefix = user.getCachedData().getMetaData().getPrefix();
                         final String suffix = user.getCachedData().getMetaData().getSuffix();
                         final String user_prefix = prefix == null ? "" : prefix;
@@ -78,6 +89,7 @@ public class JoinListener {
                                     .replace("%userprefix%", user_prefix)
                                     .replace("%usersuffix%", user_suffix)
                                     .replace("%prefix%", VelocityMessages.PREFIX.color())
+                                    .replace("%server%", player.getCurrentServer().get().getServerInfo().getName())
                                     .replace("&", "§");
 
 
@@ -97,6 +109,7 @@ public class JoinListener {
                                         new Placeholder("displayname", user_prefix + player.getUsername() + user_suffix),
                                         new Placeholder("userprefix", user_prefix),
                                         new Placeholder("usersuffix", user_suffix),
+                                        new Placeholder("server", player.getCurrentServer().get().getServerInfo().getName()),
                                         new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
                     } else {
@@ -125,6 +138,10 @@ public class JoinListener {
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                                 .forEach(players -> VelocityMessages.STAFF_JOIN_MESSAGE_FORMAT.send(players,
                                         new Placeholder("user", player.getUsername()),
+                                        new Placeholder("displayname", player.getUsername()),
+                                        new Placeholder("userprefix", ""),
+                                        new Placeholder("usersuffix", ""),
+                                        new Placeholder("server", player.getCurrentServer().get().getServerInfo().getName()),
                                         new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
                     }
@@ -133,7 +150,9 @@ public class JoinListener {
 
                         final TextChannel channel = PLUGIN.getJda().JdaWorker().getTextChannelById(VelocityDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
-                        if (channel == null) {return;}
+                        if (channel == null) {
+                            return;
+                        }
 
                         if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
@@ -187,7 +206,9 @@ public class JoinListener {
                     }
 
                     User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
-                    if (user == null) {return;}
+                    if (user == null) {
+                        return;
+                    }
 
                     final String prefix = user.getCachedData().getMetaData().getPrefix();
                     final String suffix = user.getCachedData().getMetaData().getSuffix();
@@ -202,6 +223,7 @@ public class JoinListener {
                                 .replace("%displayname%", user_prefix + player.getUsername() + user_suffix)
                                 .replace("%userprefix%", user_prefix)
                                 .replace("%usersuffix%", user_suffix)
+                                .replace("%server%", player.getCurrentServer().get().getServerInfo().getName())
                                 .replace("%prefix%", VelocityMessages.PREFIX.color())
                                 .replace("&", "§");
 
@@ -224,6 +246,7 @@ public class JoinListener {
                                         new Placeholder("displayname", user_prefix + player.getUsername() + user_suffix),
                                         new Placeholder("userprefix", user_prefix),
                                         new Placeholder("usersuffix", user_suffix),
+                                        new Placeholder("server", player.getCurrentServer().get().getServerInfo().getName()),
                                         new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
                     }
@@ -237,6 +260,7 @@ public class JoinListener {
                                 .replace("%displayname%", player.getUsername())
                                 .replace("%userprefix%", "")
                                 .replace("%usersuffix%", "")
+                                .replace("%server%", player.getCurrentServer().get().getServerInfo().getName())
                                 .replace("%prefix%", VelocityMessages.PREFIX.color())
                                 .replace("&", "§");
 
@@ -256,6 +280,10 @@ public class JoinListener {
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                                 .forEach(players -> VelocityMessages.STAFF_QUIT_MESSAGE_FORMAT.send(players,
                                         new Placeholder("user", player.getUsername()),
+                                        new Placeholder("displayname", player.getUsername()),
+                                        new Placeholder("userprefix", ""),
+                                        new Placeholder("usersuffix", ""),
+                                        new Placeholder("server", player.getCurrentServer().get().getServerInfo().getName()),
                                         new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
                     }

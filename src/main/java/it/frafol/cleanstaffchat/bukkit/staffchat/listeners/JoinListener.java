@@ -1,7 +1,6 @@
 package it.frafol.cleanstaffchat.bukkit.staffchat.listeners;
 
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
-import it.frafol.cleanstaffchat.bukkit.UpdateCheck;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
@@ -15,7 +14,6 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -38,12 +36,7 @@ public class JoinListener implements Listener {
 
         if (event.getPlayer().hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                 && (SpigotConfig.UPDATE_CHECK.get(Boolean.class)) && !PLUGIN.getDescription().getVersion().contains("alpha")) {
-            new UpdateCheck(PLUGIN).getVersion(version -> {
-                if (!PLUGIN.getDescription().getVersion().equals(version)) {
-                    event.getPlayer().sendMessage(ChatColor.YELLOW + "[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz");
-                    PLUGIN.getLogger().warning("There is a new update available, download it on SpigotMC!");
-                }
-            });
+            PLUGIN.UpdateCheck(event.getPlayer());
         }
 
         if (!(CleanStaffChat.getInstance().getServer().getOnlinePlayers().size() < 1)) {

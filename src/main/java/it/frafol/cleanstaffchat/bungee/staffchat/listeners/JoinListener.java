@@ -2,7 +2,6 @@ package it.frafol.cleanstaffchat.bungee.staffchat.listeners;
 
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
-import it.frafol.cleanstaffchat.bungee.UpdateCheck;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
@@ -41,12 +40,7 @@ public class JoinListener implements Listener {
 
         if (event.getPlayer().hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                 && (BungeeConfig.UPDATE_CHECK.get(Boolean.class)) && !PLUGIN.getDescription().getVersion().contains("alpha")) {
-            new UpdateCheck(PLUGIN).getVersion(version -> {
-                if (!PLUGIN.getDescription().getVersion().equals(version)) {
-                    event.getPlayer().sendMessage(TextComponent.fromLegacyText("[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz"));
-                    PLUGIN.getLogger().warning("§eThere is a new update available, download it on SpigotMC!");
-                }
-            });
+            PLUGIN.UpdateCheck(event.getPlayer());
         }
 
         if (!(CleanStaffChat.getInstance().getProxy().getPlayers().size() < 1)) {

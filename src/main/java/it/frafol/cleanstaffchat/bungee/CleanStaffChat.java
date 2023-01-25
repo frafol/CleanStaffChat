@@ -19,6 +19,8 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.simpleyaml.configuration.file.YamlFile;
 
@@ -185,13 +187,19 @@ public class CleanStaffChat extends Plugin {
     }
 
     private void UpdateChecker() {
-
         new UpdateCheck(this).getVersion(version -> {
             if (!this.getDescription().getVersion().equals(version)) {
-                getLogger().warning("§eThere is a new update available, download it on SpigotMC!");
+                getLogger().warning("§eThere is a new update available, download it on https://bit.ly/3BOQFEz");
             }
         });
+    }
 
+    public void UpdateCheck(ProxiedPlayer player) {
+        new UpdateCheck(this).getVersion(version -> {
+            if (!getDescription().getVersion().equals(version)) {
+                player.sendMessage(TextComponent.fromLegacyText("[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz"));
+            }
+        });
     }
 
     private void registerRedisBungee() {

@@ -6,7 +6,6 @@ import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.proxy.Player;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
-import it.frafol.cleanstaffchat.velocity.UpdateCheck;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityDiscordConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
@@ -15,7 +14,6 @@ import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -43,17 +41,8 @@ public class JoinListener {
 
         final Player player = event.getPlayer();
 
-        if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
-            if (VelocityConfig.UPDATE_CHECK.get(Boolean.class) && !CleanStaffChat.Version.contains("alpha")) {
-                new UpdateCheck(PLUGIN).getVersion(version -> {
-                    if (PLUGIN.container.getDescription().getVersion().isPresent()) {
-                        if (!PLUGIN.container.getDescription().getVersion().get().equals(version)) {
-                            player.sendMessage(Component.text("§e[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz"));
-                            PLUGIN.getLogger().warn("There is a new update available, download it on SpigotMC!");
-                        }
-                    }
-                });
-            }
+        if (player.hasPermission(STAFFCHAT_RELOAD_PERMISSION.get(String.class))) {
+            PLUGIN.UpdateCheck(player);
         }
 
         if (!(CleanStaffChat.getInstance().getServer().getAllPlayers().size() < 1)) {

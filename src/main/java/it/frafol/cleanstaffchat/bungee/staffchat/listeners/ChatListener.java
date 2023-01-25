@@ -38,7 +38,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
     }
 
     @EventHandler
-    public void onChat(ChatEvent event) {
+    public void onChat(@NotNull ChatEvent event) {
 
         String message = event.getMessage();
 

@@ -8,6 +8,7 @@ import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
+import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import it.frafol.cleanstaffchat.velocity.adminchat.commands.AdminChatCommand;
 import it.frafol.cleanstaffchat.velocity.donorchat.commands.DonorChatCommand;
@@ -26,6 +27,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import net.byteflux.libby.Library;
 import net.byteflux.libby.VelocityLibraryManager;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
@@ -36,7 +38,7 @@ import java.nio.file.Path;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.8.1",
+        version = "1.8.2",
         dependencies = {@Dependency(id = "redisbungee", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
@@ -59,7 +61,7 @@ public class CleanStaffChat {
         return instance;
     }
 
-    public static String Version = "1.8.1";
+    public static String Version = "1.8.2";
 
     @Inject
     public CleanStaffChat(ProxyServer server, Logger logger, @DataDirectory Path path, Metrics.Factory metricsFactory) {
@@ -176,12 +178,8 @@ public class CleanStaffChat {
 
         }
 
-        getLogger().warn("Some functions are not available on Velocity in 1.19+ clients, this is due to Mojang's self-moderation.");
-
         if (VelocityConfig.UPDATE_CHECK.get(Boolean.class) && !Version.contains("alpha")) {
-
             UpdateChecker();
-
         }
 
         getLogger().info("§7Plugin successfully §denabled§7!");
@@ -208,15 +206,26 @@ public class CleanStaffChat {
     }
 
     private void UpdateChecker() {
-
         new UpdateCheck(this).getVersion(version -> {
             if (container.getDescription().getVersion().isPresent()) {
                 if (!container.getDescription().getVersion().get().equals(version)) {
-                    getLogger().warn("There is a new update available, download it on SpigotMC!");
+                    getLogger().warn("There is a new update available, download it on https://bit.ly/3BOQFEz");
                 }
             }
         });
+    }
 
+    public void UpdateCheck(Player player) {
+        if (VelocityConfig.UPDATE_CHECK.get(Boolean.class) && !CleanStaffChat.Version.contains("alpha")) {
+            new UpdateCheck(this).getVersion(version -> {
+                if (container.getDescription().getVersion().isPresent()) {
+                    if (!container.getDescription().getVersion().get().equals(version)) {
+                        player.sendMessage(LegacyComponentSerializer.legacy('§')
+                                .deserialize("§e[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz"));
+                    }
+                }
+            });
+        }
     }
 
     private void registerRedisBungee() {

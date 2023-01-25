@@ -17,8 +17,10 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.simpleyaml.configuration.file.YamlFile;
 
@@ -179,7 +181,7 @@ public class CleanStaffChat extends JavaPlugin {
         if (SpigotConfig.UPDATE_CHECK.get(Boolean.class) && !getDescription().getVersion().contains("alpha")) {
             new UpdateCheck(this).getVersion(version -> {
                 if (!this.getDescription().getVersion().equals(version)) {
-                    getLogger().warning("There is a new update available, download it on SpigotMC!");
+                    getLogger().warning("There is a new update available, download it on https://bit.ly/3BOQFEz");
                 }
             });
         }
@@ -280,4 +282,13 @@ public class CleanStaffChat extends JavaPlugin {
 
         getLogger().info("Successfully disabled.");
     }
+
+    public void UpdateCheck(Player player) {
+        new UpdateCheck(this).getVersion(version -> {
+            if (!getDescription().getVersion().equals(version)) {
+                player.sendMessage(ChatColor.YELLOW + "[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz");
+            }
+        });
+    }
+
 }

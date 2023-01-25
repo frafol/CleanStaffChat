@@ -18,6 +18,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public class ServerListener implements Listener {
     }
 
     @EventHandler
-    public void Switch(ServerSwitchEvent event){
+    public void Switch(@NotNull ServerSwitchEvent event){
 
         if (event.getFrom() == null) {
             return;

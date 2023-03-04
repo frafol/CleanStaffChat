@@ -50,5 +50,4 @@ public class TextFile {
     public static void reloadAll() {
         list.forEach(TextFile::reload);
     }
-
 }

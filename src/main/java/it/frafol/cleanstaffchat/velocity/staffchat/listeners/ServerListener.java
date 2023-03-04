@@ -15,6 +15,7 @@ import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
+import org.jetbrains.annotations.NotNull;
 
 public class ServerListener {
 
@@ -25,7 +26,7 @@ public class ServerListener {
     }
 
     @Subscribe
-    public void Switch(ServerConnectedEvent event) {
+    public void Switch(@NotNull ServerConnectedEvent event) {
 
         if (!event.getPreviousServer().isPresent()) {
 

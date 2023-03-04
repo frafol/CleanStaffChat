@@ -55,8 +55,8 @@ public class CleanStaffChat extends Plugin {
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.0.0-beta.3")
-                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.3/JDA-5.0.0-beta.3-withDependencies-min.jar")
+                .version("5.0.0-beta.5")
+                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.5/JDA-5.0.0-beta.5-withDependencies-min.jar")
                 .build();
 
         bungeeLibraryManager.addMavenCentral();
@@ -75,29 +75,7 @@ public class CleanStaffChat extends Plugin {
         if (BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
 
             jda = JDABuilder.createDefault(BungeeDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
-
-            jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
-                            (BungeeDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
-                    BungeeDiscordConfig.DISCORD_ACTIVITY.get(String.class)));
-
-            if (getProxy().getPluginManager().getPlugin("ServerUtils") != null
-                    || getProxy().getPluginManager().getPlugin("PlugManBungee") != null) {
-
-                if (getProxy().getPluginManager().getPlugin("ServerUtils") != null ) {
-
-                    getLogger().warning("\n§f\n§e§lWARNING!" +
-                            "\n§f\n§7Integration on Discord may give you many problems if you reload the plugin with ServerUtils." +
-                            "\n§7Consider performing a §d§lTOTAL RESTART to prevent issues!\n");
-
-                } else {
-
-                    getLogger().warning("\n§f\n§e§lWARNING!" +
-                            "\n§f\n§7Integration on Discord may give you many problems if you reload the plugin with PlugManBungee." +
-                            "\n§7Consider performing a §d§lTOTAL RESTART to prevent issues!\n");
-
-                }
-
-            }
+            updateJDA();
 
             getLogger().info("§7Hooked into Discord §dsuccessfully§7!");
 
@@ -180,6 +158,7 @@ public class CleanStaffChat extends Plugin {
     @Override
     public void onDisable() {
         getLogger().info("§7Deleting instances...");
+        jda.shutdownNow();
         instance = null;
         configTextFile = null;
 
@@ -272,4 +251,21 @@ public class CleanStaffChat extends Plugin {
 
     }
 
+    public void updateJDA() {
+
+        if (!BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            return;
+        }
+
+        if (jda == null) {
+            getLogger().severe("Fatal error while updating JDA. Please report this error to discord.io/futurevelopment.");
+            return;
+        }
+
+        jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
+                        (BungeeDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
+                BungeeDiscordConfig.DISCORD_ACTIVITY.get(String.class)
+                        .replace("%players%", String.valueOf(getProxy().getOnlineCount()))));
+
+    }
 }

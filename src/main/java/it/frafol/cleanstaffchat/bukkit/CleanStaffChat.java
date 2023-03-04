@@ -58,8 +58,8 @@ public class CleanStaffChat extends JavaPlugin {
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.0.0-beta.3")
-                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.3/JDA-5.0.0-beta.3-withDependencies-min.jar")
+                .version("5.0.0-beta.5")
+                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.5/JDA-5.0.0-beta.5-withDependencies-min.jar")
                 .build();
 
         bukkitLibraryManager.addMavenCentral();
@@ -102,32 +102,7 @@ public class CleanStaffChat extends JavaPlugin {
         if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
 
             jda = JDABuilder.createDefault(SpigotDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
-
-            jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
-                            (SpigotDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
-                    SpigotDiscordConfig.DISCORD_ACTIVITY.get(String.class)));
-
-            if (getServer().getPluginManager().getPlugin("ServerUtils") != null
-                    || getServer().getPluginManager().getPlugin("PlugManX") != null
-                    || getServer().getPluginManager().getPlugin("PlugManDummy") != null
-                    || getServer().getPluginManager().getPlugin("PlugMan") != null
-                    || getServer().getPluginManager().getPlugin("Plugman") != null) {
-
-                if (getServer().getPluginManager().getPlugin("ServerUtils") != null) {
-
-                    getLogger().warning("\n \nWARNING!" +
-                            "\n \nIntegration on Discord may give you many problems if you reload the plugin with ServerUtils." +
-                            "\nConsider performing a TOTAL RESTART to prevent issues!\n");
-
-                } else {
-
-                    getLogger().warning("\n \nWARNING!" +
-                            "\n \nIntegration on Discord may give you many problems if you reload the plugin with Plugman." +
-                            "\nConsider performing a TOTAL RESTART to prevent issues!\n");
-
-                }
-
-            }
+            updateJDA();
 
             getLogger().info("Hooked into Discord successfully!");
 
@@ -277,6 +252,7 @@ public class CleanStaffChat extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("Deleting instances...");
+        jda.shutdownNow();
         instance = null;
         configTextFile = null;
 
@@ -289,6 +265,24 @@ public class CleanStaffChat extends JavaPlugin {
                 player.sendMessage(ChatColor.YELLOW + "[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz");
             }
         });
+    }
+
+    public void updateJDA() {
+
+        if (!SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            return;
+        }
+
+        if (jda == null) {
+            getLogger().severe("Fatal error while updating JDA. Please report this error to discord.io/futurevelopment.");
+            return;
+        }
+
+        jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
+                        (SpigotDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
+                SpigotDiscordConfig.DISCORD_ACTIVITY.get(String.class)
+                        .replace("%players%", String.valueOf(getServer().getOnlinePlayers().size()))));
+
     }
 
 }

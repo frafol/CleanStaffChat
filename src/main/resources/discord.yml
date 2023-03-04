@@ -15,10 +15,10 @@ discord: # The Discord Integration is an experimental feature, report all proble
   token: ""
 
   # Types: WATCHING, PLAYING, STREAMING.
-  activity_type: "PLAYING"
+  activity_type: "WATCHING"
 
-  # The Discord bot's activity.
-  activity: "play.yourserver.net"
+  # The Discord bot's activity. You can use %players% to see the amount of players online.
+  activity: "%players% online players."
 
   # To use staffchat with Discord, enter the ID of the chat where you want messages to be sent.
   staffchat_channel_id: ""

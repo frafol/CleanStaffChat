@@ -10,6 +10,9 @@ import java.util.UUID;
 public class PlayerCache {
 
     @Getter
+    private final HashSet<UUID> staffers = new HashSet<>();
+
+    @Getter
     private final HashSet<UUID> toggled = new HashSet<>();
 
     @Getter

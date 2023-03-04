@@ -20,6 +20,7 @@ import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -36,7 +37,7 @@ public class StaffChatCommand implements SimpleCommand {
     }
 
     @Override
-    public void execute(Invocation invocation) {
+    public void execute(@NotNull Invocation invocation) {
 
         CommandSource commandSource = invocation.source();
         String[] args = invocation.arguments();
@@ -46,7 +47,6 @@ public class StaffChatCommand implements SimpleCommand {
             if (!(commandSource instanceof Player)) {
 
                 VelocityMessages.ARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
-
                 return;
 
             }
@@ -60,7 +60,6 @@ public class StaffChatCommand implements SimpleCommand {
                         || ((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19_3) {
 
                     VelocityMessages.ARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
-
                     return;
 
                 }
@@ -68,7 +67,6 @@ public class StaffChatCommand implements SimpleCommand {
                 if (!(STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
 
                     VelocityMessages.ARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
-
                     return;
 
                 }
@@ -82,7 +80,6 @@ public class StaffChatCommand implements SimpleCommand {
 
                         VelocityMessages.STAFFCHAT_TALK_ENABLED.send(commandSource,
                                 new Placeholder("prefix", VelocityMessages.PREFIX.color()));
-
                         return;
 
                     } else {

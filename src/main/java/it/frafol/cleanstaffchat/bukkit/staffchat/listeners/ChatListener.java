@@ -34,7 +34,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
     }
 
     @EventHandler
-    public void onChat(AsyncPlayerChatEvent event) {
+    public void onChat(@NotNull AsyncPlayerChatEvent event) {
 
         if (PlayerCache.getToggled_2().contains(event.getPlayer().getUniqueId())) {
 

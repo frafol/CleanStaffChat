@@ -19,6 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Optional;
@@ -32,7 +33,9 @@ public class JoinListener implements Listener {
     }
 
     @EventHandler
-    public void handle(PlayerJoinEvent event) {
+    public void handle(@NotNull PlayerJoinEvent event) {
+
+        PLUGIN.updateJDA();
 
         if (event.getPlayer().hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                 && (SpigotConfig.UPDATE_CHECK.get(Boolean.class)) && !PLUGIN.getDescription().getVersion().contains("alpha")) {
@@ -144,9 +147,11 @@ public class JoinListener implements Listener {
     }
 
     @EventHandler
-    public void handle(PlayerQuitEvent event) {
+    public void handle(@NotNull PlayerQuitEvent event) {
 
         final Player player = event.getPlayer();
+
+        PLUGIN.updateJDA();
 
         if (SpigotConfig.STAFF_QUIT_MESSAGE.get(Boolean.class)) {
 

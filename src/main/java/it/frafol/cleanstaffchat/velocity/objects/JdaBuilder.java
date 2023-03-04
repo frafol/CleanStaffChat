@@ -22,8 +22,6 @@ public class JdaBuilder {
 
     @SneakyThrows
     public void startJDA() {
-
         jda = JDABuilder.createDefault(VelocityDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
-
     }
 }

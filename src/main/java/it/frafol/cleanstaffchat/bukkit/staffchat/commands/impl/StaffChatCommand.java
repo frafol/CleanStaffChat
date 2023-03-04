@@ -31,7 +31,7 @@ public class StaffChatCommand extends CommandBase {
     }
 
     @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String @NotNull [] args) {
 
         if (args.length == 0) {
 

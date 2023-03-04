@@ -38,7 +38,7 @@ import java.nio.file.Path;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.8.2",
+        version = "1.8.3",
         dependencies = {@Dependency(id = "redisbungee", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
@@ -61,7 +61,7 @@ public class CleanStaffChat {
         return instance;
     }
 
-    public static String Version = "1.8.2";
+    public static String Version = "1.8.3";
 
     @Inject
     public CleanStaffChat(ProxyServer server, Logger logger, @DataDirectory Path path, Metrics.Factory metricsFactory) {
@@ -91,8 +91,8 @@ public class CleanStaffChat {
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.0.0-beta.3")
-                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.3/JDA-5.0.0-beta.3-withDependencies-min.jar")
+                .version("5.0.0-beta.5")
+                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.5/JDA-5.0.0-beta.5-withDependencies-min.jar")
                 .build();
 
         velocityLibraryManager.addMavenCentral();
@@ -116,18 +116,7 @@ public class CleanStaffChat {
         if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
 
             jda.startJDA();
-
-            jda.getJda().getPresence().setActivity(net.dv8tion.jda.api.entities.Activity.of(net.dv8tion.jda.api.entities.Activity.ActivityType.valueOf
-                            (VelocityDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
-                    VelocityDiscordConfig.DISCORD_ACTIVITY.get(String.class)));
-
-            if (getServer().getPluginManager().isLoaded("serverutils")) {
-
-                getLogger().warn("\n§f\n§e§lWARNING!" +
-                        "\n§f\n§7Integration on Discord may give you many problems if you reload the plugin with ServerUtils." +
-                        "\n§7Consider performing a §d§lTOTAL RESTART to prevent issues!\n");
-
-            }
+            updateJDA();
 
             getLogger().info("§7Hooked into Discord §dsuccessfully§7!");
 
@@ -187,8 +176,9 @@ public class CleanStaffChat {
     }
 
     @Subscribe
-    public void onProxyShutdown(ProxyShutdownEvent event) {
+    public void onProxyShutdown(ProxyShutdownEvent event) throws LoginException {
         getLogger().info("Deleting instances...");
+        jda.getJda().shutdownNow();
         instance = null;
         configTextFile = null;
 
@@ -355,5 +345,23 @@ public class CleanStaffChat {
             jda.getJda().addEventListener(new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
 
         }
+    }
+
+    public void updateJDA() throws LoginException {
+
+        if (!VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            return;
+        }
+
+        if (jda.getJda() == null) {
+            logger.error("Fatal error while updating JDA, please report this error on discord.io/futuredevelopment.");
+            return;
+        }
+
+        jda.getJda().getPresence().setActivity(net.dv8tion.jda.api.entities.Activity.of(net.dv8tion.jda.api.entities.Activity.ActivityType.valueOf
+                        (VelocityDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
+                VelocityDiscordConfig.DISCORD_ACTIVITY.get(String.class)
+                        .replace("%players%", String.valueOf(server.getAllPlayers().size()))));
+
     }
 }

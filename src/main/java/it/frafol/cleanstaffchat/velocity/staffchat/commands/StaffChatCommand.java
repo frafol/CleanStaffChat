@@ -55,9 +55,9 @@ public class StaffChatCommand implements SimpleCommand {
 
                 Player player = (Player) commandSource;
 
-                if ((!PLUGIN.getUnsignedVelocityAddon()) && ((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19
+                if ((!PLUGIN.getUnsignedVelocityAddon()) && (((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19
                         || ((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19_1
-                        || ((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19_3) {
+                        || ((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19_3)) {
 
                     VelocityMessages.ARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
                     return;

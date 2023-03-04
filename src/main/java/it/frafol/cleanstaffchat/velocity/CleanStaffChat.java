@@ -39,7 +39,7 @@ import java.nio.file.Path;
         id = "cleanstaffchat",
         name = "CleanStaffChat",
         version = "1.8.3",
-        dependencies = {@Dependency(id = "redisbungee", optional = true)},
+        dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
 )
@@ -145,13 +145,13 @@ public class CleanStaffChat {
 
         }
 
-        if (VelocityRedis.REDIS_ENABLE.get(Boolean.class) && !getServer().getPluginManager().isLoaded("redisbungee")) {
+        if (VelocityRedis.REDIS_ENABLE.get(Boolean.class) && getRedisBungee()) {
 
             getLogger().error("RedisBungee was not found, the RedisBungee hook won't work.");
 
         }
 
-        if (VelocityRedis.REDIS_ENABLE.get(Boolean.class) && getServer().getPluginManager().isLoaded("redisbungee")) {
+        if (VelocityRedis.REDIS_ENABLE.get(Boolean.class) && getRedisBungee()) {
 
             registerRedisBungee();
 
@@ -169,6 +169,11 @@ public class CleanStaffChat {
 
         if (VelocityConfig.UPDATE_CHECK.get(Boolean.class) && !Version.contains("alpha")) {
             UpdateChecker();
+        }
+
+        if (!getUnsignedVelocityAddon()) {
+            getLogger().warn("To get the full functionality of CleanStaffChat for versions 1.19.1 and later on Velocity, " +
+                    "consider downloading https://github.com/4drian3d/UnSignedVelocity/releases/latest");
         }
 
         getLogger().info("§7Plugin successfully §denabled§7!");
@@ -363,5 +368,14 @@ public class CleanStaffChat {
                 VelocityDiscordConfig.DISCORD_ACTIVITY.get(String.class)
                         .replace("%players%", String.valueOf(server.getAllPlayers().size()))));
 
+    }
+
+    public boolean getRedisBungee() {
+        return getServer().getPluginManager().isLoaded("redisbungee");
+    }
+
+    @SuppressWarnings("ALL")
+    public boolean getUnsignedVelocityAddon() {
+        return getServer().getPluginManager().isLoaded("unsignedvelocity");
     }
 }

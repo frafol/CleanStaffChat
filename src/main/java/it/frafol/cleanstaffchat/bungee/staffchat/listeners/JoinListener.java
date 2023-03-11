@@ -54,6 +54,10 @@ public class JoinListener implements Listener {
                 if (player.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                         || BungeeConfig.STAFFCHAT_JOIN_LEAVE_ALL.get(Boolean.class)) {
 
+                    if (player.hasPermission(BungeeConfig.STAFFCHAT_JOIN_SILENT_PERMISSION.get(String.class)) && BungeeConfig.STAFFCHAT_JOIN_SILENT_MODULE.get(Boolean.class)) {
+                        return;
+                    }
+
                     if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
 
                         LuckPerms api = LuckPermsProvider.get();
@@ -235,6 +239,10 @@ public class JoinListener implements Listener {
 
             if (player.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                     || BungeeConfig.STAFFCHAT_QUIT_ALL.get(Boolean.class)) {
+
+                if (player.hasPermission(BungeeConfig.STAFFCHAT_QUIT_SILENT_PERMISSION.get(String.class)) && BungeeConfig.STAFFCHAT_QUIT_SILENT_MODULE.get(Boolean.class)) {
+                    return;
+                }
 
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
 

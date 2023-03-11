@@ -63,6 +63,10 @@ public class JoinListener {
 
                 PlayerCache.getStaffers().add(player.getUniqueId());
 
+                if (player.hasPermission(STAFFCHAT_JOIN_SILENT_PERMISSION.get(String.class)) && STAFFCHAT_JOIN_SILENT_MODULE.get(Boolean.class)) {
+                    return;
+                }
+
                 if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
                     final LuckPerms api = LuckPermsProvider.get();
@@ -197,6 +201,10 @@ public class JoinListener {
 
         if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                 || STAFFCHAT_QUIT_ALL.get(Boolean.class)) {
+
+            if (player.hasPermission(STAFFCHAT_QUIT_SILENT_PERMISSION.get(String.class)) && STAFFCHAT_QUIT_SILENT_MODULE.get(Boolean.class)) {
+                return;
+            }
 
             if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 

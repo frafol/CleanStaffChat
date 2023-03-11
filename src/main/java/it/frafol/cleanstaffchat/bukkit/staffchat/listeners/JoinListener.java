@@ -51,6 +51,10 @@ public class JoinListener implements Listener {
                 if (player.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                         || SpigotConfig.STAFFCHAT_JOIN_LEAVE_ALL.get(Boolean.class)) {
 
+                    if (player.hasPermission(SpigotConfig.STAFFCHAT_JOIN_SILENT_PERMISSION.get(String.class)) && SpigotConfig.STAFFCHAT_JOIN_SILENT_MODULE.get(Boolean.class)) {
+                        return;
+                    }
+
                     if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
 
                         LuckPerms api = LuckPermsProvider.get();
@@ -152,11 +156,16 @@ public class JoinListener implements Listener {
         final Player player = event.getPlayer();
 
         PLUGIN.updateJDA();
+        PlayerCache.getAfk().remove(event.getPlayer().getUniqueId());
 
         if (SpigotConfig.STAFF_QUIT_MESSAGE.get(Boolean.class)) {
 
             if (player.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                     || SpigotConfig.STAFFCHAT_QUIT_ALL.get(Boolean.class)) {
+
+                if (player.hasPermission(SpigotConfig.STAFFCHAT_QUIT_SILENT_PERMISSION.get(String.class)) && SpigotConfig.STAFFCHAT_QUIT_SILENT_MODULE.get(Boolean.class)) {
+                    return;
+                }
 
                 if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
 
@@ -253,11 +262,7 @@ public class JoinListener implements Listener {
 
                     }
                 }
-
             }
         }
-
-        PlayerCache.getAfk().remove(event.getPlayer().getUniqueId());
-
     }
 }

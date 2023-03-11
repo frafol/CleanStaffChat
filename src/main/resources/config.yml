@@ -26,16 +26,23 @@ settings:
     # Activating these options, staff members will receive a message when another staff member enters/leaves the server.
     staff_join_message: true
     staff_quit_message: true
+
     staff_join_all_players: false # By activating it, the staff will receive a message every time any player enters the server.
     staff_quit_all_players: false # By activating it, the staff will receive a message every time any player leaves the server.
+
     staff_switch_all_players: false # By activating it, the staff will receive a message every time any player switch a server.
     staff_disable_afk_on_move: true # On Velocity and BungeeCord, this works when a player changes server.
+
+    staff_join_silent: false # By activating it, the staff will not receive a message when another staff member with a permission enters the server.
+    staff_quit_silent: false # By activating it, the staff will not receive a message when another staff member with a permission leaves the server.
 
     # You can customise permissions.
     staffchat_use_permission: "staffchat.use"
     staffchat_mute_permission: "staffchat.mute"
     staffchat_toggle_permission: "staffchat.toggle"
     staffchat_afk_permission: "staffchat.afk"
+    staffchat_join_silent_permission: "staffchat.join.silent"
+    staffchat_quit_silent_permission: "staffchat.quit.silent"
 
   adminchat:
 

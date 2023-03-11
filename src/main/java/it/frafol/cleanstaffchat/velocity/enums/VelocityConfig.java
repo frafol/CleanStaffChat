@@ -7,6 +7,11 @@ public enum VelocityConfig {
     STAFFCHAT_JOIN_LEAVE_ALL("settings.staffchat.staff_join_all_players"),
     STAFFCHAT_QUIT_ALL("settings.staffchat.staff_quit_all_players"),
 
+    STAFFCHAT_JOIN_SILENT_MODULE("settings.staffchat.staff_join_silent"),
+    STAFFCHAT_QUIT_SILENT_MODULE("settings.staffchat.staff_quit_silent"),
+    STAFFCHAT_JOIN_SILENT_PERMISSION("settings.staffchat.staff_join_silent_permission"),
+    STAFFCHAT_QUIT_SILENT_PERMISSION("settings.staffchat.staff_quit_silent_permission"),
+
     HIDE_ADVERTS("settings.hide_advertisements"),
 
     STAFFCHAT_AFK_MODULE("modules.staffchat_afk_module"),

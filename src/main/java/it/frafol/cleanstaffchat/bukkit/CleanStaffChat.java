@@ -252,7 +252,11 @@ public class CleanStaffChat extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("Deleting instances...");
-        jda.shutdownNow();
+
+        if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            jda.shutdownNow();
+        }
+
         instance = null;
         configTextFile = null;
 

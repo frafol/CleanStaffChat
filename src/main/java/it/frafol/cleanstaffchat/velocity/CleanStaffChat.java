@@ -38,7 +38,7 @@ import java.nio.file.Path;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.8.4",
+        version = "1.8.5",
         dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
@@ -61,7 +61,7 @@ public class CleanStaffChat {
         return instance;
     }
 
-    public static String Version = "1.8.3";
+    public static String Version = "1.8.5";
 
     @Inject
     public CleanStaffChat(ProxyServer server, Logger logger, @DataDirectory Path path, Metrics.Factory metricsFactory) {
@@ -183,7 +183,11 @@ public class CleanStaffChat {
     @Subscribe
     public void onProxyShutdown(ProxyShutdownEvent event) throws LoginException {
         getLogger().info("Deleting instances...");
-        jda.getJda().shutdownNow();
+
+        if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            jda.getJda().shutdownNow();
+        }
+
         instance = null;
         configTextFile = null;
 

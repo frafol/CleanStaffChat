@@ -158,7 +158,11 @@ public class CleanStaffChat extends Plugin {
     @Override
     public void onDisable() {
         getLogger().info("§7Deleting instances...");
-        jda.shutdownNow();
+
+        if (BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            jda.shutdownNow();
+        }
+
         instance = null;
         configTextFile = null;
 

@@ -9,8 +9,8 @@ public enum BungeeConfig {
 
     STAFFCHAT_JOIN_SILENT_MODULE("settings.staffchat.staff_join_silent"),
     STAFFCHAT_QUIT_SILENT_MODULE("settings.staffchat.staff_quit_silent"),
-    STAFFCHAT_JOIN_SILENT_PERMISSION("settings.staffchat.staff_join_silent_permission"),
-    STAFFCHAT_QUIT_SILENT_PERMISSION("settings.staffchat.staff_quit_silent_permission"),
+    STAFFCHAT_JOIN_SILENT_PERMISSION("settings.staffchat.staffchat_join_silent_permission"),
+    STAFFCHAT_QUIT_SILENT_PERMISSION("settings.staffchat.staffchat_quit_silent_permission"),
 
     HIDE_ADVERTS("settings.hide_advertisements"),
 

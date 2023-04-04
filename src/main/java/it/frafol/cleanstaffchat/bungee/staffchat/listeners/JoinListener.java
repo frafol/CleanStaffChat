@@ -19,7 +19,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
-import net.md_5.bungee.api.event.PostLoginEvent;
+import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import org.jetbrains.annotations.NotNull;
@@ -36,18 +36,22 @@ public class JoinListener implements Listener {
     }
 
     @EventHandler
-    public void handle(@NotNull PostLoginEvent event){
+    public void handle(@NotNull ServerSwitchEvent event){
 
-        if (event.getPlayer().hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+        final ProxiedPlayer player = event.getPlayer();
+
+        if (event.getFrom() != null) {
+            return;
+        }
+
+        if (player.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                 && (BungeeConfig.UPDATE_CHECK.get(Boolean.class)) && !PLUGIN.getDescription().getVersion().contains("alpha")) {
-            PLUGIN.UpdateCheck(event.getPlayer());
+            PLUGIN.UpdateCheck(player);
         }
 
         PLUGIN.updateJDA();
 
         if (!(CleanStaffChat.getInstance().getProxy().getPlayers().size() < 1)) {
-
-            final ProxiedPlayer player = event.getPlayer();
 
             if (BungeeConfig.STAFF_JOIN_MESSAGE.get(Boolean.class)) {
 
@@ -62,7 +66,7 @@ public class JoinListener implements Listener {
 
                         LuckPerms api = LuckPermsProvider.get();
 
-                        User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
+                        User user = api.getUserManager().getUser(player.getUniqueId());
 
                         if (user == null) {
                             return;

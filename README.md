@@ -19,9 +19,9 @@ Clean StaffChat is a basic StaffChat plugin, compatible with BungeeCord, Spigot 
 
 ## Velocity, BungeeCord and Spigot compatibility is here.
 ```
-» BungeeCord 1.7 - 1.19 & forks
-» Velocity 3.1.2
-» Spigot 1.7 - 1.19.2 & forks
+» BungeeCord 1.7 - 1.19.4 & forks
+» Velocity 3.1.2/3.2.0 & forks
+» Spigot 1.7 - 1.19.4 & forks
 ```
 
 ## Commands

@@ -38,7 +38,7 @@ import java.nio.file.Path;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.8.6",
+        version = "1.8.7",
         dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
@@ -61,7 +61,7 @@ public class CleanStaffChat {
         return instance;
     }
 
-    public static String Version = "1.8.6";
+    public static String Version = "1.8.7";
 
     @Inject
     public CleanStaffChat(ProxyServer server, Logger logger, @DataDirectory Path path, Metrics.Factory metricsFactory) {
@@ -85,7 +85,7 @@ public class CleanStaffChat {
         Library yaml = Library.builder()
                 .groupId("me{}carleslc{}Simple-YAML")
                 .artifactId("Simple-Yaml")
-                .version("1.8.3")
+                .version("1.8.4")
                 .build();
 
         Library discord = Library.builder()

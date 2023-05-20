@@ -3,6 +3,7 @@ version: '${project.version}'
 main: it.frafol.cleanstaffchat.bukkit.CleanStaffChat
 authors: [ frafol ]
 description: Best StaffChat plugin.
+folia-supported: true
 softdepend:
   - LuckPerms
   - UltraPermissions

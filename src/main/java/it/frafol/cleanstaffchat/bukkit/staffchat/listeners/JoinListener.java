@@ -37,7 +37,7 @@ public class JoinListener implements Listener {
 
         PLUGIN.updateJDA();
 
-        if (event.getPlayer().hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+        if (!PLUGIN.isFolia() && event.getPlayer().hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                 && (SpigotConfig.UPDATE_CHECK.get(Boolean.class)) && !PLUGIN.getDescription().getVersion().contains("alpha")) {
             PLUGIN.UpdateCheck(event.getPlayer());
         }

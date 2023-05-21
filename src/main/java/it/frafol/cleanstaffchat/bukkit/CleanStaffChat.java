@@ -128,13 +128,20 @@ public class CleanStaffChat extends JavaPlugin {
 
         if (SpigotConfig.DONORCHAT.get(Boolean.class)) {
 
-            registerDonorChatCommands();
+            if (!isFolia()) {
 
-            getServer().getPluginManager().registerEvents(new it.frafol.cleanstaffchat.bukkit.donorchat.listeners.ChatListener(this), this);
+                registerDonorChatCommands();
 
-            if (SpigotConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class) && SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-                jda.addEventListener(new it.frafol.cleanstaffchat.bukkit.donorchat.listeners.ChatListener(this));
+                getServer().getPluginManager().registerEvents(new it.frafol.cleanstaffchat.bukkit.donorchat.listeners.ChatListener(this), this);
+
+                if (SpigotConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class) && SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+                    jda.addEventListener(new it.frafol.cleanstaffchat.bukkit.donorchat.listeners.ChatListener(this));
+                }
+
+            } else {
+                getLogger().severe("DonorChat is not supported in Folia, disabling it.");
             }
+
 
         }
 
@@ -166,7 +173,7 @@ public class CleanStaffChat extends JavaPlugin {
                     }
                 });
             } else {
-                getLogger().severe("Folia does not support the update checker.");
+                getLogger().severe("Update Checker is not supported in Folia.");
             }
 
         }
@@ -175,7 +182,7 @@ public class CleanStaffChat extends JavaPlugin {
 
     }
 
-    public static boolean isFolia() {
+    public boolean isFolia() {
         try {
             Class.forName("io.papermc.paper.threadedregions.RegionizedServerInitEvent");
         } catch (ClassNotFoundException e) {

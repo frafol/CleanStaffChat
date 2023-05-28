@@ -58,6 +58,8 @@ public class DonorChatCommand extends CommandBase {
                     if (!PlayerCache.getMuted().contains("true")) {
 
                         PlayerCache.getToggled_2_donor().add(player.getUniqueId());
+                        PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
+                        PlayerCache.getToggled_2().remove(player.getUniqueId());
 
                         sender.sendMessage((SpigotMessages.DONORCHAT_TALK_ENABLED.color()
                                 .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));

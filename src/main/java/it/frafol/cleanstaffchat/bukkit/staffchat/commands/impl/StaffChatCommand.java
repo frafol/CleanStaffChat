@@ -57,6 +57,8 @@ public class StaffChatCommand extends CommandBase {
                     if (!PlayerCache.getMuted().contains("true")) {
 
                         PlayerCache.getToggled_2().add(player.getUniqueId());
+                        PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
+                        PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
 
                         sender.sendMessage((SpigotMessages.STAFFCHAT_TALK_ENABLED.color()
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())));

@@ -64,6 +64,8 @@ public class DonorChatCommand extends Command {
                     }
                     if (!PlayerCache.getMuted_donor().contains("true")) {
                         PlayerCache.getToggled_2_donor().add(player.getUniqueId());
+                        PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
+                        PlayerCache.getToggled_2().remove(player.getUniqueId());
                         sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_TALK_ENABLED.color()
                                 .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
                         return;

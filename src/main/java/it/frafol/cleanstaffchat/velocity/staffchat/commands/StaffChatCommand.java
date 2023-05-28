@@ -75,6 +75,8 @@ public class StaffChatCommand implements SimpleCommand {
                     if (!PlayerCache.getMuted().contains("true")) {
 
                         PlayerCache.getToggled_2().add(player.getUniqueId());
+                        PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
+                        PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
 
                         VelocityMessages.STAFFCHAT_TALK_ENABLED.send(commandSource,
                                 new Placeholder("prefix", VelocityMessages.PREFIX.color()));

@@ -80,6 +80,8 @@ public class DonorChatCommand implements SimpleCommand {
                     if (!PlayerCache.getMuted_donor().contains("true")) {
 
                         PlayerCache.getToggled_2_donor().add(player.getUniqueId());
+                        PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
+                        PlayerCache.getToggled_2().remove(player.getUniqueId());
 
                         VelocityMessages.DONORCHAT_TALK_ENABLED.send(commandSource,
                                 new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));

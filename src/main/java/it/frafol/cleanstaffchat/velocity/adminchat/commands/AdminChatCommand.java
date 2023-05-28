@@ -79,6 +79,8 @@ public class AdminChatCommand implements SimpleCommand {
                     if (!PlayerCache.getMuted().contains("true")) {
 
                         PlayerCache.getToggled_2_admin().add(player.getUniqueId());
+                        PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
+                        PlayerCache.getToggled_2().remove(player.getUniqueId());
 
                         VelocityMessages.ADMINCHAT_TALK_ENABLED.send(commandSource,
                                 new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));

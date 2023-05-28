@@ -53,6 +53,8 @@ public class StaffChatCommand extends Command {
                     }
                     if (!PlayerCache.getMuted().contains("true")) {
                         PlayerCache.getToggled_2().add(player.getUniqueId());
+                        PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
+                        PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
                         sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_TALK_ENABLED.color()
                                 .replace("%prefix%", BungeeMessages.PREFIX.color())));
                         return;

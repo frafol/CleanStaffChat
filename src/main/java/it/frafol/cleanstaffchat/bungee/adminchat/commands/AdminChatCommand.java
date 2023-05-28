@@ -53,6 +53,8 @@ public class AdminChatCommand extends Command {
                     }
                     if (!PlayerCache.getMuted_admin().contains("true")) {
                         PlayerCache.getToggled_2_admin().add(player.getUniqueId());
+                        PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
+                        PlayerCache.getToggled_2().remove(player.getUniqueId());
                         sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_TALK_ENABLED.color()
                                 .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
                         return;

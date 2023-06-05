@@ -3,7 +3,6 @@ package it.frafol.cleanstaffchat.velocity.donorchat.commands;
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
-import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
@@ -56,20 +55,9 @@ public class DonorChatCommand implements SimpleCommand {
 
                 Player player = (Player) commandSource;
 
-                if (((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19
-                        || ((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19_1
-                        || ((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19_3) {
-
-                    VelocityMessages.DONORARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
-
-                    return;
-
-                }
-
                 if (!(DONORCHAT_TALK_MODULE.get(Boolean.class))) {
 
                     VelocityMessages.DONORARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
-
                     return;
 
                 }
@@ -98,6 +86,8 @@ public class DonorChatCommand implements SimpleCommand {
                 } else if (PlayerCache.getToggled_2_donor().contains(player.getUniqueId())) {
 
                     PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
+                    PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
+                    PlayerCache.getToggled_2().remove(player.getUniqueId());
 
                     VelocityMessages.DONORCHAT_TALK_DISABLED.send(commandSource,
                             new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
@@ -109,7 +99,6 @@ public class DonorChatCommand implements SimpleCommand {
             } else {
 
                 commandSource.sendMessage(Component.text("§7This server is using §dCleanStaffChat §7by §dfrafol§7."));
-
                 return;
 
             }

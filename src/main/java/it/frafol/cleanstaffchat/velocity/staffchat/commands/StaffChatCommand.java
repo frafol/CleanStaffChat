@@ -3,7 +3,6 @@ package it.frafol.cleanstaffchat.velocity.staffchat.commands;
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
-import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
@@ -55,13 +54,6 @@ public class StaffChatCommand implements SimpleCommand {
 
                 Player player = (Player) commandSource;
 
-                if ((!PLUGIN.getUnsignedVelocityAddon()) && (((Player) commandSource).getProtocolVersion().getProtocol() >= ProtocolVersion.getProtocolVersion(759).getProtocol())) {
-
-                    VelocityMessages.ARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
-                    return;
-
-                }
-
                 if (!(STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
 
                     VelocityMessages.ARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
@@ -92,6 +84,8 @@ public class StaffChatCommand implements SimpleCommand {
                 } else if (PlayerCache.getToggled_2().contains(player.getUniqueId())) {
 
                     PlayerCache.getToggled_2().remove(player.getUniqueId());
+                    PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
+                    PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
 
                     VelocityMessages.STAFFCHAT_TALK_DISABLED.send(commandSource,
                             new Placeholder("prefix", VelocityMessages.PREFIX.color()));

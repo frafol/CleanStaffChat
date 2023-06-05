@@ -38,7 +38,7 @@ import java.nio.file.Path;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.9.2",
+        version = "1.9.3",
         dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
@@ -61,7 +61,7 @@ public class CleanStaffChat {
         return instance;
     }
 
-    public static String Version = "1.9.2";
+    public static String Version = "1.9.3";
 
     @Inject
     public CleanStaffChat(ProxyServer server, Logger logger, @DataDirectory Path path, Metrics.Factory metricsFactory) {
@@ -172,7 +172,7 @@ public class CleanStaffChat {
         }
 
         if (!getUnsignedVelocityAddon()) {
-            getLogger().warn("To get the full functionality of CleanStaffChat for versions 1.19.1 and later on Velocity, " +
+            getLogger().warn("If you get kicked out in 1.19+ while typing in a staffchat on Velocity, " +
                     "consider downloading https://github.com/4drian3d/UnSignedVelocity/releases/latest");
         }
 

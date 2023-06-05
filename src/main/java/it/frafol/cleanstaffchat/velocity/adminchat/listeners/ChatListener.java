@@ -60,7 +60,7 @@ public class ChatListener extends ListenerAdapter {
                             if (ChatUtil.hasColorCodes(message)) {
 
                                 VelocityMessages.COLOR_CODES.send(event.getPlayer(),
-                                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+                                        new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
 
                                 return;
                             }
@@ -114,7 +114,7 @@ public class ChatListener extends ListenerAdapter {
                                             new Placeholder("userprefix", user_prefix),
                                             new Placeholder("usersuffix", user_suffix),
                                             new Placeholder("server", event.getPlayer().getCurrentServer().get().getServerInfo().getName()),
-                                            new Placeholder("prefix", VelocityMessages.PREFIX.color())));
+                                            new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color())));
 
                         } else {
 
@@ -148,7 +148,7 @@ public class ChatListener extends ListenerAdapter {
                                             new Placeholder("userprefix", ""),
                                             new Placeholder("usersuffix", ""),
                                             new Placeholder("server", event.getPlayer().getCurrentServer().get().getServerInfo().getName()),
-                                            new Placeholder("prefix", VelocityMessages.PREFIX.color())));
+                                            new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color())));
 
                         }
 

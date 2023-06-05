@@ -3,7 +3,6 @@ package it.frafol.cleanstaffchat.velocity.adminchat.commands;
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
-import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
@@ -55,20 +54,9 @@ public class AdminChatCommand implements SimpleCommand {
 
                 Player player = (Player) commandSource;
 
-                if (((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19
-                        || ((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19_1
-                        || ((Player) commandSource).getProtocolVersion() == ProtocolVersion.MINECRAFT_1_19_3) {
-
-                    VelocityMessages.ADMINARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
-
-                    return;
-
-                }
-
                 if (!(ADMINCHAT_TALK_MODULE.get(Boolean.class))) {
 
                     VelocityMessages.ADMINARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
-
                     return;
 
                 }
@@ -97,6 +85,8 @@ public class AdminChatCommand implements SimpleCommand {
                 } else if (PlayerCache.getToggled_2_admin().contains(player.getUniqueId())) {
 
                     PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
+                    PlayerCache.getToggled_2().remove(player.getUniqueId());
+                    PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
 
                     VelocityMessages.ADMINCHAT_TALK_DISABLED.send(commandSource,
                             new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));

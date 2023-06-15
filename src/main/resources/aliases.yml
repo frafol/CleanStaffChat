@@ -89,3 +89,9 @@ aliases:
       - "donormute"
       - "cleandcmute"
       - "cleandonorchatmute"
+
+  stafflist:
+    main:
+      - "stafflist"
+      - "slist"
+      - "staffl"

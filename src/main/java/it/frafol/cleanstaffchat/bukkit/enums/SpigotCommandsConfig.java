@@ -3,10 +3,7 @@ package it.frafol.cleanstaffchat.bukkit.enums;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.adminchat.commands.AdminChatCommand;
 import it.frafol.cleanstaffchat.bukkit.donorchat.commands.DonorChatCommand;
-import it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl.AFKCommand;
-import it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl.MuteCommand;
-import it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl.StaffChatCommand;
-import it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl.ToggleCommand;
+import it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl.*;
 
 import java.util.List;
 
@@ -15,6 +12,8 @@ public enum SpigotCommandsConfig {
     STAFFCHAT(StaffChatCommand.class, "aliases.staffchat.main"),
     ADMINCHAT(AdminChatCommand.class, "aliases.adminchat.main"),
     DONORCHAT(DonorChatCommand.class, "aliases.donorchat.main"),
+
+    STAFFLIST(StaffListCommand.class, "aliases.stafflist.main"),
 
     STAFFCHAT_MUTE(MuteCommand.class, "aliases.staffchat.mute"),
     ADMINCHAT_MUTE(it.frafol.cleanstaffchat.bukkit.adminchat.commands.MuteCommand.class, "aliases.adminchat.mute"),
@@ -57,6 +56,12 @@ public enum SpigotCommandsConfig {
                 STAFFCHAT_MUTE,
                 STAFFCHAT_AFK,
                 STAFFCHAT_TOGGLE
+        };
+    }
+
+    public static SpigotCommandsConfig[] getStaffListCommands() {
+        return new SpigotCommandsConfig[]{
+                STAFFLIST
         };
     }
 

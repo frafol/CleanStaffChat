@@ -9,7 +9,7 @@ import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 
-import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.*;
+import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.STAFFCHAT_TOGGLE_MODULE;
 
 public class ToggleCommand implements SimpleCommand {
 

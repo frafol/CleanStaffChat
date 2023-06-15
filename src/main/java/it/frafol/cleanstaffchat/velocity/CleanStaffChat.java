@@ -38,7 +38,7 @@ import java.nio.file.Path;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.9.3",
+        version = "1.10",
         dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
@@ -61,7 +61,7 @@ public class CleanStaffChat {
         return instance;
     }
 
-    public static String Version = "1.9.3";
+    public static String Version = "1.10";
 
     @Inject
     public CleanStaffChat(ProxyServer server, Logger logger, @DataDirectory Path path, Metrics.Factory metricsFactory) {
@@ -126,6 +126,12 @@ public class CleanStaffChat {
                 .metaBuilder("screload")
                 .aliases("staffchatreload", "staffreload", "cleanscreload", "cleanstaffchatreload")
                 .build(), new ReloadCommand(this));
+
+        if (VelocityConfig.STAFFLIST_MODULE.get(Boolean.class)) {
+
+            registerStaffList();
+
+        }
 
         if (VelocityConfig.STAFFCHAT.get(Boolean.class)) {
 
@@ -242,6 +248,23 @@ public class CleanStaffChat {
         redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteStaffChat-RedisBungee");
         redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteAdminChat-RedisBungee");
         redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteDonorChat-RedisBungee");
+
+    }
+
+    @SneakyThrows
+    private void registerStaffList() {
+
+        if (!server.getPluginManager().isLoaded("luckperms")) {
+            logger.warn("You need LuckPermsVelocity to use StaffList.");
+            return;
+        }
+
+        final String[] aliases_stafflist = VelocityCommandsConfig.STAFFLIST.getStringList().toArray(new String[0]);
+
+        server.getCommandManager().register(server.getCommandManager()
+                .metaBuilder(VelocityCommandsConfig.STAFFLIST.getStringList().get(0))
+                .aliases(aliases_stafflist)
+                .build(), new StaffListCommand(this));
 
     }
 

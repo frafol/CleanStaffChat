@@ -13,6 +13,7 @@ settings:
   console_name: "Console"
 
   reload_permission: "staffchat.reload"
+  stafflist_permission: "stafflist.use"
 
   use_staffchat: true
   use_adminchat: true
@@ -96,5 +97,6 @@ modules:
   donorchat_toggle_module: true
   donorchat_discord_module: true
 
+  stafflist_module: true
 
 # Enjoy.

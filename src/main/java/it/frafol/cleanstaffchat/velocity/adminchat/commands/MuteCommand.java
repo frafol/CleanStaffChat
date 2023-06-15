@@ -10,7 +10,7 @@ import it.frafol.cleanstaffchat.velocity.enums.VelocityRedis;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 
-import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.*;
+import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.ADMINCHAT_MUTE_MODULE;
 
 public class MuteCommand implements SimpleCommand {
 

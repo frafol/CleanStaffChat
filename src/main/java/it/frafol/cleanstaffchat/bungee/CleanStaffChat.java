@@ -83,6 +83,12 @@ public class CleanStaffChat extends Plugin {
 
         getProxy().getPluginManager().registerCommand(this, new ReloadCommand());
 
+        if (BungeeConfig.STAFFLIST_MODULE.get(Boolean.class)) {
+
+            registerStaffList();
+
+        }
+
         if (BungeeConfig.STAFFCHAT.get(Boolean.class)) {
 
             registerStaffChat();
@@ -227,6 +233,16 @@ public class CleanStaffChat extends Plugin {
             jda.addEventListener(new it.frafol.cleanstaffchat.bungee.adminchat.listeners.ChatListener(this));
         }
 
+    }
+
+    private void registerStaffList() {
+
+        if (getProxy().getPluginManager().getPlugin("LuckPermsBungee") == null) {
+            getLogger().warning("You need LuckPermsBungee to use StaffList.");
+            return;
+        }
+
+        getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.staffchat.commands.StaffListCommand());
     }
 
     private void registerStaffChat() {

@@ -48,6 +48,9 @@ public enum VelocityConfig {
     ADMINCHAT_TOGGLE_MODULE("modules.adminchat_toggle_module"),
     DONORCHAT_TOGGLE_MODULE("modules.donorchat_toggle_module"),
 
+    STAFFLIST_MODULE("modules.stafflist_module"),
+    STAFFLIST_PERMISSION("settings.stafflist_permission"),
+
     STAFFCHAT_RELOAD_PERMISSION("settings.reload_permission"),
 
     CONSOLE_CAN_TALK("settings.console_staffchat"),

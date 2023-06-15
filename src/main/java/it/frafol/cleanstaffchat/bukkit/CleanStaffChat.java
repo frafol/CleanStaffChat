@@ -103,6 +103,10 @@ public class CleanStaffChat extends JavaPlugin {
 
         getCommandMap().register(getName().toLowerCase(), new ReloadCommand(this));
 
+        if (SpigotConfig.STAFFLIST_MODULE.get(Boolean.class)) {
+            registerStaffListCommands();
+        }
+
         if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
 
             jda = JDABuilder.createDefault(SpigotDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
@@ -208,6 +212,31 @@ public class CleanStaffChat extends JavaPlugin {
             ));
         }
         getCommandMap().registerAll(getName().toLowerCase(), staffChatCommands);
+    }
+
+    @SneakyThrows
+    private void registerStaffListCommands() {
+        
+        if (getServer().getPluginManager().getPlugin("LuckPerms") == null) {
+            getLogger().warning("You need LuckPerms to use the StaffList.");
+            return;
+        }
+
+        List<Command> staffListCommands = new ArrayList<>();
+        for(SpigotCommandsConfig commandsList : SpigotCommandsConfig.getStaffListCommands()){
+            List<String> commandLabels = commandsList.getStringList();
+            if (commandLabels.isEmpty()) {
+                continue;
+            }
+
+            staffListCommands.add((CommandBase) commandsList.getCommandClass().getDeclaredConstructors()[0].newInstance(
+                    this,
+                    commandLabels.get(0),
+                    "",
+                    commandLabels.subList(1, commandLabels.size())
+            ));
+        }
+        getCommandMap().registerAll(getName().toLowerCase(), staffListCommands);
     }
 
     @SneakyThrows

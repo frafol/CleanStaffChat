@@ -105,6 +105,11 @@ messages:
 
       discord_cooldown_message: "You have to wait some seconds to send another message."
 
+  stafflist:
+    header: "&8&m------&5&m------&d&m------&5&m------&8&m------&f"
+    format: "%userprefix%%player% &7(&d%server%&7)"
+    footer: "&8&m------&5&m------&d&m------&5&m------&8&m------&f"
+
   # Errors and reload.
   deny_color_codes: "%prefix% &cColor codes are not permitted."
   no_permission: "%prefix% &cYou don't have the permission to do this."

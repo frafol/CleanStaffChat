@@ -72,6 +72,10 @@ public enum SpigotMessages {
     DISCORD_DONOR_FORMAT("messages.donorchat.discord.donorchat_discord_format"),
     DISCORD_ADMIN_FORMAT("messages.adminchat.discord.adminchat_discord_format"),
 
+    LIST_HEADER("messages.stafflist.header"),
+    LIST_FORMAT("messages.stafflist.format"),
+    LIST_FOOTER("messages.stafflist.footer"),
+
     DONORCHAT_COOLDOWN_ERROR_DISCORD("messages.donorchat.discord.discord_cooldown_message");
 
     private final String path;

@@ -14,6 +14,8 @@ public enum BungeeCommandsConfig {
     ADMINCHAT_MUTE("aliases.adminchat.mute"),
     DONORCHAT_MUTE("aliases.donorchat.mute"),
 
+    STAFFLIST("aliases.stafflist.main"),
+
     STAFFCHAT_TOGGLE("aliases.staffchat.toggle"),
     ADMINCHAT_TOGGLE("aliases.adminchat.toggle"),
     DONORCHAT_TOGGLE("aliases.donorchat.toggle"),

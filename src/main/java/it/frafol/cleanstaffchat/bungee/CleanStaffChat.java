@@ -8,6 +8,7 @@ import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeRedis;
 import it.frafol.cleanstaffchat.bungee.hooks.RedisListener;
 import it.frafol.cleanstaffchat.bungee.objects.TextFile;
+import it.frafol.cleanstaffchat.bungee.staffchat.commands.DebugCommand;
 import it.frafol.cleanstaffchat.bungee.staffchat.commands.ReloadCommand;
 import it.frafol.cleanstaffchat.bungee.staffchat.listeners.ChatListener;
 import it.frafol.cleanstaffchat.bungee.staffchat.listeners.JoinListener;
@@ -55,8 +56,8 @@ public class CleanStaffChat extends Plugin {
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.0.0-beta.5")
-                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.5/JDA-5.0.0-beta.5-withDependencies-min.jar")
+                .version("5.0.0-beta.10")
+                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.10/JDA-5.0.0-beta.10-withDependencies-min.jar")
                 .build();
 
         bungeeLibraryManager.addMavenCentral();
@@ -82,6 +83,7 @@ public class CleanStaffChat extends Plugin {
         }
 
         getProxy().getPluginManager().registerCommand(this, new ReloadCommand());
+        getProxy().getPluginManager().registerCommand(this, new DebugCommand(this));
 
         if (BungeeConfig.STAFFLIST_MODULE.get(Boolean.class)) {
 

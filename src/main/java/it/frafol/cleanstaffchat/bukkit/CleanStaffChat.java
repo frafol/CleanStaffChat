@@ -5,6 +5,7 @@ import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
 import it.frafol.cleanstaffchat.bukkit.objects.TextFile;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.CommandBase;
+import it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl.DebugCommand;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl.ReloadCommand;
 import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.ChatListener;
 import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.JoinListener;
@@ -58,8 +59,8 @@ public class CleanStaffChat extends JavaPlugin {
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.0.0-beta.5")
-                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.5/JDA-5.0.0-beta.5-withDependencies-min.jar")
+                .version("5.0.0-beta.10")
+                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.10/JDA-5.0.0-beta.10-withDependencies-min.jar")
                 .build();
 
         bukkitLibraryManager.addMavenCentral();
@@ -102,6 +103,7 @@ public class CleanStaffChat extends JavaPlugin {
         getLogger().info("Configurations loaded successfully!");
 
         getCommandMap().register(getName().toLowerCase(), new ReloadCommand(this));
+        getServer().getPluginManager().registerEvents(new DebugCommand(), this);
 
         if (SpigotConfig.STAFFLIST_MODULE.get(Boolean.class)) {
             registerStaffListCommands();

@@ -91,8 +91,8 @@ public class CleanStaffChat {
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.0.0-beta.5")
-                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.5/JDA-5.0.0-beta.5-withDependencies-min.jar")
+                .version("5.0.0-beta.10")
+                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.10/JDA-5.0.0-beta.10-withDependencies-min.jar")
                 .build();
 
         velocityLibraryManager.addMavenCentral();
@@ -126,6 +126,11 @@ public class CleanStaffChat {
                 .metaBuilder("screload")
                 .aliases("staffchatreload", "staffreload", "cleanscreload", "cleanstaffchatreload")
                 .build(), new ReloadCommand(this));
+
+        server.getCommandManager().register(server.getCommandManager()
+                .metaBuilder("scdebug")
+                .aliases("staffchatdebug", "staffdebug", "cleanscdebug", "cleanstaffchatdebug")
+                .build(), new DebugCommand(this));
 
         if (VelocityConfig.STAFFLIST_MODULE.get(Boolean.class)) {
 

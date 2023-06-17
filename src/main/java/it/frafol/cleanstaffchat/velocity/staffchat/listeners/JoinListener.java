@@ -12,6 +12,7 @@ import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityRedis;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
+import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.luckperms.api.LuckPerms;
@@ -86,9 +87,9 @@ public class JoinListener {
 
                         final String final_message = VelocityMessages.STAFF_JOIN_MESSAGE_FORMAT.get(String.class)
                                 .replace("%user%", player.getUsername())
-                                .replace("%displayname%", user_prefix + player.getUsername() + user_suffix)
-                                .replace("%userprefix%", user_prefix)
-                                .replace("%usersuffix%", user_suffix)
+                                .replace("%displayname%", ChatUtil.translateHex(user_prefix) + player.getUsername() + ChatUtil.translateHex(user_suffix))
+                                .replace("%userprefix%", ChatUtil.translateHex(user_prefix))
+                                .replace("%usersuffix%", ChatUtil.translateHex(user_suffix))
                                 .replace("%prefix%", VelocityMessages.PREFIX.color())
                                 .replace("%server%", player.getCurrentServer().get().getServerInfo().getName())
                                 .replace("&", "§");
@@ -107,9 +108,9 @@ public class JoinListener {
                                             && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                             .forEach(players -> VelocityMessages.STAFF_JOIN_MESSAGE_FORMAT.send(players,
                                     new Placeholder("user", player.getUsername()),
-                                    new Placeholder("displayname", user_prefix + player.getUsername() + user_suffix),
-                                    new Placeholder("userprefix", user_prefix),
-                                    new Placeholder("usersuffix", user_suffix),
+                                    new Placeholder("displayname", ChatUtil.translateHex(user_prefix) + player.getUsername() + ChatUtil.translateHex(user_suffix)),
+                                    new Placeholder("userprefix", ChatUtil.translateHex(user_prefix)),
+                                    new Placeholder("usersuffix", ChatUtil.translateHex(user_suffix)),
                                     new Placeholder("server", player.getCurrentServer().get().getServerInfo().getName()),
                                     new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
@@ -229,9 +230,9 @@ public class JoinListener {
 
                     final String final_message = VelocityMessages.STAFF_QUIT_MESSAGE_FORMAT.get(String.class)
                             .replace("%user%", player.getUsername())
-                            .replace("%displayname%", user_prefix + player.getUsername() + user_suffix)
-                            .replace("%userprefix%", user_prefix)
-                            .replace("%usersuffix%", user_suffix)
+                            .replace("%displayname%", ChatUtil.translateHex(user_prefix) + player.getUsername() + ChatUtil.translateHex(user_suffix))
+                            .replace("%userprefix%", ChatUtil.translateHex(user_prefix))
+                            .replace("%usersuffix%", ChatUtil.translateHex(user_suffix))
                             .replace("%server%", player.getCurrentServer().get().getServerInfo().getName())
                             .replace("%prefix%", VelocityMessages.PREFIX.color())
                             .replace("&", "§");
@@ -252,9 +253,9 @@ public class JoinListener {
                                             && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                             .forEach(players -> VelocityMessages.STAFF_QUIT_MESSAGE_FORMAT.send(players,
                                     new Placeholder("user", player.getUsername()),
-                                    new Placeholder("displayname", user_prefix + player.getUsername() + user_suffix),
-                                    new Placeholder("userprefix", user_prefix),
-                                    new Placeholder("usersuffix", user_suffix),
+                                    new Placeholder("displayname", ChatUtil.translateHex(user_prefix) + player.getUsername() + ChatUtil.translateHex(user_suffix)),
+                                    new Placeholder("userprefix", ChatUtil.translateHex(user_prefix)),
+                                    new Placeholder("usersuffix", ChatUtil.translateHex(user_suffix)),
                                     new Placeholder("server", player.getCurrentServer().get().getServerInfo().getName()),
                                     new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 

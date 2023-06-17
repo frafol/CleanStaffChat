@@ -10,6 +10,7 @@ import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityRedis;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
+import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -73,9 +74,9 @@ public class AFKCommand implements SimpleCommand {
 
                     final String final_message = VelocityMessages.STAFFCHAT_AFK_ON.get(String.class)
                             .replace("%user%", ((Player) commandSource).getUsername())
-                            .replace("%displayname%", user_prefix + commandSource + user_suffix)
-                            .replace("%userprefix%", user_prefix)
-                            .replace("%usersuffix%", user_suffix)
+                            .replace("%displayname%", ChatUtil.translateHex(user_prefix) + commandSource + ChatUtil.translateHex(user_suffix))
+                            .replace("%userprefix%", ChatUtil.translateHex(user_prefix))
+                            .replace("%usersuffix%", ChatUtil.translateHex(user_suffix))
                             .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName())
                             .replace("%prefix%", VelocityMessages.PREFIX.color())
                             .replace("&", "§");
@@ -91,9 +92,9 @@ public class AFKCommand implements SimpleCommand {
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                         .forEach(players -> VelocityMessages.STAFFCHAT_AFK_ON.send(players,
                                 new Placeholder("user", ((Player) commandSource).getUsername()),
-                                new Placeholder("displayname", user_prefix + commandSource + user_suffix),
-                                new Placeholder("userprefix", user_prefix),
-                                new Placeholder("usersuffix", user_suffix),
+                                new Placeholder("displayname", ChatUtil.translateHex(user_prefix) + commandSource + ChatUtil.translateHex(user_suffix)),
+                                new Placeholder("userprefix", ChatUtil.translateHex(user_prefix)),
+                                new Placeholder("usersuffix", ChatUtil.translateHex(user_suffix)),
                                 new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
                                 new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
@@ -153,9 +154,9 @@ public class AFKCommand implements SimpleCommand {
 
                     final String final_message = VelocityMessages.STAFFCHAT_AFK_OFF.get(String.class)
                             .replace("%user%", ((Player) commandSource).getUsername())
-                            .replace("%displayname%", user_prefix + commandSource + user_suffix)
-                            .replace("%userprefix%", user_prefix)
-                            .replace("%usersuffix%", user_suffix)
+                            .replace("%displayname%", ChatUtil.translateHex(user_prefix) + commandSource + ChatUtil.translateHex(user_suffix))
+                            .replace("%userprefix%", ChatUtil.translateHex(user_prefix))
+                            .replace("%usersuffix%", ChatUtil.translateHex(user_suffix))
                             .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName())
                             .replace("%prefix%", VelocityMessages.PREFIX.color())
                             .replace("&", "§");
@@ -171,9 +172,9 @@ public class AFKCommand implements SimpleCommand {
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                         .forEach(players -> VelocityMessages.STAFFCHAT_AFK_OFF.send(players,
                                 new Placeholder("user", ((Player) commandSource).getUsername()),
-                                new Placeholder("displayname", user_prefix + commandSource + user_suffix),
-                                new Placeholder("userprefix", user_prefix),
-                                new Placeholder("usersuffix", user_suffix),
+                                new Placeholder("displayname", ChatUtil.translateHex(user_prefix) + commandSource + ChatUtil.translateHex(user_suffix)),
+                                new Placeholder("userprefix", ChatUtil.translateHex(user_prefix)),
+                                new Placeholder("usersuffix", ChatUtil.translateHex(user_suffix)),
                                 new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
                                 new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 

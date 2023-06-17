@@ -62,9 +62,9 @@ public class ServerListener implements Listener {
                             .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_AFK_OFF.color()
                                     .replace("%prefix%", BungeeMessages.PREFIX.color())
                                     .replace("%user%", event.getPlayer().getName())
-                                    .replace("%displayname%", user_prefix + event.getPlayer().getName() + user_suffix)
-                                    .replace("%userprefix%", user_prefix)
-                                    .replace("%usersuffix%", user_suffix))));
+                                    .replace("%displayname%", PlayerCache.translateHex(user_prefix) + event.getPlayer().getName() + PlayerCache.translateHex(user_suffix))
+                                    .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                    .replace("%usersuffix%", PlayerCache.translateHex(user_suffix)))));
 
                 } else if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {
 
@@ -182,9 +182,9 @@ public class ServerListener implements Listener {
                             final String final_message = BungeeMessages.STAFF_SWITCH_MESSAGE_FORMAT.get(String.class)
                                     .replace("%prefix%", BungeeMessages.PREFIX.color())
                                     .replace("%user%", player.getName())
-                                    .replace("%displayname%", user_prefix + player.getName() + user_suffix)
-                                    .replace("%userprefix%", user_prefix)
-                                    .replace("%usersuffix%", user_suffix)
+                                    .replace("%displayname%", PlayerCache.translateHex(user_prefix) + player.getName() + PlayerCache.translateHex(user_suffix))
+                                    .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                    .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                                     .replace("%serverbefore%", event.getFrom().getName())
                                     .replace("%server%", player.getServer().getInfo().getName());
 
@@ -203,9 +203,9 @@ public class ServerListener implements Listener {
                                 .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFF_SWITCH_MESSAGE_FORMAT.color()
                                         .replace("%prefix%", BungeeMessages.PREFIX.color())
                                         .replace("%user%", player.getName())
-                                        .replace("%displayname%", user_prefix + player.getName() + user_suffix)
-                                        .replace("%userprefix%", user_prefix)
-                                        .replace("%usersuffix%", user_suffix)
+                                        .replace("%displayname%", PlayerCache.translateHex(user_prefix) + player.getName() + PlayerCache.translateHex(user_suffix))
+                                        .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                        .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                                         .replace("%serverbefore%", event.getFrom().getName())
                                         .replace("%server%", player.getServer().getInfo().getName()))));
 

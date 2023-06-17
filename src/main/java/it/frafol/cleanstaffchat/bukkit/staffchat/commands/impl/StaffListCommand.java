@@ -3,6 +3,7 @@ package it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
+import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.CommandBase;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -53,7 +54,7 @@ public class StaffListCommand extends CommandBase {
                     String user_prefix = prefix == null ? group.getDisplayName() : prefix;
 
                     sender.sendMessage(SpigotMessages.LIST_FORMAT.color()
-                            .replace("%userprefix%", user_prefix)
+                            .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
                             .replace("%player%", players.getName())
                             .replace("%server%", "")
                             .replace("%prefix%", SpigotMessages.PREFIX.color()));

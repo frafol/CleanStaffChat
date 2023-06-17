@@ -4,6 +4,7 @@ import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeCommandsConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
+import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
@@ -53,7 +54,7 @@ public class StaffListCommand extends Command {
                     String user_prefix = prefix == null ? group.getDisplayName() : prefix;
 
                     sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FORMAT.color()
-                            .replace("%userprefix%", user_prefix)
+                            .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
                             .replace("%player%", players.getName())
                             .replace("%server%", "")
                             .replace("%prefix%", BungeeMessages.PREFIX.color())));

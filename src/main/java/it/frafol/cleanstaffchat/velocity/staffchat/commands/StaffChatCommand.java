@@ -150,9 +150,9 @@ public class StaffChatCommand implements SimpleCommand {
                             final String final_message = VelocityMessages.STAFFCHAT_FORMAT.get(String.class)
                                     .replace("%user%", sender)
                                     .replace("%message%", message)
-                                    .replace("%displayname%", user_prefix + sender + user_suffix)
-                                    .replace("%userprefix%", user_prefix)
-                                    .replace("%usersuffix%", user_suffix)
+                                    .replace("%displayname%", ChatUtil.translateHex(user_prefix) + sender + ChatUtil.translateHex(user_suffix))
+                                    .replace("%userprefix%", ChatUtil.translateHex(user_prefix))
+                                    .replace("%usersuffix%", ChatUtil.translateHex(user_suffix))
                                     .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName())
                                     .replace("%prefix%", VelocityMessages.PREFIX.color())
                                     .replace("&", "§");
@@ -172,9 +172,9 @@ public class StaffChatCommand implements SimpleCommand {
                                 .forEach(players -> VelocityMessages.STAFFCHAT_FORMAT.send(players,
                                         new Placeholder("user", sender),
                                         new Placeholder("message", message),
-                                        new Placeholder("displayname", user_prefix + sender + user_suffix),
-                                        new Placeholder("userprefix", user_prefix),
-                                        new Placeholder("usersuffix", user_suffix),
+                                        new Placeholder("displayname", ChatUtil.translateHex(user_prefix) + sender + ChatUtil.translateHex(user_suffix)),
+                                        new Placeholder("userprefix", ChatUtil.translateHex(user_prefix)),
+                                        new Placeholder("usersuffix", ChatUtil.translateHex(user_suffix)),
                                         new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
                                         new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 

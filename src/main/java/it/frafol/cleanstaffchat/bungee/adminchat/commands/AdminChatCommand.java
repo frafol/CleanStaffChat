@@ -122,9 +122,9 @@ public class AdminChatCommand extends Command {
                             final String final_message = BungeeMessages.ADMINCHAT_FORMAT.get(String.class)
                                     .replace("%user%", commandsender)
                                     .replace("%message%", message)
-                                    .replace("%displayname%", user_prefix + commandsender + user_suffix)
-                                    .replace("%userprefix%", user_prefix)
-                                    .replace("%usersuffix%", user_suffix)
+                                    .replace("%displayname%", PlayerCache.translateHex(user_prefix) + commandsender + PlayerCache.translateHex(user_suffix))
+                                    .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                    .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                                     .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
                                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                                     .replace("&", "§");
@@ -142,9 +142,9 @@ public class AdminChatCommand extends Command {
                                         .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%message%", message)
-                                        .replace("%displayname%", user_prefix + commandsender + user_suffix)
-                                        .replace("%userprefix%", user_prefix)
-                                        .replace("%usersuffix%", user_suffix)
+                                        .replace("%displayname%", PlayerCache.translateHex(user_prefix) + commandsender + PlayerCache.translateHex(user_suffix))
+                                        .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                        .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                                         .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
                                         .replace("&", "§"))));
 

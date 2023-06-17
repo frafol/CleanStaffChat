@@ -91,9 +91,9 @@ public class ChatListener extends ListenerAdapter implements Listener {
                             final String final_message = BungeeMessages.STAFFCHAT_FORMAT.get(String.class)
                                     .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
                                     .replace("%message%", message)
-                                    .replace("%displayname%", user_prefix + ((ProxiedPlayer) event.getSender()).getName() + user_suffix)
-                                    .replace("%userprefix%", user_prefix)
-                                    .replace("%usersuffix%", user_suffix)
+                                    .replace("%displayname%", PlayerCache.translateHex(user_prefix) + ((ProxiedPlayer) event.getSender()).getName() + PlayerCache.translateHex(user_suffix))
+                                    .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                    .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                                     .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
                                     .replace("%prefix%", BungeeMessages.PREFIX.color())
                                     .replace("&", "§");
@@ -111,9 +111,9 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                         .replace("%prefix%", BungeeMessages.PREFIX.color())
                                         .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
                                         .replace("%message%", message)
-                                        .replace("%displayname%", user_prefix + ((ProxiedPlayer) event.getSender()).getName() + user_suffix)
-                                        .replace("%userprefix%", user_prefix)
-                                        .replace("%usersuffix%", user_suffix)
+                                        .replace("%displayname%", PlayerCache.translateHex(user_prefix) + ((ProxiedPlayer) event.getSender()).getName() + PlayerCache.translateHex(user_suffix))
+                                        .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                        .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                                         .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
                                         .replace("&", "§"))));
                     } else if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {

@@ -82,9 +82,9 @@ public class JoinListener implements Listener {
 
                             final String final_message = BungeeMessages.STAFF_JOIN_MESSAGE_FORMAT.get(String.class)
                                     .replace("%user%", player.getName())
-                                    .replace("%displayname%", user_prefix + player.getName() + user_suffix)
-                                    .replace("%userprefix%", user_prefix)
-                                    .replace("%usersuffix%", user_suffix)
+                                    .replace("%displayname%", PlayerCache.translateHex(user_prefix) + player.getName() + PlayerCache.translateHex(user_suffix))
+                                    .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                    .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                                     .replace("%server%", player.getServer().getInfo().getName())
                                     .replace("%prefix%", BungeeMessages.PREFIX.color())
                                     .replace("&", "§");
@@ -103,9 +103,9 @@ public class JoinListener implements Listener {
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                                 .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
                                         .replace("%prefix%", BungeeMessages.PREFIX.color())
-                                        .replace("%displayname%", user_prefix + player.getName() + user_suffix)
-                                        .replace("%userprefix%", user_prefix)
-                                        .replace("%usersuffix%", user_suffix)
+                                        .replace("%displayname%", PlayerCache.translateHex(user_prefix) + player.getName() + PlayerCache.translateHex(user_suffix))
+                                        .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                        .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                                         .replace("%server%", player.getServer().getInfo().getName())
                                         .replace("%user%", player.getName()))));
 
@@ -263,9 +263,9 @@ public class JoinListener implements Listener {
 
                         final String final_message = BungeeMessages.STAFF_QUIT_MESSAGE_FORMAT.get(String.class)
                                 .replace("%user%", player.getName())
-                                .replace("%displayname%", user_prefix + player.getName() + user_suffix)
-                                .replace("%userprefix%", user_prefix)
-                                .replace("%usersuffix%", user_suffix)
+                                .replace("%displayname%", PlayerCache.translateHex(user_prefix) + player.getName() + PlayerCache.translateHex(user_suffix))
+                                .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                                 .replace("%prefix%", BungeeMessages.PREFIX.color())
                                 .replace("%server%", player.getServer().getInfo().getName())
                                 .replace("&", "§");
@@ -286,9 +286,9 @@ public class JoinListener implements Listener {
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                                 .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFF_QUIT_MESSAGE_FORMAT.color()
                                         .replace("%prefix%", BungeeMessages.PREFIX.color())
-                                        .replace("%displayname%", user_prefix + player.getName() + user_suffix)
-                                        .replace("%userprefix%", user_prefix)
-                                        .replace("%usersuffix%", user_suffix)
+                                        .replace("%displayname%", PlayerCache.translateHex(user_prefix) + player.getName() + PlayerCache.translateHex(user_suffix))
+                                        .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                        .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                                         .replace("%server%", player.getServer().getInfo().getName())
                                         .replace("%user%", player.getName()))));
 

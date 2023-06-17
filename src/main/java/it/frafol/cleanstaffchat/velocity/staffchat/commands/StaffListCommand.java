@@ -7,6 +7,7 @@ import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
+import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
@@ -63,7 +64,7 @@ public class StaffListCommand implements SimpleCommand {
 
                     VelocityMessages.LIST_FORMAT.send(invocation.source(),
                             new Placeholder("prefix", VelocityMessages.PREFIX.color()),
-                            new Placeholder("userprefix", user_prefix),
+                            new Placeholder("userprefix", ChatUtil.translateHex(user_prefix)),
                             new Placeholder("player", players.getUsername()),
                             new Placeholder("server", players.getCurrentServer().get().getServerInfo().getName()));
 

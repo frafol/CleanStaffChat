@@ -111,9 +111,9 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                     .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
                                     .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
                                     .replace("%message%", message)
-                                    .replace("%displayname%", user_prefix + ((ProxiedPlayer) event.getSender()).getName() + user_suffix)
-                                    .replace("%userprefix%", user_prefix)
-                                    .replace("%usersuffix%", user_suffix)
+                                    .replace("%displayname%", PlayerCache.translateHex(user_prefix) + ((ProxiedPlayer) event.getSender()).getName() + PlayerCache.translateHex(user_suffix))
+                                    .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                    .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                                     .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
                                     .replace("&", "§");
 
@@ -130,9 +130,9 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                         .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
                                         .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
                                         .replace("%message%", message)
-                                        .replace("%displayname%", user_prefix + ((ProxiedPlayer) event.getSender()).getName() + user_suffix)
-                                        .replace("%userprefix%", user_prefix)
-                                        .replace("%usersuffix%", user_suffix)
+                                        .replace("%displayname%", PlayerCache.translateHex(user_prefix) + ((ProxiedPlayer) event.getSender()).getName() + PlayerCache.translateHex(user_suffix))
+                                        .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                        .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                                         .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
                                         .replace("&", "§"))));
                         

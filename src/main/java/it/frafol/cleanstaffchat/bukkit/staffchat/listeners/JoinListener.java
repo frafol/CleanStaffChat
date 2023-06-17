@@ -73,9 +73,9 @@ public class JoinListener implements Listener {
                                                 (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
                                 .forEach(players -> players.sendMessage(SpigotMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
                                         .replace("%prefix%", SpigotMessages.PREFIX.color())
-                                        .replace("%displayname%", user_prefix + player.getName() + user_suffix)
-                                        .replace("%userprefix%", user_prefix)
-                                        .replace("%usersuffix%", user_suffix)
+                                        .replace("%displayname%", PlayerCache.translateHex(user_prefix) + player.getName() + PlayerCache.translateHex(user_suffix))
+                                        .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                        .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                                         .replace("%user%", player.getName())));
 
                     } else if (Bukkit.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {
@@ -188,9 +188,9 @@ public class JoinListener implements Listener {
                                             (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
                             .forEach(players -> players.sendMessage(SpigotMessages.STAFF_QUIT_MESSAGE_FORMAT.color()
                                     .replace("%prefix%", SpigotMessages.PREFIX.color())
-                                    .replace("%displayname%", user_prefix + player.getName() + user_suffix)
-                                    .replace("%userprefix%", user_prefix)
-                                    .replace("%usersuffix%", user_suffix)
+                                    .replace("%displayname%", PlayerCache.translateHex(user_prefix) + player.getName() + PlayerCache.translateHex(user_suffix))
+                                    .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                    .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                                     .replace("%user%", player.getName())));
 
                 } else if (Bukkit.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {

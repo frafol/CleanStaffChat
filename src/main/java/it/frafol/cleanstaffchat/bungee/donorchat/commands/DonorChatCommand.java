@@ -139,9 +139,9 @@ public class DonorChatCommand extends Command {
                             final String final_message = BungeeMessages.DONORCHAT_FORMAT.get(String.class)
                                     .replace("%user%", commandsender)
                                     .replace("%message%", message)
-                                    .replace("%displayname%", user_prefix + commandsender + user_suffix)
-                                    .replace("%userprefix%", user_prefix)
-                                    .replace("%usersuffix%", user_suffix)
+                                    .replace("%displayname%", PlayerCache.translateHex(user_prefix) + commandsender + PlayerCache.translateHex(user_suffix))
+                                    .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                    .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                                     .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
                                     .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
                                     .replace("&", "§");
@@ -159,9 +159,9 @@ public class DonorChatCommand extends Command {
                                         .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%message%", message)
-                                        .replace("%displayname%", user_prefix + commandsender + user_suffix)
-                                        .replace("%userprefix%", user_prefix)
-                                        .replace("%usersuffix%", user_suffix)
+                                        .replace("%displayname%", PlayerCache.translateHex(user_prefix) + commandsender + PlayerCache.translateHex(user_suffix))
+                                        .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                        .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                                         .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
                                         .replace("&", "§"))));
                     } else if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {

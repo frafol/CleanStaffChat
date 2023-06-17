@@ -73,9 +73,9 @@ public class AFKCommand extends Command {
 
                     final String final_message = BungeeMessages.STAFFCHAT_AFK_ON.get(String.class)
                             .replace("%user%", sender.getName())
-                            .replace("%displayname%", user_prefix + sender.getName() + user_suffix)
-                            .replace("%userprefix%", user_prefix)
-                            .replace("%usersuffix%", user_suffix)
+                            .replace("%displayname%", PlayerCache.translateHex(user_prefix) + sender.getName() + PlayerCache.translateHex(user_suffix))
+                            .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                            .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                             .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
                             .replace("%prefix%", BungeeMessages.PREFIX.color())
                             .replace("&", "§");
@@ -91,10 +91,10 @@ public class AFKCommand extends Command {
                             .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_AFK_ON.color()
                                     .replace("%prefix%", BungeeMessages.PREFIX.color())
                                     .replace("%user%", sender.getName())
-                                    .replace("%displayname%", user_prefix + sender.getName() + user_suffix)
-                                    .replace("%userprefix%", user_prefix)
+                                    .replace("%displayname%", PlayerCache.translateHex(user_prefix) + sender.getName() + PlayerCache.translateHex(user_suffix))
+                                    .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
                                     .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
-                                    .replace("%usersuffix%", user_suffix))));
+                                    .replace("%usersuffix%", PlayerCache.translateHex(user_suffix)))));
 
                 } else if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {
 
@@ -198,9 +198,9 @@ public class AFKCommand extends Command {
 
                     final String final_message = BungeeMessages.STAFFCHAT_AFK_OFF.get(String.class)
                             .replace("%user%", sender.getName())
-                            .replace("%displayname%", user_prefix + sender.getName() + user_suffix)
-                            .replace("%userprefix%", user_prefix)
-                            .replace("%usersuffix%", user_suffix)
+                            .replace("%displayname%", PlayerCache.translateHex(user_prefix) + sender.getName() + PlayerCache.translateHex(user_suffix))
+                            .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                            .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                             .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
                             .replace("%prefix%", BungeeMessages.PREFIX.color())
                             .replace("&", "§");
@@ -217,10 +217,10 @@ public class AFKCommand extends Command {
                         .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_AFK_OFF.color()
                                 .replace("%prefix%", BungeeMessages.PREFIX.color())
                                 .replace("%user%", sender.getName())
-                                .replace("%displayname%", user_prefix + sender.getName() + user_suffix)
-                                .replace("%userprefix%", user_prefix)
+                                .replace("%displayname%", PlayerCache.translateHex(user_prefix) + sender.getName() + PlayerCache.translateHex(user_suffix))
+                                .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
                                 .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
-                                .replace("%usersuffix%", user_suffix))));
+                                .replace("%usersuffix%", PlayerCache.translateHex(user_suffix)))));
 
             } else {
 

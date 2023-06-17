@@ -68,9 +68,9 @@ public class MoveListener implements Listener {
                         .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_OFF.color()
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", player.getName())
-                                .replace("%displayname%", user_prefix + player.getName() + user_suffix)
-                                .replace("%userprefix%", user_prefix)
-                                .replace("%usersuffix%", user_suffix)));
+                                .replace("%displayname%", PlayerCache.translateHex(user_prefix) + player.getName() + PlayerCache.translateHex(user_suffix))
+                                .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))));
 
             } else {
 

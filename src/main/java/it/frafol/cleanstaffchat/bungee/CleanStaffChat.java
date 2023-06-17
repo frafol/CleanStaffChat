@@ -239,7 +239,7 @@ public class CleanStaffChat extends Plugin {
 
     private void registerStaffList() {
 
-        if (getProxy().getPluginManager().getPlugin("LuckPermsBungee") == null) {
+        if (getProxy().getPluginManager().getPlugin("LuckPerms") == null) {
             getLogger().warning("You need LuckPermsBungee to use StaffList.");
             return;
         }

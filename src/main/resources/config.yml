@@ -73,6 +73,7 @@ settings:
 modules:
 
   update_check: true
+  auto_update: true
   stats: true
 
   staffchat_switch_module: true

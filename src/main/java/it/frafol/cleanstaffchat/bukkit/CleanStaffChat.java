@@ -1,8 +1,10 @@
 package it.frafol.cleanstaffchat.bukkit;
 
+import com.tchristofferson.configupdater.ConfigUpdater;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotCommandsConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotVersion;
 import it.frafol.cleanstaffchat.bukkit.objects.TextFile;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.CommandBase;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl.DebugCommand;
@@ -25,8 +27,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.simpleyaml.configuration.file.YamlFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CleanStaffChat extends JavaPlugin {
@@ -36,7 +45,10 @@ public class CleanStaffChat extends JavaPlugin {
     private TextFile messagesTextFile;
     private TextFile discordTextFile;
     private TextFile aliasesTextFile;
+    private TextFile versionTextFile;
     private static CleanStaffChat instance;
+
+    public boolean updated = false;
 
     public static CleanStaffChat getInstance() {
         return instance;
@@ -94,6 +106,30 @@ public class CleanStaffChat extends JavaPlugin {
 
         if (isFolia()) {
             getLogger().warning("Support for Folia has not been tested and is only for experimental purposes.");
+        }
+
+        File configFile = new File(getDataFolder(), "config.yml");
+        File messageFile = new File(getDataFolder(), "messages.yml");
+        File discordFile = new File(getDataFolder(), "discord.yml");
+        File aliasesFile = new File(getDataFolder(), "aliases.yml");
+        versionTextFile = new TextFile(getDataFolder().toPath(), "version.yml");
+
+        if (!getDescription().getVersion().equals(SpigotVersion.VERSION.get(String.class))) {
+
+            getLogger().info("Creating new configurations...");
+            try {
+                ConfigUpdater.update(this, "config.yml", configFile, Collections.emptyList());
+                ConfigUpdater.update(this, "messages.yml", messageFile, Collections.emptyList());
+                ConfigUpdater.update(this, "discord.yml", discordFile, Collections.emptyList());
+                ConfigUpdater.update(this, "aliases.yml", aliasesFile, Collections.emptyList());
+            } catch (IOException exception) {
+                getLogger().severe("Unable to update configuration file, see the error below:");
+                exception.printStackTrace();
+            }
+
+            versionTextFile.getConfig().set("version", getDescription().getVersion());
+            versionTextFile.getConfig().save();
+
         }
 
         configTextFile = new TextFile(getDataFolder().toPath(), "config.yml");
@@ -170,22 +206,74 @@ public class CleanStaffChat extends JavaPlugin {
             getLogger().info("Metrics loaded successfully!");
         }
 
-        if (SpigotConfig.UPDATE_CHECK.get(Boolean.class) && !getDescription().getVersion().contains("alpha")) {
-
-            if (!isFolia()) {
-                new UpdateCheck(this).getVersion(version -> {
-                    if (!this.getDescription().getVersion().equals(version)) {
-                        getLogger().warning("There is a new update available, download it on https://bit.ly/3BOQFEz");
-                    }
-                });
-            } else {
-                getLogger().severe("Update Checker is not supported in Folia.");
-            }
-
-        }
+        UpdateChecker();
 
         getLogger().info("Plugin successfully enabled!");
 
+    }
+
+    private void UpdateChecker() {
+
+        if (!SpigotConfig.UPDATE_CHECK.get(Boolean.class)) {
+            return;
+        }
+
+        if (isFolia()) {
+            getLogger().severe("Update Checker is not supported in Folia.");
+            return;
+        }
+
+        new UpdateCheck(this).getVersion(version -> {
+
+            if (Integer.parseInt(getDescription().getVersion().replace(".", "")) < Integer.parseInt(version.replace(".", ""))) {
+
+                if (SpigotConfig.AUTO_UPDATE.get(Boolean.class) && !updated) {
+                    autoUpdate();
+                    return;
+                }
+
+                if (!updated) {
+                    getLogger().warning("There is a new update available, download it on SpigotMC!");
+                }
+            }
+
+            if (Integer.parseInt(getDescription().getVersion().replace(".", "")) > Integer.parseInt(version.replace(".", ""))) {
+                getLogger().warning("You are using a development version, please report any bugs!");
+            }
+
+        });
+    }
+
+    public void autoUpdate() {
+        try {
+            String fileUrl = "https://github.com/frafol/CleanStaffChat/releases/download/release/CleanStaffChat.jar";
+            String destination = "./plugins/";
+
+            String fileName = getFileNameFromUrl(fileUrl);
+            File outputFile = new File(destination, fileName);
+
+            downloadFile(fileUrl, outputFile);
+            updated = true;
+            getLogger().warning("CleanStaffChat successfully updated, a restart is required.");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getFileNameFromUrl(String fileUrl) {
+        int slashIndex = fileUrl.lastIndexOf('/');
+        if (slashIndex != -1 && slashIndex < fileUrl.length() - 1) {
+            return fileUrl.substring(slashIndex + 1);
+        }
+        throw new IllegalArgumentException("Invalid file URL");
+    }
+
+    private void downloadFile(String fileUrl, File outputFile) throws IOException {
+        URL url = new URL(fileUrl);
+        try (InputStream inputStream = url.openStream()) {
+            Files.copy(inputStream, outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
     }
 
     public boolean isFolia() {
@@ -306,6 +394,10 @@ public class CleanStaffChat extends JavaPlugin {
         return getInstance().aliasesTextFile.getConfig();
     }
 
+    public YamlFile getVersionTextFile() {
+        return getInstance().versionTextFile.getConfig();
+    }
+
     @Override
     public void onDisable() {
         getLogger().info("Deleting instances...");
@@ -321,9 +413,22 @@ public class CleanStaffChat extends JavaPlugin {
     }
 
     public void UpdateCheck(Player player) {
+
+        if (isFolia()) {
+            return;
+        }
+
         new UpdateCheck(this).getVersion(version -> {
-            if (!getDescription().getVersion().equals(version)) {
-                player.sendMessage(ChatColor.YELLOW + "[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz");
+            if (Integer.parseInt(getDescription().getVersion().replace(".", "")) < Integer.parseInt(version.replace(".", ""))) {
+
+                if (SpigotConfig.AUTO_UPDATE.get(Boolean.class) && !updated) {
+                    autoUpdate();
+                    return;
+                }
+
+                if (!updated) {
+                    player.sendMessage(ChatColor.YELLOW + "There is a new update available, download it on SpigotMC!");
+                }
             }
         });
     }

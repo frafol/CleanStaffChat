@@ -37,6 +37,8 @@ public enum VelocityConfig {
     ADMINCHAT_TALK_MODULE("modules.adminchat_talk_module"),
     DONORCHAT_TALK_MODULE("modules.donorchat_talk_module"),
 
+    AUTO_UPDATE("modules.auto_update"),
+
     STAFFCHAT_MUTE_MODULE("modules.staffchat_mute_module"),
     ADMINCHAT_MUTE_MODULE("modules.adminchat_mute_module"),
     DONORCHAT_MUTE_MODULE("modules.donorchat_mute_module"),

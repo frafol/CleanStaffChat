@@ -5,14 +5,12 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.proxy.Player;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
-import it.frafol.cleanstaffchat.velocity.UpdateCheck;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityRedis;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
-import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -32,19 +30,8 @@ public class ServerListener {
         if (!event.getPreviousServer().isPresent()) {
 
             if (event.getPlayer().hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                    && (VelocityConfig.UPDATE_CHECK.get(Boolean.class)) && !CleanStaffChat.Version.contains("alpha")) {
-
-                new UpdateCheck(PLUGIN).getVersion(version -> {
-
-                    if (PLUGIN.container.getDescription().getVersion().isPresent()) {
-
-                        if (!PLUGIN.container.getDescription().getVersion().get().equals(version)) {
-
-                            event.getPlayer().sendMessage(Component.text("§e[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz"));
-
-                        }
-                    }
-                });
+                    && (VelocityConfig.UPDATE_CHECK.get(Boolean.class))) {
+                PLUGIN.UpdateCheck(event.getPlayer());
             }
             return;
         }

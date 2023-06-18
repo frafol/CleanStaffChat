@@ -12,10 +12,7 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import it.frafol.cleanstaffchat.velocity.adminchat.commands.AdminChatCommand;
 import it.frafol.cleanstaffchat.velocity.donorchat.commands.DonorChatCommand;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityCommandsConfig;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityDiscordConfig;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityRedis;
+import it.frafol.cleanstaffchat.velocity.enums.*;
 import it.frafol.cleanstaffchat.velocity.hooks.RedisListener;
 import it.frafol.cleanstaffchat.velocity.objects.JdaBuilder;
 import it.frafol.cleanstaffchat.velocity.objects.TextFile;
@@ -29,16 +26,24 @@ import net.byteflux.libby.Library;
 import net.byteflux.libby.VelocityLibraryManager;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.slf4j.Logger;
+import ru.vyarus.yaml.updater.YamlUpdater;
+import ru.vyarus.yaml.updater.util.FileUtils;
 
 import javax.inject.Inject;
 import javax.security.auth.login.LoginException;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 @Getter
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.10",
+        version = "1.9.4",
         dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
@@ -55,13 +60,14 @@ public class CleanStaffChat {
     private TextFile discordTextFile;
     private TextFile aliasesTextFile;
     private TextFile redisTextFile;
+    private TextFile versionTextFile;
     private static CleanStaffChat instance;
+
+    public boolean updated = false;
 
     public static CleanStaffChat getInstance() {
         return instance;
     }
-
-    public static String Version = "1.10";
 
     @Inject
     public CleanStaffChat(ProxyServer server, Logger logger, @DataDirectory Path path, Metrics.Factory metricsFactory) {
@@ -88,6 +94,12 @@ public class CleanStaffChat {
                 .version("1.8.4")
                 .build();
 
+        Library updater = Library.builder()
+                .groupId("ru{}vyarus")
+                .artifactId("yaml-config-updater")
+                .version("1.4.2")
+                .build();
+
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
@@ -98,6 +110,7 @@ public class CleanStaffChat {
         velocityLibraryManager.addMavenCentral();
         velocityLibraryManager.addJitPack();
         velocityLibraryManager.loadLibrary(yaml);
+        velocityLibraryManager.loadLibrary(updater);
         velocityLibraryManager.loadLibrary(discord);
 
         jda = new JdaBuilder();
@@ -109,7 +122,7 @@ public class CleanStaffChat {
 
 
         loadFiles();
-
+        updateConfig();
         getLogger().info("§7Configurations loaded §dsuccessfully§7!");
 
 
@@ -170,7 +183,7 @@ public class CleanStaffChat {
 
         }
 
-        if (VelocityConfig.STATS.get(Boolean.class) && !Version.contains("alpha")) {
+        if (VelocityConfig.STATS.get(Boolean.class)) {
 
             metricsFactory.make(this, 16447);
 
@@ -178,7 +191,7 @@ public class CleanStaffChat {
 
         }
 
-        if (VelocityConfig.UPDATE_CHECK.get(Boolean.class) && !Version.contains("alpha")) {
+        if (VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {
             UpdateChecker();
         }
 
@@ -212,30 +225,93 @@ public class CleanStaffChat {
         discordTextFile = new TextFile(path, "discord.yml");
         aliasesTextFile = new TextFile(path, "aliases.yml");
         redisTextFile = new TextFile(path, "redis.yml");
+        versionTextFile = new TextFile(path, "version.yml");
 
     }
 
     private void UpdateChecker() {
+        if (!VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {
+            return;
+        }
+
+        if (!container.getDescription().getVersion().isPresent()) {
+            return;
+        }
+
         new UpdateCheck(this).getVersion(version -> {
-            if (container.getDescription().getVersion().isPresent()) {
-                if (!container.getDescription().getVersion().get().equals(version)) {
-                    getLogger().warn("There is a new update available, download it on https://bit.ly/3BOQFEz");
+
+            if (Integer.parseInt(container.getDescription().getVersion().get().replace(".", "")) < Integer.parseInt(version.replace(".", ""))) {
+
+                if (VelocityConfig.AUTO_UPDATE.get(Boolean.class) && !updated) {
+                    autoUpdate();
+                    return;
+                }
+
+                if (!updated) {
+                    logger.warn("There is a new update available, download it on SpigotMC!");
                 }
             }
+
+            if (Integer.parseInt(container.getDescription().getVersion().get().replace(".", "")) > Integer.parseInt(version.replace(".", ""))) {
+                logger.warn("You are using a development version, please report any bugs!");
+            }
+
         });
     }
 
-    public void UpdateCheck(Player player) {
-        if (VelocityConfig.UPDATE_CHECK.get(Boolean.class) && !CleanStaffChat.Version.contains("alpha")) {
-            new UpdateCheck(this).getVersion(version -> {
-                if (container.getDescription().getVersion().isPresent()) {
-                    if (!container.getDescription().getVersion().get().equals(version)) {
-                        player.sendMessage(LegacyComponentSerializer.legacy('§')
-                                .deserialize("§e[CleanStaffChat] New update is available! Download it on https://bit.ly/3BOQFEz"));
-                    }
-                }
-            });
+    @SneakyThrows
+    private void updateConfig() {
+        if (container.getDescription().getVersion().isPresent() && (!container.getDescription().getVersion().get().equals(VelocityVersion.VERSION.get(String.class)))) {
+
+            logger.info("§7Creating new §dconfigurations§7...");
+            YamlUpdater.create(new File(path + "/config.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/config.yml"))
+                    .backup(true)
+                    .update();
+            YamlUpdater.create(new File(path + "/messages.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/messages.yml"))
+                    .backup(true)
+                    .update();
+            YamlUpdater.create(new File(path + "/discord.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/discord.yml"))
+                    .backup(true)
+                    .update();
+            YamlUpdater.create(new File(path + "/redis.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/redis.yml"))
+                    .backup(true)
+                    .update();
+            YamlUpdater.create(new File(path + "/aliases.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/aliases.yml"))
+                    .backup(true)
+                    .update();
+            versionTextFile.getConfig().set("version", container.getDescription().getVersion().get());
+            versionTextFile.getConfig().save();
+            loadFiles();
         }
+    }
+
+    public void UpdateCheck(Player player) {
+        if (!VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {
+            return;
+        }
+
+        if (!container.getDescription().getVersion().isPresent()) {
+            return;
+        }
+
+        new UpdateCheck(this).getVersion(version -> {
+
+            if (!(Integer.parseInt(container.getDescription().getVersion().get().replace(".", ""))
+                    < Integer.parseInt(version.replace(".", "")))) {
+                return;
+            }
+
+            if (VelocityConfig.AUTO_UPDATE.get(Boolean.class) && !updated) {
+                autoUpdate();
+                return;
+            }
+
+            if (!updated) {
+                player.sendMessage(LegacyComponentSerializer.legacy('§')
+                        .deserialize("§e[CleanStaffChat] There is a new update available, download it on SpigotMC!"));
+            }
+
+        });
     }
 
     private void registerRedisBungee() {
@@ -401,6 +477,39 @@ public class CleanStaffChat {
                         .replace("%players%", String.valueOf(server.getAllPlayers().size()))));
 
     }
+
+    public void autoUpdate() {
+        try {
+            String fileUrl = "https://github.com/frafol/CleanStaffChat/releases/download/release/CleanStaffChat.jar";
+            String destination = "./plugins/";
+
+            String fileName = getFileNameFromUrl(fileUrl);
+            File outputFile = new File(destination, fileName);
+
+            downloadFile(fileUrl, outputFile);
+            updated = true;
+            logger.warn("CleanStaffChat successfully updated, a restart is required.");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getFileNameFromUrl(String fileUrl) {
+        int slashIndex = fileUrl.lastIndexOf('/');
+        if (slashIndex != -1 && slashIndex < fileUrl.length() - 1) {
+            return fileUrl.substring(slashIndex + 1);
+        }
+        throw new IllegalArgumentException("Invalid file URL");
+    }
+
+    private void downloadFile(String fileUrl, File outputFile) throws IOException {
+        URL url = new URL(fileUrl);
+        try (InputStream inputStream = url.openStream()) {
+            Files.copy(inputStream, outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+
 
     public boolean getRedisBungee() {
         return getServer().getPluginManager().isLoaded("redisbungee");

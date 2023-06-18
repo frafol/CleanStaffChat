@@ -21,6 +21,8 @@ public enum SpigotConfig {
     STAFFCHAT_NO_AFK_ONCHANGE_SERVER("settings.staffchat.staff_disable_afk_on_move"),
     STAFFCHAT_AFK_PERMISSION("settings.staffchat.staffchat_afk_permission"),
 
+    AUTO_UPDATE("modules.auto_update"),
+
     STAFF_JOIN_MESSAGE("settings.staffchat.staff_join_message"),
     STAFF_QUIT_MESSAGE("settings.staffchat.staff_quit_message"),
     COOLDOWN_BYPASS_DISCORD("settings.donorchat.donorchat_discord_cooldown_bypass"),

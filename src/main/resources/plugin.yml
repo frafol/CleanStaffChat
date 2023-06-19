@@ -1,6 +1,10 @@
-name: CleanScreenShare
+name: CleanStaffChat
 version: '${project.version}'
-main: it.frafol.cleanss.bukkit.CleanSS
+main: it.frafol.cleanstaffchat.bukkit.CleanStaffChat
 authors: [ frafol ]
+description: Best StaffChat plugin.
+api-version: 1.13
 folia-supported: true
-description: "Addition for CleanSS (Bungee/Velocity)"
+softdepend:
+  - LuckPerms
+  - UltraPermissions

@@ -1,4 +1,8 @@
-name: CleanScreenShare
+name: CleanStaffChat
 version: ${project.version}
-main: it.frafol.cleanss.bungee.CleanSS
+main: it.frafol.cleanstaffchat.bungee.CleanStaffChat
 author: frafol
+softDepends:
+  - RedisBungee
+  - LuckPerms
+  - UltraPermissions

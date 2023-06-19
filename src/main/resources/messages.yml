@@ -1,120 +1,134 @@
-#   ___  __    ____    __    _  _    ___   ___
-#  / __)(  )  ( ___)  /__\  ( \( )  / __) / __)
-# ( (__  )(__  )__)  /(__)\  )  (   \__ \( (__
-#  \___)(____)(____)(__)(__)(_)\_)  (___/ \___)
-#
-# Messages. Made with ❤ by frafol.
+#   ___  __    ____    __    _  _   ___  ___
+#  / __)(  )  ( ___)  /__\  ( \( ) / __)/ __)
+# ( (__  )(__  )__)  /(__)\  )  (  \__ \\__ \
+#  \___)(____)(____)(__)(__)(_)\_) (___/(___/
+# Messages file. Made with ❤ by frafol.
 # For support: discord.io/futuredevelopment
 
 messages:
 
-  staffchat:
+  prefix: "&d&lSS &7»"
 
-    # General messages.
-    prefix: "&5&lSTAFF&d&lCHAT &8&l•"
-    arguments: "%prefix% &7Use &d/sc <message>&7."
+  usage: "%prefix% &7Use: &d/ss [player] &7- &d/ssfinish [player] &7- &d/ssinfo [player]"
 
-    # StaffChat talk messages. (NOTE: 1.19+ clients does not support it on Velocity)
-    staffchat_talk_enabled: "%prefix% &7Now your messages will be sent in the &aStaffChat&7."
-    staffchat_talk_disabled: "%prefix% &7Now your messages will be sent in the &achat&7."
+  only_players: "%prefix% &7This command is only for &dplayers&7."
 
-    # StaffChat mute messages.
-    staffchat_muted: "%prefix% &7StaffChat has been &amuted&7."
-    staffchat_unmuted: "%prefix% &7StaffChat has been &aunmuted&7."
+  no_permission: "%prefix% &7You do not have the &dpermission &7to do this."
+  not_online: "%prefix% &7The user &d%player% &7is not &donline&7."
 
-    # StaffChat toggle messages.
-    staffchat_toggled_on: "%prefix% &7The StaffChat is now &avisible&7."
-    staffchat_toggled_off: "%prefix% &7The StaffChat is now &ainvisible&7."
+  yourself: "%prefix% &7You can't control &dyourself&7."
+  player_bypass: "%prefix% &7You can't control &dthis player&7."
+  already_in_control: "%prefix% &7This player is already under an &dhack control&7."
+  not_under_control: "%prefix% &7This player is not under an &dhack control&7."
 
-    # Chat Formats (If you use LuckPerms/UltraPermissions you can use %displayname%, %userprefix% and %usersuffix%).
-    staffchat_format: "%prefix% &7%userprefix% %user% &8» &7%message%" # You can use %server% on BungeeCord or Velocity.
+  reloaded: "%prefix% &7Configuration reloaded &dsuccessfully&7."
 
-    # You can use %server% on BungeeCord or Velocity.
-    staff_join_message_format: "%prefix% &7[&a+&7] &f&d%user%"
-    staff_quit_message_format: "%prefix% &7[&c-&7] &f&d%user%"
+  server_offline: "%prefix% &7The server where you have to connect is not &donline&7."
 
-    staff_switch_message_format: "%prefix% &7%user% &8(&d%serverbefore% &e➜ &d%server%&8)" # This won't work if you run your plugin on bukkit.
+  control:
+    suspicious_main: "%prefix% &7You're now under &dhack control&7, please read the chat."
+    suspicious_finish: "%prefix% &7Hack control &dfinished&7, thanks for your patience."
+    suspicious_disconnect: "%prefix% &7Hack control &dfinished&7, %player% has just disconnected."
 
-    # You can use %server% on BungeeCord or Velocity.
-    staff_afk_on_message_format: "%prefix% &7%user% is now &aAFK&7."
-    staff_afk_off_message_format: "%prefix% &7%user% is no longer &aAFK&7."
+  info:
+    main_message:
+      - "&8&m------&5&m------&d&m------&5&m------&8&m------"
+      - "&f"
+      - "&d%player% &7informations:"
+      - "&f"
+      - "&7Is in control: &d%is_in_control%"
+      - "&f"
+      - "&7Controls done: &d%controls_done%"
+      - "&7Controls suffered: &d%controls_suffered%"
+      - "&f"
+      - "&8&m------&5&m------&d&m------&5&m------&8&m------"
 
-    discord:
+  staff_message:
 
-      # Discord Chat Formats (You can use %user% and %message% only)
-      staffchat_discord_format: "%prefix% &7[&bDiscord&7] &7%user% &8» &7%message%"
-      staffchat_to_discord_format: "%user% » %message%"
+    # Administration message sent to the staffer when sending in hack control server.
+    format:
+      - "&8&m------&5&m------&d&m------&5&m------&8&m------"
+      - ""
+      - "&d%cleanname% &7(Click to view)"
+      - "&d%hackername% &7(Click to view)"
+      - "&d%admitname% &7(Click to view)"
+      - "&d%refusename% &7(Click to view)"
+      - ""
+      - "&8&m------&5&m------&d&m------&5&m------&8&m------"
 
-      discord_join_message_format: "%user% joined the server."
-      discord_quit_message_format: "%user% left the server."
+    # Clickable messages to put in the Administration message. (%player% is the suspicious player name)
+    clean:
+      name: "[Clean]"
+      command: "/controlfinish %player%"
+    cheater:
+      name: "[Cheater]"
+      command: "/tempban %player% 30d Cheating -s"
+    admit:
+      name: "[Admit]"
+      command: "/tempban %player% 14d Admit -s"
+    refuse:
+      name: "[Refuse]"
+      command: "/tempban %player% 30d Refusal to SS -s"
 
-  adminchat:
+  title:
 
-    # General messages.
-    prefix: "&5&lADMIN&d&lCHAT &8&l•"
-    arguments: "%prefix% &7Use &d/ac <message>&7."
+    start:
 
-    # AdminChat talk messages. (NOTE: 1.19+ clients does not support it on Velocity)
-    adminchat_talk_enabled: "%prefix% &7Now your messages will be sent in the &aAdminChat&7."
-    adminchat_talk_disabled: "%prefix% &7Now your messages will be sent in the &achat&7."
+      # Here you can set a title that will be sent to the user when it is put into hack control.
+      enable: true
 
-    # AdminChat mute messages.
-    adminchat_muted: "%prefix% &7AdminChat has been &amuted&7."
-    adminchat_unmuted: "%prefix% &7AdminChat has been &aunmuted&7."
+      delay: 2 # In seconds
 
-    # AdminChat toggle messages.
-    adminchat_toggled_on: "%prefix% &7The AdminChat is now &avisible&7."
-    adminchat_toggled_off: "%prefix% &7The AdminChat is now &ainvisible&7."
+      title: "&c&lHACK CONTROL"
+      subtitle: "&7&oPlease read the chat..."
 
-    # Chat Format (If you use LuckPerms/UltraPermissions you can use %displayname%, %userprefix% and %usersuffix%).
-    adminchat_format: "%prefix% &7%userprefix% %user% &8» &7%message%" # You can use %server% on BungeeCord or Velocity.
+      fade_in: 1
+      stay: 3
+      fade_out: 1
 
-    discord:
+    finish:
 
-      # Discord Chat Format (You can use %user% and %message% only)
-      adminchat_discord_format: "%prefix% &7[&bDiscord&7] &7%user% &8» &7%message%"
-      adminchat_to_discord_format: "%user% » %message%"
+      # Here you can set a title that will be sent to the user when it is leaving the hack control.
+      enable: true
 
-  donorchat:
+      delay: 2 # In seconds
 
-    # General messages.
-    prefix: "&5&lDONOR&d&lCHAT &8&l•"
-    arguments: "%prefix% &7Use &d/dc <message>&7."
-    cooldown: "%prefix% &7Please wait to be able to reuse this &dchat&7."
+      title: "&a&lHACK CONTROL"
+      subtitle: "&7You've finished the control!"
 
-    # DonorChat talk messages. (NOTE: 1.19+ clients does not support it on Velocity)
-    donorchat_talk_enabled: "%prefix% &7Now your messages will be sent in the &aDonorChat&7."
-    donorchat_talk_disabled: "%prefix% &7Now your messages will be sent in the &achat&7."
+      fade_in: 1
+      stay: 3
+      fade_out: 1
 
-    # DonorChat mute messages.
-    donorchat_muted: "%prefix% &7DonorChat has been &amuted&7."
-    donorchat_unmuted: "%prefix% &7DonorChat has been &aunmuted&7."
+  chat:
 
-    # DonorChat toggle messages.
-    donorchat_toggled_on: "%prefix% &7The DonorChat is now &avisible&7."
-    donorchat_toggled_off: "%prefix% &7The DonorChat is now &ainvisible&7."
+    # Here you can set a chat format that will be used during the hack control.
+    enable: true
 
-    # Chat Formats (If you use LuckPerms/UltraPermissions you can use %displayname%, %userprefix% and %usersuffix%).
-    donorchat_format: "%prefix% &7%userprefix% %user% &8» &7%message%" # You can use %server% on BungeeCord or Velocity.
+    # Sets the Chat Format of the Control server. (You can use %userprefix% or %usersuffix% if you have LuckPerms installed)
+    format: "%state%%player% &7» &f%message%"
 
-    discord:
+    # Set a prefix for users (suspect and staffer) in the chat.
+    states:
+      suspect: "&b&lSUSPECT &b"
+      staffer: "&c&lSTAFFER &c"
 
-      # Discord Chat Format (You can use %user% and %message% only)
-      donorchat_discord_format: "%prefix% &7[&bDiscord&7] &7%user% &8» &7%message%"
-      donorchat_to_discord_format: "%user% » %message%"
+  discord:
 
-      discord_cooldown_message: "You have to wait some seconds to send another message."
+    # These messages will be sent in the discord channel when a certain thing happens.
+    # You can use %staffer%, %suspect%. If you are using LuckPerms, you can also use %admingroup% and %suspectgroup%.
+    started: "The staffer %staffer% started an hack control to %suspect%."
 
-  stafflist:
-    header: "&8&m------&5&m------&d&m------&5&m------&8&m------&f"
-    format: "%userprefix%%player% &7(&d%server%&7)"
-    footer: "&8&m------&5&m------&d&m------&5&m------&8&m------&f"
+    # You can use %staffer%, %suspect% and %result%. If you are using LuckPerms, you can also use %admingroup% and %suspectgroup%.
+    finished: "The staffer %staffer% finished the control to %suspect%."
 
-  # Errors and reload.
-  deny_color_codes: "%prefix% &cColor codes are not permitted."
-  no_permission: "%prefix% &cYou don't have the permission to do this."
-  console: "%prefix% &cYou must be a player to use that command."
-  chat_muted_error: "%prefix% &7Chat is actually &cmuted&7 by an operator!"
-  chat_muted_error_discord: "Chat is actually muted by an operator!"
-  reloaded: "%prefix% &7The plugin has been &areloaded&7!"
-  module_disabled: "%prefix% &7This function is actually &cdisabled&7!"
+    # You can use %staffer%, %suspect% and %result%. If you are using LuckPerms, you can also use %admingroup% and %suspectgroup%.
+    suspect_left_during_control: "The suspect %suspect%, left the server during a control."
+
+    # Output of placeholder %result%.
+    results:
+      clean: "Clean"
+      cheater: "Cheater"
+      left: "Left"
+
+# Enjoy.

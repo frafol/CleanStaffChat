@@ -1,103 +1,105 @@
-#   ___  __    ____    __    _  _    ___   ___
-#  / __)(  )  ( ___)  /__\  ( \( )  / __) / __)
-# ( (__  )(__  )__)  /(__)\  )  (   \__ \( (__
-#  \___)(____)(____)(__)(__)(_)\_)  (___/ \___)
-#
+#   ___  __    ____    __    _  _   ___  ___
+#  / __)(  )  ( ___)  /__\  ( \( ) / __)/ __)
+# ( (__  )(__  )__)  /(__)\  )  (  \__ \\__ \
+#  \___)(____)(____)(__)(__)(_)\_) (___/(___/
 # Configuration file. Made with ❤ by frafol.
 # For support: discord.io/futuredevelopment
 
 settings:
 
-  # By activating this option, the console will be able to send messages (not receive them) in staffchat.
-  console_staffchat: true
-  console_name: "Console"
+  # Name of the ScreenShare server where CleanScreenShare have to send players on control.
+  server_name: "Control"
 
-  reload_permission: "staffchat.reload"
-  stafflist_permission: "stafflist.use"
+  # Disconnect the player from the control server instead of taking it to a fallback server.
+  # It can be useful if you use plugins that allow multi lobby fallback (e.g., FallbackServer).
+  # NOTE: This function will break CleanScreenShare if you haven't also put it on the server control!
+  use_disconnect_instead_of_fallback: false
 
-  use_staffchat: true
-  use_adminchat: true
-  use_donorchat: true
+  # The server name that will be used to send the players at the end of a control.
+  # NOTE: if the value use_disconnect_instead_of_fallback is true, this setting will be ignored.
+  fallback_server_name: "Hub"
 
-  # Hides the (This server is using CleanStaffChat by frafol) message.
-  hide_advertisements: false
+  # This will check if you have been properly connected to the control server,
+  # and if not, it will exit the control. If you encounter an error in the console
+  # telling you that the server may be offline or crashed,
+  # but you are sure that this is active, disable this feature.
+  check_for_problems: true
 
-  staffchat:
+  # This will disable a check that pings the control server before connecting to prevent problems.
+  # If you disable ping, the plugin may break if your control server is offline.
+  # This can be useful to get past an annoying offline server error given by BungeeCord's incapable ping system
+  # (velocity does not have this problem). NOTE: it is not recommended to disable ping.
+  disable_ping_check: false
 
-    # Activating these options, staff members will receive a message when another staff member enters/leaves the server.
-    staff_join_message: true
-    staff_quit_message: true
-
-    staff_join_all_players: false # By activating it, the staff will receive a message every time any player enters the server.
-    staff_quit_all_players: false # By activating it, the staff will receive a message every time any player leaves the server.
-
-    staff_switch_all_players: false # By activating it, the staff will receive a message every time any player switch a server.
-    staff_disable_afk_on_move: true # On Velocity and BungeeCord, this works when a player changes server.
-
-    staff_join_silent: false # By activating it, the staff will not receive a message when another staff member with a permission enters the server.
-    staff_quit_silent: false # By activating it, the staff will not receive a message when another staff member with a permission leaves the server.
-
-    # You can customise permissions.
-    staffchat_use_permission: "staffchat.use"
-    staffchat_mute_permission: "staffchat.mute"
-    staffchat_toggle_permission: "staffchat.toggle"
-    staffchat_afk_permission: "staffchat.afk"
-    staffchat_join_silent_permission: "staffchat.join.silent"
-    staffchat_quit_silent_permission: "staffchat.quit.silent"
-
-  adminchat:
-
-    # You can customise permissions.
-    adminchat_use_permission: "adminchat.use"
-    adminchat_mute_permission: "adminchat.mute"
-    adminchat_toggle_permission: "adminchat.toggle"
-    adminchat_afk_permission: "adminchat.afk"
-
-  donorchat:
-
-    # Cooldown in seconds, to disable set it to 0.
-    cooldown: 30
-    donorchat_discord_cooldown_bypass: false
-
-    # You can customise permissions.
-    donorchat_use_permission: "donorchat.use"
-    donorchat_mute_permission: "donorchat.mute"
-    donorchat_toggle_permission: "donorchat.toggle"
-    donorchat_afk_permission: "donorchat.afk"
-    donorchat_cooldown_bypass_permission: "donorchat.bypass"
-
-  # By activating this option, you will not be able to send messages with formatting codes (&c, &f etc.).
-  # Can also fix blank messages.
-  prevent_color_codes: false
-
-modules:
-
+  # Check for plugin updates.
   update_check: true
+
+  # Automatically update the plugin.
   auto_update: true
+
+  # Enables telemetry.
   stats: true
 
-  staffchat_switch_module: true
-  staffchat_afk_module: true
-  staffchat_talk_module: true
-  staffchat_mute_module: true
-  staffchat_toggle_module: true
-  staffchat_discord_module: true
-  staffchat_discord_join_leave_module: true
+  slog:
 
-  adminchat_switch_module: true
-  adminchat_afk_module: true
-  adminchat_talk_module: true
-  adminchat_mute_module: true
-  adminchat_toggle_module: true
-  adminchat_discord_module: true
+    # Enable this if you want to punish the player when it left during a control.
+    punish: false
 
-  donorchat_switch_module: true
-  donorchat_afk_module: true
-  donorchat_talk_module: true
-  donorchat_mute_module: true
-  donorchat_toggle_module: true
-  donorchat_discord_module: true
+    # Enter your used ban commands, to predict whether the player has been banned or not.
+    ban_commands:
+      - "tempban"
+      - "ban"
+      - "ban-ip"
+      - "kick"
+      - "ipban"
+      - "tempipban"
 
-  stafflist_module: true
+    # Enter the command to be executed by the console when the player disconnects from the server.
+    punish_command: "ban %player% Slog under hack control -s"
+
+permissions:
+
+  # You can personalize permissions.
+  control: screenshare.control
+  info: screenshare.info
+  bypass: screenshare.bypass
+  reload: screenshare.reload
+
+discord-webhook: # The Discord Integration is an experimental feature, report all problems on our Discord.
+
+  # Find out how to set up your discord bot through the Discord Web Developer Application via this link.
+  # https://www.ionos.com/digitalguide/server/know-how/creating-discord-bot/#:~:text=Creating%20your%20own%20Discord%20bot
+
+  # Toggle discord feature.
+  enabled: false
+
+  # Your Discord bot's token.
+  token: ""
+
+  # Types: WATCHING, PLAYING, STREAMING.
+  activity_type: "WATCHING"
+
+  # The Discord bot's activity. You can use %players% to see the amount of players online.
+  activity: "%players% online players."
+
+  # To use CleanScreenShare with Discord, enter the ID of the chat where you want messages to be sent.
+  channel_id: ""
+
+  # The 'title' of the embed message sent on Discord.
+  embed_title: "ScreenShare handler"
+
+mysql:
+
+  # The MySQL database is an experimental feature.
+  # It's just to allow compatibility with multiple proxies (e.g. RedisBungee and RedisVelocity)
+  # and for saving the /ssinfo command (without MySQL, the command will reset on every reboot).
+  enable: false
+
+  # MySQL database connection details.
+  host: "127.0.0.1:3306"
+  user: "root"
+  database: "cleanscreenshare"
+  password: "password"
+  arguments: "?autoReconnect=true&maxReconnects=10"
 
 # Enjoy.

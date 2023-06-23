@@ -102,6 +102,11 @@
         </dependency>
         <dependency>
             <groupId>net.byteflux</groupId>
+            <artifactId>libby-paper</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.byteflux</groupId>
             <artifactId>libby-velocity</artifactId>
             <version>1.2.0</version>
         </dependency>

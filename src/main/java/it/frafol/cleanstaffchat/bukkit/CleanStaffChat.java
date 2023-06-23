@@ -62,7 +62,8 @@ public class CleanStaffChat extends JavaPlugin {
 
         BukkitLibraryManager bukkitLibraryManager = new BukkitLibraryManager(this);
 
-        Library yaml = Library.builder()
+        Library yaml;
+        yaml = Library.builder()
                 .groupId("me{}carleslc{}Simple-YAML")
                 .artifactId("Simple-Yaml")
                 .version("1.8.4")
@@ -78,6 +79,19 @@ public class CleanStaffChat extends JavaPlugin {
         bukkitLibraryManager.addMavenCentral();
         bukkitLibraryManager.addJitPack();
         bukkitLibraryManager.loadLibrary(discord);
+
+        try {
+            bukkitLibraryManager.loadLibrary(yaml);
+        } catch (RuntimeException ignored) {
+            getLogger().severe("Failed to load Simple-YAML, trying to download it from GitHub...");
+            yaml = Library.builder()
+                    .groupId("me{}carleslc{}Simple-YAML")
+                    .artifactId("Simple-Yaml")
+                    .version("1.8.4")
+                    .url("https://github.com/Carleslc/Simple-YAML/releases/download/1.8.4/Simple-Yaml-1.8.4.jar")
+                    .build();
+        }
+
         bukkitLibraryManager.loadLibrary(yaml);
 
         getLogger().info("\n  ___  __    ____    __    _  _    ___   ___ \n" +

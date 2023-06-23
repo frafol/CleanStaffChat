@@ -43,7 +43,7 @@ import java.nio.file.StandardCopyOption;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.9.4",
+        version = "1.9.5",
         dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
@@ -88,7 +88,8 @@ public class CleanStaffChat {
 
         VelocityLibraryManager<CleanStaffChat> velocityLibraryManager = new VelocityLibraryManager<>(getLogger(), path, getServer().getPluginManager(), this);
 
-        Library yaml = Library.builder()
+        Library yaml;
+        yaml = Library.builder()
                 .groupId("me{}carleslc{}Simple-YAML")
                 .artifactId("Simple-Yaml")
                 .version("1.8.4")
@@ -109,6 +110,19 @@ public class CleanStaffChat {
 
         velocityLibraryManager.addMavenCentral();
         velocityLibraryManager.addJitPack();
+
+        try {
+            velocityLibraryManager.loadLibrary(yaml);
+        } catch (RuntimeException ignored) {
+            getLogger().error("Failed to load Simple-YAML, trying to download it from GitHub...");
+            yaml = Library.builder()
+                    .groupId("me{}carleslc{}Simple-YAML")
+                    .artifactId("Simple-Yaml")
+                    .version("1.8.4")
+                    .url("https://github.com/Carleslc/Simple-YAML/releases/download/1.8.4/Simple-Yaml-1.8.4.jar")
+                    .build();
+        }
+
         velocityLibraryManager.loadLibrary(yaml);
         velocityLibraryManager.loadLibrary(updater);
         velocityLibraryManager.loadLibrary(discord);

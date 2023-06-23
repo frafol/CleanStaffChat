@@ -6,7 +6,7 @@
 
     <groupId>it.frafol</groupId>
     <artifactId>cleanstaffchat</artifactId>
-    <version>1.9.4</version>
+    <version>1.9.5</version>
     <packaging>jar</packaging>
 
     <name>CleanStaffChat</name>
@@ -98,11 +98,6 @@
         <dependency>
             <groupId>net.byteflux</groupId>
             <artifactId>libby-bukkit</artifactId>
-            <version>1.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>net.byteflux</groupId>
-            <artifactId>libby-paper</artifactId>
             <version>1.2.0</version>
         </dependency>
         <dependency>

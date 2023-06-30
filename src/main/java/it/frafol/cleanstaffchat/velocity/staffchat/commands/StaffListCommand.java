@@ -39,6 +39,8 @@ public class StaffListCommand implements SimpleCommand {
             VelocityMessages.LIST_HEADER.send(invocation.source(),
                     new Placeholder("prefix", VelocityMessages.PREFIX.color()));
 
+            String user_prefix;
+
             for (Player players : PLUGIN.getServer().getAllPlayers()) {
 
                 if (players.hasPermission(VelocityConfig.STAFFLIST_PERMISSION.get(String.class))) {
@@ -46,20 +48,37 @@ public class StaffListCommand implements SimpleCommand {
                     User user = api.getUserManager().getUser(players.getUniqueId());
 
                     if (user == null) {
-                        return;
+                        continue;
                     }
 
                     final String prefix = user.getCachedData().getMetaData().getPrefix();
                     Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
 
                     if (group == null || group.getDisplayName() == null) {
-                        return;
+
+                        if (prefix != null) {
+                            user_prefix = prefix;
+                        } else {
+                            user_prefix = "";
+                        }
+
+                        if (!players.getCurrentServer().isPresent()) {
+                            continue;
+                        }
+
+                        VelocityMessages.LIST_FORMAT.send(invocation.source(),
+                                new Placeholder("prefix", VelocityMessages.PREFIX.color()),
+                                new Placeholder("userprefix", ChatUtil.translateHex(user_prefix)),
+                                new Placeholder("player", players.getUsername()),
+                                new Placeholder("server", players.getCurrentServer().get().getServerInfo().getName()));
+
+                        continue;
                     }
 
-                    String user_prefix = prefix == null ? group.getDisplayName() : prefix;
+                    user_prefix = prefix == null ? group.getDisplayName() : prefix;
 
                     if (!players.getCurrentServer().isPresent()) {
-                        return;
+                        continue;
                     }
 
                     VelocityMessages.LIST_FORMAT.send(invocation.source(),
@@ -70,6 +89,7 @@ public class StaffListCommand implements SimpleCommand {
 
                 }
             }
+
             VelocityMessages.LIST_FOOTER.send(invocation.source(),
                     new Placeholder("prefix", VelocityMessages.PREFIX.color()));
         }

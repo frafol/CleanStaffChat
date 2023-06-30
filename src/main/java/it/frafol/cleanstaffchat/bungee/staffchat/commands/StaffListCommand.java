@@ -34,6 +34,8 @@ public class StaffListCommand extends Command {
             sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_HEADER.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
 
+            String user_prefix;
+
             for (ProxiedPlayer players : CleanStaffChat.getInstance().getProxy().getPlayers()) {
 
                 if (players.hasPermission(BungeeConfig.STAFFLIST_PERMISSION.get(String.class))) {
@@ -41,17 +43,38 @@ public class StaffListCommand extends Command {
                     User user = api.getUserManager().getUser(players.getUniqueId());
 
                     if (user == null) {
-                        return;
+                        continue;
                     }
 
                     final String prefix = user.getCachedData().getMetaData().getPrefix();
                     Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
 
                     if (group == null || group.getDisplayName() == null) {
-                        return;
+
+                        if (prefix != null) {
+                            user_prefix = prefix;
+                        } else {
+                            user_prefix = "";
+                        }
+
+                        if (players.getServer() == null) {
+                            continue;
+                        }
+
+                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FORMAT.color()
+                                .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                .replace("%player%", players.getName())
+                                .replace("%server%", "")
+                                .replace("%prefix%", BungeeMessages.PREFIX.color())));
+
+                        continue;
                     }
 
-                    String user_prefix = prefix == null ? group.getDisplayName() : prefix;
+                    user_prefix = prefix == null ? group.getDisplayName() : prefix;
+
+                    if (players.getServer() == null) {
+                        continue;
+                    }
 
                     sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FORMAT.color()
                             .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
@@ -61,7 +84,7 @@ public class StaffListCommand extends Command {
 
                 }
             }
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_HEADER.color()
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FOOTER.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
         }
     }

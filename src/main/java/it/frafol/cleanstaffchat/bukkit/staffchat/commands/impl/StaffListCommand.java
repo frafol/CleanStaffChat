@@ -32,7 +32,10 @@ public class StaffListCommand extends CommandBase {
 
             LuckPerms api = LuckPermsProvider.get();
 
-            sender.sendMessage(SpigotMessages.LIST_HEADER.color().replace("%prefix%", SpigotMessages.PREFIX.color()));
+            sender.sendMessage(SpigotMessages.LIST_HEADER.color()
+                    .replace("%prefix%", SpigotMessages.PREFIX.color()));
+
+            String user_prefix;
 
             for (Player players : plugin.getServer().getOnlinePlayers()) {
 
@@ -41,17 +44,38 @@ public class StaffListCommand extends CommandBase {
                     User user = api.getUserManager().getUser(players.getUniqueId());
 
                     if (user == null) {
-                        return false;
+                        continue;
                     }
 
                     final String prefix = user.getCachedData().getMetaData().getPrefix();
                     Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
 
                     if (group == null || group.getDisplayName() == null) {
-                        return false;
+
+                        if (prefix != null) {
+                            user_prefix = prefix;
+                        } else {
+                            user_prefix = "";
+                        }
+
+                        if (players.getServer() == null) {
+                            continue;
+                        }
+
+                        sender.sendMessage(SpigotMessages.LIST_FORMAT.color()
+                                .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                .replace("%player%", players.getName())
+                                .replace("%server%", "")
+                                .replace("%prefix%", SpigotMessages.PREFIX.color()));
+
+                        continue;
                     }
 
-                    String user_prefix = prefix == null ? group.getDisplayName() : prefix;
+                    user_prefix = prefix == null ? group.getDisplayName() : prefix;
+
+                    if (players.getServer() == null) {
+                        continue;
+                    }
 
                     sender.sendMessage(SpigotMessages.LIST_FORMAT.color()
                             .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
@@ -61,8 +85,8 @@ public class StaffListCommand extends CommandBase {
 
                 }
             }
-            sender.sendMessage(SpigotMessages.LIST_FOOTER.color().replace("%prefix%", SpigotMessages.PREFIX.color()));
-            return false;
+            sender.sendMessage(SpigotMessages.LIST_FOOTER.color()
+                    .replace("%prefix%", SpigotMessages.PREFIX.color()));
         }
         return false;
     }

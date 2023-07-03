@@ -38,6 +38,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.concurrent.TimeUnit;
 
 @Getter
 @Plugin(
@@ -127,8 +128,6 @@ public class CleanStaffChat {
         velocityLibraryManager.loadLibrary(updater);
         velocityLibraryManager.loadLibrary(discord);
 
-        jda = new JdaBuilder();
-
         getLogger().info("\n§d  ___  __    ____    __    _  _    ___   ___ \n" +
                 " / __)(  )  ( ___)  /__\\  ( \\( )  / __) / __)\n" +
                 "( (__  )(__  )__)  /(__)\\  )  (   \\__ \\( (__ \n" +
@@ -142,8 +141,9 @@ public class CleanStaffChat {
 
         if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
 
+            jda = new JdaBuilder();
             jda.startJDA();
-            updateJDA();
+            updateJDATask();
 
             getLogger().info("§7Hooked into Discord §dsuccessfully§7!");
 
@@ -472,6 +472,18 @@ public class CleanStaffChat {
             jda.getJda().addEventListener(new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
 
         }
+    }
+
+    private void updateJDATask() {
+        getServer().getScheduler().buildTask(this, () -> {
+
+            try {
+                updateJDA();
+            } catch (LoginException e) {
+                throw new RuntimeException("Fatal error while updating JDA. Is Discord Bot configured correctly?" , e);
+            }
+
+        }).repeat(30, TimeUnit.SECONDS).schedule();
     }
 
     public void updateJDA() throws LoginException {

@@ -34,6 +34,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.concurrent.TimeUnit;
 
 public class CleanStaffChat extends Plugin {
 
@@ -112,7 +113,7 @@ public class CleanStaffChat extends Plugin {
         if (BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
 
             jda = JDABuilder.createDefault(BungeeDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
-            updateJDA();
+            updateJDATask();
 
             getLogger().info("§7Hooked into Discord §dsuccessfully§7!");
 
@@ -370,6 +371,10 @@ public class CleanStaffChat extends Plugin {
         redisTextFile = new TextFile(getDataFolder().toPath(), "redis.yml");
         versionTextFile = new TextFile(getDataFolder().toPath(), "version.yml");
 
+    }
+
+    private void updateJDATask() {
+        getProxy().getScheduler().schedule(this, this::updateJDA, 1L, 30L, TimeUnit.SECONDS);
     }
 
     public void updateJDA() {

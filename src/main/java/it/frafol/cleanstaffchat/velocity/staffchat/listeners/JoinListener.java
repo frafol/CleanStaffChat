@@ -43,8 +43,6 @@ public class JoinListener {
 
         final Player player = event.getPlayer();
 
-        PLUGIN.updateJDA();
-
         if (player.hasPermission(STAFFCHAT_RELOAD_PERMISSION.get(String.class))) {
             PLUGIN.UpdateCheck(player);
         }
@@ -193,8 +191,6 @@ public class JoinListener {
         if (!player.getCurrentServer().isPresent()) {
             return;
         }
-
-        PLUGIN.updateJDA();
 
         if (!STAFF_QUIT_MESSAGE.get(Boolean.class)) {
             return;

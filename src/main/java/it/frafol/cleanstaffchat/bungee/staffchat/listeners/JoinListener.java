@@ -49,8 +49,6 @@ public class JoinListener implements Listener {
             PLUGIN.UpdateCheck(player);
         }
 
-        PLUGIN.updateJDA();
-
         if (!(CleanStaffChat.getInstance().getProxy().getPlayers().size() < 1)) {
 
             if (BungeeConfig.STAFF_JOIN_MESSAGE.get(Boolean.class)) {
@@ -236,8 +234,6 @@ public class JoinListener implements Listener {
         if (player.getServer() == null) {
             return;
         }
-
-        PLUGIN.updateJDA();
 
         if (BungeeConfig.STAFF_QUIT_MESSAGE.get(Boolean.class)) {
 

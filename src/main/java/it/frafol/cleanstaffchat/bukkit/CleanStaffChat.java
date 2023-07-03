@@ -162,7 +162,7 @@ public class CleanStaffChat extends JavaPlugin {
         if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
 
             jda = JDABuilder.createDefault(SpigotDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
-            updateJDA();
+            updateJDATask();
 
             getLogger().info("Hooked into Discord successfully!");
 
@@ -445,6 +445,10 @@ public class CleanStaffChat extends JavaPlugin {
                 }
             }
         });
+    }
+
+    private void updateJDATask() {
+        getServer().getScheduler().runTaskTimerAsynchronously(this, this::updateJDA, 1, 20 * 30);
     }
 
     public void updateJDA() {

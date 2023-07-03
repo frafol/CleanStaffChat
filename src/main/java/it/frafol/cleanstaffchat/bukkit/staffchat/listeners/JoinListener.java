@@ -35,8 +35,6 @@ public class JoinListener implements Listener {
     @EventHandler
     public void handle(@NotNull PlayerJoinEvent event) {
 
-        PLUGIN.updateJDA();
-
         if (!PLUGIN.isFolia() && event.getPlayer().hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                 && (SpigotConfig.UPDATE_CHECK.get(Boolean.class)) && !PLUGIN.getDescription().getVersion().contains("alpha")) {
             PLUGIN.UpdateCheck(event.getPlayer());
@@ -155,7 +153,6 @@ public class JoinListener implements Listener {
 
         final Player player = event.getPlayer();
 
-        PLUGIN.updateJDA();
         PlayerCache.getAfk().remove(event.getPlayer().getUniqueId());
 
         if (SpigotConfig.STAFF_QUIT_MESSAGE.get(Boolean.class)) {

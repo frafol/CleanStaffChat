@@ -24,6 +24,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import net.byteflux.libby.Library;
 import net.byteflux.libby.VelocityLibraryManager;
+import net.byteflux.libby.relocation.Relocation;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.slf4j.Logger;
 import ru.vyarus.yaml.updater.YamlUpdater;
@@ -44,7 +45,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.9.6",
+        version = "1.9.8",
         dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
@@ -83,7 +84,7 @@ public class CleanStaffChat {
     public PluginContainer container;
 
     @Subscribe
-    public void onProxyInitialization(ProxyInitializeEvent event) throws LoginException {
+    public void onProxyInitialization(ProxyInitializeEvent event) {
 
         instance = this;
 
@@ -102,11 +103,13 @@ public class CleanStaffChat {
                 .version("1.4.2")
                 .build();
 
+        final Relocation kotlin = new Relocation("kotlin", "it{}frafol{}libs{}kotlin");
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.0.0-beta.10")
-                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.10/JDA-5.0.0-beta.10-withDependencies-min.jar")
+                .version("5.0.0-beta.12")
+                .url("https://github.com/discord-jda/JDA/releases/download/v5.0.0-beta.12/JDA-5.0.0-beta.12-withDependencies-min.jar")
+                .relocate(kotlin)
                 .build();
 
         velocityLibraryManager.addMavenCentral();

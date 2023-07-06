@@ -23,7 +23,7 @@ public class DebugCommand extends Command {
         }
 
         invocation.sendMessage(TextComponent.fromLegacyText("§d| "));
-        invocation.sendMessage(TextComponent.fromLegacyText("§d| §7CleanScreenShare Informations"));
+        invocation.sendMessage(TextComponent.fromLegacyText("§d| §7CleanStaffChat Informations"));
         invocation.sendMessage(TextComponent.fromLegacyText("§d| "));
         invocation.sendMessage(TextComponent.fromLegacyText("§d| §7Version: §d" + instance.getDescription().getVersion()));
         invocation.sendMessage(TextComponent.fromLegacyText("§d| §7BungeeCord: §d" + instance.getProxy().getVersion()));

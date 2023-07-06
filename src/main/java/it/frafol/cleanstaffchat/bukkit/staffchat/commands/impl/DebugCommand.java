@@ -24,7 +24,7 @@ public class DebugCommand implements Listener {
 
         event.setCancelled(true);
         player.sendMessage("§d| ");
-        player.sendMessage("§d| §7CleanScreenShare Informations");
+        player.sendMessage("§d| §7CleanStaffChat Informations");
         player.sendMessage("§d| ");
         player.sendMessage("§d| §7Version: §d" + CleanStaffChat.getInstance().getDescription().getVersion());
         player.sendMessage("§d| §7BungeeCord: §d" + CleanStaffChat.getInstance().getServer().getVersion());

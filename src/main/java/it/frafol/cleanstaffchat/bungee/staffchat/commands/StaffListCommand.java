@@ -64,7 +64,7 @@ public class StaffListCommand extends Command {
                         sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FORMAT.color()
                                 .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
                                 .replace("%player%", players.getName())
-                                .replace("%server%", "")
+                                .replace("%server%", players.getServer().getInfo().getName())
                                 .replace("%prefix%", BungeeMessages.PREFIX.color())));
 
                         continue;
@@ -79,7 +79,7 @@ public class StaffListCommand extends Command {
                     sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FORMAT.color()
                             .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
                             .replace("%player%", players.getName())
-                            .replace("%server%", "")
+                            .replace("%server%", players.getServer().getInfo().getName())
                             .replace("%prefix%", BungeeMessages.PREFIX.color())));
 
                 }

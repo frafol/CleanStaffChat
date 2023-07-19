@@ -82,7 +82,7 @@ public class PlayerCache {
     public static String translateHex(String message) {
 
         if (!containsHexColor(message)) {
-            return message;
+            return message.replace("&", "§");
         }
 
         final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9]{6})");
@@ -98,6 +98,6 @@ public class PlayerCache {
                     + COLOR_CHAR + group.charAt(4) + COLOR_CHAR + group.charAt(5)
             );
         }
-        return matcher.appendTail(buffer).toString();
+        return matcher.appendTail(buffer).toString().replace("&", "§");
     }
 }

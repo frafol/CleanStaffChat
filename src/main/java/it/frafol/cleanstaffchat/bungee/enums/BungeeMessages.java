@@ -78,6 +78,10 @@ public enum BungeeMessages {
     LIST_FORMAT("messages.stafflist.format"),
     LIST_FOOTER("messages.stafflist.footer"),
 
+    DISCORDLIST_HEADER("messages.stafflist.discord.header"),
+    DISCORDLIST_FORMAT("messages.stafflist.discord.format"),
+    DISCORDLIST_FOOTER("messages.stafflist.discord.footer"),
+
     DONORCHAT_COOLDOWN_ERROR_DISCORD("messages.donorchat.discord.discord_cooldown_message");
 
     private final String path;

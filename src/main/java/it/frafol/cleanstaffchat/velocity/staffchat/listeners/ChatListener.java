@@ -4,6 +4,8 @@ import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
+import com.velocitypowered.api.proxy.Player;
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityDiscordConfig;
@@ -18,6 +20,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import org.jetbrains.annotations.NotNull;
 
@@ -207,9 +210,77 @@ public class ChatListener extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
 
         if (PLUGIN.getConfigTextFile() == null || PLUGIN.getMessagesTextFile() == null) {
-
             return;
+        }
 
+        if (event.getMessage().getContentDisplay().equalsIgnoreCase("/stafflist")) {
+
+            if (!event.getChannel().getId().equalsIgnoreCase(VelocityDiscordConfig.STAFFLIST_CHANNEL_ID.get(String.class))) {
+                return;
+            }
+
+            if (event.getAuthor().isBot()) {
+                return;
+            }
+
+            LuckPerms api = LuckPermsProvider.get();
+            StringBuilder sb = new StringBuilder();
+
+            sb.append(VelocityMessages.DISCORDLIST_HEADER.color()
+                    .replace("%prefix%", SpigotMessages.PREFIX.color()));
+
+            String user_prefix;
+            for (Player players : PLUGIN.getServer().getAllPlayers()) {
+
+                if (players.hasPermission(VelocityConfig.STAFFLIST_PERMISSION.get(String.class))) {
+
+                    User user = api.getUserManager().getUser(players.getUniqueId());
+
+                    if (user == null) {
+                        continue;
+                    }
+
+                    final String prefix = user.getCachedData().getMetaData().getPrimaryGroup();
+                    Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
+
+                    if (group == null || group.getDisplayName() == null) {
+
+                        if (prefix != null) {
+                            user_prefix = prefix;
+                        } else {
+                            user_prefix = "";
+                        }
+
+                        if (!players.getCurrentServer().isPresent()) {
+                            continue;
+                        }
+
+                        sb.append(VelocityMessages.DISCORDLIST_FORMAT.get(String.class)
+                                .replace("%usergroup%", ChatUtil.translateHex(user_prefix))
+                                .replace("%player%", players.getUsername())
+                                .replace("%server%", ""));
+
+                        continue;
+                    }
+
+                    user_prefix = prefix == null ? group.getDisplayName() : prefix;
+
+                    if (!players.getCurrentServer().isPresent()) {
+                        continue;
+                    }
+
+                    sb.append(VelocityMessages.DISCORDLIST_FORMAT.get(String.class)
+                            .replace("%userprefix%", ChatUtil.translateHex(user_prefix))
+                            .replace("%player%", players.getUsername())
+                            .replace("%server%", ""));
+
+                }
+            }
+            sb.append(VelocityMessages.DISCORDLIST_FOOTER.get(String.class));
+
+            event.getMessage().reply(sb.toString()).queue();
+            event.getMessage().delete().queue();
+            return;
         }
 
         if (!event.getChannel().getId().equalsIgnoreCase(VelocityDiscordConfig.STAFF_CHANNEL_ID.get(String.class))) {

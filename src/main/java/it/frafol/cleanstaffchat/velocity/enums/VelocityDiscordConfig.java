@@ -15,6 +15,7 @@ public enum VelocityDiscordConfig {
     DISCORD_ACTIVITY_TYPE("discord.activity_type"),
     DISCORD_ACTIVITY("discord.activity"),
     STAFF_CHANNEL_ID("discord.staffchat_channel_id"),
+    STAFFLIST_CHANNEL_ID("discord.stafflist_channel_id"),
     DONOR_CHANNEL_ID("discord.donorchat_channel_id"),
     ADMIN_CHANNEL_ID("discord.adminchat_channel_id");
 

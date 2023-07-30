@@ -14,8 +14,10 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -196,9 +198,77 @@ public class ChatListener extends ListenerAdapter implements Listener {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
 
         if (PLUGIN.getConfigTextFile() == null) {
-
             return;
+        }
 
+        if (event.getMessage().getContentDisplay().equalsIgnoreCase("/stafflist")) {
+
+            if (!event.getChannel().getId().equalsIgnoreCase(SpigotDiscordConfig.STAFFLIST_CHANNEL_ID.get(String.class))) {
+                return;
+            }
+
+            if (event.getAuthor().isBot()) {
+                return;
+            }
+
+            LuckPerms api = LuckPermsProvider.get();
+            StringBuilder sb = new StringBuilder();
+
+            sb.append(SpigotMessages.DISCORDLIST_HEADER.color()
+                    .replace("%prefix%", SpigotMessages.PREFIX.color()));
+
+            String user_prefix;
+            for (Player players : PLUGIN.getServer().getOnlinePlayers()) {
+
+                if (players.hasPermission(SpigotConfig.STAFFLIST_PERMISSION.get(String.class))) {
+
+                    User user = api.getUserManager().getUser(players.getUniqueId());
+
+                    if (user == null) {
+                        continue;
+                    }
+
+                    final String prefix = user.getCachedData().getMetaData().getPrimaryGroup();
+                    Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
+
+                    if (group == null || group.getDisplayName() == null) {
+
+                        if (prefix != null) {
+                            user_prefix = prefix;
+                        } else {
+                            user_prefix = "";
+                        }
+
+                        if (players.getServer() == null) {
+                            continue;
+                        }
+
+                        sb.append(SpigotMessages.DISCORDLIST_FORMAT.get(String.class)
+                                .replace("%usergroup%", PlayerCache.translateHex(user_prefix))
+                                .replace("%player%", players.getName())
+                                .replace("%server%", ""));
+
+                        continue;
+                    }
+
+                    user_prefix = prefix == null ? group.getDisplayName() : prefix;
+
+                    if (players.getServer() == null) {
+                        continue;
+                    }
+
+                    sb.append(SpigotMessages.DISCORDLIST_FORMAT.get(String.class)
+                            .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                            .replace("%player%", players.getName())
+                            .replace("%server%", ""));
+
+                }
+            }
+            sb.append(SpigotMessages.DISCORDLIST_FOOTER.get(String.class));
+
+            event.getMessage().reply(sb.toString()).queue();
+            event.getMessage().delete().queue();
+            return;
         }
 
         if (!event.getChannel().getId().equalsIgnoreCase(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class))) {

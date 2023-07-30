@@ -34,6 +34,10 @@ public enum VelocityMessages {
     DONORCHAT_FORMAT_DISCORD("messages.donorchat.discord.donorchat_to_discord_format"),
     ADMINCHAT_FORMAT_DISCORD("messages.adminchat.discord.adminchat_to_discord_format"),
 
+    DISCORDLIST_HEADER("messages.stafflist.discord.header"),
+    DISCORDLIST_FORMAT("messages.stafflist.discord.format"),
+    DISCORDLIST_FOOTER("messages.stafflist.discord.footer"),
+
     STAFF_DISCORD_JOIN_MESSAGE_FORMAT("messages.staffchat.discord.discord_join_message_format"),
     STAFF_DISCORD_QUIT_MESSAGE_FORMAT("messages.staffchat.discord.discord_quit_message_format"),
     STAFF_JOIN_MESSAGE_FORMAT("messages.staffchat.staff_join_message_format"),

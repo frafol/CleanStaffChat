@@ -106,9 +106,18 @@ messages:
       discord_cooldown_message: "You have to wait some seconds to send another message."
 
   stafflist:
+
+    # General messages.
     header: "&8&m------&5&m------&d&m------&5&m------&8&m------&f"
     format: "%userprefix%%player% &7(&d%server%&7)"
     footer: "&8&m------&5&m------&d&m------&5&m------&8&m------&f"
+
+    discord:
+
+        # Discord StaffList Format, you can use %player% (and %usergroup% only if you're using LuckPerms).
+      header: "Staff List"
+      format: "%usergroup%%player% (%server%)"
+      footer: "Staff List"
 
   # Errors and reload.
   deny_color_codes: "%prefix% &cColor codes are not permitted."

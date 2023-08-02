@@ -203,6 +203,10 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
         if (event.getMessage().getContentDisplay().equalsIgnoreCase("/stafflist")) {
 
+            if (SpigotDiscordConfig.STAFFLIST_CHANNEL_ID.get(String.class).equalsIgnoreCase("none")) {
+                return;
+            }
+
             if (!event.getChannel().getId().equalsIgnoreCase(SpigotDiscordConfig.STAFFLIST_CHANNEL_ID.get(String.class))) {
                 return;
             }
@@ -214,60 +218,72 @@ public class ChatListener extends ListenerAdapter implements Listener {
             LuckPerms api = LuckPermsProvider.get();
             StringBuilder sb = new StringBuilder();
 
-            sb.append(SpigotMessages.DISCORDLIST_HEADER.color()
+            sb.append((SpigotMessages.DISCORDLIST_HEADER.color() + "\n")
                     .replace("%prefix%", SpigotMessages.PREFIX.color()));
 
             String user_prefix;
-            for (Player players : PLUGIN.getServer().getOnlinePlayers()) {
+            if (!PLUGIN.getServer().getOnlinePlayers().isEmpty()) {
+                for (Player players : PLUGIN.getServer().getOnlinePlayers()) {
 
-                if (players.hasPermission(SpigotConfig.STAFFLIST_PERMISSION.get(String.class))) {
+                    if (players.hasPermission(SpigotConfig.STAFFLIST_PERMISSION.get(String.class))) {
 
-                    User user = api.getUserManager().getUser(players.getUniqueId());
+                        User user = api.getUserManager().getUser(players.getUniqueId());
 
-                    if (user == null) {
-                        continue;
-                    }
-
-                    final String prefix = user.getCachedData().getMetaData().getPrimaryGroup();
-                    Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
-
-                    if (group == null || group.getDisplayName() == null) {
-
-                        if (prefix != null) {
-                            user_prefix = prefix;
-                        } else {
-                            user_prefix = "";
+                        if (user == null) {
+                            continue;
                         }
+
+                        final String prefix = user.getCachedData().getMetaData().getPrimaryGroup();
+                        Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
+
+                        if (group == null || group.getDisplayName() == null) {
+
+                            if (prefix != null) {
+                                user_prefix = prefix;
+                            } else {
+                                user_prefix = "";
+                            }
+
+                            if (players.getServer() == null) {
+                                continue;
+                            }
+
+                            sb.append((SpigotMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
+                                    .replace("%usergroup%", PlayerCache.translateHex(user_prefix))
+                                    .replace("%player%", players.getName())
+                                    .replace("%server%", ""));
+
+                            continue;
+                        }
+
+                        user_prefix = prefix == null ? group.getDisplayName() : prefix;
 
                         if (players.getServer() == null) {
                             continue;
                         }
 
-                        sb.append(SpigotMessages.DISCORDLIST_FORMAT.get(String.class)
-                                .replace("%usergroup%", PlayerCache.translateHex(user_prefix))
+                        sb.append((SpigotMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
+                                .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
                                 .replace("%player%", players.getName())
                                 .replace("%server%", ""));
 
-                        continue;
                     }
-
-                    user_prefix = prefix == null ? group.getDisplayName() : prefix;
-
-                    if (players.getServer() == null) {
-                        continue;
-                    }
-
-                    sb.append(SpigotMessages.DISCORDLIST_FORMAT.get(String.class)
-                            .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
-                            .replace("%player%", players.getName())
-                            .replace("%server%", ""));
-
                 }
             }
             sb.append(SpigotMessages.DISCORDLIST_FOOTER.get(String.class));
 
-            event.getMessage().reply(sb.toString()).queue();
-            event.getMessage().delete().queue();
+            if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
+                EmbedBuilder embed = new EmbedBuilder();
+                embed.setTitle(SpigotDiscordConfig.STAFFLIST_EMBED_TITLE.get(String.class), null);
+                embed.setDescription(sb.toString());
+                embed.setColor(Color.RED);
+                embed.setFooter("Powered by CleanStaffChat");
+                event.getChannel().sendMessageEmbeds(embed.build()).queue();
+
+            } else {
+                event.getMessage().reply(sb.toString()).queue();
+            }
+
             return;
         }
 

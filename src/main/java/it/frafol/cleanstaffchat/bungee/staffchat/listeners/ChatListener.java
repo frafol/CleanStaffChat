@@ -1,7 +1,6 @@
 package it.frafol.cleanstaffchat.bungee.staffchat.listeners;
 
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
-import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
@@ -252,6 +251,10 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
         if (event.getMessage().getContentDisplay().equalsIgnoreCase("/stafflist")) {
 
+            if (BungeeDiscordConfig.STAFFLIST_CHANNEL_ID.get(String.class).equalsIgnoreCase("none")) {
+                return;
+            }
+
             if (!event.getChannel().getId().equalsIgnoreCase(BungeeDiscordConfig.STAFFLIST_CHANNEL_ID.get(String.class))) {
                 return;
             }
@@ -263,60 +266,73 @@ public class ChatListener extends ListenerAdapter implements Listener {
             LuckPerms api = LuckPermsProvider.get();
             StringBuilder sb = new StringBuilder();
 
-            sb.append(BungeeMessages.DISCORDLIST_HEADER.color()
-                    .replace("%prefix%", SpigotMessages.PREFIX.color()));
+            sb.append((BungeeMessages.DISCORDLIST_HEADER.color() + "\n")
+                    .replace("%prefix%", BungeeMessages.PREFIX.color()));
 
             String user_prefix;
-            for (ProxiedPlayer players : PLUGIN.getProxy().getPlayers()) {
 
-                if (players.hasPermission(BungeeConfig.STAFFLIST_PERMISSION.get(String.class))) {
+            if (!PLUGIN.getProxy().getPlayers().isEmpty()) {
+                for (ProxiedPlayer players : PLUGIN.getProxy().getPlayers()) {
 
-                    User user = api.getUserManager().getUser(players.getUniqueId());
+                    if (players.hasPermission(BungeeConfig.STAFFLIST_PERMISSION.get(String.class))) {
 
-                    if (user == null) {
-                        continue;
-                    }
+                        User user = api.getUserManager().getUser(players.getUniqueId());
 
-                    final String prefix = user.getCachedData().getMetaData().getPrimaryGroup();
-                    Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
-
-                    if (group == null || group.getDisplayName() == null) {
-
-                        if (prefix != null) {
-                            user_prefix = prefix;
-                        } else {
-                            user_prefix = "";
+                        if (user == null) {
+                            continue;
                         }
+
+                        final String prefix = user.getCachedData().getMetaData().getPrimaryGroup();
+                        Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
+
+                        if (group == null || group.getDisplayName() == null) {
+
+                            if (prefix != null) {
+                                user_prefix = prefix;
+                            } else {
+                                user_prefix = "";
+                            }
+
+                            if (players.getServer() == null) {
+                                continue;
+                            }
+
+                            sb.append((BungeeMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
+                                    .replace("%usergroup%", PlayerCache.translateHex(user_prefix))
+                                    .replace("%player%", players.getName())
+                                    .replace("%server%", ""));
+
+                            continue;
+                        }
+
+                        user_prefix = prefix == null ? group.getDisplayName() : prefix;
 
                         if (players.getServer() == null) {
                             continue;
                         }
 
-                        sb.append(BungeeMessages.DISCORDLIST_FORMAT.get(String.class)
-                                .replace("%usergroup%", PlayerCache.translateHex(user_prefix))
+                        sb.append((BungeeMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
+                                .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
                                 .replace("%player%", players.getName())
                                 .replace("%server%", ""));
 
-                        continue;
                     }
-
-                    user_prefix = prefix == null ? group.getDisplayName() : prefix;
-
-                    if (players.getServer() == null) {
-                        continue;
-                    }
-
-                    sb.append(BungeeMessages.DISCORDLIST_FORMAT.get(String.class)
-                            .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
-                            .replace("%player%", players.getName())
-                            .replace("%server%", ""));
-
                 }
             }
             sb.append(BungeeMessages.DISCORDLIST_FOOTER.get(String.class));
 
-            event.getMessage().reply(sb.toString()).queue();
-            event.getMessage().delete().queue();
+            if (BungeeDiscordConfig.USE_EMBED.get(Boolean.class)) {
+                EmbedBuilder embed = new EmbedBuilder();
+                embed.setTitle(BungeeDiscordConfig.STAFFLIST_EMBED_TITLE.get(String.class), null);
+                embed.setDescription(sb.toString());
+                embed.setColor(Color.RED);
+                embed.setFooter("Powered by CleanStaffChat");
+                event.getChannel().sendMessageEmbeds(embed.build()).queue();
+
+            } else {
+                event.getMessage().reply(sb.toString()).queue();
+            }
+
             return;
         }
 

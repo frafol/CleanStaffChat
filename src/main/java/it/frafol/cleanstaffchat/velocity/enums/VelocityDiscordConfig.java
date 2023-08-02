@@ -9,6 +9,7 @@ public enum VelocityDiscordConfig {
     STAFFCHAT_EMBED_TITLE("discord.staffchat_embed_title"),
     ADMINCHAT_EMBED_TITLE("discord.adminchat_embed_title"),
     DONORCHAT_EMBED_TITLE("discord.donorchat_embed_title"),
+    STAFFLIST_EMBED_TITLE("discord.stafflist_embed_title"),
 
     DISCORD_ENABLED("discord.enabled"),
     DISCORD_TOKEN("discord.token"),

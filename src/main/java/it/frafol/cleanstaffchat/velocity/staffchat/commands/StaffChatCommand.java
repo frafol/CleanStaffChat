@@ -118,19 +118,14 @@ public class StaffChatCommand implements SimpleCommand {
 
                     if (PREVENT_COLOR_CODES.get(Boolean.class)) {
                         if (ChatUtil.hasColorCodes(message)) {
-
                             VelocityMessages.COLOR_CODES.send(commandSource,
                                     new Placeholder("prefix", VelocityMessages.PREFIX.color()));
-
                             return;
-
                         }
                     }
 
                     if (!((Player) commandSource).getCurrentServer().isPresent()) {
-
                         return;
-
                     }
 
                     if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
@@ -193,9 +188,7 @@ public class StaffChatCommand implements SimpleCommand {
                                     .replace("&", "§");
 
                             final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
                             redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffMessage-RedisBungee", final_message);
-
                             return;
 
                         }
@@ -218,7 +211,9 @@ public class StaffChatCommand implements SimpleCommand {
 
                         final TextChannel channel = PLUGIN.getJda().JdaWorker().getTextChannelById(VelocityDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
-                        if (channel == null) {return;}
+                        if (channel == null) {
+                            return;
+                        }
 
                         if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
 

@@ -262,7 +262,7 @@ public class ChatListener extends ListenerAdapter {
                             sb.append((VelocityMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
                                     .replace("%usergroup%", ChatUtil.translateHex(user_prefix))
                                     .replace("%player%", players.getUsername())
-                                    .replace("%server%", ""));
+                                    .replace("%server%", players.getCurrentServer().get().getServerInfo().getName()));
 
                             continue;
                         }
@@ -276,7 +276,7 @@ public class ChatListener extends ListenerAdapter {
                         sb.append((VelocityMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
                                 .replace("%userprefix%", ChatUtil.translateHex(user_prefix))
                                 .replace("%player%", players.getUsername())
-                                .replace("%server%", ""));
+                                .replace("%server%", players.getCurrentServer().get().getServerInfo().getName()));
 
                     }
                 }

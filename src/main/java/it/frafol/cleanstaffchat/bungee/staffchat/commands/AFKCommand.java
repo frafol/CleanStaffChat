@@ -61,7 +61,9 @@ public class AFKCommand extends Command {
 
                 final User user = api.getUserManager().getUser(((ProxiedPlayer) sender).getUniqueId());
 
-                if (user == null) {return;}
+                if (user == null) {
+                            return;
+                        }
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
                 final String user_prefix = prefix == null ? "" : prefix;
@@ -186,7 +188,9 @@ public class AFKCommand extends Command {
 
                 final User user = api.getUserManager().getUser(((ProxiedPlayer) sender).getUniqueId());
 
-                if (user == null) {return;}
+                if (user == null) {
+                            return;
+                        }
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
                 final String user_prefix = prefix == null ? "" : prefix;

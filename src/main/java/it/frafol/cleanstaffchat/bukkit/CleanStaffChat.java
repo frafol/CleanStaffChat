@@ -114,15 +114,8 @@ public class CleanStaffChat extends JavaPlugin {
                 || Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_0_R")) {
 
             getLogger().severe("Support for your version was declined.");
-
             Bukkit.getPluginManager().disablePlugin(this);
-
             return;
-
-        }
-
-        if (isFolia()) {
-            getLogger().warning("Support for Folia has not been tested and is only for experimental purposes.");
         }
 
         File configFile = new File(getDataFolder(), "config.yml");
@@ -139,9 +132,8 @@ public class CleanStaffChat extends JavaPlugin {
                 ConfigUpdater.update(this, "messages.yml", messageFile, Collections.emptyList());
                 ConfigUpdater.update(this, "discord.yml", discordFile, Collections.emptyList());
                 ConfigUpdater.update(this, "aliases.yml", aliasesFile, Collections.emptyList());
-            } catch (IOException exception) {
-                getLogger().severe("Unable to update configuration file, see the error below:");
-                exception.printStackTrace();
+            } catch (IOException ignored) {
+                getLogger().severe("Unable to update the files. Are you on Windows?");
             }
 
             versionTextFile.getConfig().set("version", getDescription().getVersion());
@@ -186,22 +178,12 @@ public class CleanStaffChat extends JavaPlugin {
         }
 
         if (SpigotConfig.DONORCHAT.get(Boolean.class)) {
+            registerDonorChatCommands();
+            getServer().getPluginManager().registerEvents(new it.frafol.cleanstaffchat.bukkit.donorchat.listeners.ChatListener(this), this);
 
-            if (!isFolia()) {
-
-                registerDonorChatCommands();
-
-                getServer().getPluginManager().registerEvents(new it.frafol.cleanstaffchat.bukkit.donorchat.listeners.ChatListener(this), this);
-
-                if (SpigotConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class) && SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-                    jda.addEventListener(new it.frafol.cleanstaffchat.bukkit.donorchat.listeners.ChatListener(this));
-                }
-
-            } else {
-                getLogger().severe("DonorChat is not supported in Folia, disabling it.");
+            if (SpigotConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class) && SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+                jda.addEventListener(new it.frafol.cleanstaffchat.bukkit.donorchat.listeners.ChatListener(this));
             }
-
-
         }
 
         if (SpigotConfig.ADMINCHAT.get(Boolean.class)) {
@@ -217,14 +199,11 @@ public class CleanStaffChat extends JavaPlugin {
         }
 
         if (SpigotConfig.STATS.get(Boolean.class) && !getDescription().getVersion().contains("alpha")) {
-
             new Metrics(this, 16448);
-
             getLogger().info("Metrics loaded successfully!");
         }
 
         UpdateChecker();
-
         getLogger().info("Plugin successfully enabled!");
 
     }
@@ -232,11 +211,6 @@ public class CleanStaffChat extends JavaPlugin {
     private void UpdateChecker() {
 
         if (!SpigotConfig.UPDATE_CHECK.get(Boolean.class)) {
-            return;
-        }
-
-        if (isFolia()) {
-            getLogger().severe("Update Checker is not supported in Folia.");
             return;
         }
 
@@ -273,8 +247,8 @@ public class CleanStaffChat extends JavaPlugin {
             updated = true;
             getLogger().warning("CleanStaffChat successfully updated, a restart is required.");
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ignored) {
+            getLogger().severe("Unable to update the plugin, please download the latest version manually. Are you on Windows?");
         }
     }
 
@@ -291,15 +265,6 @@ public class CleanStaffChat extends JavaPlugin {
         try (InputStream inputStream = url.openStream()) {
             Files.copy(inputStream, outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
-    }
-
-    public boolean isFolia() {
-        try {
-            Class.forName("io.papermc.paper.threadedregions.RegionizedServerInitEvent");
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
-        return true;
     }
 
     @SneakyThrows
@@ -430,10 +395,6 @@ public class CleanStaffChat extends JavaPlugin {
     }
 
     public void UpdateCheck(Player player) {
-
-        if (isFolia()) {
-            return;
-        }
 
         new UpdateCheck(this).getVersion(version -> {
             if (Integer.parseInt(getDescription().getVersion().replace(".", "")) < Integer.parseInt(version.replace(".", ""))) {

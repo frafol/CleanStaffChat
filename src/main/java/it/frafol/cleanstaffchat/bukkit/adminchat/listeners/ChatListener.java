@@ -153,7 +153,9 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                         final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
 
-                        if (channel == null) {return;}
+                        if (channel == null) {
+                            return;
+                        }
 
                         if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 

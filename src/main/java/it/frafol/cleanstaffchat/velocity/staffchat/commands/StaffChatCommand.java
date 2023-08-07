@@ -134,7 +134,9 @@ public class StaffChatCommand implements SimpleCommand {
 
                         final User user = api.getUserManager().getUser(((Player) commandSource).getUniqueId());
 
-                        if (user == null) {return;}
+                        if (user == null) {
+                            return;
+                        }
                         final String prefix = user.getCachedData().getMetaData().getPrefix();
                         final String suffix = user.getCachedData().getMetaData().getSuffix();
                         final String user_prefix = prefix == null ? "" : prefix;
@@ -282,7 +284,9 @@ public class StaffChatCommand implements SimpleCommand {
 
                             final TextChannel channel = PLUGIN.getJda().JdaWorker().getTextChannelById(VelocityDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
-                            if (channel == null) {return;}
+                            if (channel == null) {
+                            return;
+                        }
 
                             if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
 

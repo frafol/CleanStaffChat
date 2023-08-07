@@ -163,49 +163,33 @@ public class CleanStaffChat {
                 .build(), new DebugCommand(this));
 
         if (VelocityConfig.STAFFLIST_MODULE.get(Boolean.class)) {
-
             registerStaffList();
-
         }
 
         if (VelocityConfig.STAFFCHAT.get(Boolean.class)) {
-
             registerStaffChat();
-
         }
 
         if (VelocityConfig.DONORCHAT.get(Boolean.class)) {
-
             registerDonorChat();
-
         }
 
         if (VelocityConfig.ADMINCHAT.get(Boolean.class)) {
-
             registerAdminChat();
-
         }
 
         if (VelocityRedis.REDIS_ENABLE.get(Boolean.class) && getRedisBungee()) {
-
             getLogger().error("RedisBungee was not found, the RedisBungee hook won't work.");
-
         }
 
         if (VelocityRedis.REDIS_ENABLE.get(Boolean.class) && getRedisBungee()) {
-
             registerRedisBungee();
-
             getLogger().info("§7Hooked into RedisBungee §dsuccessfully§7!");
-
         }
 
         if (VelocityConfig.STATS.get(Boolean.class)) {
-
             metricsFactory.make(this, 16447);
-
             getLogger().info("§7Metrics loaded §dsuccessfully§7!");
-
         }
 
         if (VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {

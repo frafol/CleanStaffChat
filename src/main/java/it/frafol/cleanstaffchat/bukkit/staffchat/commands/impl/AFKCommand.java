@@ -57,7 +57,9 @@ public class AFKCommand extends CommandBase {
 
                 final User user = api.getUserManager().getUser(player.getUniqueId());
 
-                if (user == null) {return false;}
+                if (user == null) {
+                            return false;
+                        }
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
                 final String user_prefix = prefix == null ? "" : prefix;
@@ -127,7 +129,9 @@ public class AFKCommand extends CommandBase {
 
                 final User user = api.getUserManager().getUser(player.getUniqueId());
 
-                if (user == null) {return false;}
+                if (user == null) {
+                            return false;
+                        }
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
                 final String user_prefix = prefix == null ? "" : prefix;

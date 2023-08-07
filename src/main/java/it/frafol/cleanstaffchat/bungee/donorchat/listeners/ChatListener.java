@@ -97,7 +97,9 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         LuckPerms api = LuckPermsProvider.get();
 
                         User user = api.getUserManager().getUser(((ProxiedPlayer) event.getSender()).getUniqueId());
-                        if (user == null) {return;}
+                        if (user == null) {
+                            return;
+                        }
                         final String prefix = user.getCachedData().getMetaData().getPrefix();
                         final String suffix = user.getCachedData().getMetaData().getSuffix();
                         final String user_prefix = prefix == null ? "" : prefix;
@@ -224,7 +226,9 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                         final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeDiscordConfig.DONOR_CHANNEL_ID.get(String.class));
 
-                        if (channel == null) {return;}
+                        if (channel == null) {
+                            return;
+                        }
 
                         if (BungeeDiscordConfig.USE_EMBED.get(Boolean.class)) {
 

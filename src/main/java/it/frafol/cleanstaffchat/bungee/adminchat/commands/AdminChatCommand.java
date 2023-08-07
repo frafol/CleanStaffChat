@@ -240,7 +240,9 @@ public class AdminChatCommand extends Command {
 
                         final TextChannel channel = CleanStaffChat.getInstance().getJda().getTextChannelById(BungeeDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
 
-                        if (channel == null) {return;}
+                        if (channel == null) {
+                            return;
+                        }
 
                         if (BungeeDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
@@ -325,7 +327,9 @@ public class AdminChatCommand extends Command {
 
                         final TextChannel channel = CleanStaffChat.getInstance().getJda().getTextChannelById(BungeeDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
 
-                        if (channel == null) {return;}
+                        if (channel == null) {
+                            return;
+                        }
 
                         if (BungeeDiscordConfig.USE_EMBED.get(Boolean.class)) {
 

@@ -17,13 +17,14 @@ import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class DonorChatCommand extends CommandBase {
 
@@ -137,7 +138,9 @@ public class DonorChatCommand extends CommandBase {
                         LuckPerms api = LuckPermsProvider.get();
 
                         User user = api.getUserManager().getUser(((Player) sender).getUniqueId());
-                        if (user == null) {return false;}
+                        if (user == null) {
+                            return false;
+                        }
                         final String prefix = user.getCachedData().getMetaData().getPrefix();
                         final String suffix = user.getCachedData().getMetaData().getSuffix();
                         final String user_prefix = prefix == null ? "" : prefix;
@@ -206,14 +209,14 @@ public class DonorChatCommand extends CommandBase {
 
                         final TextChannel channel = plugin.getJda().getTextChannelById(SpigotDiscordConfig.DONOR_CHANNEL_ID.get(String.class));
 
-                        if (channel == null) {return false;}
+                        if (channel == null) {
+                            return false;
+                        }
 
                         if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
                             EmbedBuilder embed = new EmbedBuilder();
-
                             embed.setTitle(SpigotDiscordConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
-
                             embed.setDescription(SpigotMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                                     .replace("%user%", commandsender)
                                     .replace("%message%", message)
@@ -239,16 +242,10 @@ public class DonorChatCommand extends CommandBase {
 
                         PlayerCache.getCooldown().add(((Player) sender).getUniqueId());
 
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-
-                                PlayerCache.getCooldown().remove(((Player) sender).getUniqueId());
-                                cancel();
-
-                            }
-
-                        }.runTaskTimer(plugin, Math.multiplyExact(SpigotConfig.DONOR_TIMER.get(Integer.class), 20), 1);
+                        ScheduledThreadPoolExecutor service = new ScheduledThreadPoolExecutor(1);
+                        service.schedule(() -> {
+                            PlayerCache.getCooldown().remove(((Player) sender).getUniqueId());
+                        }, SpigotConfig.DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS);
 
                     }
 
@@ -290,7 +287,9 @@ public class DonorChatCommand extends CommandBase {
 
                         final TextChannel channel = plugin.getJda().getTextChannelById(SpigotDiscordConfig.DONOR_CHANNEL_ID.get(String.class));
 
-                        if (channel == null) {return false;}
+                        if (channel == null) {
+                            return false;
+                        }
 
                         if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 

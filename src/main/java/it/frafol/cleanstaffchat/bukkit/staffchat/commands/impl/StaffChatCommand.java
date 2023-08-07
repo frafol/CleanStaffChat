@@ -200,7 +200,9 @@ public class StaffChatCommand extends CommandBase {
 
                         final TextChannel channel = plugin.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
-                        if (channel == null) {return false;}
+                        if (channel == null) {
+                            return false;
+                        }
 
                         if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
@@ -267,7 +269,9 @@ public class StaffChatCommand extends CommandBase {
 
                         final TextChannel channel = plugin.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
-                        if (channel == null) {return false;}
+                        if (channel == null) {
+                            return false;
+                        }
 
                         if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 

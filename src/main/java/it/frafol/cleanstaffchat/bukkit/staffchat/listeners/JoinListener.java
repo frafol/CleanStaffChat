@@ -35,7 +35,7 @@ public class JoinListener implements Listener {
     @EventHandler
     public void handle(@NotNull PlayerJoinEvent event) {
 
-        if (!PLUGIN.isFolia() && event.getPlayer().hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+        if (event.getPlayer().hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                 && (SpigotConfig.UPDATE_CHECK.get(Boolean.class)) && !PLUGIN.getDescription().getVersion().contains("alpha")) {
             PLUGIN.UpdateCheck(event.getPlayer());
         }
@@ -58,7 +58,9 @@ public class JoinListener implements Listener {
                         LuckPerms api = LuckPermsProvider.get();
 
                         User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
-                        if (user == null) {return;}
+                        if (user == null) {
+                            return;
+                        }
 
                         final String prefix = user.getCachedData().getMetaData().getPrefix();
                         final String suffix = user.getCachedData().getMetaData().getSuffix();
@@ -119,7 +121,9 @@ public class JoinListener implements Listener {
 
                         final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
-                        if (channel == null) {return;}
+                        if (channel == null) {
+                            return;
+                        }
 
                         if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
@@ -236,7 +240,9 @@ public class JoinListener implements Listener {
 
                     final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
-                    if (channel == null) {return;}
+                    if (channel == null) {
+                            return;
+                        }
 
                     if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 

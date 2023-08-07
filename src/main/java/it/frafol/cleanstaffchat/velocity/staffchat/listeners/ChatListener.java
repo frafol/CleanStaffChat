@@ -80,7 +80,9 @@ public class ChatListener extends ListenerAdapter {
                             event.setResult(PlayerChatEvent.ChatResult.denied());
 
                             User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
-                            if (user == null) {return;}
+                            if (user == null) {
+                            return;
+                        }
                             final String prefix = user.getCachedData().getMetaData().getPrefix();
                             final String suffix = user.getCachedData().getMetaData().getSuffix();
                             final String user_prefix = prefix == null ? "" : prefix;

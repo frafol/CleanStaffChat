@@ -53,6 +53,8 @@ public enum VelocityConfig {
     STAFFLIST_MODULE("modules.stafflist_module"),
     STAFFLIST_PERMISSION("settings.stafflist_permission"),
 
+    SORTING("settings.stafflist.sorting"),
+
     STAFFCHAT_RELOAD_PERMISSION("settings.reload_permission"),
 
     CONSOLE_CAN_TALK("settings.console_staffchat"),

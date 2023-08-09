@@ -66,6 +66,13 @@ settings:
     donorchat_afk_permission: "donorchat.afk"
     donorchat_cooldown_bypass_permission: "donorchat.bypass"
 
+  stafflist:
+
+    # Select if you want to sort the staff list by group weight.
+    # Set a weight in LP using: /lp group <group> setweight <weight>.
+    # Groups with major weight will be at the top of the list.
+    sorting: true
+
   # By activating this option, you will not be able to send messages with formatting codes (&c, &f etc.).
   # Can also fix blank messages.
   prevent_color_codes: false

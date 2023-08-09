@@ -1,5 +1,6 @@
 package it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl;
 
+import com.google.common.collect.Lists;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
@@ -14,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.UUID;
 
 public class StaffListCommand extends CommandBase {
 
@@ -37,41 +39,64 @@ public class StaffListCommand extends CommandBase {
 
             String user_prefix;
 
+            List <UUID> list = Lists.newArrayList();
             for (Player players : plugin.getServer().getOnlinePlayers()) {
 
-                if (players.hasPermission(SpigotConfig.STAFFLIST_PERMISSION.get(String.class))) {
+                if (!players.hasPermission(SpigotConfig.STAFFLIST_PERMISSION.get(String.class))) {
+                    continue;
+                }
 
-                    User user = api.getUserManager().getUser(players.getUniqueId());
+                list.add(players.getUniqueId());
 
-                    if (user == null) {
-                        continue;
+            }
+
+            if (SpigotConfig.SORTING.get(Boolean.class)) {
+                list.sort((o1, o2) -> {
+
+                    User user1 = api.getUserManager().getUser(o1);
+                    User user2 = api.getUserManager().getUser(o2);
+
+                    Group group1 = null;
+                    if (user1 != null) {
+                        group1 = api.getGroupManager().getGroup(user1.getPrimaryGroup());
                     }
 
-                    final String prefix = user.getCachedData().getMetaData().getPrefix();
-                    Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
-
-                    if (group == null || group.getDisplayName() == null) {
-
-                        if (prefix != null) {
-                            user_prefix = prefix;
-                        } else {
-                            user_prefix = "";
-                        }
-
-                        if (players.getServer() == null) {
-                            continue;
-                        }
-
-                        sender.sendMessage(SpigotMessages.LIST_FORMAT.color()
-                                .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
-                                .replace("%player%", players.getName())
-                                .replace("%server%", "")
-                                .replace("%prefix%", SpigotMessages.PREFIX.color()));
-
-                        continue;
+                    Group group2 = null;
+                    if (user2 != null) {
+                        group2 = api.getGroupManager().getGroup(user2.getPrimaryGroup());
                     }
 
-                    user_prefix = prefix == null ? group.getDisplayName() : prefix;
+                    if (group1 == null || group2 == null) {
+                        return 0;
+                    }
+
+                    if (!group1.getWeight().isPresent() || !group2.getWeight().isPresent()) {
+                        return 0;
+                    }
+
+                    return Integer.compare(group1.getWeight().getAsInt(), group2.getWeight().getAsInt());
+                });
+            }
+
+            for (UUID uuids : list) {
+
+                Player players = plugin.getServer().getPlayer(uuids);
+                User user = api.getUserManager().getUser(players.getUniqueId());
+
+                if (user == null) {
+                    continue;
+                }
+
+                final String prefix = user.getCachedData().getMetaData().getPrefix();
+                Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
+
+                if (group == null || group.getDisplayName() == null) {
+
+                    if (prefix != null) {
+                        user_prefix = prefix;
+                    } else {
+                        user_prefix = "";
+                    }
 
                     if (players.getServer() == null) {
                         continue;
@@ -83,8 +108,23 @@ public class StaffListCommand extends CommandBase {
                             .replace("%server%", "")
                             .replace("%prefix%", SpigotMessages.PREFIX.color()));
 
+                    continue;
                 }
+
+                user_prefix = prefix == null ? group.getDisplayName() : prefix;
+
+                if (players.getServer() == null) {
+                    continue;
+                }
+
+                sender.sendMessage(SpigotMessages.LIST_FORMAT.color()
+                        .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                        .replace("%player%", players.getName())
+                        .replace("%server%", "")
+                        .replace("%prefix%", SpigotMessages.PREFIX.color()));
+
             }
+
             sender.sendMessage(SpigotMessages.LIST_FOOTER.color()
                     .replace("%prefix%", SpigotMessages.PREFIX.color()));
         }

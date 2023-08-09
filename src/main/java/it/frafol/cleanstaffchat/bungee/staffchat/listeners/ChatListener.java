@@ -1,5 +1,6 @@
 package it.frafol.cleanstaffchat.bungee.staffchat.listeners;
 
+import com.google.common.collect.Lists;
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
@@ -27,7 +28,9 @@ import net.md_5.bungee.event.EventHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class ChatListener extends ListenerAdapter implements Listener {
@@ -276,51 +279,88 @@ public class ChatListener extends ListenerAdapter implements Listener {
             String user_prefix;
 
             if (!PLUGIN.getProxy().getPlayers().isEmpty()) {
+                List<UUID> list = Lists.newArrayList();
                 for (ProxiedPlayer players : PLUGIN.getProxy().getPlayers()) {
 
-                    if (players.hasPermission(BungeeConfig.STAFFLIST_PERMISSION.get(String.class))) {
+                    if (!players.hasPermission(BungeeConfig.STAFFLIST_PERMISSION.get(String.class))) {
+                        continue;
+                    }
 
-                        User user = api.getUserManager().getUser(players.getUniqueId());
+                    list.add(players.getUniqueId());
 
-                        if (user == null) {
-                            continue;
+                }
+
+                if (BungeeConfig.SORTING.get(Boolean.class)) {
+                    list.sort((o1, o2) -> {
+
+                        User user1 = api.getUserManager().getUser(o1);
+                        User user2 = api.getUserManager().getUser(o2);
+
+                        Group group1 = null;
+                        if (user1 != null) {
+                            group1 = api.getGroupManager().getGroup(user1.getPrimaryGroup());
                         }
 
-                        final String prefix = user.getCachedData().getMetaData().getPrimaryGroup();
-                        Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
-
-                        if (group == null || group.getDisplayName() == null) {
-
-                            if (prefix != null) {
-                                user_prefix = prefix;
-                            } else {
-                                user_prefix = "";
-                            }
-
-                            if (players.getServer() == null) {
-                                continue;
-                            }
-
-                            sb.append((BungeeMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
-                                    .replace("%usergroup%", PlayerCache.translateHex(user_prefix))
-                                    .replace("%player%", players.getName())
-                                    .replace("%server%", players.getServer().getInfo().getName()));
-
-                            continue;
+                        Group group2 = null;
+                        if (user2 != null) {
+                            group2 = api.getGroupManager().getGroup(user2.getPrimaryGroup());
                         }
 
-                        user_prefix = prefix == null ? group.getDisplayName() : prefix;
+                        if (group1 == null || group2 == null) {
+                            return 0;
+                        }
+
+                        if (!group1.getWeight().isPresent() || !group2.getWeight().isPresent()) {
+                            return 0;
+                        }
+
+                        return Integer.compare(group1.getWeight().getAsInt(), group2.getWeight().getAsInt());
+                    });
+                }
+
+                for (UUID uuids : list) {
+
+                    ProxiedPlayer players = PLUGIN.getProxy().getPlayer(uuids);
+                    User user = api.getUserManager().getUser(players.getUniqueId());
+
+                    if (user == null) {
+                        continue;
+                    }
+
+                    final String prefix = user.getCachedData().getMetaData().getPrimaryGroup();
+                    Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
+
+                    if (group == null || group.getDisplayName() == null) {
+
+                        if (prefix != null) {
+                            user_prefix = prefix;
+                        } else {
+                            user_prefix = "";
+                        }
 
                         if (players.getServer() == null) {
                             continue;
                         }
 
                         sb.append((BungeeMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
-                                .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                .replace("%usergroup%", PlayerCache.translateHex(user_prefix))
                                 .replace("%player%", players.getName())
                                 .replace("%server%", players.getServer().getInfo().getName()));
 
+                        continue;
                     }
+
+                    user_prefix = prefix == null ? group.getDisplayName() : prefix;
+
+                    if (players.getServer() == null) {
+                        continue;
+                    }
+
+                    sb.append((BungeeMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
+                            .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                            .replace("%player%", players.getName())
+                            .replace("%server%", players.getServer().getInfo().getName()));
+
                 }
             }
             sb.append(BungeeMessages.DISCORDLIST_FOOTER.get(String.class));

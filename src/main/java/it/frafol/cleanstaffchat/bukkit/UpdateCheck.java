@@ -17,8 +17,7 @@ public class UpdateCheck {
     }
 
     public void getVersion(final Consumer<String> consumer) {
-        ScheduledThreadPoolExecutor service = new ScheduledThreadPoolExecutor(1);
-        service.schedule(() -> {
+        new Thread(() -> {
             try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=105220")
                     .openStream(); Scanner scanner = new Scanner(inputStream)) {
                 if (scanner.hasNext()) {
@@ -27,6 +26,6 @@ public class UpdateCheck {
             } catch (IOException exception) {
                 PLUGIN.getLogger().severe("Unable to check for updates: " + exception.getMessage());
             }
-        }, 0, TimeUnit.MILLISECONDS);
+        }, "CleanStaffChat-Updater").start();
     }
 }

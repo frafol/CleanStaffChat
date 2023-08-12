@@ -243,7 +243,11 @@ public class ChatListener extends ListenerAdapter {
                 List<UUID> list = Lists.newArrayList();
                 for (Player players : PLUGIN.getServer().getAllPlayers()) {
 
-                    if (!players.hasPermission(VelocityConfig.STAFFLIST_PERMISSION.get(String.class))) {
+                    if (!players.hasPermission(VelocityConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
+                        continue;
+                    }
+
+                    if (players.hasPermission(VelocityConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
                         continue;
                     }
 

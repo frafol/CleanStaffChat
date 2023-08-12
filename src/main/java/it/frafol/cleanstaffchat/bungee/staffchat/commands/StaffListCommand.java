@@ -45,7 +45,11 @@ public class StaffListCommand extends Command {
             List <UUID> list = Lists.newArrayList();
             for (ProxiedPlayer players : plugin.getProxy().getPlayers()) {
 
-                if (!players.hasPermission(BungeeConfig.STAFFLIST_PERMISSION.get(String.class))) {
+                if (!players.hasPermission(BungeeConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
+                    continue;
+                }
+
+                if (players.hasPermission(BungeeConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
                     continue;
                 }
 

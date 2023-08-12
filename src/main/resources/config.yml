@@ -13,7 +13,6 @@ settings:
   console_name: "Console"
 
   reload_permission: "staffchat.reload"
-  stafflist_permission: "stafflist.use"
 
   use_staffchat: true
   use_adminchat: true
@@ -67,6 +66,11 @@ settings:
     donorchat_cooldown_bypass_permission: "donorchat.bypass"
 
   stafflist:
+
+    # You can customise permissions.
+    stafflist_permission: "stafflist.use"
+    stafflist_show_permission: "stafflist.show"
+    stafflist_bypass_permission: "stafflist.bypass"
 
     # Select if you want to sort the staff list by group weight.
     # Set a weight in LP using: /lp group <group> setweight <weight>.

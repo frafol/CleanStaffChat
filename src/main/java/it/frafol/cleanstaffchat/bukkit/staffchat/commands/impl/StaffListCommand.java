@@ -42,7 +42,11 @@ public class StaffListCommand extends CommandBase {
             List <UUID> list = Lists.newArrayList();
             for (Player players : plugin.getServer().getOnlinePlayers()) {
 
-                if (!players.hasPermission(SpigotConfig.STAFFLIST_PERMISSION.get(String.class))) {
+                if (!players.hasPermission(SpigotConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
+                    continue;
+                }
+
+                if (players.hasPermission(SpigotConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
                     continue;
                 }
 

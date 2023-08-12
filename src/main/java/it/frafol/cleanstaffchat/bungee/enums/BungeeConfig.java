@@ -15,7 +15,9 @@ public enum BungeeConfig {
     SORTING("settings.stafflist.sorting"),
 
     STAFFLIST_MODULE("modules.stafflist_module"),
-    STAFFLIST_PERMISSION("settings.stafflist_permission"),
+    STAFFLIST_PERMISSION("settings.stafflist.stafflist_use_permission"),
+    STAFFLIST_SHOW_PERMISSION("settings.stafflist.stafflist_show_permission"),
+    STAFFLIST_BYPASS_PERMISSION("settings.stafflist.stafflist_bypass_permission"),
 
     HIDE_ADVERTS("settings.hide_advertisements"),
 

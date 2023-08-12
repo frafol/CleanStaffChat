@@ -361,7 +361,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                     }
 
                     sb.append((BungeeMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
-                            .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                            .replace("%usergroup%", PlayerCache.translateHex(user_prefix))
                             .replace("%player%", players.getName())
                             .replace("%server%", players.getServer().getInfo().getName()));
 

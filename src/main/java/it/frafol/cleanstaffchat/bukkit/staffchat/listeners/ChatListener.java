@@ -6,7 +6,6 @@ import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import me.TechsCode.UltraPermissions.UltraPermissions;
 import me.TechsCode.UltraPermissions.UltraPermissionsAPI;
 import me.TechsCode.UltraPermissions.storage.collection.UserList;
@@ -312,7 +311,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                     }
 
                     sb.append((SpigotMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
-                            .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                            .replace("%usergroup%", PlayerCache.translateHex(user_prefix))
                             .replace("%player%", players.getName())
                             .replace("%server%", ""));
 

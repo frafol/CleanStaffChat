@@ -3,10 +3,7 @@ package it.frafol.cleanstaffchat.bungee;
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import it.frafol.cleanstaffchat.bungee.adminchat.commands.AdminChatCommand;
 import it.frafol.cleanstaffchat.bungee.donorchat.commands.DonorChatCommand;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeRedis;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeVersion;
+import it.frafol.cleanstaffchat.bungee.enums.*;
 import it.frafol.cleanstaffchat.bungee.hooks.RedisListener;
 import it.frafol.cleanstaffchat.bungee.objects.TextFile;
 import it.frafol.cleanstaffchat.bungee.staffchat.commands.DebugCommand;
@@ -115,65 +112,52 @@ public class CleanStaffChat extends Plugin {
 
         if (BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
 
-            jda = JDABuilder.createDefault(BungeeDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
+            try {
+                jda = JDABuilder.createDefault(BungeeDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
+            } catch (ExceptionInInitializerError e) {
+                getLogger().severe("Invalid Discord configuration, please check your discord.yml file.");
+                getLogger().severe("Make sure you are not using any strange forks (like Aegis).");
+            }
+
             updateJDATask();
-
             getLogger().info("§7Hooked into Discord §dsuccessfully§7!");
-
         }
 
         getProxy().getPluginManager().registerCommand(this, new ReloadCommand());
         getProxy().getPluginManager().registerCommand(this, new DebugCommand(this));
 
         if (BungeeConfig.STAFFLIST_MODULE.get(Boolean.class)) {
-
             registerStaffList();
-
         }
 
         if (BungeeConfig.STAFFCHAT.get(Boolean.class)) {
-
             registerStaffChat();
-
         }
 
         if (BungeeConfig.ADMINCHAT.get(Boolean.class)) {
-
             registerAdminChat();
-
         }
 
         if (BungeeConfig.DONORCHAT.get(Boolean.class)) {
-
             registerDonorChat();
-
         }
 
         if (BungeeRedis.REDIS_ENABLE.get(Boolean.class) && getProxy().getPluginManager().getPlugin("RedisBungee") == null) {
-
             getLogger().severe("RedisBungee was not found, the RedisBungee hook won't work.");
-
         }
 
         if (BungeeRedis.REDIS_ENABLE.get(Boolean.class) && getProxy().getPluginManager().getPlugin("RedisBungee") != null) {
-
             registerRedisBungee();
-
             getLogger().info("§7Hooked into RedisBungee §dsuccessfully§7!");
-
         }
 
         if (BungeeConfig.STATS.get(Boolean.class)) {
-
             new Metrics(this, 16449);
-
             getLogger().info("§7Metrics loaded §asuccessfully§7!");
         }
 
         if (BungeeConfig.UPDATE_CHECK.get(Boolean.class)) {
-
             UpdateChecker();
-
         }
 
         getLogger().info("§7Plugin successfully §denabled§7!");
@@ -263,7 +247,9 @@ public class CleanStaffChat extends Plugin {
                 }
 
                 if (!updated) {
-                    player.sendMessage(TextComponent.fromLegacyText("§e[CleanStaffChat] There is a new update available, download it on SpigotMC!"));
+                    player.sendMessage(TextComponent.fromLegacyText(BungeeMessages.UPDATE.color()
+                            .replace("%version%", version)
+                            .replace("%prefix%", BungeeMessages.PREFIX.color())));
                 }
             }
         });

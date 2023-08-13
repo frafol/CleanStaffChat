@@ -1,10 +1,7 @@
 package it.frafol.cleanstaffchat.bukkit;
 
 import com.tchristofferson.configupdater.ConfigUpdater;
-import it.frafol.cleanstaffchat.bukkit.enums.SpigotCommandsConfig;
-import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
-import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
-import it.frafol.cleanstaffchat.bukkit.enums.SpigotVersion;
+import it.frafol.cleanstaffchat.bukkit.enums.*;
 import it.frafol.cleanstaffchat.bukkit.objects.TextFile;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.CommandBase;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl.DebugCommand;
@@ -21,7 +18,6 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.entity.Player;
@@ -156,7 +152,11 @@ public class CleanStaffChat extends JavaPlugin {
 
         if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
 
-            jda = JDABuilder.createDefault(SpigotDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
+            try {
+                jda = JDABuilder.createDefault(SpigotDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
+            } catch (ExceptionInInitializerError e) {
+                getLogger().severe("§cInvalid Discord configuration, please check your discord.yml file.");
+            }
             updateJDATask();
 
             getLogger().info("Hooked into Discord successfully!");
@@ -166,7 +166,6 @@ public class CleanStaffChat extends JavaPlugin {
         if (SpigotConfig.STAFFCHAT.get(Boolean.class)) {
 
             registerStaffChatCommands();
-
             getServer().getPluginManager().registerEvents(new JoinListener(this), this);
             getServer().getPluginManager().registerEvents(new ChatListener(this), this);
             getServer().getPluginManager().registerEvents(new MoveListener(this), this);
@@ -405,7 +404,9 @@ public class CleanStaffChat extends JavaPlugin {
                 }
 
                 if (!updated) {
-                    player.sendMessage(ChatColor.YELLOW + "There is a new update available, download it on SpigotMC!");
+                    player.sendMessage(SpigotMessages.UPDATE.color()
+                            .replace("%version%", version)
+                            .replace("%prefix%", SpigotMessages.PREFIX.color()));
                 }
             }
         });

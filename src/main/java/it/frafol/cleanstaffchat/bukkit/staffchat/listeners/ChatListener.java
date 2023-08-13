@@ -281,10 +281,11 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         continue;
                     }
 
-                    final String prefix = user.getCachedData().getMetaData().getPrimaryGroup();
                     Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
 
                     if (group == null || group.getDisplayName() == null) {
+
+                        final String prefix = user.getCachedData().getMetaData().getPrimaryGroup();
 
                         if (prefix != null) {
                             user_prefix = prefix;
@@ -304,6 +305,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         continue;
                     }
 
+                    final String prefix = group.getDisplayName();
                     user_prefix = prefix == null ? group.getDisplayName() : prefix;
 
                     if (players.getServer() == null) {

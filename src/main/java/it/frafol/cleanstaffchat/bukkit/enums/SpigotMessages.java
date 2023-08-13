@@ -80,6 +80,8 @@ public enum SpigotMessages {
     DISCORDLIST_FORMAT("messages.stafflist.discord.format"),
     DISCORDLIST_FOOTER("messages.stafflist.discord.footer"),
 
+    UPDATE("messages.new_version"),
+
     DONORCHAT_COOLDOWN_ERROR_DISCORD("messages.donorchat.discord.discord_cooldown_message");
 
     private final String path;

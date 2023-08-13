@@ -231,9 +231,6 @@ public class CleanStaffChat {
     }
 
     private void UpdateChecker() {
-        if (!VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {
-            return;
-        }
 
         if (!container.getDescription().getVersion().isPresent()) {
             return;
@@ -309,7 +306,9 @@ public class CleanStaffChat {
 
             if (!updated) {
                 player.sendMessage(LegacyComponentSerializer.legacy('§')
-                        .deserialize("§e[CleanStaffChat] There is a new update available, download it on SpigotMC!"));
+                        .deserialize(VelocityMessages.UPDATE.color()
+                                .replace("%version%", version)
+                                .replace("%prefix%", VelocityMessages.PREFIX.color())));
             }
 
         });

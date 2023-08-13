@@ -51,9 +51,10 @@ public enum VelocityConfig {
     DONORCHAT_TOGGLE_MODULE("modules.donorchat_toggle_module"),
 
     STAFFLIST_MODULE("modules.stafflist_module"),
-    STAFFLIST_PERMISSION("settings.stafflist.stafflist_use_permission"),
+    STAFFLIST_PERMISSION("settings.stafflist.stafflist_permission"),
     STAFFLIST_SHOW_PERMISSION("settings.stafflist.stafflist_show_permission"),
     STAFFLIST_BYPASS_PERMISSION("settings.stafflist.stafflist_bypass_permission"),
+    STAFFLIST_BYPASS("settings.stafflist.bypass_enabled"),
 
     SORTING("settings.stafflist.sorting"),
 

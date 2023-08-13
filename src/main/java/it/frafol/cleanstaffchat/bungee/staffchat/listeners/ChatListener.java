@@ -286,7 +286,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         continue;
                     }
 
-                    if (players.hasPermission(BungeeConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
+                    if (BungeeConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(BungeeConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
                         continue;
                     }
 

@@ -72,6 +72,9 @@ settings:
     stafflist_show_permission: "stafflist.show"
     stafflist_bypass_permission: "stafflist.bypass"
 
+    # You can enable or disable the bypass permission.
+    bypass_enabled: true
+
     # Select if you want to sort the staff list by group weight.
     # Set a weight in LP using: /lp group <group> setweight <weight>.
     # Groups with major weight will be at the top of the list.

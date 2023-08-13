@@ -49,7 +49,7 @@ public class StaffListCommand extends Command {
                     continue;
                 }
 
-                if (players.hasPermission(BungeeConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
+                if (BungeeConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(BungeeConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
                     continue;
                 }
 

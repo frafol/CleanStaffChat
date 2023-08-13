@@ -247,7 +247,7 @@ public class ChatListener extends ListenerAdapter {
                         continue;
                     }
 
-                    if (players.hasPermission(VelocityConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
+                    if (VelocityConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(VelocityConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
                         continue;
                     }
 

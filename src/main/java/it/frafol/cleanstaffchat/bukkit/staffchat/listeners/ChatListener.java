@@ -236,7 +236,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         continue;
                     }
 
-                    if (players.hasPermission(SpigotConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
+                    if (SpigotConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(SpigotConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
                         continue;
                     }
 

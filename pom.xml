@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>it.frafol</groupId>
-    <artifactId>cleanstaffchat</artifactId>
-    <version>1.10.1</version>
+    <artifactId>knockbackinator</artifactId>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
 
-    <name>CleanStaffChat</name>
+    <name>Knockbackinator</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -18,8 +18,8 @@
     </properties>
 
     <build>
+        <finalName>Knockbackinator</finalName>
         <defaultGoal>clean install</defaultGoal>
-        <finalName>CleanStaffChat</finalName>
         <plugins>
             <plugin>
                 <version>3.6.1</version>
@@ -41,12 +41,6 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <relocations>
-                                <relocation>
-                                    <pattern>net.byteflux.libby</pattern>
-                                    <shadedPattern>it.frafol.libs.net.byteflux.libby</shadedPattern>
-                                </relocation>
-                            </relocations>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                         </configuration>
                     </execution>
@@ -63,71 +57,20 @@
 
     <repositories>
         <repository>
-            <id>papermc</id>
-            <url>https://repo.papermc.io/repository/maven-public/</url>
-        </repository>
-        <repository>
-            <id>bungeecord-repo</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </repository>
-        <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
-            <id>AlessioDP</id>
-            <url>https://repo.alessiodp.com/releases/</url>
         </repository>
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
         <repository>
-            <id>techscode</id>
-            <url>https://repo.techscode.com/repository/maven-releases/</url>
+            <id>AlessioDP</id>
+            <url>https://repo.alessiodp.com/releases/</url>
         </repository>
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>com.velocitypowered</groupId>
-            <artifactId>velocity-api</artifactId>
-            <version>3.1.2-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.byteflux</groupId>
-            <artifactId>libby-bukkit</artifactId>
-            <version>1.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>net.byteflux</groupId>
-            <artifactId>libby-velocity</artifactId>
-            <version>1.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>net.byteflux</groupId>
-            <artifactId>libby-bungee</artifactId>
-            <version>1.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>net.luckperms</groupId>
-            <artifactId>api</artifactId>
-            <version>5.4</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.TechsCode</groupId>
-            <artifactId>UltraPermissionsAPI</artifactId>
-            <version>1.0.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.dv8tion</groupId>
-            <artifactId>JDA</artifactId>
-            <version>5.0.0-beta.12</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>me.carleslc.Simple-YAML</groupId>
             <artifactId>Simple-Yaml</artifactId>
@@ -141,48 +84,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>1.20-R0.1-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>1.20-R0.1-SNAPSHOT</version>
-            <type>javadoc</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>dev.folia</groupId>
-            <artifactId>folia-api</artifactId>
-            <version>1.20.1-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.proxiodev.redisbungee</groupId>
-            <artifactId>RedisBungee-Bungee</artifactId>
-            <version>0.11.2</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.proxiodev.redisbungee</groupId>
-            <artifactId>RedisBungee-Velocity</artifactId>
-            <version>0.11.2</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>ru.vyarus</groupId>
-            <artifactId>yaml-config-updater</artifactId>
-            <version>1.4.2</version>
-            <scope>provided</scope>
+            <groupId>net.byteflux</groupId>
+            <artifactId>libby-bukkit</artifactId>
+            <version>1.2.0</version>
         </dependency>
         <dependency>
             <groupId>com.tchristofferson</groupId>

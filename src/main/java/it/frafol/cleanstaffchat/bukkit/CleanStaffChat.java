@@ -423,7 +423,7 @@ public class CleanStaffChat extends JavaPlugin {
         }
 
         if (jda == null) {
-            getLogger().severe("Fatal error while updating JDA. Please report this error to discord.io/futurevelopment.");
+            getLogger().severe("Fatal error while updating JDA. Please report this error to https://discord.com/invite/sTSwaGBCdC.");
             return;
         }
 

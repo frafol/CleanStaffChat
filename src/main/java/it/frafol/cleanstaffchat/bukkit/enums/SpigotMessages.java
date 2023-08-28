@@ -1,6 +1,7 @@
 package it.frafol.cleanstaffchat.bukkit.enums;
 
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
+import org.bukkit.ChatColor;
 
 public enum SpigotMessages {
 
@@ -99,6 +100,14 @@ public enum SpigotMessages {
     }
 
     public String color() {
+        if (checkNonLegacy(instance.getServer().getVersion()) >= 0) {
+            return get(String.class).replaceAll("&#([A-Fa-f0-9]{6})", ChatColor.COLOR_CHAR + "x$1").replace("&", "§");
+        }
+
         return get(String.class).replace("&", "§");
+    }
+
+    private int checkNonLegacy(String version) {
+        return version.compareTo("1.16.5");
     }
 }

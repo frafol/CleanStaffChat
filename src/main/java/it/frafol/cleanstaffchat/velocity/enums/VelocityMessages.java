@@ -6,6 +6,9 @@ import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public enum VelocityMessages {
 
     PLAYER_ONLY("messages.console"),
@@ -103,12 +106,30 @@ public enum VelocityMessages {
     public String getPath() {
         return path;
     }
+
     public <T> T get(Class<T> clazz) {
         return clazz.cast(instance.getMessagesTextFile().getConfig().get(path));
     }
 
     public String color() {
-        return get(String.class).replace("&", "§");
+        String hex = convertHexColors(get(String.class));
+        return hex.replace("&", "§");
+    }
+
+    private static final Pattern HEX_COLOR_PATTERN = Pattern.compile("#([A-Fa-f0-9]{6})");
+
+    private String convertHexColors(String message) {
+        Matcher matcher = HEX_COLOR_PATTERN.matcher(message);
+        StringBuffer sb = new StringBuffer();
+
+        while (matcher.find()) {
+            String hexColor = matcher.group(1);
+            String convertedColor = "§x" + hexColor;
+            matcher.appendReplacement(sb, convertedColor);
+        }
+        matcher.appendTail(sb);
+
+        return sb.toString();
     }
 
     public void send(CommandSource commandSource, Placeholder... placeholders) {
@@ -118,6 +139,5 @@ public enum VelocityMessages {
         }
 
         commandSource.sendMessage(LegacyComponentSerializer.legacy('§').deserialize(ChatUtil.getFormattedString(this, placeholders)));
-
     }
 }

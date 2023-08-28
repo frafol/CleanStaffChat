@@ -39,11 +39,8 @@ public class StaffListCommand extends CommandBase {
         }
 
         LuckPerms api = LuckPermsProvider.get();
-
-        sender.sendMessage(SpigotMessages.LIST_HEADER.color()
-                .replace("%prefix%", SpigotMessages.PREFIX.color()));
-
         String user_prefix;
+        String user_suffix;
 
         List<UUID> list = Lists.newArrayList();
         for (Player players : plugin.getServer().getOnlinePlayers()) {
@@ -59,6 +56,10 @@ public class StaffListCommand extends CommandBase {
             list.add(players.getUniqueId());
 
         }
+
+        sender.sendMessage(SpigotMessages.LIST_HEADER.color()
+                .replace("%prefix%", SpigotMessages.PREFIX.color())
+                .replace("%online%", String.valueOf(list.size())));
 
         if (list.isEmpty()) {
             sender.sendMessage(SpigotMessages.LIST_NONE.color()
@@ -103,6 +104,7 @@ public class StaffListCommand extends CommandBase {
             }
 
             final String prefix = user.getCachedData().getMetaData().getPrefix();
+            final String suffix = user.getCachedData().getMetaData().getSuffix();
             Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
 
             if (group == null || group.getDisplayName() == null) {
@@ -113,12 +115,19 @@ public class StaffListCommand extends CommandBase {
                     user_prefix = "";
                 }
 
+                if (suffix != null) {
+                    user_suffix = suffix;
+                } else {
+                    user_suffix = "";
+                }
+
                 if (players.getServer() == null) {
                     continue;
                 }
 
                 sender.sendMessage(SpigotMessages.LIST_FORMAT.color()
                         .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                        .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                         .replace("%player%", players.getName())
                         .replace("%server%", "")
                         .replace("%prefix%", SpigotMessages.PREFIX.color()));
@@ -127,6 +136,7 @@ public class StaffListCommand extends CommandBase {
             }
 
             user_prefix = prefix == null ? group.getDisplayName() : prefix;
+            user_suffix = suffix == null ? group.getDisplayName() : suffix;
 
             if (players.getServer() == null) {
                 continue;
@@ -134,6 +144,7 @@ public class StaffListCommand extends CommandBase {
 
             sender.sendMessage(SpigotMessages.LIST_FORMAT.color()
                     .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                    .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                     .replace("%player%", players.getName())
                     .replace("%server%", "")
                     .replace("%prefix%", SpigotMessages.PREFIX.color()));
@@ -141,7 +152,8 @@ public class StaffListCommand extends CommandBase {
         }
 
         sender.sendMessage(SpigotMessages.LIST_FOOTER.color()
-                .replace("%prefix%", SpigotMessages.PREFIX.color()));
+                .replace("%prefix%", SpigotMessages.PREFIX.color())
+                .replace("%online%", String.valueOf(list.size())));
         return false;
     }
 }

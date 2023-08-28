@@ -270,13 +270,10 @@ public class ChatListener extends ListenerAdapter implements Listener {
             LuckPerms api = LuckPermsProvider.get();
             StringBuilder sb = new StringBuilder();
 
-            sb.append((BungeeMessages.DISCORDLIST_HEADER.color() + "\n")
-                    .replace("%prefix%", BungeeMessages.PREFIX.color()));
-
             String user_prefix;
+            List<UUID> list = Lists.newArrayList();
 
             if (!PLUGIN.getProxy().getPlayers().isEmpty()) {
-                List<UUID> list = Lists.newArrayList();
                 for (ProxiedPlayer players : PLUGIN.getProxy().getPlayers()) {
 
                     if (!players.hasPermission(BungeeConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
@@ -289,74 +286,63 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                     list.add(players.getUniqueId());
                 }
+            }
 
-                if (list.isEmpty()) {
-                    sb.append((BungeeMessages.DISCORDLIST_NONE.color()  + "\n")
-                            .replace("%prefix%", BungeeMessages.PREFIX.color()));
-                }
+            sb.append((BungeeMessages.DISCORDLIST_HEADER.color() + "\n")
+                    .replace("%online%", String.valueOf(list.size())));
 
-                if (BungeeConfig.SORTING.get(Boolean.class)) {
-                    list.sort((o1, o2) -> {
+            if (list.isEmpty()) {
+                sb.append((BungeeMessages.DISCORDLIST_NONE.color() + "\n")
+                        .replace("%prefix%", BungeeMessages.PREFIX.color()));
+            }
 
-                        User user1 = api.getUserManager().getUser(o1);
-                        User user2 = api.getUserManager().getUser(o2);
+            if (BungeeConfig.SORTING.get(Boolean.class)) {
+                list.sort((o1, o2) -> {
 
-                        Group group1 = null;
-                        if (user1 != null) {
-                            group1 = api.getGroupManager().getGroup(user1.getPrimaryGroup());
-                        }
+                    User user1 = api.getUserManager().getUser(o1);
+                    User user2 = api.getUserManager().getUser(o2);
 
-                        Group group2 = null;
-                        if (user2 != null) {
-                            group2 = api.getGroupManager().getGroup(user2.getPrimaryGroup());
-                        }
-
-                        if (group1 == null || group2 == null) {
-                            return 0;
-                        }
-
-                        if (!group1.getWeight().isPresent() || !group2.getWeight().isPresent()) {
-                            return 0;
-                        }
-
-                        return Integer.compare(group1.getWeight().getAsInt(), group2.getWeight().getAsInt());
-                    });
-                }
-
-                for (UUID uuids : list) {
-
-                    ProxiedPlayer players = PLUGIN.getProxy().getPlayer(uuids);
-                    User user = api.getUserManager().getUser(players.getUniqueId());
-
-                    if (user == null) {
-                        continue;
+                    Group group1 = null;
+                    if (user1 != null) {
+                        group1 = api.getGroupManager().getGroup(user1.getPrimaryGroup());
                     }
 
-                    Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
-
-                    if (group == null || group.getDisplayName() == null) {
-
-                        final String prefix = user.getCachedData().getMetaData().getPrimaryGroup();
-                        if (prefix != null) {
-                            user_prefix = prefix;
-                        } else {
-                            user_prefix = "";
-                        }
-
-                        if (players.getServer() == null) {
-                            continue;
-                        }
-
-                        sb.append((BungeeMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
-                                .replace("%usergroup%", PlayerCache.translateHex(user_prefix))
-                                .replace("%player%", players.getName())
-                                .replace("%server%", players.getServer().getInfo().getName()));
-
-                        continue;
+                    Group group2 = null;
+                    if (user2 != null) {
+                        group2 = api.getGroupManager().getGroup(user2.getPrimaryGroup());
                     }
 
-                    final String prefix = group.getDisplayName();
-                    user_prefix = prefix == null ? group.getDisplayName() : prefix;
+                    if (group1 == null || group2 == null) {
+                        return 0;
+                    }
+
+                    if (!group1.getWeight().isPresent() || !group2.getWeight().isPresent()) {
+                        return 0;
+                    }
+
+                    return Integer.compare(group1.getWeight().getAsInt(), group2.getWeight().getAsInt());
+                });
+            }
+
+            for (UUID uuids : list) {
+
+                ProxiedPlayer players = PLUGIN.getProxy().getPlayer(uuids);
+                User user = api.getUserManager().getUser(players.getUniqueId());
+
+                if (user == null) {
+                    continue;
+                }
+
+                Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
+
+                if (group == null || group.getDisplayName() == null) {
+
+                    final String prefix = user.getCachedData().getMetaData().getPrimaryGroup();
+                    if (prefix != null) {
+                        user_prefix = prefix;
+                    } else {
+                        user_prefix = "";
+                    }
 
                     if (players.getServer() == null) {
                         continue;
@@ -367,9 +353,23 @@ public class ChatListener extends ListenerAdapter implements Listener {
                             .replace("%player%", players.getName())
                             .replace("%server%", players.getServer().getInfo().getName()));
 
+                    continue;
                 }
+
+                final String prefix = group.getDisplayName();
+                user_prefix = prefix == null ? group.getDisplayName() : prefix;
+
+                if (players.getServer() == null) {
+                    continue;
+                }
+
+                sb.append((BungeeMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
+                        .replace("%usergroup%", PlayerCache.translateHex(user_prefix))
+                        .replace("%player%", players.getName())
+                        .replace("%server%", players.getServer().getInfo().getName()));
+
             }
-            sb.append(BungeeMessages.DISCORDLIST_FOOTER.get(String.class));
+            sb.append(BungeeMessages.DISCORDLIST_FOOTER.get(String.class).replace("%online%", String.valueOf(list.size())));
 
             if (BungeeDiscordConfig.USE_EMBED.get(Boolean.class)) {
                 EmbedBuilder embed = new EmbedBuilder();
@@ -435,6 +435,5 @@ public class ChatListener extends ListenerAdapter implements Listener {
                             .replace("%user%", event.getAuthor().getName())
                             .replace("%message%", event.getMessage().getContentDisplay()))));
         }
-
     }
 }

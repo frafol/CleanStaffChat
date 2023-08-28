@@ -109,7 +109,8 @@ messages:
 
     usage: "%prefix% &7Use &d/stafflist&7."
 
-    # General messages.
+    # Server StaffList Format, you can use %player% (and %userprefix%/%usersuffix% only if you're using LuckPerms).
+    # You can use %server% on BungeeCord or Velocity and you can use %online% to display online staff (only in header/footer).
     header: "&8&m------&5&m------&d&m------&5&m------&8&m------&f"
     format: "%userprefix%%player% &7(&d%server%&7)"
     footer: "&8&m------&5&m------&d&m------&5&m------&8&m------&f"
@@ -119,6 +120,7 @@ messages:
     discord:
 
       # Discord StaffList Format, you can use %player% (and %usergroup% only if you're using LuckPerms).
+      # You can use %server% on BungeeCord or Velocity and you can use %online% to display online staff (only in header/footer).
       header: "Staff List"
       format: "%usergroup%%player% (%server%)"
       footer: "Staff List"

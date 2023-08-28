@@ -227,13 +227,12 @@ public class ChatListener extends ListenerAdapter {
             LuckPerms api = LuckPermsProvider.get();
             StringBuilder sb = new StringBuilder();
 
-            sb.append((VelocityMessages.DISCORDLIST_HEADER.color()  + "\n")
-                    .replace("%prefix%", VelocityMessages.PREFIX.color()));
+
 
             String user_prefix;
-            if (!PLUGIN.getServer().getAllPlayers().isEmpty()) {
+            List<UUID> list = Lists.newArrayList();
 
-                List<UUID> list = Lists.newArrayList();
+            if (!PLUGIN.getServer().getAllPlayers().isEmpty()) {
                 for (Player players : PLUGIN.getServer().getAllPlayers()) {
 
                     if (!players.hasPermission(VelocityConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
@@ -247,80 +246,68 @@ public class ChatListener extends ListenerAdapter {
                     list.add(players.getUniqueId());
 
                 }
+            }
 
-                if (list.isEmpty()) {
-                    sb.append((VelocityMessages.DISCORDLIST_NOBODY.color()  + "\n")
-                            .replace("%prefix%", VelocityMessages.PREFIX.color()));
+            sb.append((VelocityMessages.DISCORDLIST_HEADER.get(String.class) + "\n")
+                    .replace("%online%", String.valueOf(list.size())));
+
+            if (list.isEmpty()) {
+                sb.append(VelocityMessages.DISCORDLIST_NOBODY.get(String.class)).append("\n");
+            }
+
+            if (VelocityConfig.SORTING.get(Boolean.class)) {
+                list.sort((o1, o2) -> {
+
+                    User user1 = api.getUserManager().getUser(o1);
+                    User user2 = api.getUserManager().getUser(o2);
+
+                    Group group1 = null;
+                    if (user1 != null) {
+                        group1 = api.getGroupManager().getGroup(user1.getPrimaryGroup());
+                    }
+
+                    Group group2 = null;
+                    if (user2 != null) {
+                        group2 = api.getGroupManager().getGroup(user2.getPrimaryGroup());
+                    }
+
+                    if (group1 == null || group2 == null) {
+                        return 0;
+                    }
+
+                    if (!group1.getWeight().isPresent() || !group2.getWeight().isPresent()) {
+                        return 0;
+                    }
+
+                    return Integer.compare(group1.getWeight().getAsInt(), group2.getWeight().getAsInt());
+                });
+            }
+
+            for (UUID uuids : list) {
+
+                Player players = PLUGIN.getServer().getPlayer(uuids).orElse(null);
+
+                if (players == null) {
+                    continue;
                 }
 
-                if (VelocityConfig.SORTING.get(Boolean.class)) {
-                    list.sort((o1, o2) -> {
+                User user = api.getUserManager().getUser(players.getUniqueId());
 
-                        User user1 = api.getUserManager().getUser(o1);
-                        User user2 = api.getUserManager().getUser(o2);
-
-                        Group group1 = null;
-                        if (user1 != null) {
-                            group1 = api.getGroupManager().getGroup(user1.getPrimaryGroup());
-                        }
-
-                        Group group2 = null;
-                        if (user2 != null) {
-                            group2 = api.getGroupManager().getGroup(user2.getPrimaryGroup());
-                        }
-
-                        if (group1 == null || group2 == null) {
-                            return 0;
-                        }
-
-                        if (!group1.getWeight().isPresent() || !group2.getWeight().isPresent()) {
-                            return 0;
-                        }
-
-                        return Integer.compare(group1.getWeight().getAsInt(), group2.getWeight().getAsInt());
-                    });
+                if (user == null) {
+                    continue;
                 }
 
-                for (UUID uuids : list) {
+                Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
 
-                    Player players = PLUGIN.getServer().getPlayer(uuids).orElse(null);
+                if (group == null || group.getDisplayName() == null) {
 
-                    if (players == null) {
-                        continue;
+                    final String prefix = user.getCachedData().getMetaData().getPrimaryGroup();
+
+                    if (prefix != null) {
+                        user_prefix = prefix;
+                    } else {
+                        user_prefix = "";
                     }
-
-                    User user = api.getUserManager().getUser(players.getUniqueId());
-
-                    if (user == null) {
-                        continue;
-                    }
-
-                    Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
-
-                    if (group == null || group.getDisplayName() == null) {
-
-                        final String prefix = user.getCachedData().getMetaData().getPrimaryGroup();
-
-                        if (prefix != null) {
-                            user_prefix = prefix;
-                        } else {
-                            user_prefix = "";
-                        }
-
-                        if (!players.getCurrentServer().isPresent()) {
-                            continue;
-                        }
-
-                        sb.append((VelocityMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
-                                .replace("%usergroup%", ChatUtil.translateHex(user_prefix))
-                                .replace("%player%", players.getUsername())
-                                .replace("%server%", players.getCurrentServer().get().getServerInfo().getName()));
-
-                        continue;
-                    }
-
-                    final String prefix = group.getDisplayName();
-                    user_prefix = prefix == null ? group.getDisplayName() : prefix;
 
                     if (!players.getCurrentServer().isPresent()) {
                         continue;
@@ -331,10 +318,24 @@ public class ChatListener extends ListenerAdapter {
                             .replace("%player%", players.getUsername())
                             .replace("%server%", players.getCurrentServer().get().getServerInfo().getName()));
 
+                    continue;
                 }
-            }
 
-            sb.append(VelocityMessages.DISCORDLIST_FOOTER.get(String.class));
+                final String prefix = group.getDisplayName();
+                user_prefix = prefix == null ? group.getDisplayName() : prefix;
+
+                if (!players.getCurrentServer().isPresent()) {
+                    continue;
+                }
+
+                sb.append((VelocityMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
+                        .replace("%usergroup%", ChatUtil.translateHex(user_prefix))
+                        .replace("%player%", players.getUsername())
+                        .replace("%server%", players.getCurrentServer().get().getServerInfo().getName()));
+
+            }
+            sb.append(VelocityMessages.DISCORDLIST_FOOTER.get(String.class).replace("%online%", String.valueOf(list.size())));
+
             if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
                 EmbedBuilder embed = new EmbedBuilder();
                 embed.setTitle(VelocityDiscordConfig.STAFFLIST_EMBED_TITLE.get(String.class), null);

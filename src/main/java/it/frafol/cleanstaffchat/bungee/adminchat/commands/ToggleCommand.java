@@ -32,21 +32,20 @@ public class ToggleCommand extends Command {
 
         ProxiedPlayer player = (ProxiedPlayer) sender;
 
-        if (player.hasPermission(BungeeConfig.ADMINCHAT_TOGGLE_PERMISSION.get(String.class))) {
-            if (!PlayerCache.getToggled_admin().contains(player.getUniqueId())) {
-                PlayerCache.getToggled_admin().add(player.getUniqueId());
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_TOGGLED_OFF.color()
-                        .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
-                return;
-            }
-        } else {
+        if (!player.hasPermission(BungeeConfig.ADMINCHAT_TOGGLE_PERMISSION.get(String.class))) {
             sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
             return;
         }
 
-        PlayerCache.getToggled_admin().remove(player.getUniqueId());
+        if (!PlayerCache.getToggled_admin().contains(player.getUniqueId())) {
+            PlayerCache.getToggled_admin().add(player.getUniqueId());
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_TOGGLED_OFF.color()
+                    .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
+            return;
+        }
 
+        PlayerCache.getToggled_admin().remove(player.getUniqueId());
         sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_TOGGLED_ON.color()
                 .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
     }

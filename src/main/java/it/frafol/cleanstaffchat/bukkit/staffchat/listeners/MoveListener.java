@@ -28,21 +28,15 @@ public class MoveListener implements Listener {
         final Player player = event.getPlayer();
 
         if (!PlayerCache.getAfk().contains(player.getUniqueId())) {
-
             return;
-
         }
 
         if (!player.hasPermission(SpigotConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))) {
-
             return;
-
         }
 
         if (!SpigotConfig.STAFFCHAT_NO_AFK_ONCHANGE_SERVER.get(Boolean.class)) {
-
             return;
-
         }
 
         if (PlayerCache.getAfk().contains(player.getUniqueId())) {
@@ -50,7 +44,6 @@ public class MoveListener implements Listener {
             if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
 
                 final LuckPerms api = LuckPermsProvider.get();
-
                 final User user = api.getUserManager().getUser(player.getUniqueId());
 
                 if (user == null) {
@@ -85,9 +78,7 @@ public class MoveListener implements Listener {
                                 .replace("%displayname%", player.getName())));
 
             }
-
             PlayerCache.getAfk().remove(player.getUniqueId());
-
         }
     }
 }

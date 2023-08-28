@@ -25,36 +25,37 @@ public class MuteCommand extends Command {
             return;
         }
 
-        if (sender.hasPermission(BungeeConfig.DONORCHAT_MUTE_PERMISSION.get(String.class))) {
+        if (!sender.hasPermission(BungeeConfig.DONORCHAT_MUTE_PERMISSION.get(String.class))) {
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
+                    .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
+            return;
+        }
 
-            if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+        if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
-                final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+            final String final_message = "set.donorchat.mute";
 
-                final String final_message = "set.donorchat.mute";
-
-                if (!PlayerCache.getMuted_donor().contains("true")) {
-                    sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_MUTED.color()
-                            .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
-                } else {
-                    sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_UNMUTED.color()
-                            .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
-                }
-
-                redisBungeeAPI.sendChannelMessage("CleanStaffChat-MuteDonorChat-RedisBungee", final_message);
-
-            } else if (!PlayerCache.getMuted_donor().contains("true")) {
-                PlayerCache.getMuted_donor().add("true");
+            if (!PlayerCache.getMuted_donor().contains("true")) {
                 sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_MUTED.color()
                         .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
             } else {
-                PlayerCache.getMuted_donor().remove("true");
                 sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_UNMUTED.color()
                         .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
             }
-        } else {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
+
+            redisBungeeAPI.sendChannelMessage("CleanStaffChat-MuteDonorChat-RedisBungee", final_message);
+            return;
+
+        } else if (!PlayerCache.getMuted_donor().contains("true")) {
+            PlayerCache.getMuted_donor().add("true");
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_MUTED.color()
                     .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
+            return;
         }
+
+        PlayerCache.getMuted_donor().remove("true");
+        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_UNMUTED.color()
+                .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
     }
 }

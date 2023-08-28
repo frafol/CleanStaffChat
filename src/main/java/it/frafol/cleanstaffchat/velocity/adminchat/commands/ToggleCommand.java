@@ -21,6 +21,7 @@ public class ToggleCommand implements SimpleCommand {
 
     @Override
     public void execute(Invocation invocation) {
+
         CommandSource commandSource = invocation.source();
         if (!(ADMINCHAT_TOGGLE_MODULE.get(Boolean.class))) {
             VelocityMessages.MODULE_DISABLED.send(commandSource, new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
@@ -34,19 +35,21 @@ public class ToggleCommand implements SimpleCommand {
 
         Player player = (Player) commandSource;
 
-        if (player.hasPermission(VelocityConfig.ADMINCHAT_TOGGLE_PERMISSION.get(String.class))) {
-            if (!PlayerCache.getToggled_admin().contains(player.getUniqueId())) {
-                PlayerCache.getToggled_admin().add(player.getUniqueId());
-                VelocityMessages.ADMINCHAT_TOGGLED_OFF.send(commandSource,
-                        new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
-            } else {
-                PlayerCache.getToggled_admin().remove(player.getUniqueId());
-                VelocityMessages.ADMINCHAT_TOGGLED_ON.send(commandSource,
-                        new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
-            }
-        } else {
+        if (!player.hasPermission(VelocityConfig.ADMINCHAT_TOGGLE_PERMISSION.get(String.class))) {
             VelocityMessages.NO_PERMISSION.send(commandSource,
                     new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
+            return;
         }
+
+        if (!PlayerCache.getToggled_admin().contains(player.getUniqueId())) {
+            PlayerCache.getToggled_admin().add(player.getUniqueId());
+            VelocityMessages.ADMINCHAT_TOGGLED_OFF.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
+            return;
+        }
+
+        PlayerCache.getToggled_admin().remove(player.getUniqueId());
+        VelocityMessages.ADMINCHAT_TOGGLED_ON.send(commandSource,
+                new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
     }
 }

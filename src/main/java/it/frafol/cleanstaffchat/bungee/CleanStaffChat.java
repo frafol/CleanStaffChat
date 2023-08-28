@@ -11,6 +11,7 @@ import it.frafol.cleanstaffchat.bungee.staffchat.commands.ReloadCommand;
 import it.frafol.cleanstaffchat.bungee.staffchat.listeners.ChatListener;
 import it.frafol.cleanstaffchat.bungee.staffchat.listeners.JoinListener;
 import it.frafol.cleanstaffchat.bungee.staffchat.listeners.ServerListener;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import net.byteflux.libby.BungeeLibraryManager;
 import net.byteflux.libby.Library;
@@ -34,9 +35,11 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.concurrent.TimeUnit;
 
+@Getter
 public class CleanStaffChat extends Plugin {
 
     private JDA jda;
+
     private TextFile configTextFile;
     private TextFile messagesTextFile;
     private TextFile discordTextFile;
@@ -46,11 +49,8 @@ public class CleanStaffChat extends Plugin {
 
     public boolean updated = false;
 
+    @Getter
     public static CleanStaffChat instance;
-
-    public static CleanStaffChat getInstance() {
-        return instance;
-    }
 
     @SneakyThrows
     @Override
@@ -185,10 +185,6 @@ public class CleanStaffChat extends Plugin {
 
     public YamlFile getVersionTextFile() {
         return getInstance().versionTextFile.getConfig();
-    }
-
-    public JDA getJda() {
-        return jda;
     }
 
     @Override
@@ -373,7 +369,7 @@ public class CleanStaffChat extends Plugin {
         }
 
         if (jda == null) {
-            getLogger().severe("Fatal error while updating JDA. Please report this error to https://discord.com/invite/sTSwaGBCdC.");
+            getLogger().severe("Fatal error while updating JDA. Please report this error to https://dsc.gg/futuredevelopment.");
             return;
         }
 
@@ -396,8 +392,8 @@ public class CleanStaffChat extends Plugin {
             updated = true;
             getLogger().warning("CleanStaffChat successfully updated, a restart is required.");
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ignored) {
+            getLogger().severe("Error while updating CleanStaffChat, please report this error on https://dsc.gg/futuredevelopment.");
         }
     }
 

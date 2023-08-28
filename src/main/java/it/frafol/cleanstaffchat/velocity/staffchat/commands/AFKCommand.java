@@ -34,25 +34,17 @@ public class AFKCommand implements SimpleCommand {
         }
 
         if (!VelocityConfig.STAFFCHAT_AFK_MODULE.get(Boolean.class)) {
-
             VelocityMessages.MODULE_DISABLED.send(commandSource, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
-
             return;
-
         }
 
         if (!commandSource.hasPermission(VelocityConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))) {
-
             VelocityMessages.NO_PERMISSION.send(commandSource, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
-
             return;
-
         }
 
         if (!((Player) commandSource).getCurrentServer().isPresent()) {
-
             return;
-
         }
 
         if (!PlayerCache.getAfk().contains(((Player) commandSource).getUniqueId())) {
@@ -63,8 +55,9 @@ public class AFKCommand implements SimpleCommand {
                 final User user = api.getUserManager().getUser(((Player) commandSource).getUniqueId());
 
                 if (user == null) {
-                            return;
-                        }
+                    return;
+                }
+
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
                 final String user_prefix = prefix == null ? "" : prefix;
@@ -116,9 +109,7 @@ public class AFKCommand implements SimpleCommand {
                             .replace("&", "§");
 
                     redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffAFKMessage-RedisBungee", final_message);
-
                     return;
-
                 }
 
                 CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
@@ -133,7 +124,6 @@ public class AFKCommand implements SimpleCommand {
                                 new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
             }
-
             PlayerCache.getAfk().add(((Player) commandSource).getUniqueId());
 
         } else {
@@ -145,8 +135,9 @@ public class AFKCommand implements SimpleCommand {
                 final User user = api.getUserManager().getUser(((Player) commandSource).getUniqueId());
 
                 if (user == null) {
-                            return;
-                        }
+                    return;
+                }
+
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
                 final String user_prefix = prefix == null ? "" : prefix;
@@ -166,9 +157,7 @@ public class AFKCommand implements SimpleCommand {
                             .replace("&", "§");
 
                     redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffAFKMessage-RedisBungee", final_message);
-
                     return;
-
                 }
 
                 CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
@@ -198,9 +187,7 @@ public class AFKCommand implements SimpleCommand {
                             .replace("&", "§");
 
                     redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffAFKMessage-RedisBungee", final_message);
-
                     return;
-
                 }
 
                 CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
@@ -213,11 +200,8 @@ public class AFKCommand implements SimpleCommand {
                                 new Placeholder("usersuffix", ""),
                                 new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
                                 new Placeholder("prefix", VelocityMessages.PREFIX.color())));
-
             }
-
             PlayerCache.getAfk().remove(((Player) commandSource).getUniqueId());
-
         }
     }
 }

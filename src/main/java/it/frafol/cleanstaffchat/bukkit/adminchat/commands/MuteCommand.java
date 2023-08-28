@@ -20,38 +20,26 @@ public class MuteCommand extends CommandBase {
     public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] strings) {
 
         if (!(SpigotConfig.ADMINCHAT_MUTE_MODULE.get(Boolean.class))) {
-
             sender.sendMessage((SpigotMessages.MODULE_DISABLED.color()
                     .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())));
-
         }
 
-        if (sender.hasPermission(SpigotConfig.ADMINCHAT_MUTE_PERMISSION.get(String.class))) {
-
-            if (!PlayerCache.getMuted().contains("true")) {
-
-                PlayerCache.getMuted().add("true");
-
-                sender.sendMessage((SpigotMessages.ADMINCHAT_MUTED.color()
-                        .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())));
-
-            } else {
-
-                PlayerCache.getMuted().remove("true");
-
-                sender.sendMessage((SpigotMessages.ADMINCHAT_UNMUTED.color()
-                        .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())));
-            }
-
-        } else {
-
+        if (!sender.hasPermission(SpigotConfig.ADMINCHAT_MUTE_PERMISSION.get(String.class))) {
             sender.sendMessage((SpigotMessages.NO_PERMISSION.color()
                     .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())));
-
-
+            return false;
         }
 
-        return false;
+        if (!PlayerCache.getMuted().contains("true")) {
+            PlayerCache.getMuted().add("true");
+            sender.sendMessage((SpigotMessages.ADMINCHAT_MUTED.color()
+                    .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())));
 
+        } else {
+            PlayerCache.getMuted().remove("true");
+            sender.sendMessage((SpigotMessages.ADMINCHAT_UNMUTED.color()
+                    .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())));
+        }
+        return false;
     }
 }

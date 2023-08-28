@@ -19,38 +19,26 @@ public class MuteCommand extends CommandBase {
     public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
 
         if (!(SpigotConfig.STAFFCHAT_MUTE_MODULE.get(Boolean.class))) {
-
             sender.sendMessage((SpigotMessages.MODULE_DISABLED.color()
                     .replace("%prefix%", SpigotMessages.PREFIX.color())));
-
         }
 
-        if (sender.hasPermission(SpigotConfig.STAFFCHAT_MUTE_PERMISSION.get(String.class))) {
-
-            if (!PlayerCache.getMuted().contains("true")) {
-
-                PlayerCache.getMuted().add("true");
-
-                sender.sendMessage((SpigotMessages.STAFFCHAT_MUTED.color()
-                        .replace("%prefix%", SpigotMessages.PREFIX.color())));
-
-            } else {
-
-                PlayerCache.getMuted().remove("true");
-
-                sender.sendMessage((SpigotMessages.STAFFCHAT_UNMUTED.color()
-                        .replace("%prefix%", SpigotMessages.PREFIX.color())));
-            }
-
-        } else {
-
+        if (!sender.hasPermission(SpigotConfig.STAFFCHAT_MUTE_PERMISSION.get(String.class))) {
             sender.sendMessage((SpigotMessages.NO_PERMISSION.color()
                     .replace("%prefix%", SpigotMessages.PREFIX.color())));
-
-
+            return false;
         }
 
-        return false;
+        if (!PlayerCache.getMuted().contains("true")) {
+            PlayerCache.getMuted().add("true");
+            sender.sendMessage((SpigotMessages.STAFFCHAT_MUTED.color()
+                    .replace("%prefix%", SpigotMessages.PREFIX.color())));
 
+        } else {
+            PlayerCache.getMuted().remove("true");
+            sender.sendMessage((SpigotMessages.STAFFCHAT_UNMUTED.color()
+                    .replace("%prefix%", SpigotMessages.PREFIX.color())));
+        }
+        return false;
     }
 }

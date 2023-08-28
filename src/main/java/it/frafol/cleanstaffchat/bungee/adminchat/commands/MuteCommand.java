@@ -25,35 +25,37 @@ public class MuteCommand extends Command {
             return;
         }
 
-        if (sender.hasPermission(BungeeConfig.ADMINCHAT_MUTE_PERMISSION.get(String.class))) {
-            if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+        if (!sender.hasPermission(BungeeConfig.ADMINCHAT_MUTE_PERMISSION.get(String.class))) {
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
+                    .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
+            return;
+        }
 
-                final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+        if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
-                final String final_message = "set.adminchat.mute";
+            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+            final String final_message = "set.adminchat.mute";
 
-                if (!PlayerCache.getMuted_admin().contains("true")) {
-                    sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_MUTED.color()
-                            .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
-                } else {
-                    sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_UNMUTED.color()
-                            .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
-                }
-
-                redisBungeeAPI.sendChannelMessage("CleanStaffChat-MuteAdminChat-RedisBungee", final_message);
-
-            } else if (!PlayerCache.getMuted_admin().contains("true")) {
-                PlayerCache.getMuted_admin().add("true");
+            if (!PlayerCache.getMuted_admin().contains("true")) {
                 sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_MUTED.color()
                         .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
             } else {
-                PlayerCache.getMuted_admin().remove("true");
                 sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_UNMUTED.color()
                         .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
             }
-        } else {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
+
+            redisBungeeAPI.sendChannelMessage("CleanStaffChat-MuteAdminChat-RedisBungee", final_message);
+            return;
+
+        } else if (!PlayerCache.getMuted_admin().contains("true")) {
+            PlayerCache.getMuted_admin().add("true");
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_MUTED.color()
                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
+            return;
         }
+
+        PlayerCache.getMuted_admin().remove("true");
+        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_UNMUTED.color()
+                .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
     }
 }

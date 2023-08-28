@@ -34,19 +34,21 @@ public class ToggleCommand implements SimpleCommand {
 
         Player player = (Player) commandSource;
 
-        if (player.hasPermission(VelocityConfig.STAFFCHAT_TOGGLE_PERMISSION.get(String.class))) {
-            if (!PlayerCache.getToggled().contains(player.getUniqueId())) {
-                PlayerCache.getToggled().add(player.getUniqueId());
-                VelocityMessages.STAFFCHAT_TOGGLED_OFF.send(commandSource,
-                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
-            } else {
-                PlayerCache.getToggled().remove(player.getUniqueId());
-                VelocityMessages.STAFFCHAT_TOGGLED_ON.send(commandSource,
-                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
-            }
-        } else {
+        if (!player.hasPermission(VelocityConfig.STAFFCHAT_TOGGLE_PERMISSION.get(String.class))) {
             VelocityMessages.NO_PERMISSION.send(commandSource,
                     new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+            return;
         }
+
+        if (!PlayerCache.getToggled().contains(player.getUniqueId())) {
+            PlayerCache.getToggled().add(player.getUniqueId());
+            VelocityMessages.STAFFCHAT_TOGGLED_OFF.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+            return;
+        }
+
+        PlayerCache.getToggled().remove(player.getUniqueId());
+        VelocityMessages.STAFFCHAT_TOGGLED_ON.send(commandSource,
+                new Placeholder("prefix", VelocityMessages.PREFIX.color()));
     }
 }

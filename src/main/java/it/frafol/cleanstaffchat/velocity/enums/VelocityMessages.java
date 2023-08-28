@@ -37,6 +37,7 @@ public enum VelocityMessages {
     DISCORDLIST_HEADER("messages.stafflist.discord.header"),
     DISCORDLIST_FORMAT("messages.stafflist.discord.format"),
     DISCORDLIST_FOOTER("messages.stafflist.discord.footer"),
+    DISCORDLIST_NOBODY("messages.stafflist.discord.nobody"),
 
     STAFF_DISCORD_JOIN_MESSAGE_FORMAT("messages.staffchat.discord.discord_join_message_format"),
     STAFF_DISCORD_QUIT_MESSAGE_FORMAT("messages.staffchat.discord.discord_quit_message_format"),
@@ -85,6 +86,8 @@ public enum VelocityMessages {
     LIST_HEADER("messages.stafflist.header"),
     LIST_FORMAT("messages.stafflist.format"),
     LIST_FOOTER("messages.stafflist.footer"),
+    LIST_NONE("messages.stafflist.nobody"),
+    LIST_USAGE("messages.stafflist.usage"),
 
     UPDATE("messages.new_version"),
 
@@ -110,7 +113,7 @@ public enum VelocityMessages {
 
     public void send(CommandSource commandSource, Placeholder... placeholders) {
 
-        if (ChatUtil.getString(this).equals("")) {
+        if (ChatUtil.getString(this).isEmpty()) {
             return;
         }
 

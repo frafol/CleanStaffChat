@@ -31,102 +31,98 @@ public class StaffListCommand implements SimpleCommand {
     public void execute(@NotNull Invocation invocation) {
 
         if (!invocation.source().hasPermission(VelocityConfig.STAFFLIST_PERMISSION.get(String.class))) {
+            VelocityMessages.NO_PERMISSION.send(invocation.source(),
+                    new Placeholder("prefix", VelocityMessages.PREFIX.color()));
             return;
         }
 
         String[] args = invocation.arguments();
 
-        if (args.length == 0) {
-
-            LuckPerms api = LuckPermsProvider.get();
-
-            VelocityMessages.LIST_HEADER.send(invocation.source(),
+        if (args.length != 0) {
+            VelocityMessages.LIST_USAGE.send(invocation.source(),
                     new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+            return;
+        }
 
-            String user_prefix;
+        LuckPerms api = LuckPermsProvider.get();
 
-            List<UUID> list = Lists.newArrayList();
-            for (Player players : PLUGIN.getServer().getAllPlayers()) {
+        VelocityMessages.LIST_HEADER.send(invocation.source(),
+                new Placeholder("prefix", VelocityMessages.PREFIX.color()));
 
-                if (!players.hasPermission(VelocityConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
-                    continue;
-                }
+        String user_prefix;
 
-                if (VelocityConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(VelocityConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
-                    continue;
-                }
+        List<UUID> list = Lists.newArrayList();
+        for (Player players : PLUGIN.getServer().getAllPlayers()) {
 
-                list.add(players.getUniqueId());
-
+            if (!players.hasPermission(VelocityConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
+                continue;
             }
 
-            if (VelocityConfig.SORTING.get(Boolean.class)) {
-                list.sort((o1, o2) -> {
-
-                    User user1 = api.getUserManager().getUser(o1);
-                    User user2 = api.getUserManager().getUser(o2);
-
-                    Group group1 = null;
-                    if (user1 != null) {
-                        group1 = api.getGroupManager().getGroup(user1.getPrimaryGroup());
-                    }
-
-                    Group group2 = null;
-                    if (user2 != null) {
-                        group2 = api.getGroupManager().getGroup(user2.getPrimaryGroup());
-                    }
-
-                    if (group1 == null || group2 == null) {
-                        return 0;
-                    }
-
-                    if (!group1.getWeight().isPresent() || !group2.getWeight().isPresent()) {
-                        return 0;
-                    }
-
-                    return Integer.compare(group1.getWeight().getAsInt(), group2.getWeight().getAsInt());
-                });
+            if (VelocityConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(VelocityConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
+                continue;
             }
 
-            for (UUID uuids : list) {
+            list.add(players.getUniqueId());
 
-                Player players = PLUGIN.getServer().getPlayer(uuids).orElse(null);
+        }
 
-                if (players == null) {
-                    continue;
+        if (list.isEmpty()) {
+            VelocityMessages.LIST_NONE.send(invocation.source(),
+                    new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+        }
+
+        if (VelocityConfig.SORTING.get(Boolean.class)) {
+            list.sort((o1, o2) -> {
+
+                User user1 = api.getUserManager().getUser(o1);
+                User user2 = api.getUserManager().getUser(o2);
+
+                Group group1 = null;
+                if (user1 != null) {
+                    group1 = api.getGroupManager().getGroup(user1.getPrimaryGroup());
                 }
 
-                User user = api.getUserManager().getUser(players.getUniqueId());
-
-                if (user == null) {
-                    continue;
+                Group group2 = null;
+                if (user2 != null) {
+                    group2 = api.getGroupManager().getGroup(user2.getPrimaryGroup());
                 }
 
-                final String prefix = user.getCachedData().getMetaData().getPrefix();
-                Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
-
-                if (group == null || group.getDisplayName() == null) {
-
-                    if (prefix != null) {
-                        user_prefix = prefix;
-                    } else {
-                        user_prefix = "";
-                    }
-
-                    if (!players.getCurrentServer().isPresent()) {
-                        continue;
-                    }
-
-                    VelocityMessages.LIST_FORMAT.send(invocation.source(),
-                            new Placeholder("prefix", VelocityMessages.PREFIX.color()),
-                            new Placeholder("userprefix", ChatUtil.translateHex(user_prefix)),
-                            new Placeholder("player", players.getUsername()),
-                            new Placeholder("server", players.getCurrentServer().get().getServerInfo().getName()));
-
-                    continue;
+                if (group1 == null || group2 == null) {
+                    return 0;
                 }
 
-                user_prefix = prefix == null ? group.getDisplayName() : prefix;
+                if (!group1.getWeight().isPresent() || !group2.getWeight().isPresent()) {
+                    return 0;
+                }
+
+                return Integer.compare(group1.getWeight().getAsInt(), group2.getWeight().getAsInt());
+            });
+        }
+
+        for (UUID uuids : list) {
+
+            Player players = PLUGIN.getServer().getPlayer(uuids).orElse(null);
+
+            if (players == null) {
+                continue;
+            }
+
+            User user = api.getUserManager().getUser(players.getUniqueId());
+
+            if (user == null) {
+                continue;
+            }
+
+            final String prefix = user.getCachedData().getMetaData().getPrefix();
+            Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
+
+            if (group == null || group.getDisplayName() == null) {
+
+                if (prefix != null) {
+                    user_prefix = prefix;
+                } else {
+                    user_prefix = "";
+                }
 
                 if (!players.getCurrentServer().isPresent()) {
                     continue;
@@ -138,10 +134,24 @@ public class StaffListCommand implements SimpleCommand {
                         new Placeholder("player", players.getUsername()),
                         new Placeholder("server", players.getCurrentServer().get().getServerInfo().getName()));
 
+                continue;
             }
 
-            VelocityMessages.LIST_FOOTER.send(invocation.source(),
-                    new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+            user_prefix = prefix == null ? group.getDisplayName() : prefix;
+
+            if (!players.getCurrentServer().isPresent()) {
+                continue;
+            }
+
+            VelocityMessages.LIST_FORMAT.send(invocation.source(),
+                    new Placeholder("prefix", VelocityMessages.PREFIX.color()),
+                    new Placeholder("userprefix", ChatUtil.translateHex(user_prefix)),
+                    new Placeholder("player", players.getUsername()),
+                    new Placeholder("server", players.getCurrentServer().get().getServerInfo().getName()));
+
         }
+
+        VelocityMessages.LIST_FOOTER.send(invocation.source(),
+                new Placeholder("prefix", VelocityMessages.PREFIX.color()));
     }
 }

@@ -46,7 +46,6 @@ public class ToggleCommand extends CommandBase {
         }
 
         PlayerCache.getToggled_donor().remove(player.getUniqueId());
-
         sender.sendMessage((SpigotMessages.DONORCHAT_TOGGLED_ON.color()
                 .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
         return false;

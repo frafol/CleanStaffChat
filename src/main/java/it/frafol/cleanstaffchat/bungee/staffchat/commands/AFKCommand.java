@@ -37,21 +37,15 @@ public class AFKCommand extends Command {
         }
 
         if (!BungeeConfig.STAFFCHAT_AFK_MODULE.get(Boolean.class)) {
-
             sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.MODULE_DISABLED.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
-
             return;
-
         }
 
         if (!sender.hasPermission(BungeeConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))) {
-
             sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
-
             return;
-
         }
 
         if (!PlayerCache.getAfk().contains(((ProxiedPlayer) sender).getUniqueId())) {
@@ -62,8 +56,9 @@ public class AFKCommand extends Command {
                 final User user = api.getUserManager().getUser(((ProxiedPlayer) sender).getUniqueId());
 
                 if (user == null) {
-                            return;
-                        }
+                    return;
+                }
+
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
                 final String user_prefix = prefix == null ? "" : prefix;
@@ -83,7 +78,6 @@ public class AFKCommand extends Command {
                             .replace("&", "§");
 
                     redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffAFKMessage-RedisBungee", final_message);
-
                     return;
                 }
 
@@ -128,9 +122,7 @@ public class AFKCommand extends Command {
                                 .replace("&", "§");
 
                         redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffAFKMessage-RedisBungee", final_message);
-
                         return;
-
                     }
 
                     CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
@@ -160,9 +152,7 @@ public class AFKCommand extends Command {
                             .replace("&", "§");
 
                     redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffAFKMessage-RedisBungee", final_message);
-
                     return;
-
                 }
 
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
@@ -177,7 +167,6 @@ public class AFKCommand extends Command {
                                 .replace("%displayname%", sender.getName()))));
 
             }
-
             PlayerCache.getAfk().add(((ProxiedPlayer) sender).getUniqueId());
 
         } else {
@@ -189,8 +178,9 @@ public class AFKCommand extends Command {
                 final User user = api.getUserManager().getUser(((ProxiedPlayer) sender).getUniqueId());
 
                 if (user == null) {
-                            return;
-                        }
+                    return;
+                }
+
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
                 final String user_prefix = prefix == null ? "" : prefix;
@@ -210,9 +200,7 @@ public class AFKCommand extends Command {
                             .replace("&", "§");
 
                     redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffAFKMessage-RedisBungee", final_message);
-
                     return;
-
                 }
 
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
@@ -242,9 +230,7 @@ public class AFKCommand extends Command {
                             .replace("&", "§");
 
                     redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffAFKMessage-RedisBungee", final_message);
-
                     return;
-
                 }
 
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
@@ -259,9 +245,7 @@ public class AFKCommand extends Command {
                                 .replace("%displayname%", sender.getName()))));
 
             }
-
             PlayerCache.getAfk().remove(((ProxiedPlayer) sender).getUniqueId());
-
         }
     }
 }

@@ -32,21 +32,20 @@ public class ToggleCommand extends Command {
 
         ProxiedPlayer player = (ProxiedPlayer) sender;
 
-        if (player.hasPermission(BungeeConfig.STAFFCHAT_TOGGLE_PERMISSION.get(String.class))) {
-            if (!PlayerCache.getToggled().contains(player.getUniqueId())) {
-                PlayerCache.getToggled().add(player.getUniqueId());
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_TOGGLED_OFF.color()
-                        .replace("%prefix%", BungeeMessages.PREFIX.color())));
-                return;
-            }
-        } else {
+        if (!player.hasPermission(BungeeConfig.STAFFCHAT_TOGGLE_PERMISSION.get(String.class))) {
             sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
             return;
         }
 
-        PlayerCache.getToggled().remove(player.getUniqueId());
+        if (!PlayerCache.getToggled().contains(player.getUniqueId())) {
+            PlayerCache.getToggled().add(player.getUniqueId());
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_TOGGLED_OFF.color()
+                    .replace("%prefix%", BungeeMessages.PREFIX.color())));
+            return;
+        }
 
+        PlayerCache.getToggled().remove(player.getUniqueId());
         sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_TOGGLED_ON.color()
                 .replace("%prefix%", BungeeMessages.PREFIX.color())));
     }

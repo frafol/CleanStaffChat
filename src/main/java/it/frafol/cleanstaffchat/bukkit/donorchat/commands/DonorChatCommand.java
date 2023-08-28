@@ -223,7 +223,7 @@ public class DonorChatCommand extends CommandBase {
                                     .replace("%server%", ""));
 
                             embed.setColor(Color.RED);
-                            embed.setFooter("Powered by CleanStaffChat");
+                            embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                             channel.sendMessageEmbeds(embed.build()).queue();
 
@@ -246,7 +246,6 @@ public class DonorChatCommand extends CommandBase {
                         service.schedule(() -> {
                             PlayerCache.getCooldown().remove(((Player) sender).getUniqueId());
                         }, SpigotConfig.DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS);
-
                     }
 
                 } else if (SpigotConfig.CONSOLE_CAN_TALK.get(Boolean.class)) {
@@ -303,7 +302,7 @@ public class DonorChatCommand extends CommandBase {
                                     .replace("%server%", ""));
 
                             embed.setColor(Color.RED);
-                            embed.setFooter("Powered by CleanStaffChat");
+                            embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                             channel.sendMessageEmbeds(embed.build()).queue();
 

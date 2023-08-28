@@ -4,9 +4,9 @@
 #  \___)(____)(____)(__)(__)(_)\_)  (___/ \___)
 #
 # RedisBungee file. Made with ❤ by frafol.
-# For support: https://discord.com/invite/sTSwaGBCdC
+# For support: https://dsc.gg/futuredevelopment
 
-# NOTE: This feature is experimental, report all errors on https://discord.com/invite/sTSwaGBCdC.
+# NOTE: This feature is experimental, report all errors on https://dsc.gg/futuredevelopment.
 redis:
   # Toggle RedisBungee Hook (Compatible with BungeeCord and Velocity)
   enabled: false

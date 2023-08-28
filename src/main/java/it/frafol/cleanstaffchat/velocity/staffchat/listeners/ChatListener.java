@@ -50,11 +50,8 @@ public class ChatListener extends ListenerAdapter {
             if (event.getPlayer().hasPermission(STAFFCHAT_USE_PERMISSION.get(String.class))) {
 
                 if (!(STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
-
                     VelocityMessages.MODULE_DISABLED.send(event.getPlayer(), new Placeholder("prefix", VelocityMessages.PREFIX.color()));
-
                     return;
-
                 }
 
                 if (!event.getMessage().startsWith("/")) {
@@ -180,7 +177,7 @@ public class ChatListener extends ListenerAdapter {
                                         .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()));
 
                                 embed.setColor(Color.RED);
-                                embed.setFooter("Powered by CleanStaffChat");
+                                embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                                 channel.sendMessageEmbeds(embed.build()).queue();
 
@@ -227,10 +224,6 @@ public class ChatListener extends ListenerAdapter {
                 return;
             }
 
-            if (event.getAuthor().isBot()) {
-                return;
-            }
-
             LuckPerms api = LuckPermsProvider.get();
             StringBuilder sb = new StringBuilder();
 
@@ -253,6 +246,11 @@ public class ChatListener extends ListenerAdapter {
 
                     list.add(players.getUniqueId());
 
+                }
+
+                if (list.isEmpty()) {
+                    sb.append((VelocityMessages.DISCORDLIST_NOBODY.color()  + "\n")
+                            .replace("%prefix%", VelocityMessages.PREFIX.color()));
                 }
 
                 if (VelocityConfig.SORTING.get(Boolean.class)) {
@@ -302,6 +300,7 @@ public class ChatListener extends ListenerAdapter {
                     if (group == null || group.getDisplayName() == null) {
 
                         final String prefix = user.getCachedData().getMetaData().getPrimaryGroup();
+
                         if (prefix != null) {
                             user_prefix = prefix;
                         } else {
@@ -334,14 +333,14 @@ public class ChatListener extends ListenerAdapter {
 
                 }
             }
-            sb.append(VelocityMessages.DISCORDLIST_FOOTER.get(String.class));
 
+            sb.append(VelocityMessages.DISCORDLIST_FOOTER.get(String.class));
             if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
                 EmbedBuilder embed = new EmbedBuilder();
                 embed.setTitle(VelocityDiscordConfig.STAFFLIST_EMBED_TITLE.get(String.class), null);
                 embed.setDescription(sb.toString());
                 embed.setColor(Color.RED);
-                embed.setFooter("Powered by CleanStaffChat");
+                embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
                 event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
             } else {

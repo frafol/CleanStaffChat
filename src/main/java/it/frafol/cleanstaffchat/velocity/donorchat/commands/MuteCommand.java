@@ -22,49 +22,44 @@ public class MuteCommand implements SimpleCommand {
 
     @Override
     public void execute(Invocation invocation) {
-        CommandSource commandSource = invocation.source();
 
+        CommandSource commandSource = invocation.source();
         if (!(DONORCHAT_MUTE_MODULE.get(Boolean.class))) {
             VelocityMessages.MODULE_DISABLED.send(commandSource, new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
             return;
         }
 
-        if (commandSource.hasPermission(VelocityConfig.DONORCHAT_MUTE_PERMISSION.get(String.class))) {
+        if (!commandSource.hasPermission(VelocityConfig.DONORCHAT_MUTE_PERMISSION.get(String.class))) {
+            VelocityMessages.NO_PERMISSION.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
+            return;
+        }
 
-            if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
+        if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
 
-                final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+            final String final_message = "set.donorchat.mute";
 
-                final String final_message = "set.donorchat.mute";
-
-                if (!PlayerCache.getMuted_donor().contains("true")) {
-                    VelocityMessages.DONORCHAT_MUTED.send(commandSource,
-                            new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
-                } else {
-                    VelocityMessages.DONORCHAT_UNMUTED.send(commandSource,
-                            new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
-                }
-
-                redisBungeeAPI.sendChannelMessage("CleanStaffChat-MuteDonorChat-RedisBungee", final_message);
-
-            } else if (!PlayerCache.getMuted_donor().contains("true")) {
-
-                PlayerCache.getMuted_donor().add("true");
-
+            if (!PlayerCache.getMuted_donor().contains("true")) {
                 VelocityMessages.DONORCHAT_MUTED.send(commandSource,
                         new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
-
             } else {
-
-                PlayerCache.getMuted_donor().remove("true");
-
                 VelocityMessages.DONORCHAT_UNMUTED.send(commandSource,
                         new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
-
             }
+
+            redisBungeeAPI.sendChannelMessage("CleanStaffChat-MuteDonorChat-RedisBungee", final_message);
+
+        } else if (!PlayerCache.getMuted_donor().contains("true")) {
+
+            PlayerCache.getMuted_donor().add("true");
+            VelocityMessages.DONORCHAT_MUTED.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
+
         } else {
 
-            VelocityMessages.NO_PERMISSION.send(commandSource,
+            PlayerCache.getMuted_donor().remove("true");
+            VelocityMessages.DONORCHAT_UNMUTED.send(commandSource,
                     new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 
         }

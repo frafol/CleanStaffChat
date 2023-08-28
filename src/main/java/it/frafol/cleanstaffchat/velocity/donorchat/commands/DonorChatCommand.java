@@ -110,7 +110,7 @@ public class DonorChatCommand implements SimpleCommand {
         final String message = String.join(" ", Arrays.copyOfRange(args, 0, args.length));
 
         final String sender = !(commandSource instanceof Player) ? CONSOLE_PREFIX.get(String.class) :
-        ((Player) commandSource).getUsername();
+                ((Player) commandSource).getUsername();
 
         if (commandSource instanceof Player && PlayerCache.getCooldown().contains(((Player) commandSource).getUniqueId())) {
 
@@ -121,261 +121,245 @@ public class DonorChatCommand implements SimpleCommand {
 
         }
 
-        if (commandSource.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))) {
+        if (!commandSource.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))) {
+            VelocityMessages.NO_PERMISSION.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
+            return;
+        }
 
-            if (!PlayerCache.getMuted_donor().contains("true")) {
+        if (PlayerCache.getMuted_donor().contains("true")) {
+            VelocityMessages.DONORCHAT_MUTED_ERROR.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
+            return;
+        }
 
-                if (commandSource instanceof Player) {
+        if (commandSource instanceof Player) {
 
-                    if (PREVENT_COLOR_CODES.get(Boolean.class)) {
-                        if (ChatUtil.hasColorCodes(message)) {
+            if (PREVENT_COLOR_CODES.get(Boolean.class)) {
+                if (ChatUtil.hasColorCodes(message)) {
 
-                            VelocityMessages.COLOR_CODES.send(commandSource,
-                                    new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
+                    VelocityMessages.COLOR_CODES.send(commandSource,
+                            new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 
-                            return;
+                    return;
 
-                        }
-                    }
+                }
+            }
 
-                    if (!((Player) commandSource).getCurrentServer().isPresent()) {
+            if (!((Player) commandSource).getCurrentServer().isPresent()) {
 
-                        return;
+                return;
 
-                    }
+            }
 
-                    if (!commandSource.hasPermission(COOLDOWN_BYPASS_PERMISSION.get(String.class))) {
+            if (!commandSource.hasPermission(COOLDOWN_BYPASS_PERMISSION.get(String.class))) {
 
-                        PlayerCache.getCooldown().add(((Player) commandSource).getUniqueId());
+                PlayerCache.getCooldown().add(((Player) commandSource).getUniqueId());
 
-                        PLUGIN.getServer().getScheduler()
-                                .buildTask(PLUGIN, scheduledTask -> PlayerCache.getCooldown().remove(((Player) commandSource).getUniqueId()))
-                                .delay(DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS)
-                                .schedule();
+                PLUGIN.getServer().getScheduler()
+                        .buildTask(PLUGIN, scheduledTask -> PlayerCache.getCooldown().remove(((Player) commandSource).getUniqueId()))
+                        .delay(DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS)
+                        .schedule();
 
-                    }
+            }
 
-                    if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
+            if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
-                        final LuckPerms api = LuckPermsProvider.get();
+                final LuckPerms api = LuckPermsProvider.get();
 
-                        final User user = api.getUserManager().getUser(((Player) commandSource).getUniqueId());
+                final User user = api.getUserManager().getUser(((Player) commandSource).getUniqueId());
 
-                        if (user == null) {
-                            return;
-                        }
-                        final String prefix = user.getCachedData().getMetaData().getPrefix();
-                        final String suffix = user.getCachedData().getMetaData().getSuffix();
-                        final String user_prefix = prefix == null ? "" : prefix;
-                        final String user_suffix = suffix == null ? "" : suffix;
+                if (user == null) {
+                    return;
+                }
+                final String prefix = user.getCachedData().getMetaData().getPrefix();
+                final String suffix = user.getCachedData().getMetaData().getSuffix();
+                final String user_prefix = prefix == null ? "" : prefix;
+                final String user_suffix = suffix == null ? "" : suffix;
 
-                        if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
+                if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
 
-                            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+                    final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
 
-                            final String final_message = VelocityMessages.DONORCHAT_FORMAT.get(String.class)
+                    final String final_message = VelocityMessages.DONORCHAT_FORMAT.get(String.class)
+                            .replace("%user%", sender)
+                            .replace("%message%", message)
+                            .replace("%displayname%", ChatUtil.translateHex(user_prefix) + sender + ChatUtil.translateHex(user_suffix))
+                            .replace("%userprefix%", ChatUtil.translateHex(user_prefix))
+                            .replace("%usersuffix%", ChatUtil.translateHex(user_suffix))
+                            .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName())
+                            .replace("%prefix%", VelocityMessages.DONORPREFIX.color())
+                            .replace("&", "§");
+
+                    redisBungeeAPI.sendChannelMessage("CleanStaffChat-DonorMessage-RedisBungee", final_message);
+
+                    return;
+
+                }
+
+                CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+                                (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
+                                        && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
+                        .forEach(players -> VelocityMessages.DONORCHAT_FORMAT.send(players,
+                                new Placeholder("user", sender),
+                                new Placeholder("message", message),
+                                new Placeholder("displayname", ChatUtil.translateHex(user_prefix) + sender + ChatUtil.translateHex(user_suffix)),
+                                new Placeholder("userprefix", ChatUtil.translateHex(user_prefix)),
+                                new Placeholder("usersuffix", ChatUtil.translateHex(user_suffix)),
+                                new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
+                                new Placeholder("prefix", VelocityMessages.DONORPREFIX.color())));
+
+            } else {
+
+                if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+                    final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+
+                    final String final_message = VelocityMessages.DONORCHAT_FORMAT.get(String.class)
+                            .replace("%user%", sender)
+                            .replace("%message%", message)
+                            .replace("%displayname%", sender)
+                            .replace("%userprefix%", "")
+                            .replace("%usersuffix%", "")
+                            .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName())
+                            .replace("%prefix%", VelocityMessages.DONORPREFIX.color())
+                            .replace("&", "§");
+
+                    redisBungeeAPI.sendChannelMessage("CleanStaffChat-DonorMessage-RedisBungee", final_message);
+
+                    return;
+
+                }
+
+                CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+                                (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
+                                        && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
+                        .forEach(players -> VelocityMessages.DONORCHAT_FORMAT.send(players,
+                                new Placeholder("user", sender),
+                                new Placeholder("message", message),
+                                new Placeholder("displayname", sender),
+                                new Placeholder("userprefix", ""),
+                                new Placeholder("usersuffix", ""),
+                                new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
+                                new Placeholder("prefix", VelocityMessages.DONORPREFIX.color())));
+
+            }
+
+            if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                final TextChannel channel = PLUGIN.getJda().JdaWorker().getTextChannelById(VelocityDiscordConfig.DONOR_CHANNEL_ID.get(String.class));
+
+                if (channel == null) {
+                    return;
+                }
+
+                if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
+
+                    EmbedBuilder embed = new EmbedBuilder();
+
+                    embed.setTitle(VelocityDiscordConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
+
+                    embed.setDescription(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                            .replace("%user%", sender)
+                            .replace("%message%", message)
+                            .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()));
+
+                    embed.setColor(Color.RED);
+                    embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
+
+                    channel.sendMessageEmbeds(embed.build()).queue();
+
+                } else {
+
+                    channel.sendMessageFormat(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                                     .replace("%user%", sender)
                                     .replace("%message%", message)
-                                    .replace("%displayname%", ChatUtil.translateHex(user_prefix) + sender + ChatUtil.translateHex(user_suffix))
-                                    .replace("%userprefix%", ChatUtil.translateHex(user_prefix))
-                                    .replace("%usersuffix%", ChatUtil.translateHex(user_suffix))
-                                    .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName())
-                                    .replace("%prefix%", VelocityMessages.DONORPREFIX.color())
-                                    .replace("&", "§");
+                                    .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()))
+                            .queue();
 
-                            redisBungeeAPI.sendChannelMessage("CleanStaffChat-DonorMessage-RedisBungee", final_message);
+                }
+            }
 
-                            return;
+        } else if (CONSOLE_CAN_TALK.get(Boolean.class)) {
 
-                        }
+            if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
 
-                        CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
-                                        (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
-                                                && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                                .forEach(players -> VelocityMessages.DONORCHAT_FORMAT.send(players,
-                                        new Placeholder("user", sender),
-                                        new Placeholder("message", message),
-                                        new Placeholder("displayname", ChatUtil.translateHex(user_prefix) + sender + ChatUtil.translateHex(user_suffix)),
-                                        new Placeholder("userprefix", ChatUtil.translateHex(user_prefix)),
-                                        new Placeholder("usersuffix", ChatUtil.translateHex(user_suffix)),
-                                        new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
-                                        new Placeholder("prefix", VelocityMessages.DONORPREFIX.color())));
+                final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
 
-                    } else {
+                final String final_message = VelocityMessages.DONORCHAT_FORMAT.get(String.class)
+                        .replace("%user%", sender)
+                        .replace("%message%", message)
+                        .replace("%displayname%", sender)
+                        .replace("%userprefix%", "")
+                        .replace("%usersuffix%", "")
+                        .replace("%server%", "")
+                        .replace("%prefix%", VelocityMessages.DONORPREFIX.color())
+                        .replace("&", "§");
 
-                        if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
+                redisBungeeAPI.sendChannelMessage("CleanStaffChat-DonorMessage-RedisBungee", final_message);
+                return;
 
-                            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+            }
 
-                            final String final_message = VelocityMessages.DONORCHAT_FORMAT.get(String.class)
-                                    .replace("%user%", sender)
-                                    .replace("%message%", message)
-                                    .replace("%displayname%", sender)
-                                    .replace("%userprefix%", "")
-                                    .replace("%usersuffix%", "")
-                                    .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName())
-                                    .replace("%prefix%", VelocityMessages.DONORPREFIX.color())
-                                    .replace("&", "§");
-
-                            redisBungeeAPI.sendChannelMessage("CleanStaffChat-DonorMessage-RedisBungee", final_message);
-
-                            return;
-
-                        }
-
-                        CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
-                                        (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
-                                                && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                                .forEach(players -> VelocityMessages.DONORCHAT_FORMAT.send(players,
-                                        new Placeholder("user", sender),
-                                        new Placeholder("message", message),
-                                        new Placeholder("displayname", sender),
-                                        new Placeholder("userprefix", ""),
-                                        new Placeholder("usersuffix", ""),
-                                        new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
-                                        new Placeholder("prefix", VelocityMessages.DONORPREFIX.color())));
-
-                    }
-
-                    if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
-
-                        final TextChannel channel = PLUGIN.getJda().JdaWorker().getTextChannelById(VelocityDiscordConfig.DONOR_CHANNEL_ID.get(String.class));
-
-                        if (channel == null) {
-                            return;
-                        }
-
-                        if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
-
-                            EmbedBuilder embed = new EmbedBuilder();
-
-                            embed.setTitle(VelocityDiscordConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
-
-                            embed.setDescription(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
-                                    .replace("%user%", sender)
-                                    .replace("%message%", message)
-                                    .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()));
-
-                            embed.setColor(Color.RED);
-                            embed.setFooter("Powered by CleanStaffChat");
-
-                            channel.sendMessageEmbeds(embed.build()).queue();
-
-                        } else {
-
-                            channel.sendMessageFormat(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
-                                            .replace("%user%", sender)
-                                            .replace("%message%", message)
-                                            .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()))
-                                    .queue();
-
-                        }
-                    }
-
-                } else if (CONSOLE_CAN_TALK.get(Boolean.class)) {
-
-                    if (!PlayerCache.getMuted_donor().contains("true")) {
-
-                        if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
-
-                            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
-                            final String final_message = VelocityMessages.DONORCHAT_FORMAT.get(String.class)
-                                    .replace("%user%", sender)
-                                    .replace("%message%", message)
-                                    .replace("%displayname%", sender)
-                                    .replace("%userprefix%", "")
-                                    .replace("%usersuffix%", "")
-                                    .replace("%server%", "")
-                                    .replace("%prefix%", VelocityMessages.DONORPREFIX.color())
-                                    .replace("&", "§");
-
-                            redisBungeeAPI.sendChannelMessage("CleanStaffChat-DonorMessage-RedisBungee", final_message);
-
-                            return;
-
-                        }
-
-                        CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
-                                        (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
-                                                && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                                .forEach(players -> VelocityMessages.DONORCHAT_FORMAT.send(players,
-                                        new Placeholder("user", sender),
-                                        new Placeholder("message", message),
-                                        new Placeholder("displayname", sender),
-                                        new Placeholder("userprefix", ""),
-                                        new Placeholder("usersuffix", ""),
-                                        new Placeholder("server", ""),
-                                        new Placeholder("prefix", VelocityMessages.DONORPREFIX.color())));
-
-                        if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
-
-                            final TextChannel channel = PLUGIN.getJda().JdaWorker().getTextChannelById(VelocityDiscordConfig.DONOR_CHANNEL_ID.get(String.class));
-
-                            if (channel == null) {
-                            return;
-                        }
-
-                            if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
-
-                                EmbedBuilder embed = new EmbedBuilder();
-
-                                embed.setTitle(VelocityDiscordConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
-
-                                embed.setDescription(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
-                                        .replace("%user%", sender)
-                                        .replace("%message%", message)
-                                        .replace("%server%", ""));
-
-                                embed.setColor(Color.RED);
-                                embed.setFooter("Powered by CleanStaffChat");
-
-                                channel.sendMessageEmbeds(embed.build()).queue();
-
-                            } else {
-
-                                channel.sendMessageFormat(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
-                                                .replace("%user%", sender)
-                                                .replace("%message%", message)
-                                                .replace("%server%", ""))
-                                        .queue();
-
-                            }
-                        }
-
-                    } else {
-
-                        VelocityMessages.DONORCHAT_MUTED_ERROR.send(commandSource,
-                                new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
-
-                    }
-
-                    VelocityMessages.DONORCHAT_FORMAT.send(commandSource,
+            CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+                            (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
+                                    && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
+                    .forEach(players -> VelocityMessages.DONORCHAT_FORMAT.send(players,
                             new Placeholder("user", sender),
                             new Placeholder("message", message),
                             new Placeholder("displayname", sender),
                             new Placeholder("userprefix", ""),
                             new Placeholder("usersuffix", ""),
                             new Placeholder("server", ""),
-                            new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
+                            new Placeholder("prefix", VelocityMessages.DONORPREFIX.color())));
+
+            if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                final TextChannel channel = PLUGIN.getJda().JdaWorker().getTextChannelById(VelocityDiscordConfig.DONOR_CHANNEL_ID.get(String.class));
+
+                if (channel == null) {
+                    return;
+                }
+
+                if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
+
+                    EmbedBuilder embed = new EmbedBuilder();
+
+                    embed.setTitle(VelocityDiscordConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
+
+                    embed.setDescription(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                            .replace("%user%", sender)
+                            .replace("%message%", message)
+                            .replace("%server%", ""));
+
+                    embed.setColor(Color.RED);
+                    embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
+
+                    channel.sendMessageEmbeds(embed.build()).queue();
 
                 } else {
 
-                    VelocityMessages.PLAYER_ONLY.send(commandSource,
-                            new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
+                    channel.sendMessageFormat(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
+                                    .replace("%user%", sender)
+                                    .replace("%message%", message)
+                                    .replace("%server%", ""))
+                            .queue();
 
                 }
-
-            } else {
-
-                VelocityMessages.DONORCHAT_MUTED_ERROR.send(commandSource,
-                        new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
-
             }
+
+            VelocityMessages.DONORCHAT_FORMAT.send(commandSource,
+                    new Placeholder("user", sender),
+                    new Placeholder("message", message),
+                    new Placeholder("displayname", sender),
+                    new Placeholder("userprefix", ""),
+                    new Placeholder("usersuffix", ""),
+                    new Placeholder("server", ""),
+                    new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 
         } else {
 
-            VelocityMessages.NO_PERMISSION.send(commandSource,
+            VelocityMessages.PLAYER_ONLY.send(commandSource,
                     new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
 
         }

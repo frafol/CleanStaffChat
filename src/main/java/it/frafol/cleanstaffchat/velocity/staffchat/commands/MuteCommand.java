@@ -29,42 +29,37 @@ public class MuteCommand implements SimpleCommand {
             return;
         }
 
-        if (commandSource.hasPermission(VelocityConfig.STAFFCHAT_MUTE_PERMISSION.get(String.class))) {
-            if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
-
-                final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
-                final String final_message = "set.staffchat.mute";
-
-                if (!PlayerCache.getMuted().contains("true")) {
-                    VelocityMessages.STAFFCHAT_MUTED.send(commandSource,
-                            new Placeholder("prefix", VelocityMessages.PREFIX.color()));
-                } else {
-                    VelocityMessages.STAFFCHAT_UNMUTED.send(commandSource,
-                            new Placeholder("prefix", VelocityMessages.PREFIX.color()));
-                }
-
-                redisBungeeAPI.sendChannelMessage("CleanStaffChat-MuteStaffChat-RedisBungee", final_message);
-
-            } else if (!PlayerCache.getMuted().contains("true")) {
-
-                    PlayerCache.getMuted().add("true");
-
-                VelocityMessages.STAFFCHAT_MUTED.send(commandSource,
-                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
-
-            } else {
-
-                PlayerCache.getMuted().remove("true");
-
-                VelocityMessages.STAFFCHAT_UNMUTED.send(commandSource,
-                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
-
-            }
-
-        } else {
+        if (!commandSource.hasPermission(VelocityConfig.STAFFCHAT_MUTE_PERMISSION.get(String.class))) {
             VelocityMessages.NO_PERMISSION.send(commandSource,
                     new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+            return;
+        }
+
+        if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
+
+            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+            final String final_message = "set.staffchat.mute";
+
+            if (!PlayerCache.getMuted().contains("true")) {
+                VelocityMessages.STAFFCHAT_MUTED.send(commandSource,
+                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+            } else {
+                VelocityMessages.STAFFCHAT_UNMUTED.send(commandSource,
+                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+            }
+
+            redisBungeeAPI.sendChannelMessage("CleanStaffChat-MuteStaffChat-RedisBungee", final_message);
+
+        } else if (!PlayerCache.getMuted().contains("true")) {
+            PlayerCache.getMuted().add("true");
+            VelocityMessages.STAFFCHAT_MUTED.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+
+        } else {
+            PlayerCache.getMuted().remove("true");
+            VelocityMessages.STAFFCHAT_UNMUTED.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+
         }
     }
 }

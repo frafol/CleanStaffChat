@@ -4,7 +4,7 @@
 #  \___)(____)(____)(__)(__)(_)\_)  (___/ \___)
 #
 # Messages. Made with ❤ by frafol.
-# For support: https://discord.com/invite/sTSwaGBCdC
+# For support: https://dsc.gg/futuredevelopment
 
 messages:
 
@@ -107,17 +107,23 @@ messages:
 
   stafflist:
 
+    usage: "%prefix% &7Use &d/stafflist&7."
+
     # General messages.
     header: "&8&m------&5&m------&d&m------&5&m------&8&m------&f"
     format: "%userprefix%%player% &7(&d%server%&7)"
     footer: "&8&m------&5&m------&d&m------&5&m------&8&m------&f"
 
+    nobody: "%prefix% &7There is no staff &donline&7."
+
     discord:
 
-        # Discord StaffList Format, you can use %player% (and %usergroup% only if you're using LuckPerms).
+      # Discord StaffList Format, you can use %player% (and %usergroup% only if you're using LuckPerms).
       header: "Staff List"
       format: "%usergroup%%player% (%server%)"
       footer: "Staff List"
+
+      nobody: "There is no staff online."
 
   # Errors and reload.
   deny_color_codes: "%prefix% &cColor codes are not permitted."

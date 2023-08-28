@@ -30,95 +30,91 @@ public class StaffListCommand extends Command {
     public void execute(CommandSender sender, String[] args) {
 
         if (!sender.hasPermission(BungeeConfig.STAFFLIST_PERMISSION.get(String.class))) {
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
+                    .replace("%prefix%", BungeeMessages.PREFIX.color())));
             return;
         }
 
-        if (args.length == 0) {
-
-            LuckPerms api = LuckPermsProvider.get();
-
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_HEADER.color()
+        if (args.length != 0) {
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_USAGE.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
+            return;
+        }
 
-            String user_prefix;
+        LuckPerms api = LuckPermsProvider.get();
 
-            List <UUID> list = Lists.newArrayList();
-            for (ProxiedPlayer players : plugin.getProxy().getPlayers()) {
+        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_HEADER.color()
+                .replace("%prefix%", BungeeMessages.PREFIX.color())));
 
-                if (!players.hasPermission(BungeeConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
-                    continue;
-                }
+        String user_prefix;
 
-                if (BungeeConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(BungeeConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
-                    continue;
-                }
+        List<UUID> list = Lists.newArrayList();
+        for (ProxiedPlayer players : plugin.getProxy().getPlayers()) {
 
-                list.add(players.getUniqueId());
-
+            if (!players.hasPermission(BungeeConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
+                continue;
             }
 
-            if (BungeeConfig.SORTING.get(Boolean.class)) {
-                list.sort((o1, o2) -> {
-
-                    User user1 = api.getUserManager().getUser(o1);
-                    User user2 = api.getUserManager().getUser(o2);
-
-                    Group group1 = null;
-                    if (user1 != null) {
-                        group1 = api.getGroupManager().getGroup(user1.getPrimaryGroup());
-                    }
-
-                    Group group2 = null;
-                    if (user2 != null) {
-                        group2 = api.getGroupManager().getGroup(user2.getPrimaryGroup());
-                    }
-
-                    if (group1 == null || group2 == null) {
-                        return 0;
-                    }
-
-                    if (!group1.getWeight().isPresent() || !group2.getWeight().isPresent()) {
-                        return 0;
-                    }
-
-                    return Integer.compare(group1.getWeight().getAsInt(), group2.getWeight().getAsInt());
-                });
+            if (BungeeConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(BungeeConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
+                continue;
             }
 
-            for (UUID uuids : list) {
+            list.add(players.getUniqueId());
 
-                ProxiedPlayer players = plugin.getProxy().getPlayer(uuids);
-                User user = api.getUserManager().getUser(players.getUniqueId());
+        }
 
-                if (user == null) {
-                    continue;
+        if (list.isEmpty()) {
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_NONE.color()
+                    .replace("%prefix%", BungeeMessages.PREFIX.color())));
+        }
+
+        if (BungeeConfig.SORTING.get(Boolean.class)) {
+            list.sort((o1, o2) -> {
+
+                User user1 = api.getUserManager().getUser(o1);
+                User user2 = api.getUserManager().getUser(o2);
+
+                Group group1 = null;
+                if (user1 != null) {
+                    group1 = api.getGroupManager().getGroup(user1.getPrimaryGroup());
                 }
 
-                final String prefix = user.getCachedData().getMetaData().getPrefix();
-                Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
-
-                if (group == null || group.getDisplayName() == null) {
-
-                    if (prefix != null) {
-                        user_prefix = prefix;
-                    } else {
-                        user_prefix = "";
-                    }
-
-                    if (players.getServer() == null) {
-                        continue;
-                    }
-
-                    sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FORMAT.color()
-                            .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
-                            .replace("%player%", players.getName())
-                            .replace("%server%", players.getServer().getInfo().getName())
-                            .replace("%prefix%", BungeeMessages.PREFIX.color())));
-
-                    continue;
+                Group group2 = null;
+                if (user2 != null) {
+                    group2 = api.getGroupManager().getGroup(user2.getPrimaryGroup());
                 }
 
-                user_prefix = prefix == null ? group.getDisplayName() : prefix;
+                if (group1 == null || group2 == null) {
+                    return 0;
+                }
+
+                if (!group1.getWeight().isPresent() || !group2.getWeight().isPresent()) {
+                    return 0;
+                }
+
+                return Integer.compare(group1.getWeight().getAsInt(), group2.getWeight().getAsInt());
+            });
+        }
+
+        for (UUID uuids : list) {
+
+            ProxiedPlayer players = plugin.getProxy().getPlayer(uuids);
+            User user = api.getUserManager().getUser(players.getUniqueId());
+
+            if (user == null) {
+                continue;
+            }
+
+            final String prefix = user.getCachedData().getMetaData().getPrefix();
+            Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
+
+            if (group == null || group.getDisplayName() == null) {
+
+                if (prefix != null) {
+                    user_prefix = prefix;
+                } else {
+                    user_prefix = "";
+                }
 
                 if (players.getServer() == null) {
                     continue;
@@ -130,10 +126,24 @@ public class StaffListCommand extends Command {
                         .replace("%server%", players.getServer().getInfo().getName())
                         .replace("%prefix%", BungeeMessages.PREFIX.color())));
 
-
+                continue;
             }
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FOOTER.color()
+
+            user_prefix = prefix == null ? group.getDisplayName() : prefix;
+
+            if (players.getServer() == null) {
+                continue;
+            }
+
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FORMAT.color()
+                    .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                    .replace("%player%", players.getName())
+                    .replace("%server%", players.getServer().getInfo().getName())
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
+
+
         }
+        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FOOTER.color()
+                .replace("%prefix%", BungeeMessages.PREFIX.color())));
     }
 }

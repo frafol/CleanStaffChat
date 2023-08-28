@@ -22,42 +22,42 @@ public class MuteCommand implements SimpleCommand {
 
     @Override
     public void execute(Invocation invocation) {
-        CommandSource commandSource = invocation.source();
 
+        CommandSource commandSource = invocation.source();
         if (!(ADMINCHAT_MUTE_MODULE.get(Boolean.class))) {
             VelocityMessages.MODULE_DISABLED.send(commandSource, new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
             return;
         }
 
-        if (commandSource.hasPermission(VelocityConfig.ADMINCHAT_MUTE_PERMISSION.get(String.class))) {
+        if (!commandSource.hasPermission(VelocityConfig.ADMINCHAT_MUTE_PERMISSION.get(String.class))) {
+            VelocityMessages.NO_PERMISSION.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
+            return;
+        }
 
-            if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
+        if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
 
-                final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
 
-                final String final_message = "set.adminchat.mute";
+            final String final_message = "set.adminchat.mute";
 
-                if (!PlayerCache.getMuted_admin().contains("true")) {
-                    VelocityMessages.ADMINCHAT_MUTED.send(commandSource,
-                            new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
-                } else {
-                    VelocityMessages.ADMINCHAT_UNMUTED.send(commandSource,
-                            new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
-                }
-
-                redisBungeeAPI.sendChannelMessage("CleanStaffChat-MuteAdminChat-RedisBungee", final_message);
-
-            } else if (!PlayerCache.getMuted().contains("true")) {
-                PlayerCache.getMuted().add("true");
+            if (!PlayerCache.getMuted_admin().contains("true")) {
                 VelocityMessages.ADMINCHAT_MUTED.send(commandSource,
                         new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
             } else {
-                PlayerCache.getMuted().remove("true");
                 VelocityMessages.ADMINCHAT_UNMUTED.send(commandSource,
                         new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
             }
+
+            redisBungeeAPI.sendChannelMessage("CleanStaffChat-MuteAdminChat-RedisBungee", final_message);
+
+        } else if (!PlayerCache.getMuted().contains("true")) {
+            PlayerCache.getMuted().add("true");
+            VelocityMessages.ADMINCHAT_MUTED.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
         } else {
-            VelocityMessages.NO_PERMISSION.send(commandSource,
+            PlayerCache.getMuted().remove("true");
+            VelocityMessages.ADMINCHAT_UNMUTED.send(commandSource,
                     new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
         }
     }

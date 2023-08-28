@@ -9,6 +9,7 @@ import it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl.ReloadCommand;
 import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.ChatListener;
 import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.JoinListener;
 import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.MoveListener;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import net.byteflux.libby.BukkitLibraryManager;
 import net.byteflux.libby.Library;
@@ -35,21 +36,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Getter
 public class CleanStaffChat extends JavaPlugin {
 
     private JDA jda;
+
     private TextFile configTextFile;
     private TextFile messagesTextFile;
     private TextFile discordTextFile;
     private TextFile aliasesTextFile;
     private TextFile versionTextFile;
+
+    @Getter
     private static CleanStaffChat instance;
 
     public boolean updated = false;
-
-    public static CleanStaffChat getInstance() {
-        return instance;
-    }
 
     @SneakyThrows
     @Override
@@ -355,10 +356,6 @@ public class CleanStaffChat extends JavaPlugin {
         return (CommandMap) commandMap.get(getServer());
     }
 
-    public JDA getJda() {
-        return jda;
-    }
-
     public YamlFile getConfigTextFile() {
         return getInstance().configTextFile.getConfig();
     }
@@ -423,7 +420,7 @@ public class CleanStaffChat extends JavaPlugin {
         }
 
         if (jda == null) {
-            getLogger().severe("Fatal error while updating JDA. Please report this error to https://discord.com/invite/sTSwaGBCdC.");
+            getLogger().severe("Fatal error while updating JDA. Please report this error to https://dsc.gg/futuredevelopment.");
             return;
         }
 

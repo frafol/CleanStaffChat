@@ -45,7 +45,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.11.0",
+        version = "1.12.0",
         dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
@@ -63,13 +63,11 @@ public class CleanStaffChat {
     private TextFile aliasesTextFile;
     private TextFile redisTextFile;
     private TextFile versionTextFile;
+
+    @Getter
     private static CleanStaffChat instance;
 
     public boolean updated = false;
-
-    public static CleanStaffChat getInstance() {
-        return instance;
-    }
 
     @Inject
     public CleanStaffChat(ProxyServer server, Logger logger, @DataDirectory Path path, Metrics.Factory metricsFactory) {
@@ -479,7 +477,7 @@ public class CleanStaffChat {
         }
 
         if (jda.getJda() == null) {
-            logger.error("Fatal error while updating JDA, please report this error on https://discord.com/invite/sTSwaGBCdC.");
+            logger.error("Fatal error while updating JDA, please report this error on https://dsc.gg/futuredevelopment.");
             return;
         }
 
@@ -502,8 +500,8 @@ public class CleanStaffChat {
             updated = true;
             logger.warn("CleanStaffChat successfully updated, a restart is required.");
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ignored) {
+            logger.error("Error while updating CleanStaffChat, please report this error on https://dsc.gg/futuredevelopment.");
         }
     }
 

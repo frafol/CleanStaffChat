@@ -35,7 +35,7 @@ public class JoinListener {
 
     @Subscribe
     @SuppressWarnings("UnstableApiUsage")
-    public void handle(@NotNull ServerPostConnectEvent event) throws LoginException {
+    public void handle(@NotNull ServerPostConnectEvent event) {
 
         if (event.getPreviousServer() != null) {
             return;
@@ -47,7 +47,7 @@ public class JoinListener {
             PLUGIN.UpdateCheck(player);
         }
 
-        if (!(CleanStaffChat.getInstance().getServer().getAllPlayers().size() < 1)) {
+        if (!(CleanStaffChat.getInstance().getServer().getAllPlayers().isEmpty())) {
 
             if (!STAFF_JOIN_MESSAGE.get(Boolean.class)) {
                 return;
@@ -164,7 +164,7 @@ public class JoinListener {
                                 .replace("%user%", player.getUsername()));
 
                         embed.setColor(Color.YELLOW);
-                        embed.setFooter("Powered by CleanStaffChat");
+                        embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                         channel.sendMessageEmbeds(embed.build()).queue();
 
@@ -242,7 +242,7 @@ public class JoinListener {
 
                 }
 
-                if (CleanStaffChat.getInstance().getServer().getAllPlayers().size() >= 1) {
+                if (!CleanStaffChat.getInstance().getServer().getAllPlayers().isEmpty()) {
 
                     CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                     (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
@@ -279,7 +279,7 @@ public class JoinListener {
 
                 }
 
-                if (CleanStaffChat.getInstance().getServer().getAllPlayers().size() >= 1) {
+                if (!CleanStaffChat.getInstance().getServer().getAllPlayers().isEmpty()) {
 
                     CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                     (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
@@ -316,7 +316,7 @@ public class JoinListener {
                             .replace("%user%", player.getUsername()));
 
                     embed.setColor(Color.YELLOW);
-                    embed.setFooter("Powered by CleanStaffChat");
+                    embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                     channel.sendMessageEmbeds(embed.build()).queue();
 

@@ -29,10 +29,8 @@ public class AFKCommand extends CommandBase {
     public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
         
         if (!SpigotConfig.STAFFCHAT_AFK_MODULE.get(Boolean.class)) {
-
             sender.sendMessage((SpigotMessages.MODULE_DISABLED.color()
                     .replace("%prefix%", SpigotMessages.PREFIX.color())));
-
             return false;
         }
 
@@ -42,12 +40,9 @@ public class AFKCommand extends CommandBase {
         
         Player player = (Player) sender;
         if (!player.hasPermission(SpigotConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))) {
-
             player.sendMessage((SpigotMessages.NO_PERMISSION.color()
                     .replace("%prefix%", SpigotMessages.PREFIX.color())));
-
             return false;
-
         }
 
         if (!PlayerCache.getAfk().contains(player.getUniqueId())) {
@@ -130,8 +125,9 @@ public class AFKCommand extends CommandBase {
                 final User user = api.getUserManager().getUser(player.getUniqueId());
 
                 if (user == null) {
-                            return false;
-                        }
+                    return false;
+                }
+
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
                 final String user_prefix = prefix == null ? "" : prefix;
@@ -190,9 +186,7 @@ public class AFKCommand extends CommandBase {
                                 .replace("%displayname%", player.getName())));
 
             }
-
             PlayerCache.getAfk().remove(player.getUniqueId());
-
         }
         return false;
     }

@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -40,113 +39,112 @@ public class JoinListener implements Listener {
             PLUGIN.UpdateCheck(event.getPlayer());
         }
 
-        if (!(CleanStaffChat.getInstance().getServer().getOnlinePlayers().size() < 1)) {
+        if (CleanStaffChat.getInstance().getServer().getOnlinePlayers().isEmpty()) {
+            return;
+        }
 
-            final Player player = event.getPlayer();
+        final Player player = event.getPlayer();
 
-            if (SpigotConfig.STAFF_JOIN_MESSAGE.get(Boolean.class)) {
+        if (!SpigotConfig.STAFF_JOIN_MESSAGE.get(Boolean.class)) {
+            return;
+        }
 
-                if (player.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                        || SpigotConfig.STAFFCHAT_JOIN_LEAVE_ALL.get(Boolean.class)) {
+        if (player.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                || SpigotConfig.STAFFCHAT_JOIN_LEAVE_ALL.get(Boolean.class)) {
 
-                    if (player.hasPermission(SpigotConfig.STAFFCHAT_JOIN_SILENT_PERMISSION.get(String.class)) && SpigotConfig.STAFFCHAT_JOIN_SILENT_MODULE.get(Boolean.class)) {
-                        return;
-                    }
+            if (player.hasPermission(SpigotConfig.STAFFCHAT_JOIN_SILENT_PERMISSION.get(String.class)) && SpigotConfig.STAFFCHAT_JOIN_SILENT_MODULE.get(Boolean.class)) {
+                return;
+            }
 
-                    if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
+            if (PLUGIN.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
 
-                        LuckPerms api = LuckPermsProvider.get();
+                LuckPerms api = LuckPermsProvider.get();
 
-                        User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
-                        if (user == null) {
-                            return;
-                        }
+                User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
+                if (user == null) {
+                    return;
+                }
 
-                        final String prefix = user.getCachedData().getMetaData().getPrefix();
-                        final String suffix = user.getCachedData().getMetaData().getSuffix();
+                final String prefix = user.getCachedData().getMetaData().getPrefix();
+                final String suffix = user.getCachedData().getMetaData().getSuffix();
 
-                        final String user_prefix = prefix == null ? "" : prefix;
-                        final String user_suffix = suffix == null ? "" : suffix;
+                final String user_prefix = prefix == null ? "" : prefix;
+                final String user_suffix = suffix == null ? "" : suffix;
 
-                        CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
-                                        (players -> players.hasPermission
-                                                (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
-                                .forEach(players -> players.sendMessage(SpigotMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
-                                        .replace("%prefix%", SpigotMessages.PREFIX.color())
-                                        .replace("%displayname%", PlayerCache.translateHex(user_prefix) + player.getName() + PlayerCache.translateHex(user_suffix))
-                                        .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
-                                        .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
-                                        .replace("%user%", player.getName())));
+                CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                                (players -> players.hasPermission
+                                        (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
+                                .replace("%prefix%", SpigotMessages.PREFIX.color())
+                                .replace("%displayname%", PlayerCache.translateHex(user_prefix) + player.getName() + PlayerCache.translateHex(user_suffix))
+                                .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
+                                .replace("%user%", player.getName())));
 
-                    } else if (Bukkit.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {
+            } else if (PLUGIN.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {
 
-                        final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
-                        final UserList userList = ultraPermissionsAPI.getUsers();
+                final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
+                final UserList userList = ultraPermissionsAPI.getUsers();
 
-                        if (!userList.uuid(player.getUniqueId()).isPresent()) {
-                            return;
-                        }
+                if (!userList.uuid(player.getUniqueId()).isPresent()) {
+                    return;
+                }
 
-                        final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(player.getUniqueId()).get();
+                final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(player.getUniqueId()).get();
 
-                        final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
-                        final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
-                        final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
-                        final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+                final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
+                final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
+                final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
+                final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
 
-                        CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
-                                        (players -> players.hasPermission
-                                                (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
-                                .forEach(players -> players.sendMessage(SpigotMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
-                                        .replace("%prefix%", SpigotMessages.PREFIX.color())
-                                        .replace("%displayname%", ultraPermissionsUserPrefixFinal + player.getName() + ultraPermissionsUserSuffixFinal)
-                                        .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
-                                        .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
-                                        .replace("%user%", player.getName())));
+                CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                                (players -> players.hasPermission
+                                        (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
+                                .replace("%prefix%", SpigotMessages.PREFIX.color())
+                                .replace("%displayname%", ultraPermissionsUserPrefixFinal + player.getName() + ultraPermissionsUserSuffixFinal)
+                                .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
+                                .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
+                                .replace("%user%", player.getName())));
 
-                    } else {
+            } else {
 
-                        CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
-                                        (players -> players.hasPermission
-                                                (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
-                                .forEach(players -> players.sendMessage(SpigotMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
-                                        .replace("%prefix%", SpigotMessages.PREFIX.color())
-                                        .replace("%user%", player.getName())));
+                CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                                (players -> players.hasPermission
+                                        (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
+                                .replace("%prefix%", SpigotMessages.PREFIX.color())
+                                .replace("%user%", player.getName())));
 
-                    }
+            }
 
-                    if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
-                            && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
-                            && SpigotConfig.JOIN_LEAVE_DISCORD_MODULE.get(Boolean.class)) {
+            if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
+                    && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
+                    && SpigotConfig.JOIN_LEAVE_DISCORD_MODULE.get(Boolean.class)) {
 
-                        final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
+                final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
-                        if (channel == null) {
-                            return;
-                        }
+                if (channel == null) {
+                    return;
+                }
 
-                        if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
+                if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
-                            EmbedBuilder embed = new EmbedBuilder();
+                    EmbedBuilder embed = new EmbedBuilder();
 
-                            embed.setTitle(SpigotDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+                    embed.setTitle(SpigotDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
-                            embed.setDescription(SpigotMessages.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
-                                    .replace("%user%", player.getName()));
+                    embed.setDescription(SpigotMessages.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
+                            .replace("%user%", player.getName()));
 
-                            embed.setColor(Color.YELLOW);
-                            embed.setFooter("Powered by CleanStaffChat");
+                    embed.setColor(Color.YELLOW);
+                    embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
-                            channel.sendMessageEmbeds(embed.build()).queue();
+                    channel.sendMessageEmbeds(embed.build()).queue();
 
-                        } else {
-
-                            channel.sendMessageFormat(SpigotMessages.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
-                                    .replace("%user%", player.getName())).queue();
-
-                        }
-                    }
-
+                } else {
+                    channel.sendMessageFormat(SpigotMessages.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
+                            .replace("%user%", player.getName())).queue();
                 }
             }
         }
@@ -159,111 +157,110 @@ public class JoinListener implements Listener {
 
         PlayerCache.getAfk().remove(event.getPlayer().getUniqueId());
 
-        if (SpigotConfig.STAFF_QUIT_MESSAGE.get(Boolean.class)) {
+        if (!SpigotConfig.STAFF_QUIT_MESSAGE.get(Boolean.class)) {
+            return;
+        }
 
-            if (player.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                    || SpigotConfig.STAFFCHAT_QUIT_ALL.get(Boolean.class)) {
+        if (player.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                || SpigotConfig.STAFFCHAT_QUIT_ALL.get(Boolean.class)) {
 
-                if (player.hasPermission(SpigotConfig.STAFFCHAT_QUIT_SILENT_PERMISSION.get(String.class)) && SpigotConfig.STAFFCHAT_QUIT_SILENT_MODULE.get(Boolean.class)) {
+            if (player.hasPermission(SpigotConfig.STAFFCHAT_QUIT_SILENT_PERMISSION.get(String.class)) && SpigotConfig.STAFFCHAT_QUIT_SILENT_MODULE.get(Boolean.class)) {
+                return;
+            }
+
+            if (PLUGIN.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
+
+                LuckPerms api = LuckPermsProvider.get();
+
+                User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
+
+                if (user == null) {
                     return;
                 }
 
-                if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
+                final String prefix = user.getCachedData().getMetaData().getPrefix();
+                final String suffix = user.getCachedData().getMetaData().getSuffix();
 
-                    LuckPerms api = LuckPermsProvider.get();
+                final String user_prefix = prefix == null ? "" : prefix;
+                final String user_suffix = suffix == null ? "" : suffix;
 
-                    User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
-                    
-                    if (user == null) {
-                        return;
-                    }
+                CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                                (players -> players.hasPermission
+                                        (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFF_QUIT_MESSAGE_FORMAT.color()
+                                .replace("%prefix%", SpigotMessages.PREFIX.color())
+                                .replace("%displayname%", PlayerCache.translateHex(user_prefix) + player.getName() + PlayerCache.translateHex(user_suffix))
+                                .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
+                                .replace("%user%", player.getName())));
 
-                    final String prefix = user.getCachedData().getMetaData().getPrefix();
-                    final String suffix = user.getCachedData().getMetaData().getSuffix();
+            } else if (PLUGIN.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {
 
-                    final String user_prefix = prefix == null ? "" : prefix;
-                    final String user_suffix = suffix == null ? "" : suffix;
+                final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
+                final UserList userList = ultraPermissionsAPI.getUsers();
 
-                    CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
-                                    (players -> players.hasPermission
-                                            (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
-                            .forEach(players -> players.sendMessage(SpigotMessages.STAFF_QUIT_MESSAGE_FORMAT.color()
-                                    .replace("%prefix%", SpigotMessages.PREFIX.color())
-                                    .replace("%displayname%", PlayerCache.translateHex(user_prefix) + player.getName() + PlayerCache.translateHex(user_suffix))
-                                    .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
-                                    .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
-                                    .replace("%user%", player.getName())));
-
-                } else if (Bukkit.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {
-
-                    final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
-                    final UserList userList = ultraPermissionsAPI.getUsers();
-
-                    if (!userList.uuid(player.getUniqueId()).isPresent()) {
-                        return;
-                    }
-
-                    final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(player.getUniqueId()).get();
-
-                    final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
-                    final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
-                    final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
-                    final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
-
-                    CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
-                                    (players -> players.hasPermission
-                                            (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
-                            .forEach(players -> players.sendMessage(SpigotMessages.STAFF_QUIT_MESSAGE_FORMAT.color()
-                                    .replace("%prefix%", SpigotMessages.PREFIX.color())
-                                    .replace("%displayname%", ultraPermissionsUserPrefixFinal + player.getName() + ultraPermissionsUserSuffixFinal)
-                                    .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
-                                    .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
-                                    .replace("%user%", player.getName())));
-
-                } else {
-
-                    CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
-                                    (players -> players.hasPermission
-                                            (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
-                            .forEach(players -> players.sendMessage(SpigotMessages.STAFF_QUIT_MESSAGE_FORMAT.color()
-                                    .replace("%prefix%", SpigotMessages.PREFIX.color())
-                                    .replace("%displayname%", player.getName())
-                                    .replace("%userprefix%", "")
-                                    .replace("%usersuffix%", "")
-                                    .replace("%user%", player.getName())));
-
+                if (!userList.uuid(player.getUniqueId()).isPresent()) {
+                    return;
                 }
 
-                if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
-                        && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
-                        && SpigotConfig.JOIN_LEAVE_DISCORD_MODULE.get(Boolean.class)) {
+                final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(player.getUniqueId()).get();
 
-                    final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
+                final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
+                final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
+                final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
+                final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
 
-                    if (channel == null) {
-                            return;
-                        }
+                CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                                (players -> players.hasPermission
+                                        (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFF_QUIT_MESSAGE_FORMAT.color()
+                                .replace("%prefix%", SpigotMessages.PREFIX.color())
+                                .replace("%displayname%", ultraPermissionsUserPrefixFinal + player.getName() + ultraPermissionsUserSuffixFinal)
+                                .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
+                                .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
+                                .replace("%user%", player.getName())));
 
-                    if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
+            } else {
 
-                        EmbedBuilder embed = new EmbedBuilder();
+                CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                                (players -> players.hasPermission
+                                        (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFF_QUIT_MESSAGE_FORMAT.color()
+                                .replace("%prefix%", SpigotMessages.PREFIX.color())
+                                .replace("%displayname%", player.getName())
+                                .replace("%userprefix%", "")
+                                .replace("%usersuffix%", "")
+                                .replace("%user%", player.getName())));
 
-                        embed.setTitle(SpigotDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+            }
 
-                        embed.setDescription(SpigotMessages.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
-                                .replace("%user%", player.getName()));
+            if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
+                    && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
+                    && SpigotConfig.JOIN_LEAVE_DISCORD_MODULE.get(Boolean.class)) {
 
-                        embed.setColor(Color.YELLOW);
-                        embed.setFooter("Powered by CleanStaffChat");
+                final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
-                        channel.sendMessageEmbeds(embed.build()).queue();
+                if (channel == null) {
+                    return;
+                }
 
-                    } else {
+                if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
-                        channel.sendMessageFormat(SpigotMessages.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
-                                .replace("%user%", player.getName())).queue();
+                    EmbedBuilder embed = new EmbedBuilder();
 
-                    }
+                    embed.setTitle(SpigotDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+
+                    embed.setDescription(SpigotMessages.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
+                            .replace("%user%", player.getName()));
+
+                    embed.setColor(Color.YELLOW);
+                    embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
+
+                    channel.sendMessageEmbeds(embed.build()).queue();
+
+                } else {
+                    channel.sendMessageFormat(SpigotMessages.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
+                            .replace("%user%", player.getName())).queue();
                 }
             }
         }

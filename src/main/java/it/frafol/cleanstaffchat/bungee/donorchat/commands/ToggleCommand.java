@@ -46,7 +46,6 @@ public class ToggleCommand extends Command {
         }
 
         PlayerCache.getToggled_donor().remove(player.getUniqueId());
-
         sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_TOGGLED_ON.color()
                 .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
     }

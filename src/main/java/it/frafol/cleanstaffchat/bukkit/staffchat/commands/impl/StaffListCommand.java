@@ -27,95 +27,91 @@ public class StaffListCommand extends CommandBase {
     public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String @NotNull [] args) {
 
         if (!sender.hasPermission(SpigotConfig.STAFFLIST_PERMISSION.get(String.class))) {
+            sender.sendMessage(SpigotMessages.NO_PERMISSION.color()
+                    .replace("%prefix%", SpigotMessages.PREFIX.color()));
             return false;
         }
 
-        if (args.length == 0) {
-
-            LuckPerms api = LuckPermsProvider.get();
-
-            sender.sendMessage(SpigotMessages.LIST_HEADER.color()
+        if (args.length != 0) {
+            sender.sendMessage(SpigotMessages.LIST_USAGE.color()
                     .replace("%prefix%", SpigotMessages.PREFIX.color()));
+            return false;
+        }
 
-            String user_prefix;
+        LuckPerms api = LuckPermsProvider.get();
 
-            List <UUID> list = Lists.newArrayList();
-            for (Player players : plugin.getServer().getOnlinePlayers()) {
+        sender.sendMessage(SpigotMessages.LIST_HEADER.color()
+                .replace("%prefix%", SpigotMessages.PREFIX.color()));
 
-                if (!players.hasPermission(SpigotConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
-                    continue;
-                }
+        String user_prefix;
 
-                if (SpigotConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(SpigotConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
-                    continue;
-                }
+        List<UUID> list = Lists.newArrayList();
+        for (Player players : plugin.getServer().getOnlinePlayers()) {
 
-                list.add(players.getUniqueId());
-
+            if (!players.hasPermission(SpigotConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
+                continue;
             }
 
-            if (SpigotConfig.SORTING.get(Boolean.class)) {
-                list.sort((o1, o2) -> {
-
-                    User user1 = api.getUserManager().getUser(o1);
-                    User user2 = api.getUserManager().getUser(o2);
-
-                    Group group1 = null;
-                    if (user1 != null) {
-                        group1 = api.getGroupManager().getGroup(user1.getPrimaryGroup());
-                    }
-
-                    Group group2 = null;
-                    if (user2 != null) {
-                        group2 = api.getGroupManager().getGroup(user2.getPrimaryGroup());
-                    }
-
-                    if (group1 == null || group2 == null) {
-                        return 0;
-                    }
-
-                    if (!group1.getWeight().isPresent() || !group2.getWeight().isPresent()) {
-                        return 0;
-                    }
-
-                    return Integer.compare(group1.getWeight().getAsInt(), group2.getWeight().getAsInt());
-                });
+            if (SpigotConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(SpigotConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
+                continue;
             }
 
-            for (UUID uuids : list) {
+            list.add(players.getUniqueId());
 
-                Player players = plugin.getServer().getPlayer(uuids);
-                User user = api.getUserManager().getUser(players.getUniqueId());
+        }
 
-                if (user == null) {
-                    continue;
+        if (list.isEmpty()) {
+            sender.sendMessage(SpigotMessages.LIST_NONE.color()
+                    .replace("%prefix%", SpigotMessages.PREFIX.color()));
+        }
+
+        if (SpigotConfig.SORTING.get(Boolean.class)) {
+            list.sort((o1, o2) -> {
+
+                User user1 = api.getUserManager().getUser(o1);
+                User user2 = api.getUserManager().getUser(o2);
+
+                Group group1 = null;
+                if (user1 != null) {
+                    group1 = api.getGroupManager().getGroup(user1.getPrimaryGroup());
                 }
 
-                final String prefix = user.getCachedData().getMetaData().getPrefix();
-                Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
-
-                if (group == null || group.getDisplayName() == null) {
-
-                    if (prefix != null) {
-                        user_prefix = prefix;
-                    } else {
-                        user_prefix = "";
-                    }
-
-                    if (players.getServer() == null) {
-                        continue;
-                    }
-
-                    sender.sendMessage(SpigotMessages.LIST_FORMAT.color()
-                            .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
-                            .replace("%player%", players.getName())
-                            .replace("%server%", "")
-                            .replace("%prefix%", SpigotMessages.PREFIX.color()));
-
-                    continue;
+                Group group2 = null;
+                if (user2 != null) {
+                    group2 = api.getGroupManager().getGroup(user2.getPrimaryGroup());
                 }
 
-                user_prefix = prefix == null ? group.getDisplayName() : prefix;
+                if (group1 == null || group2 == null) {
+                    return 0;
+                }
+
+                if (!group1.getWeight().isPresent() || !group2.getWeight().isPresent()) {
+                    return 0;
+                }
+
+                return Integer.compare(group1.getWeight().getAsInt(), group2.getWeight().getAsInt());
+            });
+        }
+
+        for (UUID uuids : list) {
+
+            Player players = plugin.getServer().getPlayer(uuids);
+            User user = api.getUserManager().getUser(players.getUniqueId());
+
+            if (user == null) {
+                continue;
+            }
+
+            final String prefix = user.getCachedData().getMetaData().getPrefix();
+            Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
+
+            if (group == null || group.getDisplayName() == null) {
+
+                if (prefix != null) {
+                    user_prefix = prefix;
+                } else {
+                    user_prefix = "";
+                }
 
                 if (players.getServer() == null) {
                     continue;
@@ -127,11 +123,25 @@ public class StaffListCommand extends CommandBase {
                         .replace("%server%", "")
                         .replace("%prefix%", SpigotMessages.PREFIX.color()));
 
+                continue;
             }
 
-            sender.sendMessage(SpigotMessages.LIST_FOOTER.color()
+            user_prefix = prefix == null ? group.getDisplayName() : prefix;
+
+            if (players.getServer() == null) {
+                continue;
+            }
+
+            sender.sendMessage(SpigotMessages.LIST_FORMAT.color()
+                    .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                    .replace("%player%", players.getName())
+                    .replace("%server%", "")
                     .replace("%prefix%", SpigotMessages.PREFIX.color()));
+
         }
+
+        sender.sendMessage(SpigotMessages.LIST_FOOTER.color()
+                .replace("%prefix%", SpigotMessages.PREFIX.color()));
         return false;
     }
 }

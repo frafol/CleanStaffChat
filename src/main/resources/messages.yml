@@ -112,20 +112,22 @@ messages:
     # Server StaffList Format, you can use %player% (and %userprefix%/%usersuffix% only if you're using LuckPerms).
     # You can use %server% on BungeeCord or Velocity and you can use %online% to display online staff (only in header/footer).
     header: "&8&m------&5&m------&d&m------&5&m------&8&m------&f"
-    format: "%userprefix%%player% &7(&d%server%&7)"
+    format: "%userprefix%%player% &7(&d%server%&7) %afk%"
     footer: "&8&m------&5&m------&d&m------&5&m------&8&m------&f"
 
     nobody: "%prefix% &7There is no staff &donline&7."
+    afk: "&7[&dAFK&7]"
 
     discord:
 
       # Discord StaffList Format, you can use %player% (and %usergroup% only if you're using LuckPerms).
       # You can use %server% on BungeeCord or Velocity and you can use %online% to display online staff (only in header/footer).
       header: "Staff List"
-      format: "%usergroup%%player% (%server%)"
+      format: "%usergroup%%player% (%server%) %afk%"
       footer: "Staff List"
 
       nobody: "There is no staff online."
+      afk: "[AFK]"
 
   # Errors and reload.
   deny_color_codes: "%prefix% &cColor codes are not permitted."

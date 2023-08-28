@@ -79,6 +79,9 @@ public enum SpigotMessages {
     LIST_NONE("messages.stafflist.nobody"),
     LIST_USAGE("messages.stafflist.usage"),
 
+    STAFFLIST_AFK("messages.stafflist.afk"),
+    DISCORDLIST_AFK("messages.stafflist.discord.afk"),
+
     DISCORDLIST_HEADER("messages.stafflist.discord.header"),
     DISCORDLIST_FORMAT("messages.stafflist.discord.format"),
     DISCORDLIST_FOOTER("messages.stafflist.discord.footer"),

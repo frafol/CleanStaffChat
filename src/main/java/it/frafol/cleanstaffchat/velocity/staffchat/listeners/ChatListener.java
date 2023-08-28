@@ -299,6 +299,11 @@ public class ChatListener extends ListenerAdapter {
 
                 Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
 
+                String isAFK = "";
+                if (PlayerCache.getAfk().contains(uuids)) {
+                    isAFK = VelocityMessages.STAFFLIST_AFK.color();
+                }
+
                 if (group == null || group.getDisplayName() == null) {
 
                     final String prefix = user.getCachedData().getMetaData().getPrimaryGroup();
@@ -316,6 +321,7 @@ public class ChatListener extends ListenerAdapter {
                     sb.append((VelocityMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
                             .replace("%usergroup%", ChatUtil.translateHex(user_prefix))
                             .replace("%player%", players.getUsername())
+                            .replace("%afk%", isAFK)
                             .replace("%server%", players.getCurrentServer().get().getServerInfo().getName()));
 
                     continue;
@@ -331,6 +337,7 @@ public class ChatListener extends ListenerAdapter {
                 sb.append((VelocityMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
                         .replace("%usergroup%", ChatUtil.translateHex(user_prefix))
                         .replace("%player%", players.getUsername())
+                        .replace("%afk%", isAFK)
                         .replace("%server%", players.getCurrentServer().get().getServerInfo().getName()));
 
             }

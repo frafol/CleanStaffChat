@@ -8,6 +8,7 @@ import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
+import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -118,6 +119,11 @@ public class StaffListCommand implements SimpleCommand {
             final String suffix = user.getCachedData().getMetaData().getSuffix();
             Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
 
+            String isAFK = "";
+            if (PlayerCache.getAfk().contains(uuids)) {
+                isAFK = VelocityMessages.STAFFLIST_AFK.color();
+            }
+
             if (group == null || group.getDisplayName() == null) {
 
                 if (prefix != null) {
@@ -140,6 +146,7 @@ public class StaffListCommand implements SimpleCommand {
                         new Placeholder("prefix", VelocityMessages.PREFIX.color()),
                         new Placeholder("userprefix", ChatUtil.translateHex(user_prefix)),
                         new Placeholder("usersuffix", ChatUtil.translateHex(user_suffix)),
+                        new Placeholder("afk", isAFK),
                         new Placeholder("player", players.getUsername()),
                         new Placeholder("server", players.getCurrentServer().get().getServerInfo().getName()));
 
@@ -157,6 +164,7 @@ public class StaffListCommand implements SimpleCommand {
                     new Placeholder("prefix", VelocityMessages.PREFIX.color()),
                     new Placeholder("userprefix", ChatUtil.translateHex(user_prefix)),
                     new Placeholder("usersuffix", ChatUtil.translateHex(user_suffix)),
+                    new Placeholder("afk", isAFK),
                     new Placeholder("player", players.getUsername()),
                     new Placeholder("server", players.getCurrentServer().get().getServerInfo().getName()));
 

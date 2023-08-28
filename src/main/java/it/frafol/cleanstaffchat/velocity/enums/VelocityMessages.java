@@ -42,6 +42,9 @@ public enum VelocityMessages {
     DISCORDLIST_FOOTER("messages.stafflist.discord.footer"),
     DISCORDLIST_NOBODY("messages.stafflist.discord.nobody"),
 
+    STAFFLIST_AFK("messages.stafflist.afk"),
+    DISCORDLIST_AFK("messages.stafflist.discord.afk"),
+
     STAFF_DISCORD_JOIN_MESSAGE_FORMAT("messages.staffchat.discord.discord_join_message_format"),
     STAFF_DISCORD_QUIT_MESSAGE_FORMAT("messages.staffchat.discord.discord_quit_message_format"),
     STAFF_JOIN_MESSAGE_FORMAT("messages.staffchat.staff_join_message_format"),

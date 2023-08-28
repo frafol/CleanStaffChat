@@ -110,6 +110,11 @@ public class StaffListCommand extends Command {
             final String suffix = user.getCachedData().getMetaData().getSuffix();
             Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
 
+            String isAFK = "";
+            if (PlayerCache.getAfk().contains(uuids)) {
+                isAFK = BungeeMessages.STAFFLIST_AFK.color();
+            }
+
             if (group == null || group.getDisplayName() == null) {
 
                 if (prefix != null) {
@@ -132,6 +137,7 @@ public class StaffListCommand extends Command {
                         .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
                         .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                         .replace("%player%", players.getName())
+                        .replace("%afk%", isAFK)
                         .replace("%server%", players.getServer().getInfo().getName())
                         .replace("%prefix%", BungeeMessages.PREFIX.color())));
 
@@ -149,6 +155,7 @@ public class StaffListCommand extends Command {
                     .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
                     .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                     .replace("%player%", players.getName())
+                    .replace("%afk%", isAFK)
                     .replace("%server%", players.getServer().getInfo().getName())
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
 

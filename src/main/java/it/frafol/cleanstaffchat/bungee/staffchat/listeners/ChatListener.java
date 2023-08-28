@@ -335,6 +335,11 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                 Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
 
+                String isAFK = "";
+                if (PlayerCache.getAfk().contains(uuids)) {
+                    isAFK = BungeeMessages.STAFFLIST_AFK.color();
+                }
+
                 if (group == null || group.getDisplayName() == null) {
 
                     final String prefix = user.getCachedData().getMetaData().getPrimaryGroup();
@@ -351,6 +356,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                     sb.append((BungeeMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
                             .replace("%usergroup%", PlayerCache.translateHex(user_prefix))
                             .replace("%player%", players.getName())
+                            .replace("%afk%", isAFK)
                             .replace("%server%", players.getServer().getInfo().getName()));
 
                     continue;
@@ -366,6 +372,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 sb.append((BungeeMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
                         .replace("%usergroup%", PlayerCache.translateHex(user_prefix))
                         .replace("%player%", players.getName())
+                        .replace("%afk%", isAFK)
                         .replace("%server%", players.getServer().getInfo().getName()));
 
             }

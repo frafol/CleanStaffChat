@@ -107,6 +107,11 @@ public class StaffListCommand extends CommandBase {
             final String suffix = user.getCachedData().getMetaData().getSuffix();
             Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
 
+            String isAFK = "";
+            if (PlayerCache.getAfk().contains(uuids)) {
+                isAFK = SpigotMessages.STAFFLIST_AFK.color();
+            }
+
             if (group == null || group.getDisplayName() == null) {
 
                 if (prefix != null) {
@@ -130,6 +135,7 @@ public class StaffListCommand extends CommandBase {
                         .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                         .replace("%player%", players.getName())
                         .replace("%server%", "")
+                        .replace("%afk%", isAFK)
                         .replace("%prefix%", SpigotMessages.PREFIX.color()));
 
                 continue;
@@ -146,6 +152,7 @@ public class StaffListCommand extends CommandBase {
                     .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
                     .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                     .replace("%player%", players.getName())
+                    .replace("%afk%", isAFK)
                     .replace("%server%", "")
                     .replace("%prefix%", SpigotMessages.PREFIX.color()));
 

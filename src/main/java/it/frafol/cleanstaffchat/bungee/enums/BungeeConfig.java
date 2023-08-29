@@ -20,6 +20,8 @@ public enum BungeeConfig {
     STAFFLIST_BYPASS_PERMISSION("settings.stafflist.stafflist_bypass_permission"),
     STAFFLIST_BYPASS("settings.stafflist.bypass_enabled"),
 
+    PREMIUMVANISH("modules.premiumvanish_hook"),
+
     HIDE_ADVERTS("settings.hide_advertisements"),
 
     STAFFCHAT_AFK_MODULE("modules.staffchat_afk_module"),

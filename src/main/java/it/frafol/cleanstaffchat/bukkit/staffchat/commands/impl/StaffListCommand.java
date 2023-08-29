@@ -1,6 +1,7 @@
 package it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl;
 
 import com.google.common.collect.Lists;
+import de.myzelyam.api.vanish.VanishAPI;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
@@ -53,8 +54,15 @@ public class StaffListCommand extends CommandBase {
                 continue;
             }
 
-            list.add(players.getUniqueId());
+            if (plugin.isPremiumVanish() && VanishAPI.getInvisiblePlayers().contains(players.getUniqueId())) {
+                continue;
+            }
 
+            if (plugin.isSuperVanish() && VanishAPI.getInvisiblePlayers().contains(players.getUniqueId())) {
+                continue;
+            }
+
+            list.add(players.getUniqueId());
         }
 
         sender.sendMessage(SpigotMessages.LIST_HEADER.color()
@@ -109,7 +117,7 @@ public class StaffListCommand extends CommandBase {
 
             String isAFK = "";
             if (PlayerCache.getAfk().contains(uuids)) {
-                isAFK = SpigotMessages.STAFFLIST_AFK.color();
+                isAFK = SpigotMessages.STAFFLIST_AFK.get(String.class);
             }
 
             if (group == null || group.getDisplayName() == null) {
@@ -131,8 +139,8 @@ public class StaffListCommand extends CommandBase {
                 }
 
                 sender.sendMessage(SpigotMessages.LIST_FORMAT.color()
-                        .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
-                        .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
+                        .replace("%userprefix%", PlayerCache.color(user_prefix))
+                        .replace("%usersuffix%", PlayerCache.color(user_suffix))
                         .replace("%player%", players.getName())
                         .replace("%server%", "")
                         .replace("%afk%", isAFK)
@@ -149,8 +157,8 @@ public class StaffListCommand extends CommandBase {
             }
 
             sender.sendMessage(SpigotMessages.LIST_FORMAT.color()
-                    .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
-                    .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
+                    .replace("%userprefix%", PlayerCache.color(user_prefix))
+                    .replace("%usersuffix%", PlayerCache.color(user_suffix))
                     .replace("%player%", players.getName())
                     .replace("%afk%", isAFK)
                     .replace("%server%", "")

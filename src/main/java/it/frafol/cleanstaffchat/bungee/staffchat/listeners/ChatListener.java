@@ -337,7 +337,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                 String isAFK = "";
                 if (PlayerCache.getAfk().contains(uuids)) {
-                    isAFK = BungeeMessages.STAFFLIST_AFK.color();
+                    isAFK = BungeeMessages.DISCORDLIST_AFK.color();
                 }
 
                 if (group == null || group.getDisplayName() == null) {

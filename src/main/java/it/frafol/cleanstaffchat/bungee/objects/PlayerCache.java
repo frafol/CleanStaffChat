@@ -74,7 +74,7 @@ public class PlayerCache {
                 message.contains("&r");
     }
 
-    private boolean containsHexColor(String message) {
+    public boolean containsHexColor(String message) {
         String hexColorPattern = "(?i)&#[a-f0-9]{6}";
         return message.matches(".*" + hexColorPattern + ".*");
     }

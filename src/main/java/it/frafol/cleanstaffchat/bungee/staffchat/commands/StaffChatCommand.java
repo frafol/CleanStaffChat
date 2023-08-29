@@ -121,15 +121,14 @@ public class StaffChatCommand extends Command {
 
                     final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
 
-                    final String final_message = BungeeMessages.STAFFCHAT_FORMAT.get(String.class)
+                    final String final_message = BungeeMessages.STAFFCHAT_FORMAT.color()
                             .replace("%user%", commandsender)
                             .replace("%message%", message)
                             .replace("%displayname%", PlayerCache.translateHex(user_prefix) + commandsender + PlayerCache.translateHex(user_suffix))
                             .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
                             .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                             .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
-                            .replace("%prefix%", BungeeMessages.PREFIX.color())
-                            .replace("&", "§");
+                            .replace("%prefix%", BungeeMessages.PREFIX.color());
 
                     redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffMessage-RedisBungee", final_message);
                     return;
@@ -145,8 +144,8 @@ public class StaffChatCommand extends Command {
                                 .replace("%displayname%", PlayerCache.translateHex(user_prefix) + commandsender + PlayerCache.translateHex(user_suffix))
                                 .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
                                 .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
-                                .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
-                                .replace("&", "§"))));
+                                .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName()))));
+
             } else if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {
 
                 final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
@@ -167,12 +166,12 @@ public class StaffChatCommand extends Command {
 
                     final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
 
-                    final String final_message = BungeeMessages.STAFFCHAT_FORMAT.get(String.class)
+                    final String final_message = BungeeMessages.STAFFCHAT_FORMAT.color()
                             .replace("%user%", commandsender)
                             .replace("%message%", message)
-                            .replace("%displayname%", ultraPermissionsUserPrefixFinal + commandsender + ultraPermissionsUserSuffixFinal)
-                            .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
-                            .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
+                            .replace("%displayname%", PlayerCache.translateHex(ultraPermissionsUserPrefixFinal + commandsender + ultraPermissionsUserSuffixFinal))
+                            .replace("%userprefix%", PlayerCache.translateHex(ultraPermissionsUserPrefixFinal))
+                            .replace("%usersuffix%", PlayerCache.translateHex(ultraPermissionsUserSuffixFinal))
                             .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
                             .replace("%prefix%", BungeeMessages.PREFIX.color())
                             .replace("&", "§");
@@ -182,15 +181,15 @@ public class StaffChatCommand extends Command {
                 }
 
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
-                                (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.color())
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                         .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_FORMAT.color()
                                 .replace("%prefix%", BungeeMessages.PREFIX.color())
                                 .replace("%user%", commandsender)
                                 .replace("%message%", message)
-                                .replace("%displayname%", ultraPermissionsUserPrefixFinal + commandsender + ultraPermissionsUserSuffixFinal)
-                                .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
-                                .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
+                                .replace("%displayname%", PlayerCache.translateHex(ultraPermissionsUserPrefixFinal + commandsender + ultraPermissionsUserSuffixFinal))
+                                .replace("%userprefix%", PlayerCache.translateHex(ultraPermissionsUserPrefixFinal))
+                                .replace("%usersuffix%", PlayerCache.translateHex(ultraPermissionsUserSuffixFinal))
                                 .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
                                 .replace("&", "§"))));
 
@@ -200,15 +199,14 @@ public class StaffChatCommand extends Command {
 
                     final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
 
-                    final String final_message = BungeeMessages.STAFFCHAT_FORMAT.get(String.class)
+                    final String final_message = BungeeMessages.STAFFCHAT_FORMAT.color()
                             .replace("%user%", commandsender)
                             .replace("%message%", message)
                             .replace("%displayname%", commandsender)
                             .replace("%userprefix%", "")
                             .replace("%usersuffix%", "")
                             .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
-                            .replace("%prefix%", BungeeMessages.PREFIX.color())
-                            .replace("&", "§");
+                            .replace("%prefix%", BungeeMessages.PREFIX.color());
 
                     redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffMessage-RedisBungee", final_message);
                     return;
@@ -224,8 +222,7 @@ public class StaffChatCommand extends Command {
                                 .replace("%displayname%", commandsender)
                                 .replace("%usersuffix%", "")
                                 .replace("%message%", message)
-                                .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
-                                .replace("&", "§"))));
+                                .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName()))));
             }
 
             if (BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {

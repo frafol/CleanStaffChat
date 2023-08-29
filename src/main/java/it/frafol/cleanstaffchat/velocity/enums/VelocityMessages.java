@@ -119,20 +119,28 @@ public enum VelocityMessages {
         return hex.replace("&", "§");
     }
 
-    private static final Pattern HEX_COLOR_PATTERN = Pattern.compile("#([A-Fa-f0-9]{6})");
-
     private String convertHexColors(String message) {
-        Matcher matcher = HEX_COLOR_PATTERN.matcher(message);
-        StringBuffer sb = new StringBuffer();
 
-        while (matcher.find()) {
-            String hexColor = matcher.group(1);
-            String convertedColor = "§x" + hexColor;
-            matcher.appendReplacement(sb, convertedColor);
+        if (!ChatUtil.containsHexColor(message)) {
+            return message;
         }
-        matcher.appendTail(sb);
 
-        return sb.toString();
+        Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
+        Matcher matcher = pattern.matcher(message);
+        while (matcher.find()) {
+            String hexCode = message.substring(matcher.start(), matcher.end());
+            String replaceSharp = hexCode.replace('#', 'x');
+
+            char[] ch = replaceSharp.toCharArray();
+            StringBuilder builder = new StringBuilder();
+            for (char c : ch) {
+                builder.append("&").append(c);
+            }
+
+            message = message.replace(hexCode, builder.toString());
+            matcher = pattern.matcher(message);
+        }
+        return ChatUtil.color(message);
     }
 
     public void send(CommandSource commandSource, Placeholder... placeholders) {

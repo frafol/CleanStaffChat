@@ -134,12 +134,11 @@ public class StaffChatCommand extends CommandBase {
                         .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color()
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", commandsender)
-                                .replace("%displayname%", PlayerCache.translateHex(user_prefix) + commandsender + PlayerCache.translateHex(user_suffix))
+                                .replace("%displayname%", PlayerCache.color(user_prefix) + commandsender + PlayerCache.color(user_suffix))
                                 .replace("%message%", message)
-                                .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
-                                .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
-                                .replace("%server%", "")
-                                .replace("&", "§")));
+                                .replace("%userprefix%", PlayerCache.color(user_prefix))
+                                .replace("%usersuffix%", PlayerCache.color(user_suffix))
+                                .replace("%server%", "")));
 
             } else if (Bukkit.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {
 
@@ -163,12 +162,11 @@ public class StaffChatCommand extends CommandBase {
                         .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color()
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", commandsender)
-                                .replace("%displayname%", ultraPermissionsUserPrefixFinal + commandsender + ultraPermissionsUserSuffixFinal)
+                                .replace("%displayname%", PlayerCache.color(ultraPermissionsUserPrefixFinal) + commandsender + PlayerCache.color(ultraPermissionsUserSuffixFinal))
                                 .replace("%message%", message)
-                                .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
-                                .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
-                                .replace("%server%", "")
-                                .replace("&", "§")));
+                                .replace("%userprefix%", PlayerCache.color(ultraPermissionsUserPrefixFinal))
+                                .replace("%usersuffix%", PlayerCache.color(ultraPermissionsUserSuffixFinal))
+                                .replace("%server%", "")));
 
             } else {
 
@@ -182,8 +180,7 @@ public class StaffChatCommand extends CommandBase {
                                 .replace("%usersuffix%", "")
                                 .replace("%displayname%", commandsender)
                                 .replace("%message%", message)
-                                .replace("%server%", "")
-                                .replace("&", "§")));
+                                .replace("%server%", "")));
 
             }
 

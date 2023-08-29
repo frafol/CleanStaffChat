@@ -90,6 +90,11 @@ modules:
   auto_update: true
   stats: true
 
+  # SuperVanish support is only for the Bukkit version.
+  # PremiumVanish support is only for the Bukkit/BungeeCord, Velocity is not supported by PremiumVanish.
+  premiumvanish_hook: true
+  supervanish_hook: true
+
   staffchat_switch_module: true
   staffchat_afk_module: true
   staffchat_talk_module: true

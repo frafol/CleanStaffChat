@@ -14,6 +14,9 @@ public enum SpigotConfig {
 
     SORTING("settings.stafflist.sorting"),
 
+    PREMIUMVANISH("modules.premiumvanish_hook"),
+    SUPERVANISH("modules.supervanish_hook"),
+
     STAFFLIST_MODULE("modules.stafflist_module"),
     STAFFLIST_PERMISSION("settings.stafflist.stafflist_permission"),
     STAFFLIST_SHOW_PERMISSION("settings.stafflist.stafflist_show_permission"),

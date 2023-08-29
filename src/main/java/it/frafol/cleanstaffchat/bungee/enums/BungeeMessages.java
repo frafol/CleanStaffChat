@@ -1,6 +1,7 @@
 package it.frafol.cleanstaffchat.bungee.enums;
 
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
+import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import net.md_5.bungee.api.ChatColor;
 
 public enum BungeeMessages {
@@ -105,6 +106,11 @@ public enum BungeeMessages {
     }
 
     public String color() {
-        return get(String.class).replaceAll("&#([A-Fa-f0-9]{6})", ChatColor.COLOR_CHAR + "x$1").replace("&", "§");
+
+        if (PlayerCache.containsHexColor(get(String.class))) {
+            return get(String.class).replaceAll("&#([A-Fa-f0-9]{6})", ChatColor.COLOR_CHAR + "x$1").replace("&", "§");
+        }
+
+        return get(String.class).replace("&", "§");
     }
 }

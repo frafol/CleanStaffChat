@@ -66,10 +66,10 @@ public class AFKCommand extends CommandBase {
                         .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_ON.color()
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", player.getName())
-                                .replace("%displayname%", PlayerCache.translateHex(user_prefix) + player.getName() + PlayerCache.translateHex(user_suffix))
-                                .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                .replace("%displayname%", PlayerCache.color(user_prefix) + player.getName() + PlayerCache.color(user_suffix))
+                                .replace("%userprefix%", PlayerCache.color(user_prefix))
                                 .replace("%server%", "")
-                                .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))));
+                                .replace("%usersuffix%", PlayerCache.color(user_suffix))));
 
             } else if (Bukkit.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {
 
@@ -139,10 +139,10 @@ public class AFKCommand extends CommandBase {
                         .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_OFF.color()
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", player.getName())
-                                .replace("%displayname%", PlayerCache.translateHex(user_prefix) + player.getName() + PlayerCache.translateHex(user_suffix))
-                                .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                .replace("%displayname%", PlayerCache.color(user_prefix) + player.getName() + PlayerCache.color(user_suffix))
+                                .replace("%userprefix%", PlayerCache.color(user_prefix))
                                 .replace("%server%", "")
-                                .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))));
+                                .replace("%usersuffix%", PlayerCache.color(user_suffix))));
 
             } else if (Bukkit.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {
 

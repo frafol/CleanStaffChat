@@ -144,10 +144,10 @@ public class AdminChatCommand extends CommandBase {
                         .forEach(players -> players.sendMessage(SpigotMessages.ADMINCHAT_FORMAT.color()
                                 .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
                                 .replace("%user%", commandsender)
-                                .replace("%displayname%", PlayerCache.translateHex(user_prefix) + commandsender + PlayerCache.translateHex(user_suffix))
+                                .replace("%displayname%", PlayerCache.color(user_prefix) + commandsender + PlayerCache.color(user_suffix))
                                 .replace("%message%", message)
-                                .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
-                                .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
+                                .replace("%userprefix%", PlayerCache.color(user_prefix))
+                                .replace("%usersuffix%", PlayerCache.color(user_suffix))
                                 .replace("%server%", "")
                                 .replace("&", "§")));
 

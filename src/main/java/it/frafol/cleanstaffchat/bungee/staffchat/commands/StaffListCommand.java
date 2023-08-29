@@ -1,6 +1,7 @@
 package it.frafol.cleanstaffchat.bungee.staffchat.commands;
 
 import com.google.common.collect.Lists;
+import de.myzelyam.api.vanish.BungeeVanishAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeCommandsConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
@@ -54,6 +55,10 @@ public class StaffListCommand extends Command {
 
             if (BungeeConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(BungeeConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
                 continue;
+            }
+
+            if (plugin.isPremiumVanish() && BungeeVanishAPI.getInvisiblePlayers().contains(players.getUniqueId())) {
+               continue;
             }
 
             list.add(players.getUniqueId());
@@ -112,7 +117,7 @@ public class StaffListCommand extends Command {
 
             String isAFK = "";
             if (PlayerCache.getAfk().contains(uuids)) {
-                isAFK = BungeeMessages.STAFFLIST_AFK.color();
+                isAFK = BungeeMessages.STAFFLIST_AFK.get(String.class);
             }
 
             if (group == null || group.getDisplayName() == null) {

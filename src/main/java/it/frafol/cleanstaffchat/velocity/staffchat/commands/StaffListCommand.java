@@ -121,7 +121,7 @@ public class StaffListCommand implements SimpleCommand {
 
             String isAFK = "";
             if (PlayerCache.getAfk().contains(uuids)) {
-                isAFK = VelocityMessages.STAFFLIST_AFK.color();
+                isAFK = VelocityMessages.DISCORDLIST_AFK.get(String.class);
             }
 
             if (group == null || group.getDisplayName() == null) {

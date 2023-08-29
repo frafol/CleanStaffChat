@@ -412,4 +412,11 @@ public class CleanStaffChat extends Plugin {
         }
     }
 
+    public boolean isPremiumVanish() {
+        if (BungeeConfig.PREMIUMVANISH.get(Boolean.class)) {
+            return getProxy().getPluginManager().getPlugin("PremiumVanish") != null;
+        }
+        return false;
+    }
+
 }

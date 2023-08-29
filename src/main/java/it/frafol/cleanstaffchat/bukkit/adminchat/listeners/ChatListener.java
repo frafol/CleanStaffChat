@@ -102,10 +102,10 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                 .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
                                 .replace("%user%", event.getPlayer().getName())
                                 .replace("%message%", event.getMessage())
-                                .replace("%displayname%", PlayerCache.translateHex(user_prefix) + event.getPlayer().getName() + PlayerCache.translateHex(user_suffix))
-                                .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                                .replace("%displayname%", PlayerCache.color(user_prefix) + event.getPlayer().getName() + PlayerCache.color(user_suffix))
+                                .replace("%userprefix%", PlayerCache.color(user_prefix))
                                 .replace("%server%", "")
-                                .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
+                                .replace("%usersuffix%", PlayerCache.color(user_suffix))
                                 .replace("&", "§")));
 
             } else if (Bukkit.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {

@@ -176,7 +176,7 @@ public class CleanStaffChat {
             registerAdminChat();
         }
 
-        if (VelocityRedis.REDIS_ENABLE.get(Boolean.class) && getRedisBungee()) {
+        if (VelocityRedis.REDIS_ENABLE.get(Boolean.class) && !getRedisBungee()) {
             getLogger().error("RedisBungee was not found, the RedisBungee hook won't work.");
         }
 

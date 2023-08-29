@@ -431,4 +431,17 @@ public class CleanStaffChat extends JavaPlugin {
 
     }
 
+    public boolean isPremiumVanish() {
+        if (SpigotConfig.PREMIUMVANISH.get(Boolean.class)) {
+            return getServer().getPluginManager().getPlugin("PremiumVanish") != null;
+        }
+        return false;
+    }
+
+    public boolean isSuperVanish() {
+        if (SpigotConfig.PREMIUMVANISH.get(Boolean.class)) {
+            return getServer().getPluginManager().getPlugin("PremiumVanish") != null;
+        }
+        return false;
+    }
 }

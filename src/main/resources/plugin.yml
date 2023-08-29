@@ -8,3 +8,5 @@ folia-supported: true
 softdepend:
   - LuckPerms
   - UltraPermissions
+  - PremiumVanish
+  - SuperVanish

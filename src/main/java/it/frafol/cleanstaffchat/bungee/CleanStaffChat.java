@@ -151,6 +151,10 @@ public class CleanStaffChat extends Plugin {
             getLogger().info("§7Hooked into RedisBungee §dsuccessfully§7!");
         }
 
+        if (isPremiumVanish()) {
+            getLogger().info("§7Hooked into PremiumVanish §dsuccessfully§7!");
+        }
+
         if (BungeeConfig.STATS.get(Boolean.class)) {
             new Metrics(this, 16449);
             getLogger().info("§7Metrics loaded §asuccessfully§7!");

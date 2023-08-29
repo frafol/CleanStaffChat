@@ -164,8 +164,15 @@ public class CleanStaffChat extends JavaPlugin {
 
         }
 
-        if (SpigotConfig.STAFFCHAT.get(Boolean.class)) {
+        if (isPremiumVanish()) {
+            getLogger().info("Hooked into PremiumVanish successfully!");
+        }
 
+        if (isSuperVanish()) {
+            getLogger().info("Hooked into SuperVanish successfully!");
+        }
+
+        if (SpigotConfig.STAFFCHAT.get(Boolean.class)) {
             registerStaffChatCommands();
             getServer().getPluginManager().registerEvents(new JoinListener(this), this);
             getServer().getPluginManager().registerEvents(new ChatListener(this), this);
@@ -174,7 +181,6 @@ public class CleanStaffChat extends JavaPlugin {
             if (SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class) && SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
                 jda.addEventListener(new ChatListener(this));
             }
-
         }
 
         if (SpigotConfig.DONORCHAT.get(Boolean.class)) {
@@ -187,9 +193,7 @@ public class CleanStaffChat extends JavaPlugin {
         }
 
         if (SpigotConfig.ADMINCHAT.get(Boolean.class)) {
-
             registerAdminChatCommands();
-
             getServer().getPluginManager().registerEvents(new it.frafol.cleanstaffchat.bukkit.adminchat.listeners.ChatListener(this), this);
 
             if (SpigotConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {

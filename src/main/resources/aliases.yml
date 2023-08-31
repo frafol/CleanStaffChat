@@ -90,6 +90,13 @@ aliases:
       - "cleandcmute"
       - "cleandonorchatmute"
 
+  mutechat:
+    main:
+      - "mutechat"
+      - "mc"
+      - "cleanmc"
+      - "cleanmutechat"
+
   stafflist:
     main:
       - "stafflist"

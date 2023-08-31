@@ -1,0 +1,29 @@
+#   ___  __    ____    __    _  _    ___   ___
+#  / __)(  )  ( ___)  /__\  ( \( )  / __) / __)
+# ( (__  )(__  )__)  /(__)\  )  (   \__ \( (__
+#  \___)(____)(____)(__)(__)(_)\_)  (___/ \___)
+#
+# Servers file. Made with ❤ by frafol.
+# For support: https://dsc.gg/futuredevelopment
+
+settings:
+
+  # You can block some servers from using staffchat, adminchat and donorchat.
+  # If you want to block a server, just add it to the list.
+  # Ensure that the server name is correct, otherwise it will not work.
+
+  staffchat_enable: false
+  adminchat_enable: false
+  donorchat_enable: false
+
+  staffchat_blocked_servers:
+    - "auth"
+    - "some_server"
+
+  adminchat_blocked_servers:
+    - "auth"
+    - "some_server"
+
+  donorchat_blocked_servers:
+    - "auth"
+    - "some_server"

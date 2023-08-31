@@ -8,6 +8,17 @@
 
 messages:
 
+  globalchat:
+
+    # General messages.
+    usage: "%prefix% &7Use &d/mutechat &7(or &d/mutechat <server>&7)."
+
+    mutechat_enabled: "%prefix% &7The globalchat has been &cmuted&7."
+    mutechat_disabled: "%prefix% &7The globalchat has been &aunmuted&7."
+
+    # Only for BungeeCord or Velocity.
+    server_not_found: "%prefix% &7The server you entered was &dnot found&7."
+
   staffchat:
 
     # General messages.

@@ -21,6 +21,13 @@ settings:
   # Hides the (This server is using CleanStaffChat by frafol) message.
   hide_advertisements: false
 
+  globalchat:
+
+    # You can customise permissions.
+    global_mutechat_permission: "globalchat.mute"
+    global_mutechat_all_permission: "globalchat.mute.all"
+    global_mutechat_bypass_permission: "globalchat.mute.bypass"
+
   staffchat:
 
     # Activating these options, staff members will receive a message when another staff member enters/leaves the server.
@@ -94,6 +101,8 @@ modules:
   # PremiumVanish support is only for the Bukkit/BungeeCord, Velocity is not supported by PremiumVanish.
   premiumvanish_hook: true
   supervanish_hook: true
+
+  globalchat_mute_command_module: true
 
   staffchat_switch_module: true
   staffchat_afk_module: true

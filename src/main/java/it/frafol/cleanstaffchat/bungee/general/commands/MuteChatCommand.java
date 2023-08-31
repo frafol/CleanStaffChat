@@ -6,11 +6,18 @@ import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.TabExecutor;
+import org.jetbrains.annotations.NotNull;
 
-public class MuteChatCommand extends Command {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class MuteChatCommand extends Command implements TabExecutor {
 
     public MuteChatCommand() {
         super(BungeeCommandsConfig.MUTECHAT.getStringList().get(0),"", BungeeCommandsConfig.MUTECHAT.getStringList().toArray(new String[0]));
@@ -98,5 +105,24 @@ public class MuteChatCommand extends Command {
             commandSource.sendMessage(TextComponent.fromLegacyText(BungeeMessages.MUTECHAT_USAGE.color()
                     .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())));
         }
+    }
+
+    @Override
+    public Iterable<String> onTabComplete(CommandSender sender, String @NotNull [] args) {
+
+        if (args.length != 1) {
+            return Collections.emptyList();
+        }
+
+        String partialName = args[0].toLowerCase();
+
+        List<String> completions = new ArrayList<>();
+        for (String servers : ProxyServer.getInstance().getServers().keySet()) {
+            if (servers.toLowerCase().startsWith(partialName)) {
+                completions.add(servers);
+            }
+        }
+
+        return completions;
     }
 }

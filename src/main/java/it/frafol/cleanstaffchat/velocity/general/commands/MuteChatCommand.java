@@ -30,33 +30,34 @@ public class MuteChatCommand implements SimpleCommand {
 
             if (!commandSource.hasPermission(VelocityConfig.MUTECHAT_ALL_PERMISSION.get(String.class))) {
                 VelocityMessages.NO_PERMISSION.send(commandSource,
-                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+                        new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
                 return;
             }
 
             if (PlayerCache.getMutedservers().contains("all")) {
                 PlayerCache.getMutedservers().remove("all");
                 VelocityMessages.MUTECHAT_DISABLED.send(commandSource,
-                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+                        new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
                 return;
             }
 
             PlayerCache.getMutedservers().add("all");
             VelocityMessages.MUTECHAT_ENABLED.send(commandSource,
-                    new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+                    new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
+            return;
         }
 
         if (args.length == 1) {
 
             if (!(commandSource instanceof Player)) {
                 VelocityMessages.PLAYER_ONLY.send(commandSource,
-                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+                        new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
                 return;
             }
 
             if (!commandSource.hasPermission(VelocityConfig.MUTECHAT_PERMISSION.get(String.class))) {
                 VelocityMessages.NO_PERMISSION.send(commandSource,
-                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+                        new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
                 return;
             }
 
@@ -66,39 +67,43 @@ public class MuteChatCommand implements SimpleCommand {
 
                 if (!commandSource.hasPermission(VelocityConfig.MUTECHAT_ALL_PERMISSION.get(String.class))) {
                     VelocityMessages.NO_PERMISSION.send(commandSource,
-                            new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+                            new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
                     return;
                 }
 
                 if (PlayerCache.getMutedservers().contains("all")) {
                     PlayerCache.getMutedservers().remove("all");
                     VelocityMessages.MUTECHAT_DISABLED.send(commandSource,
-                            new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+                            new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
                     return;
                 }
 
                 PlayerCache.getMutedservers().add("all");
                 VelocityMessages.MUTECHAT_ENABLED.send(commandSource,
-                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+                        new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
                 return;
             }
 
             if (!PLUGIN.getServer().getServer(server).isPresent()) {
                 VelocityMessages.SERVER_NOT_FOUND.send(commandSource,
-                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+                        new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
                 return;
             }
 
             if (PlayerCache.getMutedservers().contains(server)) {
                 PlayerCache.getMutedservers().remove(server);
                 VelocityMessages.MUTECHAT_DISABLED.send(commandSource,
-                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+                        new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
                 return;
             }
 
             PlayerCache.getMutedservers().add(server);
             VelocityMessages.MUTECHAT_ENABLED.send(commandSource,
-                    new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+                    new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
+
+        } else {
+            VelocityMessages.MUTECHAT_USAGE.send(commandSource,
+                    new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
         }
     }
 }

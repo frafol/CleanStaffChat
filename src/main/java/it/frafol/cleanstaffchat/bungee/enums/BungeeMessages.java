@@ -37,9 +37,11 @@ public enum BungeeMessages {
     STAFF_JOIN_MESSAGE_FORMAT("messages.staffchat.staff_join_message_format"),
     STAFF_QUIT_MESSAGE_FORMAT("messages.staffchat.staff_quit_message_format"),
 
-    MUTECHAT_ENABLED("messages.global.mutechat_enabled"),
-    MUTECHAT_DISABLED("messages.global.mutechat_disabled"),
-    SERVER_NOT_FOUND("messages.global.server_not_found"),
+    GLOBALPREFIX("messages.globalchat.prefix"),
+    MUTECHAT_USAGE("messages.globalchat.mutechat_usage"),
+    MUTECHAT_ENABLED("messages.globalchat.mutechat_enabled"),
+    MUTECHAT_DISABLED("messages.globalchat.mutechat_disabled"),
+    SERVER_NOT_FOUND("messages.globalchat.server_not_found"),
 
     COLOR_CODES("messages.deny_color_codes"),
 

@@ -25,6 +25,8 @@ public enum VelocityMessages {
     ADMINCHAT_FORMAT("messages.adminchat.adminchat_format"),
     DONORCHAT_FORMAT("messages.donorchat.donorchat_format"),
 
+    GLOBALPREFIX("messages.globalchat.prefix"),
+    MUTECHAT_USAGE("messages.globalchat.mutechat_usage"),
     MUTECHAT_ENABLED("messages.globalchat.mutechat_enabled"),
     MUTECHAT_DISABLED("messages.globalchat.mutechat_disabled"),
     SERVER_NOT_FOUND("messages.globalchat.server_not_found"),

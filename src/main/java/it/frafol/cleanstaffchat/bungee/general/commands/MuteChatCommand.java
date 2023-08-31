@@ -23,33 +23,34 @@ public class MuteChatCommand extends Command {
 
             if (!commandSource.hasPermission(BungeeConfig.MUTECHAT_ALL_PERMISSION.get(String.class))) {
                 commandSource.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
-                        .replace("%prefix%", BungeeMessages.PREFIX.color())));
+                        .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())));
                 return;
             }
 
             if (PlayerCache.getMutedservers().contains("all")) {
                 PlayerCache.getMutedservers().remove("all");
                 commandSource.sendMessage(TextComponent.fromLegacyText(BungeeMessages.MUTECHAT_DISABLED.color()
-                        .replace("%prefix%", BungeeMessages.PREFIX.color())));
+                        .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())));
                 return;
             }
 
             PlayerCache.getMutedservers().add("all");
             commandSource.sendMessage(TextComponent.fromLegacyText(BungeeMessages.MUTECHAT_ENABLED.color()
-                    .replace("%prefix%", BungeeMessages.PREFIX.color())));
+                    .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())));
+            return;
         }
 
         if (args.length == 1) {
 
             if (!(commandSource instanceof ProxiedPlayer)) {
                 commandSource.sendMessage(TextComponent.fromLegacyText(BungeeMessages.PLAYER_ONLY.color()
-                        .replace("%prefix%", BungeeMessages.PREFIX.color())));
+                        .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())));
                 return;
             }
 
             if (!commandSource.hasPermission(BungeeConfig.MUTECHAT_PERMISSION.get(String.class))) {
                 commandSource.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
-                        .replace("%prefix%", BungeeMessages.PREFIX.color())));
+                        .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())));
                 return;
             }
 
@@ -59,39 +60,43 @@ public class MuteChatCommand extends Command {
 
                 if (!commandSource.hasPermission(BungeeConfig.MUTECHAT_ALL_PERMISSION.get(String.class))) {
                     commandSource.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
-                            .replace("%prefix%", BungeeMessages.PREFIX.color())));
+                            .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())));
                     return;
                 }
 
                 if (PlayerCache.getMutedservers().contains("all")) {
                     PlayerCache.getMutedservers().remove("all");
                     commandSource.sendMessage(TextComponent.fromLegacyText(BungeeMessages.MUTECHAT_DISABLED.color()
-                            .replace("%prefix%", BungeeMessages.PREFIX.color())));
+                            .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())));
                     return;
                 }
 
                 PlayerCache.getMutedservers().add("all");
                 commandSource.sendMessage(TextComponent.fromLegacyText(BungeeMessages.MUTECHAT_ENABLED.color()
-                        .replace("%prefix%", BungeeMessages.PREFIX.color())));
+                        .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())));
                 return;
             }
 
             if (!CleanStaffChat.getInstance().getProxy().getServers().containsKey(server)) {
                 commandSource.sendMessage(TextComponent.fromLegacyText(BungeeMessages.SERVER_NOT_FOUND.color()
-                        .replace("%prefix%", BungeeMessages.PREFIX.color())));
+                        .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())));
                 return;
             }
 
             if (PlayerCache.getMutedservers().contains(server)) {
                 PlayerCache.getMutedservers().remove(server);
                 commandSource.sendMessage(TextComponent.fromLegacyText(BungeeMessages.MUTECHAT_DISABLED.color()
-                        .replace("%prefix%", BungeeMessages.PREFIX.color())));
+                        .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())));
                 return;
             }
 
             PlayerCache.getMutedservers().add(server);
             commandSource.sendMessage(TextComponent.fromLegacyText(BungeeMessages.MUTECHAT_ENABLED.color()
-                    .replace("%prefix%", BungeeMessages.PREFIX.color())));
+                    .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())));
+
+        } else {
+            commandSource.sendMessage(TextComponent.fromLegacyText(BungeeMessages.MUTECHAT_USAGE.color()
+                    .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())));
         }
     }
 }

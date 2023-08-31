@@ -17,7 +17,7 @@ public enum SpigotConfig {
     PREMIUMVANISH("modules.premiumvanish_hook"),
     SUPERVANISH("modules.supervanish_hook"),
 
-    MUTECHAT_MODULE("settings.modules.globalchat_mute_command_module"),
+    MUTECHAT_MODULE("modules.globalchat_mute_command_module"),
     MUTECHAT_PERMISSION("settings.globalchat.global_mutechat_permission"),
     MUTECHAT_ALL_PERMISSION("settings.globalchat.global_mutechat_all_permission"),
     MUTECHAT_BYPASS_PERMISSION("settings.globalchat.global_mutechat_bypass_permission"),

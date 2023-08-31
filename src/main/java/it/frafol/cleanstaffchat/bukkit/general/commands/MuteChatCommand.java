@@ -21,24 +21,26 @@ public class MuteChatCommand extends CommandBase {
 
         if (args.length == 0) {
 
-            if (!commandSource.hasPermission(SpigotConfig.MUTECHAT_ALL_PERMISSION.get(String.class))) {
+            if (!commandSource.hasPermission(SpigotConfig.MUTECHAT_ALL_PERMISSION.get(String.class)) &&
+                    !commandSource.hasPermission(SpigotConfig.MUTECHAT_PERMISSION.get(String.class))) {
                 commandSource.sendMessage((SpigotMessages.NO_PERMISSION.color()
-                        .replace("%prefix%", SpigotMessages.PREFIX.color())));
+                        .replace("%prefix%", SpigotMessages.GLOBALPREFIX.color())));
                 return false;
             }
 
             if (PlayerCache.getMutedservers().contains("all")) {
                 PlayerCache.getMutedservers().remove("all");
                 commandSource.sendMessage((SpigotMessages.MUTECHAT_DISABLED.color()
-                        .replace("%prefix%", SpigotMessages.PREFIX.color())));
+                        .replace("%prefix%", SpigotMessages.GLOBALPREFIX.color())));
                 return false;
             }
 
             PlayerCache.getMutedservers().add("all");
             commandSource.sendMessage((SpigotMessages.MUTECHAT_ENABLED.color()
-                    .replace("%prefix%", SpigotMessages.PREFIX.color())));
+                    .replace("%prefix%", SpigotMessages.GLOBALPREFIX.color())));
         } else {
-            // usage
+            commandSource.sendMessage((SpigotMessages.MUTECHAT_USAGE.color()
+                    .replace("%prefix%", SpigotMessages.GLOBALPREFIX.color())));
         }
         return false;
     }

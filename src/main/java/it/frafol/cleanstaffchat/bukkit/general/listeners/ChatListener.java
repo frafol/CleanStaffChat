@@ -29,7 +29,7 @@ public class ChatListener implements Listener {
             }
 
             player.sendMessage((SpigotMessages.STAFFCHAT_MUTED_ERROR.color()
-                    .replace("%prefix%", SpigotMessages.PREFIX.color())));
+                    .replace("%prefix%", SpigotMessages.GLOBALPREFIX.color())));
             event.setCancelled(true);
         }
     }

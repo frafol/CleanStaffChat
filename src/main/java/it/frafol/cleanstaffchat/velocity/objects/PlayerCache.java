@@ -49,4 +49,7 @@ public class PlayerCache {
     @Getter
     private final HashSet<String> cooldown_discord = new HashSet<>();
 
+    @Getter
+    private final HashSet<String> mutedservers = new HashSet<>();
+
 }

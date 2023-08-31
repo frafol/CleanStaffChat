@@ -6,10 +6,7 @@ import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityDiscordConfig;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityRedis;
+import it.frafol.cleanstaffchat.velocity.enums.*;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
@@ -51,6 +48,21 @@ public class StaffChatCommand implements SimpleCommand {
             if (commandSource.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
 
                 Player player = (Player) commandSource;
+
+                if (VelocityServers.STAFFCHAT_ENABLE.get(Boolean.class)) {
+                    for (String server : VelocityServers.SC_BLOCKED_SRV.getStringList()) {
+
+                        if (!player.getCurrentServer().isPresent()) {
+                            return;
+                        }
+
+                        if (player.getCurrentServer().get().getServer().getServerInfo().getName().equalsIgnoreCase(server)) {
+                            VelocityMessages.STAFFCHAT_MUTED_ERROR.send(player, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+                            return;
+                        }
+                    }
+                }
+
                 if (!(STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
                     VelocityMessages.ARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
                     return;
@@ -123,6 +135,15 @@ public class StaffChatCommand implements SimpleCommand {
 
             if (!((Player) commandSource).getCurrentServer().isPresent()) {
                 return;
+            }
+
+            if (VelocityServers.STAFFCHAT_ENABLE.get(Boolean.class)) {
+                for (String server : VelocityServers.SC_BLOCKED_SRV.getStringList()) {
+                    if (((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName().equalsIgnoreCase(server)) {
+                        VelocityMessages.STAFFCHAT_MUTED_ERROR.send(commandSource, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+                        return;
+                    }
+                }
             }
 
             if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {

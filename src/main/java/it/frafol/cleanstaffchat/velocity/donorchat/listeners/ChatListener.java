@@ -5,10 +5,7 @@ import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityDiscordConfig;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityRedis;
+import it.frafol.cleanstaffchat.velocity.enums.*;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
@@ -80,6 +77,17 @@ public class ChatListener extends ListenerAdapter {
 
         if (!(event.getPlayer().getCurrentServer().isPresent())) {
             return;
+        }
+
+        if (VelocityServers.DONORCHAT_ENABLE.get(Boolean.class)) {
+            for (String server : VelocityServers.DC_BLOCKED_SRV.getStringList()) {
+                if (event.getPlayer().getCurrentServer().get().getServer().getServerInfo().getName().equalsIgnoreCase(server)) {
+                    PlayerCache.getToggled_2_donor().remove(event.getPlayer().getUniqueId());
+                    event.setResult(PlayerChatEvent.ChatResult.denied());
+                    VelocityMessages.DONORCHAT_MUTED_ERROR.send(event.getPlayer(), new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
+                    return;
+                }
+            }
         }
 
         if (!event.getPlayer().hasPermission(COOLDOWN_BYPASS_PERMISSION.get(String.class))) {

@@ -13,6 +13,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import it.frafol.cleanstaffchat.velocity.adminchat.commands.AdminChatCommand;
 import it.frafol.cleanstaffchat.velocity.donorchat.commands.DonorChatCommand;
 import it.frafol.cleanstaffchat.velocity.enums.*;
+import it.frafol.cleanstaffchat.velocity.general.commands.MuteChatCommand;
 import it.frafol.cleanstaffchat.velocity.hooks.RedisListener;
 import it.frafol.cleanstaffchat.velocity.objects.JdaBuilder;
 import it.frafol.cleanstaffchat.velocity.objects.TextFile;
@@ -45,7 +46,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.12.1",
+        version = "1.13.0",
         dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
@@ -62,6 +63,7 @@ public class CleanStaffChat {
     private TextFile discordTextFile;
     private TextFile aliasesTextFile;
     private TextFile redisTextFile;
+    private TextFile serversTextFile;
     private TextFile versionTextFile;
 
     @Getter
@@ -139,7 +141,6 @@ public class CleanStaffChat {
         updateConfig();
         getLogger().info("§7Configurations loaded §dsuccessfully§7!");
 
-
         if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
 
             jda = new JdaBuilder();
@@ -174,6 +175,14 @@ public class CleanStaffChat {
 
         if (VelocityConfig.ADMINCHAT.get(Boolean.class)) {
             registerAdminChat();
+        }
+
+        if (VelocityConfig.MUTECHAT_MODULE.get(Boolean.class)) {
+            if (!getUnsignedVelocityAddon()) {
+                logger.error("You need UnsignedVelocity to use the mutechat feature on Velocity.");
+            } else {
+                registerMuteChat();
+            }
         }
 
         if (VelocityRedis.REDIS_ENABLE.get(Boolean.class) && !getRedisBungee()) {
@@ -224,6 +233,7 @@ public class CleanStaffChat {
         discordTextFile = new TextFile(path, "discord.yml");
         aliasesTextFile = new TextFile(path, "aliases.yml");
         redisTextFile = new TextFile(path, "redis.yml");
+        serversTextFile = new TextFile(path, "servers.yml");
         versionTextFile = new TextFile(path, "version.yml");
 
     }
@@ -273,6 +283,9 @@ public class CleanStaffChat {
                     .backup(true)
                     .update();
             YamlUpdater.create(new File(path + "/aliases.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/aliases.yml"))
+                    .backup(true)
+                    .update();
+            YamlUpdater.create(new File(path + "/servers.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/servers.yml"))
                     .backup(true)
                     .update();
             versionTextFile.getConfig().set("version", container.getDescription().getVersion().get());
@@ -456,6 +469,19 @@ public class CleanStaffChat {
             jda.getJda().addEventListener(new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
 
         }
+    }
+
+    @SneakyThrows
+    private void registerMuteChat() {
+
+        final String[] aliases = VelocityCommandsConfig.MUTECHAT.getStringList().toArray(new String[0]);
+
+        server.getCommandManager().register(server.getCommandManager()
+                .metaBuilder(VelocityCommandsConfig.MUTECHAT.getStringList().get(0))
+                .aliases(aliases)
+                .build(), new MuteChatCommand(this));
+
+        server.getEventManager().register(this, new it.frafol.cleanstaffchat.velocity.general.listeners.ChatListener(this));
     }
 
     private void updateJDATask() {

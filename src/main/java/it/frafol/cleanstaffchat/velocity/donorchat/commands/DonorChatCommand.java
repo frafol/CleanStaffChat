@@ -6,10 +6,7 @@ import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityDiscordConfig;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityRedis;
+import it.frafol.cleanstaffchat.velocity.enums.*;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
@@ -44,24 +41,32 @@ public class DonorChatCommand implements SimpleCommand {
         if (args.length == 0) {
 
             if (!(commandSource instanceof Player)) {
-
                 VelocityMessages.DONORARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
-
                 return;
-
             }
 
             if (commandSource.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))) {
 
                 Player player = (Player) commandSource;
 
-                if (!(DONORCHAT_TALK_MODULE.get(Boolean.class))) {
+                if (VelocityServers.DONORCHAT_ENABLE.get(Boolean.class)) {
+                    for (String server : VelocityServers.DC_BLOCKED_SRV.getStringList()) {
 
-                    VelocityMessages.DONORARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
-                    return;
+                        if (!player.getCurrentServer().isPresent()) {
+                            return;
+                        }
 
+                        if (player.getCurrentServer().get().getServer().getServerInfo().getName().equalsIgnoreCase(server)) {
+                            VelocityMessages.DONORCHAT_MUTED_ERROR.send(player, new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
+                            return;
+                        }
+                    }
                 }
 
+                if (!(DONORCHAT_TALK_MODULE.get(Boolean.class))) {
+                    VelocityMessages.DONORARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
+                    return;
+                }
 
                 if (!PlayerCache.getToggled_2_donor().contains(player.getUniqueId())) {
 
@@ -77,33 +82,25 @@ public class DonorChatCommand implements SimpleCommand {
                         return;
 
                     } else {
-
                         VelocityMessages.DONORARGUMENTS.send(commandSource,
                                 new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
-
                     }
 
                 } else if (PlayerCache.getToggled_2_donor().contains(player.getUniqueId())) {
-
                     PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
                     PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
                     PlayerCache.getToggled_2().remove(player.getUniqueId());
 
                     VelocityMessages.DONORCHAT_TALK_DISABLED.send(commandSource,
                             new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
-
                     return;
-
                 }
 
             } else {
-
                 if (HIDE_ADVERTS.get(Boolean.class) != null && !HIDE_ADVERTS.get(Boolean.class)) {
                     commandSource.sendMessage(Component.text("§7This server is using §dCleanStaffChat §7by §dfrafol§7."));
                 }
-
                 return;
-
             }
         }
 
@@ -137,19 +134,23 @@ public class DonorChatCommand implements SimpleCommand {
 
             if (PREVENT_COLOR_CODES.get(Boolean.class)) {
                 if (ChatUtil.hasColorCodes(message)) {
-
                     VelocityMessages.COLOR_CODES.send(commandSource,
                             new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
-
                     return;
-
                 }
             }
 
             if (!((Player) commandSource).getCurrentServer().isPresent()) {
-
                 return;
+            }
 
+            if (VelocityServers.DONORCHAT_ENABLE.get(Boolean.class)) {
+                for (String server : VelocityServers.DC_BLOCKED_SRV.getStringList()) {
+                    if (((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName().equalsIgnoreCase(server)) {
+                        VelocityMessages.DONORCHAT_MUTED_ERROR.send(commandSource, new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
+                        return;
+                    }
+                }
             }
 
             if (!commandSource.hasPermission(COOLDOWN_BYPASS_PERMISSION.get(String.class))) {

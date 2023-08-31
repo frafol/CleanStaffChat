@@ -7,10 +7,7 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.Player;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityDiscordConfig;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
-import it.frafol.cleanstaffchat.velocity.enums.VelocityRedis;
+import it.frafol.cleanstaffchat.velocity.enums.*;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
@@ -69,9 +66,18 @@ public class ChatListener extends ListenerAdapter {
                         }
 
                         if (!(event.getPlayer().getCurrentServer().isPresent())) {
-
                             return;
+                        }
 
+                        if (VelocityServers.STAFFCHAT_ENABLE.get(Boolean.class)) {
+                            for (String server : VelocityServers.SC_BLOCKED_SRV.getStringList()) {
+                                if (event.getPlayer().getCurrentServer().get().getServer().getServerInfo().getName().equalsIgnoreCase(server)) {
+                                    PlayerCache.getToggled_2().remove(event.getPlayer().getUniqueId());
+                                    event.setResult(PlayerChatEvent.ChatResult.denied());
+                                    VelocityMessages.STAFFCHAT_MUTED_ERROR.send(event.getPlayer(), new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+                                    return;
+                                }
+                            }
                         }
 
                         if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
@@ -81,8 +87,9 @@ public class ChatListener extends ListenerAdapter {
 
                             User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
                             if (user == null) {
-                            return;
-                        }
+                                return;
+                            }
+
                             final String prefix = user.getCachedData().getMetaData().getPrefix();
                             final String suffix = user.getCachedData().getMetaData().getSuffix();
                             final String user_prefix = prefix == null ? "" : prefix;
@@ -102,11 +109,8 @@ public class ChatListener extends ListenerAdapter {
 
 
                                 final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
                                 redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffChatMessage-RedisBungee", final_message);
-
                                 return;
-
                             }
 
                             CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
@@ -136,11 +140,8 @@ public class ChatListener extends ListenerAdapter {
                                         .replace("&", "§");
 
                                 final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
                                 redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffMessage-RedisBungee", final_message);
-
                                 return;
-
                             }
 
                             CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
@@ -201,9 +202,7 @@ public class ChatListener extends ListenerAdapter {
                 }
 
             } else {
-
                 PlayerCache.getToggled_2().remove(event.getPlayer().getUniqueId());
-
             }
         }
     }

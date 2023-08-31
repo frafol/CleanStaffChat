@@ -20,6 +20,8 @@ public enum VelocityCommandsConfig {
     ADMINCHAT_TOGGLE("aliases.adminchat.toggle"),
     DONORCHAT_TOGGLE("aliases.donorchat.toggle"),
 
+    MUTECHAT("aliases.mutechat.main"),
+
     STAFFCHAT_AFK("aliases.staffchat.afk");
 
     private final String path;

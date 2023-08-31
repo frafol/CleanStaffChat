@@ -20,6 +20,9 @@ public enum SpigotMessages {
     ADMINCHAT_FORMAT("messages.adminchat.adminchat_format"),
     DONORCHAT_FORMAT("messages.donorchat.donorchat_format"),
 
+    MUTECHAT_ENABLED("messages.global.mutechat_enabled"),
+    MUTECHAT_DISABLED("messages.global.mutechat_disabled"),
+
     STAFFCHAT_MUTED_ERROR_DISCORD("messages.chat_muted_error_discord"),
     STAFFCHAT_MUTED_ERROR("messages.chat_muted_error"),
     ADMINCHAT_MUTED_ERROR("messages.chat_muted_error"),

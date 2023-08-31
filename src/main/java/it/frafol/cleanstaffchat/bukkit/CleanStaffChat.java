@@ -202,6 +202,11 @@ public class CleanStaffChat extends JavaPlugin {
 
         }
 
+        if (SpigotConfig.MUTECHAT_MODULE.get(Boolean.class)) {
+            registerMuteChatCommands();
+            getServer().getPluginManager().registerEvents(new it.frafol.cleanstaffchat.bukkit.general.listeners.ChatListener(this), this);
+        }
+
         if (SpigotConfig.STATS.get(Boolean.class) && !getDescription().getVersion().contains("alpha")) {
             new Metrics(this, 16448);
             getLogger().info("Metrics loaded successfully!");
@@ -335,6 +340,25 @@ public class CleanStaffChat extends JavaPlugin {
     }
 
     @SneakyThrows
+    private void registerMuteChatCommands() {
+        List<Command> muteChatCommands = new ArrayList<>();
+        for(SpigotCommandsConfig commandConfig : SpigotCommandsConfig.getMuteChatCommands()){
+            List<String> commandLabels = commandConfig.getStringList();
+            if (commandLabels.isEmpty()) {
+                continue;
+            }
+
+            muteChatCommands.add((CommandBase) commandConfig.getCommandClass().getDeclaredConstructors()[0].newInstance(
+                    this,
+                    commandLabels.get(0),
+                    "",
+                    commandLabels.subList(1, commandLabels.size())
+            ));
+        }
+        getCommandMap().registerAll(getName().toLowerCase(), muteChatCommands);
+    }
+
+    @SneakyThrows
     private void registerDonorChatCommands() {
         List<Command> donorChatCommands = new ArrayList<>();
         for(SpigotCommandsConfig commandConfig : SpigotCommandsConfig.getDonorChatCommands()){
@@ -443,8 +467,8 @@ public class CleanStaffChat extends JavaPlugin {
     }
 
     public boolean isSuperVanish() {
-        if (SpigotConfig.PREMIUMVANISH.get(Boolean.class)) {
-            return getServer().getPluginManager().getPlugin("PremiumVanish") != null;
+        if (SpigotConfig.SUPERVANISH.get(Boolean.class)) {
+            return getServer().getPluginManager().getPlugin("SuperVanish") != null;
         }
         return false;
     }

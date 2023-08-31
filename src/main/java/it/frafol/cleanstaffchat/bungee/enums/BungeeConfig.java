@@ -22,6 +22,11 @@ public enum BungeeConfig {
 
     PREMIUMVANISH("modules.premiumvanish_hook"),
 
+    MUTECHAT_MODULE("settings.modules.globalchat_mute_command_module"),
+    MUTECHAT_PERMISSION("settings.globalchat.global_mutechat_permission"),
+    MUTECHAT_ALL_PERMISSION("settings.globalchat.global_mutechat_all_permission"),
+    MUTECHAT_BYPASS_PERMISSION("settings.globalchat.global_mutechat_bypass_permission"),
+
     HIDE_ADVERTS("settings.hide_advertisements"),
 
     STAFFCHAT_AFK_MODULE("modules.staffchat_afk_module"),

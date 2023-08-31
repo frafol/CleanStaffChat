@@ -25,9 +25,7 @@ import java.util.Optional;
 public class StaffChatCommand extends Command {
 
     public StaffChatCommand() {
-
         super(BungeeCommandsConfig.STAFFCHAT.getStringList().get(0),"", BungeeCommandsConfig.STAFFCHAT.getStringList().toArray(new String[0]));
-
     }
 
     @Override
@@ -42,6 +40,21 @@ public class StaffChatCommand extends Command {
             }
 
             ProxiedPlayer player = (ProxiedPlayer) sender;
+
+            if (BungeeServers.STAFFCHAT_ENABLE.get(Boolean.class)) {
+                for (String server : BungeeServers.SC_BLOCKED_SRV.getStringList()) {
+
+                    if (player.getServer() == null) {
+                        return;
+                    }
+
+                    if (player.getServer().getInfo().getName().equalsIgnoreCase(server)) {
+                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_MUTED_ERROR.color()
+                                .replace("%prefix%", BungeeMessages.PREFIX.color())));
+                        return;
+                    }
+                }
+            }
 
             if (sender.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
 
@@ -100,6 +113,21 @@ public class StaffChatCommand extends Command {
                         .replace("%prefix%", BungeeMessages.PREFIX.color())
                         .replace("&", "§")));
                 return;
+            }
+
+            if (BungeeServers.STAFFCHAT_ENABLE.get(Boolean.class)) {
+                for (String server : BungeeServers.SC_BLOCKED_SRV.getStringList()) {
+
+                    if (((ProxiedPlayer) sender).getServer() == null) {
+                        return;
+                    }
+
+                    if (((ProxiedPlayer) sender).getServer().getInfo().getName().equalsIgnoreCase(server)) {
+                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_MUTED_ERROR.color()
+                                .replace("%prefix%", BungeeMessages.PREFIX.color())));
+                        return;
+                    }
+                }
             }
 
             if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {

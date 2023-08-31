@@ -2,10 +2,7 @@ package it.frafol.cleanstaffchat.bungee.donorchat.listeners;
 
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeRedis;
+import it.frafol.cleanstaffchat.bungee.enums.*;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import me.TechsCode.UltraPermissions.UltraPermissions;
 import me.TechsCode.UltraPermissions.UltraPermissionsAPI;
@@ -64,6 +61,23 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
         if (event.getMessage().startsWith("/")) {
             return;
+        }
+
+        if (BungeeServers.DONORCHAT_ENABLE.get(Boolean.class)) {
+            for (String server : BungeeServers.DC_BLOCKED_SRV.getStringList()) {
+
+                if (((ProxiedPlayer) event.getSender()).getServer() == null) {
+                    return;
+                }
+
+                if (((ProxiedPlayer) event.getSender()).getServer().getInfo().getName().equalsIgnoreCase(server)) {
+                    PlayerCache.getToggled_2_donor().remove(((ProxiedPlayer) event.getSender()).getUniqueId());
+                    event.setCancelled(true);
+                    ((ProxiedPlayer) event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_MUTED_ERROR.color()
+                            .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
+                    return;
+                }
+            }
         }
 
         if (!(BungeeConfig.DONORCHAT_TALK_MODULE.get(Boolean.class))) {

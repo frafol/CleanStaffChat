@@ -48,6 +48,21 @@ public class DonorChatCommand extends Command {
 
             ProxiedPlayer player = (ProxiedPlayer) sender;
 
+            if (BungeeServers.DONORCHAT_ENABLE.get(Boolean.class)) {
+                for (String server : BungeeServers.DC_BLOCKED_SRV.getStringList()) {
+
+                    if (((ProxiedPlayer) sender).getServer() == null) {
+                        return;
+                    }
+
+                    if (((ProxiedPlayer) sender).getServer().getInfo().getName().equalsIgnoreCase(server)) {
+                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_MUTED_ERROR.color()
+                                .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
+                        return;
+                    }
+                }
+            }
+
             if (sender.hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))) {
 
                 if (PlayerCache.getCooldown().contains(player.getUniqueId())) {
@@ -81,7 +96,6 @@ public class DonorChatCommand extends Command {
                 }
 
             } else {
-
                 if (BungeeConfig.HIDE_ADVERTS.get(Boolean.class) != null && !BungeeConfig.HIDE_ADVERTS.get(Boolean.class)) {
                     sender.sendMessage(TextComponent.fromLegacyText("§7This server is using §dCleanStaffChat §7by §dfrafol§7."));
                 }
@@ -110,13 +124,25 @@ public class DonorChatCommand extends Command {
 
             if (BungeeConfig.PREVENT_COLOR_CODES.get(Boolean.class)) {
                 if (PlayerCache.hasColorCodes(message)) {
-
                     sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.COLOR_CODES.color()
                             .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
                             .replace("&", "§")));
-
                     return;
+                }
+            }
 
+            if (BungeeServers.DONORCHAT_ENABLE.get(Boolean.class)) {
+                for (String server : BungeeServers.DC_BLOCKED_SRV.getStringList()) {
+
+                    if (((ProxiedPlayer) sender).getServer() == null) {
+                        return;
+                    }
+
+                    if (((ProxiedPlayer) sender).getServer().getInfo().getName().equalsIgnoreCase(server)) {
+                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_MUTED_ERROR.color()
+                                .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
+                        return;
+                    }
                 }
             }
 

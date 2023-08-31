@@ -3,10 +3,7 @@ package it.frafol.cleanstaffchat.bungee.staffchat.listeners;
 import com.google.common.collect.Lists;
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeRedis;
+import it.frafol.cleanstaffchat.bungee.enums.*;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import me.TechsCode.UltraPermissions.UltraPermissions;
 import me.TechsCode.UltraPermissions.UltraPermissionsAPI;
@@ -49,6 +46,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
         if (!PlayerCache.getToggled_2().contains(((ProxiedPlayer) event.getSender()).getUniqueId())) {
             return;
         }
+
         if (PlayerCache.getMuted().contains("true")) {
             PlayerCache.getToggled_2().remove(((ProxiedPlayer) event.getSender()).getUniqueId());
             event.setCancelled(true);
@@ -59,6 +57,23 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
         if (event.getMessage().startsWith("/")) {
             return;
+        }
+
+        if (BungeeServers.STAFFCHAT_ENABLE.get(Boolean.class)) {
+            for (String server : BungeeServers.SC_BLOCKED_SRV.getStringList()) {
+
+                if (((ProxiedPlayer) event.getSender()).getServer() == null) {
+                    return;
+                }
+
+                if (((ProxiedPlayer) event.getSender()).getServer().getInfo().getName().equalsIgnoreCase(server)) {
+                    PlayerCache.getToggled_2().remove(((ProxiedPlayer) event.getSender()).getUniqueId());
+                    event.setCancelled(true);
+                    ((ProxiedPlayer) event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_MUTED_ERROR.color()
+                            .replace("%prefix%", BungeeMessages.PREFIX.color())));
+                    return;
+                }
+            }
         }
 
         if (!(BungeeConfig.STAFFCHAT_TALK_MODULE.get(Boolean.class))) {

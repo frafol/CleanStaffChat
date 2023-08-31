@@ -4,6 +4,7 @@ import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import it.frafol.cleanstaffchat.bungee.adminchat.commands.AdminChatCommand;
 import it.frafol.cleanstaffchat.bungee.donorchat.commands.DonorChatCommand;
 import it.frafol.cleanstaffchat.bungee.enums.*;
+import it.frafol.cleanstaffchat.bungee.general.commands.MuteChatCommand;
 import it.frafol.cleanstaffchat.bungee.hooks.RedisListener;
 import it.frafol.cleanstaffchat.bungee.objects.TextFile;
 import it.frafol.cleanstaffchat.bungee.staffchat.commands.DebugCommand;
@@ -45,6 +46,7 @@ public class CleanStaffChat extends Plugin {
     private TextFile discordTextFile;
     private TextFile aliasesTextFile;
     private TextFile redisTextFile;
+    private TextFile serversTextFile;
     private TextFile versionTextFile;
 
     public boolean updated = false;
@@ -142,6 +144,10 @@ public class CleanStaffChat extends Plugin {
             registerDonorChat();
         }
 
+        if (BungeeConfig.MUTECHAT_MODULE.get(Boolean.class)) {
+            registerMuteChat();
+        }
+
         if (BungeeRedis.REDIS_ENABLE.get(Boolean.class) && getProxy().getPluginManager().getPlugin("RedisBungee") == null) {
             getLogger().severe("RedisBungee was not found, the RedisBungee hook won't work.");
         }
@@ -185,6 +191,10 @@ public class CleanStaffChat extends Plugin {
 
     public YamlFile getRedisTextFile() {
         return getInstance().redisTextFile.getConfig();
+    }
+
+    public YamlFile getServersTextFile() {
+        return getInstance().serversTextFile.getConfig();
     }
 
     public YamlFile getVersionTextFile() {
@@ -275,6 +285,9 @@ public class CleanStaffChat extends Plugin {
             YamlUpdater.create(new File(getDataFolder().toPath() + "/aliases.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/aliases.yml"))
                     .backup(true)
                     .update();
+            YamlUpdater.create(new File(getDataFolder().toPath() + "/servers.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/servers.yml"))
+                    .backup(true)
+                    .update();
             versionTextFile.getConfig().set("version", getDescription().getVersion());
             versionTextFile.getConfig().save();
             loadFiles();
@@ -325,6 +338,11 @@ public class CleanStaffChat extends Plugin {
 
     }
 
+    private void registerMuteChat() {
+        getProxy().getPluginManager().registerCommand(this, new MuteChatCommand());
+        getProxy().getPluginManager().registerListener(this, new it.frafol.cleanstaffchat.bungee.general.listeners.ChatListener(this));
+    }
+
     private void registerStaffList() {
 
         if (getProxy().getPluginManager().getPlugin("LuckPerms") == null) {
@@ -358,6 +376,7 @@ public class CleanStaffChat extends Plugin {
         discordTextFile = new TextFile(getDataFolder().toPath(), "discord.yml");
         aliasesTextFile = new TextFile(getDataFolder().toPath(), "aliases.yml");
         redisTextFile = new TextFile(getDataFolder().toPath(), "redis.yml");
+        serversTextFile = new TextFile(getDataFolder().toPath(), "servers.yml");
         versionTextFile = new TextFile(getDataFolder().toPath(), "version.yml");
 
     }

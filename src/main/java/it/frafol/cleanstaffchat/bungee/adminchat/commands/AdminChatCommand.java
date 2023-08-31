@@ -43,6 +43,21 @@ public class AdminChatCommand extends Command {
 
             ProxiedPlayer player = (ProxiedPlayer) sender;
 
+            if (BungeeServers.ADMINCHAT_ENABLE.get(Boolean.class)) {
+                for (String server : BungeeServers.AC_BLOCKED_SRV.getStringList()) {
+
+                    if (player.getServer() == null) {
+                        return;
+                    }
+
+                    if (player.getServer().getInfo().getName().equalsIgnoreCase(server)) {
+                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_MUTED_ERROR.color()
+                                .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
+                        return;
+                    }
+                }
+            }
+
             if (sender.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))) {
 
                 if (!PlayerCache.getToggled_2_admin().contains(player.getUniqueId())) {
@@ -103,6 +118,21 @@ public class AdminChatCommand extends Command {
                         .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                         .replace("&", "§")));
                 return;
+            }
+
+            if (BungeeServers.ADMINCHAT_ENABLE.get(Boolean.class)) {
+                for (String server : BungeeServers.AC_BLOCKED_SRV.getStringList()) {
+
+                    if (((ProxiedPlayer) sender).getServer() == null) {
+                        return;
+                    }
+
+                    if (((ProxiedPlayer) sender).getServer().getInfo().getName().equalsIgnoreCase(server)) {
+                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_MUTED_ERROR.color()
+                                .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
+                        return;
+                    }
+                }
             }
 
             if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {

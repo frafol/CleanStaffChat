@@ -11,6 +11,7 @@ messages:
   globalchat:
 
     # General messages.
+    prefix: "&5&lGLOBAL&d&lCHAT &8&l•"
     usage: "%prefix% &7Use &d/mutechat &7(or &d/mutechat <server>&7)."
 
     mutechat_enabled: "%prefix% &7The globalchat has been &cmuted&7."

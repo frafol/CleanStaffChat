@@ -28,6 +28,10 @@ public class ChatListener implements Listener {
                 return;
             }
 
+            if (event.getMessage().startsWith("/")) {
+                return;
+            }
+
             player.sendMessage((SpigotMessages.STAFFCHAT_MUTED_ERROR.color()
                     .replace("%prefix%", SpigotMessages.GLOBALPREFIX.color())));
             event.setCancelled(true);

@@ -77,30 +77,26 @@ public class PlayerCache {
                 message.contains("&r");
     }
 
-    public boolean containsHexColor(String message) {
-        String hexColorPattern = "(?i)&#[a-f0-9]{6}";
-        return message.matches(".*" + hexColorPattern + ".*");
+    public String translateHex(String string) {
+        String hex = convertHexColors(string);
+        return hex.replace("&", "§");
     }
 
-    public static String translateHex(String message) {
-
-        if (!containsHexColor(message)) {
-            return message.replace("&", "§");
+    public static String convertHexColors(String str) {
+        Pattern unicode = Pattern.compile("\\\\u\\+[a-fA-F0-9]{4}");
+        Matcher match = unicode.matcher(str);
+        while (match.find()) {
+            String code = str.substring(match.start(),match.end());
+            str = str.replace(code,Character.toString((char) Integer.parseInt(code.replace("\\u+",""),16)));
+            match = unicode.matcher(str);
         }
-
-        final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9]{6})");
-        final char COLOR_CHAR = ChatColor.COLOR_CHAR;
-
-        Matcher matcher = HEX_PATTERN.matcher(message);
-        StringBuffer buffer = new StringBuffer(message.length() + 4 * 8);
-        while (matcher.find()) {
-            String group = matcher.group(1);
-            matcher.appendReplacement(buffer, COLOR_CHAR + "x"
-                    + COLOR_CHAR + group.charAt(0) + COLOR_CHAR + group.charAt(1)
-                    + COLOR_CHAR + group.charAt(2) + COLOR_CHAR + group.charAt(3)
-                    + COLOR_CHAR + group.charAt(4) + COLOR_CHAR + group.charAt(5)
-            );
+        Pattern pattern = Pattern.compile("&#[a-fA-F0-9]{6}");
+        match = pattern.matcher(str);
+        while (match.find()) {
+            String color = str.substring(match.start(),match.end());
+            str = str.replace(color,ChatColor.of(color.replace("&","")) + "");
+            match = pattern.matcher(str);
         }
-        return matcher.appendTail(buffer).toString().replace("&", "§");
+        return ChatColor.translateAlternateColorCodes('&',str);
     }
 }

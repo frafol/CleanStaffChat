@@ -1,8 +1,10 @@
 package it.frafol.cleanstaffchat.bukkit.enums;
 
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
-import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import org.bukkit.ChatColor;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public enum SpigotMessages {
 
@@ -109,15 +111,25 @@ public enum SpigotMessages {
     }
 
     public String color() {
-
-        if (checkNonLegacy(instance.getServer().getVersion()) >= 0 && PlayerCache.hasColorCodes(get(String.class))) {
-            return get(String.class).replaceAll("&#([A-Fa-f0-9]{6})", ChatColor.COLOR_CHAR + "x$1").replace("&", "§");
-        }
-
-        return get(String.class).replace("&", "§");
+        String hex = convertHexColors(get(String.class));
+        return hex.replace("&", "§");
     }
 
-    private int checkNonLegacy(String version) {
-        return version.compareTo("1.16.5");
+    public static String convertHexColors(String str) {
+        Pattern unicode = Pattern.compile("\\\\u\\+[a-fA-F0-9]{4}");
+        Matcher match = unicode.matcher(str);
+        while (match.find()) {
+            String code = str.substring(match.start(),match.end());
+            str = str.replace(code,Character.toString((char) Integer.parseInt(code.replace("\\u+",""),16)));
+            match = unicode.matcher(str);
+        }
+        Pattern pattern = Pattern.compile("&#[a-fA-F0-9]{6}");
+        match = pattern.matcher(str);
+        while (match.find()) {
+            String color = str.substring(match.start(),match.end());
+            str = str.replace(color, net.md_5.bungee.api.ChatColor.of(color.replace("&","")) + "");
+            match = pattern.matcher(str);
+        }
+        return ChatColor.translateAlternateColorCodes('&',str);
     }
 }

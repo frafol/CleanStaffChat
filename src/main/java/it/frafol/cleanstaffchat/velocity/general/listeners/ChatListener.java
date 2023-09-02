@@ -36,6 +36,10 @@ public class ChatListener extends ListenerAdapter {
                 return;
             }
 
+            if (event.getMessage().startsWith("/")) {
+                return;
+            }
+
             VelocityMessages.STAFFCHAT_MUTED_ERROR.send(player,
                     new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
             event.setResult(PlayerChatEvent.ChatResult.denied());

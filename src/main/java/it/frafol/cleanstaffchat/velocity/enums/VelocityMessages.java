@@ -121,32 +121,26 @@ public enum VelocityMessages {
     }
 
     public String color() {
-        String hex = convertHexColors(get(String.class));
-        return hex.replace("&", "§");
+        return convertHexColors(get(String.class));
     }
 
-    private String convertHexColors(String message) {
-
-        if (!ChatUtil.containsHexColor(message)) {
-            return message;
+    public static String convertHexColors(String str) {
+        Pattern unicode = Pattern.compile("\\\\u\\+[a-fA-F0-9]{4}");
+        Matcher match = unicode.matcher(str);
+        while (match.find()) {
+            String code = str.substring(match.start(),match.end());
+            str = str.replace(code,Character.toString((char) Integer.parseInt(code.replace("\\u+",""),16)));
+            match = unicode.matcher(str);
+        }
+        Pattern pattern = Pattern.compile("&#[a-fA-F0-9]{6}");
+        match = pattern.matcher(str);
+        while (match.find()) {
+            String color = str.substring(match.start(),match.end());
+            str = str.replace(color, net.md_5.bungee.api.ChatColor.of(color.replace("&","")) + "");
+            match = pattern.matcher(str);
         }
 
-        Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
-        Matcher matcher = pattern.matcher(message);
-        while (matcher.find()) {
-            String hexCode = message.substring(matcher.start(), matcher.end());
-            String replaceSharp = hexCode.replace('#', 'x');
-
-            char[] ch = replaceSharp.toCharArray();
-            StringBuilder builder = new StringBuilder();
-            for (char c : ch) {
-                builder.append("&").append(c);
-            }
-
-            message = message.replace(hexCode, builder.toString());
-            matcher = pattern.matcher(message);
-        }
-        return ChatUtil.color(message);
+        return str.replace("&", "§");
     }
 
     public void send(CommandSource commandSource, Placeholder... placeholders) {

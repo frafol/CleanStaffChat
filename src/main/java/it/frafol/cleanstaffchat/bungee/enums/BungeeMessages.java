@@ -1,8 +1,10 @@
 package it.frafol.cleanstaffchat.bungee.enums;
 
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
-import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import net.md_5.bungee.api.ChatColor;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public enum BungeeMessages {
 
@@ -112,11 +114,25 @@ public enum BungeeMessages {
     }
 
     public String color() {
+        String hex = convertHexColors(get(String.class));
+        return hex.replace("&", "§");
+    }
 
-        if (PlayerCache.containsHexColor(get(String.class))) {
-            return get(String.class).replaceAll("&#([A-Fa-f0-9]{6})", ChatColor.COLOR_CHAR + "x$1").replace("&", "§");
+    public static String convertHexColors(String str) {
+        Pattern unicode = Pattern.compile("\\\\u\\+[a-fA-F0-9]{4}");
+        Matcher match = unicode.matcher(str);
+        while (match.find()) {
+            String code = str.substring(match.start(),match.end());
+            str = str.replace(code,Character.toString((char) Integer.parseInt(code.replace("\\u+",""),16)));
+            match = unicode.matcher(str);
         }
-
-        return get(String.class).replace("&", "§");
+        Pattern pattern = Pattern.compile("&#[a-fA-F0-9]{6}");
+        match = pattern.matcher(str);
+        while (match.find()) {
+            String color = str.substring(match.start(),match.end());
+            str = str.replace(color,ChatColor.of(color.replace("&","")) + "");
+            match = pattern.matcher(str);
+        }
+        return ChatColor.translateAlternateColorCodes('&',str);
     }
 }

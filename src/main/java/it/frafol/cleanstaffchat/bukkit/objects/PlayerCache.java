@@ -2,11 +2,13 @@ package it.frafol.cleanstaffchat.bukkit.objects;
 
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @UtilityClass
 public class PlayerCache {
@@ -75,17 +77,26 @@ public class PlayerCache {
                 message.contains("&r");
     }
 
-    public boolean containsHexColor(String message) {
-        String hexColorPattern = "(?i)&#[a-f0-9]{6}";
-        return message.matches(".*" + hexColorPattern + ".*");
+    public String color(String string) {
+        String hex = convertHexColors(string);
+        return hex.replace("&", "§");
     }
 
-    public String color(String string) {
-
-        if (containsHexColor(string)) {
-            return string.replaceAll("&#([A-Fa-f0-9]{6})", ChatColor.COLOR_CHAR + "x$1").replace("&", "§");
+    public static String convertHexColors(String str) {
+        Pattern unicode = Pattern.compile("\\\\u\\+[a-fA-F0-9]{4}");
+        Matcher match = unicode.matcher(str);
+        while (match.find()) {
+            String code = str.substring(match.start(),match.end());
+            str = str.replace(code,Character.toString((char) Integer.parseInt(code.replace("\\u+",""),16)));
+            match = unicode.matcher(str);
         }
-
-        return string.replace("&", "§");
+        Pattern pattern = Pattern.compile("&#[a-fA-F0-9]{6}");
+        match = pattern.matcher(str);
+        while (match.find()) {
+            String color = str.substring(match.start(),match.end());
+            str = str.replace(color, net.md_5.bungee.api.ChatColor.of(color.replace("&","")) + "");
+            match = pattern.matcher(str);
+        }
+        return ChatColor.translateAlternateColorCodes('&',str);
     }
 }

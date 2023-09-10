@@ -6,8 +6,8 @@ import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeRedis;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
-import me.TechsCode.UltraPermissions.UltraPermissions;
 import me.TechsCode.UltraPermissions.UltraPermissionsAPI;
+import me.TechsCode.UltraPermissions.bungee.UltraPermissionsBungee;
 import me.TechsCode.UltraPermissions.storage.collection.UserList;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -68,7 +68,7 @@ public class ServerListener implements Listener {
 
                 } else if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {
 
-                    final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
+                    final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissionsBungee.getAPI();
                     final UserList userList = ultraPermissionsAPI.getUsers();
 
                     if (!userList.uuid(event.getPlayer().getUniqueId()).isPresent()) {
@@ -215,7 +215,7 @@ public class ServerListener implements Listener {
 
             } else if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {
 
-                final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
+                final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissionsBungee.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();
 
                 if (!userList.uuid(event.getPlayer().getUniqueId()).isPresent()) {

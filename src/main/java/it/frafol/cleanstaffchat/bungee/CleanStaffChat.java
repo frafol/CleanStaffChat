@@ -345,8 +345,8 @@ public class CleanStaffChat extends Plugin {
 
     private void registerStaffList() {
 
-        if (getProxy().getPluginManager().getPlugin("LuckPerms") == null) {
-            getLogger().warning("You need LuckPermsBungee to use StaffList.");
+        if (getProxy().getPluginManager().getPlugin("LuckPerms") == null && getProxy().getPluginManager().getPlugin("UltraPermissions") == null) {
+            getLogger().warning("You need LuckPerms or UltraPermissions to use StaffList.");
             return;
         }
 

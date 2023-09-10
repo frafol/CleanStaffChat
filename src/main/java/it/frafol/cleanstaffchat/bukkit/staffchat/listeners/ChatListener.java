@@ -364,10 +364,10 @@ public class ChatListener extends ListenerAdapter implements Listener {
         }
 
         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
-                        (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
+                        (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                 .forEach(players -> players.sendMessage(SpigotMessages.DISCORD_STAFF_FORMAT.color()
-                        .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
+                        .replace("%prefix%", SpigotMessages.PREFIX.color())
                         .replace("%user%", event.getAuthor().getName())
                         .replace("%message%", event.getMessage().getContentDisplay())));
     }

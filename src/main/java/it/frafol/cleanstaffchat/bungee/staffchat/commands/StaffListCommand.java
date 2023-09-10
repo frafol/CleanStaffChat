@@ -7,6 +7,8 @@ import it.frafol.cleanstaffchat.bungee.enums.BungeeCommandsConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
+import me.TechsCode.UltraPermissions.UltraPermissionsAPI;
+import me.TechsCode.UltraPermissions.bungee.UltraPermissionsBungee;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
@@ -30,6 +32,149 @@ public class StaffListCommand extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
 
+        if (plugin.getProxy().getPluginManager().getPlugin("LuckPerms") != null) {
+
+            if (!sender.hasPermission(BungeeConfig.STAFFLIST_PERMISSION.get(String.class))) {
+                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
+                        .replace("%prefix%", BungeeMessages.PREFIX.color())));
+                return;
+            }
+
+            if (args.length != 0) {
+                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_USAGE.color()
+                        .replace("%prefix%", BungeeMessages.PREFIX.color())));
+                return;
+            }
+
+            LuckPerms api = LuckPermsProvider.get();
+            String user_prefix;
+            String user_suffix;
+
+            List<UUID> list = Lists.newArrayList();
+            for (ProxiedPlayer players : plugin.getProxy().getPlayers()) {
+
+                if (!players.hasPermission(BungeeConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
+                    continue;
+                }
+
+                if (BungeeConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(BungeeConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
+                    continue;
+                }
+
+                if (plugin.isPremiumVanish() && BungeeVanishAPI.getInvisiblePlayers().contains(players.getUniqueId())) {
+                    continue;
+                }
+
+                list.add(players.getUniqueId());
+            }
+
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_HEADER.color()
+                    .replace("%prefix%", BungeeMessages.PREFIX.color())
+                    .replace("%online%", String.valueOf(list.size()))));
+
+            if (list.isEmpty()) {
+                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_NONE.color()
+                        .replace("%prefix%", BungeeMessages.PREFIX.color())));
+            }
+
+            if (BungeeConfig.SORTING.get(Boolean.class)) {
+                list.sort((o1, o2) -> {
+
+                    User user1 = api.getUserManager().getUser(o1);
+                    User user2 = api.getUserManager().getUser(o2);
+
+                    Group group1 = null;
+                    if (user1 != null) {
+                        group1 = api.getGroupManager().getGroup(user1.getPrimaryGroup());
+                    }
+
+                    Group group2 = null;
+                    if (user2 != null) {
+                        group2 = api.getGroupManager().getGroup(user2.getPrimaryGroup());
+                    }
+
+                    if (group1 == null || group2 == null) {
+                        return 0;
+                    }
+
+                    if (!group1.getWeight().isPresent() || !group2.getWeight().isPresent()) {
+                        return 0;
+                    }
+
+                    return Integer.compare(group1.getWeight().getAsInt(), group2.getWeight().getAsInt());
+                });
+            }
+
+            for (UUID uuids : list) {
+
+                ProxiedPlayer players = plugin.getProxy().getPlayer(uuids);
+                User user = api.getUserManager().getUser(players.getUniqueId());
+
+                if (user == null) {
+                    continue;
+                }
+
+                final String prefix = user.getCachedData().getMetaData().getPrefix();
+                final String suffix = user.getCachedData().getMetaData().getSuffix();
+                Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
+
+                String isAFK = "";
+                if (PlayerCache.getAfk().contains(uuids)) {
+                    isAFK = BungeeMessages.STAFFLIST_AFK.get(String.class);
+                }
+
+                if (group == null || group.getDisplayName() == null) {
+
+                    if (prefix != null) {
+                        user_prefix = prefix;
+                    } else {
+                        user_prefix = "";
+                    }
+
+                    if (suffix != null) {
+                        user_suffix = suffix;
+                    } else {
+                        user_suffix = "";
+                    }
+
+                    if (players.getServer() == null) {
+                        continue;
+                    }
+
+                    sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FORMAT.color()
+                            .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                            .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
+                            .replace("%player%", players.getName())
+                            .replace("%afk%", isAFK)
+                            .replace("%server%", players.getServer().getInfo().getName())
+                            .replace("%prefix%", BungeeMessages.PREFIX.color())));
+
+                    continue;
+                }
+
+                user_prefix = prefix == null ? group.getDisplayName() : prefix;
+                user_suffix = suffix == null ? group.getDisplayName() : suffix;
+
+                if (players.getServer() == null) {
+                    continue;
+                }
+
+                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FORMAT.color()
+                        .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                        .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
+                        .replace("%player%", players.getName())
+                        .replace("%afk%", isAFK)
+                        .replace("%server%", players.getServer().getInfo().getName())
+                        .replace("%prefix%", BungeeMessages.PREFIX.color())));
+
+
+            }
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FOOTER.color()
+                    .replace("%prefix%", BungeeMessages.PREFIX.color())
+                    .replace("%online%", String.valueOf(list.size()))));
+            return;
+        }
+
         if (!sender.hasPermission(BungeeConfig.STAFFLIST_PERMISSION.get(String.class))) {
             sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
@@ -42,7 +187,7 @@ public class StaffListCommand extends Command {
             return;
         }
 
-        LuckPerms api = LuckPermsProvider.get();
+        UltraPermissionsAPI api = UltraPermissionsBungee.getAPI();
         String user_prefix;
         String user_suffix;
 
@@ -58,11 +203,10 @@ public class StaffListCommand extends Command {
             }
 
             if (plugin.isPremiumVanish() && BungeeVanishAPI.getInvisiblePlayers().contains(players.getUniqueId())) {
-               continue;
+                continue;
             }
 
             list.add(players.getUniqueId());
-
         }
 
         sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_HEADER.color()
@@ -77,62 +221,60 @@ public class StaffListCommand extends Command {
         if (BungeeConfig.SORTING.get(Boolean.class)) {
             list.sort((o1, o2) -> {
 
-                User user1 = api.getUserManager().getUser(o1);
-                User user2 = api.getUserManager().getUser(o2);
-
-                Group group1 = null;
-                if (user1 != null) {
-                    group1 = api.getGroupManager().getGroup(user1.getPrimaryGroup());
+                if (!api.getUsers().uuid(o1).isPresent()) {
+                    return 0;
                 }
 
-                Group group2 = null;
-                if (user2 != null) {
-                    group2 = api.getGroupManager().getGroup(user2.getPrimaryGroup());
+                if (!api.getUsers().uuid(o2).isPresent()) {
+                    return 0;
                 }
+
+                me.TechsCode.UltraPermissions.storage.objects.User user1 = api.getUsers().uuid(o1).get();
+                me.TechsCode.UltraPermissions.storage.objects.User user2 = api.getUsers().uuid(o2).get();
+
+                me.TechsCode.UltraPermissions.storage.objects.Group group1 = user1.getActiveGroups().bestToWorst().get(1);
+                me.TechsCode.UltraPermissions.storage.objects.Group group2 = user2.getActiveGroups().bestToWorst().get(1);
 
                 if (group1 == null || group2 == null) {
                     return 0;
                 }
 
-                if (!group1.getWeight().isPresent() || !group2.getWeight().isPresent()) {
-                    return 0;
-                }
-
-                return Integer.compare(group1.getWeight().getAsInt(), group2.getWeight().getAsInt());
+                return Integer.compare(group1.getPriority(), group2.getPriority());
             });
         }
 
         for (UUID uuids : list) {
 
             ProxiedPlayer players = plugin.getProxy().getPlayer(uuids);
-            User user = api.getUserManager().getUser(players.getUniqueId());
 
-            if (user == null) {
+            if (!api.getUsers().uuid(players.getUniqueId()).isPresent()) {
                 continue;
             }
 
-            final String prefix = user.getCachedData().getMetaData().getPrefix();
-            final String suffix = user.getCachedData().getMetaData().getSuffix();
-            Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
+            me.TechsCode.UltraPermissions.storage.objects.User user = api.getUsers().uuid(players.getUniqueId()).get();
+
+            String prefix = "";
+            String suffix = "";
+
+            if (user.getPrefix().isPresent()) {
+                prefix = user.getPrefix().get();
+            }
+
+            if (user.getSuffix().isPresent()) {
+                suffix = user.getSuffix().get();
+            }
+
+            me.TechsCode.UltraPermissions.storage.objects.Group group = user.getActiveGroups().bestToWorst().get(1);
 
             String isAFK = "";
             if (PlayerCache.getAfk().contains(uuids)) {
                 isAFK = BungeeMessages.STAFFLIST_AFK.get(String.class);
             }
 
-            if (group == null || group.getDisplayName() == null) {
+            if (group == null || group.getName() == null) {
 
-                if (prefix != null) {
-                    user_prefix = prefix;
-                } else {
-                    user_prefix = "";
-                }
-
-                if (suffix != null) {
-                    user_suffix = suffix;
-                } else {
-                    user_suffix = "";
-                }
+                user_prefix = prefix;
+                user_suffix = suffix;
 
                 if (players.getServer() == null) {
                     continue;
@@ -149,8 +291,8 @@ public class StaffListCommand extends Command {
                 continue;
             }
 
-            user_prefix = prefix == null ? group.getDisplayName() : prefix;
-            user_suffix = suffix == null ? group.getDisplayName() : suffix;
+            user_prefix = prefix;
+            user_suffix = suffix;
 
             if (players.getServer() == null) {
                 continue;
@@ -166,6 +308,7 @@ public class StaffListCommand extends Command {
 
 
         }
+
         sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FOOTER.color()
                 .replace("%prefix%", BungeeMessages.PREFIX.color())
                 .replace("%online%", String.valueOf(list.size()))));

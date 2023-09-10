@@ -4,8 +4,8 @@ import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.*;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
-import me.TechsCode.UltraPermissions.UltraPermissions;
 import me.TechsCode.UltraPermissions.UltraPermissionsAPI;
+import me.TechsCode.UltraPermissions.bungee.UltraPermissionsBungee;
 import me.TechsCode.UltraPermissions.storage.collection.UserList;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -159,7 +159,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
             } else if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {
 
-                final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
+                final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissionsBungee.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();
 
                 if (!userList.uuid(((ProxiedPlayer) event.getSender()).getUniqueId()).isPresent()) {

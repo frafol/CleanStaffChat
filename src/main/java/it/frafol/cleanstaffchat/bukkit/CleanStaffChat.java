@@ -298,8 +298,8 @@ public class CleanStaffChat extends JavaPlugin {
     @SneakyThrows
     private void registerStaffListCommands() {
         
-        if (getServer().getPluginManager().getPlugin("LuckPerms") == null) {
-            getLogger().warning("You need LuckPerms to use the StaffList.");
+        if (getServer().getPluginManager().getPlugin("LuckPerms") == null && getServer().getPluginManager().getPlugin("UltraPermissions") == null) {
+            getLogger().warning("You need LuckPerms or UltraPermissions to use the StaffList.");
             return;
         }
 

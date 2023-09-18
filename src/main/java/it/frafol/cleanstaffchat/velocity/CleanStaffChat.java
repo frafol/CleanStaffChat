@@ -46,8 +46,8 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.13.2",
-        dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true)},
+        version = "1.13.3",
+        dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true), @Dependency(id = "spicord", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
 )
@@ -77,7 +77,6 @@ public class CleanStaffChat {
         this.logger = logger;
         this.path = path;
         this.metricsFactory = metricsFactory;
-
     }
 
     @Inject
@@ -107,8 +106,8 @@ public class CleanStaffChat {
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.0.0-beta.12")
-                .url("https://github.com/discord-jda/JDA/releases/download/v5.0.0-beta.12/JDA-5.0.0-beta.12-withDependencies-min.jar")
+                .version("5.0.0-beta.13")
+                .url("https://github.com/discord-jda/JDA/releases/download/v5.0.0-beta.13/JDA-5.0.0-beta.13-withDependencies-min.jar")
                 .relocate(kotlin)
                 .build();
 
@@ -129,7 +128,12 @@ public class CleanStaffChat {
 
         velocityLibraryManager.loadLibrary(yaml);
         velocityLibraryManager.loadLibrary(updater);
-        velocityLibraryManager.loadLibrary(discord);
+
+        try {
+            Class.forName("net.dv8tion.jda.api.entities.Member");
+        } catch (ClassNotFoundException ignored) {
+            velocityLibraryManager.loadLibrary(discord);
+        }
 
         getLogger().info("\n§d  ___  __    ____    __    _  _    ___   ___ \n" +
                 " / __)(  )  ( ___)  /__\\  ( \\( )  / __) / __)\n" +

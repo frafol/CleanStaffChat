@@ -71,14 +71,19 @@ public class CleanStaffChat extends JavaPlugin {
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.0.0-beta.12")
+                .version("5.0.0-beta.13")
                 .relocate(kotlin)
-                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.12/JDA-5.0.0-beta.12-withDependencies-min.jar")
+                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.13/JDA-5.0.0-beta.13-withDependencies-min.jar")
                 .build();
 
         bukkitLibraryManager.addMavenCentral();
         bukkitLibraryManager.addJitPack();
-        bukkitLibraryManager.loadLibrary(discord);
+
+        try {
+            Class.forName("net.dv8tion.jda.api.entities.Member");
+        } catch (ClassNotFoundException ignored) {
+            bukkitLibraryManager.loadLibrary(discord);
+        }
 
         try {
             bukkitLibraryManager.loadLibrary(yaml);

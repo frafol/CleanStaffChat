@@ -6,7 +6,7 @@
 
     <groupId>it.frafol</groupId>
     <artifactId>cleanstaffchat</artifactId>
-    <version>1.13.2</version>
+    <version>1.13.3</version>
     <packaging>jar</packaging>
 
     <name>CleanStaffChat</name>
@@ -125,7 +125,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>5.0.0-beta.12</version>
+            <version>5.0.0-beta.13</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

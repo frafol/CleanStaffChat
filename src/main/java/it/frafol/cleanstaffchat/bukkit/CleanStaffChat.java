@@ -60,20 +60,31 @@ public class CleanStaffChat extends JavaPlugin {
 
         BukkitLibraryManager bukkitLibraryManager = new BukkitLibraryManager(this);
 
+        final Relocation yamlrelocation = new Relocation("simpleyaml", "it{}frafol{}libs{}simpleyaml");
         Library yaml;
         yaml = Library.builder()
                 .groupId("me{}carleslc{}Simple-YAML")
                 .artifactId("Simple-Yaml")
                 .version("1.8.4")
+                .relocate(yamlrelocation)
                 .build();
 
-        final Relocation kotlin = new Relocation("kotlin", "it{}frafol{}libs{}kotlin");
+        final Relocation updaterrelocation = new Relocation("updater", "it{}frafol{}libs{}updater");
+        Library updater = Library.builder()
+                .groupId("com{}tchristofferson")
+                .artifactId("ConfigUpdater")
+                .version("2.1-SNAPSHOT")
+                .relocate(updaterrelocation)
+                .url("https://github.com/frafol/Config-Updater/releases/download/compile/ConfigUpdater-2.1-SNAPSHOT.jar")
+                .build();
+
+        final Relocation discordrelocation = new Relocation("discord", "it{}frafol{}libs{}discord");
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.0.0-beta.13")
-                .relocate(kotlin)
-                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.13/JDA-5.0.0-beta.13-withDependencies-min.jar")
+                .version("5.0.0-beta.15")
+                .relocate(discordrelocation)
+                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.15/JDA-5.0.0-beta.15-withDependencies-min.jar")
                 .build();
 
         bukkitLibraryManager.addMavenCentral();
@@ -94,10 +105,12 @@ public class CleanStaffChat extends JavaPlugin {
                     .artifactId("Simple-Yaml")
                     .version("1.8.4")
                     .url("https://github.com/Carleslc/Simple-YAML/releases/download/1.8.4/Simple-Yaml-1.8.4.jar")
+                    .relocate(yamlrelocation)
                     .build();
         }
 
         bukkitLibraryManager.loadLibrary(yaml);
+        bukkitLibraryManager.loadLibrary(updater);
 
         getLogger().info("\n  ___  __    ____    __    _  _    ___   ___ \n" +
                 " / __)(  )  ( ___)  /__\\  ( \\( )  / __) / __)\n" +

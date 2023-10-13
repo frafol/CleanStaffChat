@@ -63,25 +63,29 @@ public class CleanStaffChat extends Plugin {
         BungeeLibraryManager bungeeLibraryManager = new BungeeLibraryManager(this);
 
         Library yaml;
+        final Relocation yamlrelocation = new Relocation("simpleyaml", "it{}frafol{}libs{}simpleyaml");
         yaml = Library.builder()
                 .groupId("me{}carleslc{}Simple-YAML")
                 .artifactId("Simple-Yaml")
                 .version("1.8.4")
+                .relocate(yamlrelocation)
                 .build();
 
+        final Relocation updaterrelocation = new Relocation("updater", "it{}frafol{}libs{}updater");
         Library updater = Library.builder()
                 .groupId("ru{}vyarus")
                 .artifactId("yaml-config-updater")
                 .version("1.4.2")
+                .relocate(updaterrelocation)
                 .build();
 
-        final Relocation kotlin = new Relocation("kotlin", "it{}frafol{}libs{}kotlin");
+        final Relocation discordrelocation = new Relocation("discord", "it{}frafol{}libs{}discord");
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.0.0-beta.13")
-                .relocate(kotlin)
-                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.13/JDA-5.0.0-beta.13-withDependencies-min.jar")
+                .version("5.0.0-beta.15")
+                .relocate(discordrelocation)
+                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.15/JDA-5.0.0-beta.15-withDependencies-min.jar")
                 .build();
 
         bungeeLibraryManager.addMavenCentral();
@@ -103,6 +107,7 @@ public class CleanStaffChat extends Plugin {
                     .artifactId("Simple-Yaml")
                     .version("1.8.4")
                     .url("https://github.com/Carleslc/Simple-YAML/releases/download/1.8.4/Simple-Yaml-1.8.4.jar")
+                    .relocate(yamlrelocation)
                     .build();
         }
 

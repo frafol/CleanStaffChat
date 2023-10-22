@@ -271,7 +271,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
         if (!SpigotConfig.COOLDOWN_BYPASS_DISCORD.get(Boolean.class)) {
             PlayerCache.getCooldown_discord().add(event.getAuthor().getId());
             TaskScheduler scheduler = UniversalScheduler.getScheduler(PLUGIN);
-            scheduler.runTaskLaterAsynchronously(() -> PlayerCache.getCooldown_discord().remove(event.getAuthor().getId()), 5L * 20L);
+            scheduler.runTaskLaterAsynchronously(() -> PlayerCache.getCooldown_discord().remove(event.getAuthor().getId()), SpigotConfig.DONOR_TIMER.get(Integer.class) * 20L);
         }
     }
 }

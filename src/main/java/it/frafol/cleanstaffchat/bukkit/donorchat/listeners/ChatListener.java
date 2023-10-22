@@ -21,7 +21,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -98,20 +97,10 @@ public class ChatListener extends ListenerAdapter implements Listener {
             }
 
             if (event.getPlayer().hasPermission(SpigotConfig.COOLDOWN_BYPASS_PERMISSION.get(String.class))) {
-
                 PlayerCache.getCooldown().add(event.getPlayer().getUniqueId());
-
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-
-                        PlayerCache.getCooldown().remove(event.getPlayer().getUniqueId());
-                        cancel();
-
-                    }
-
-                }.runTaskTimer(PLUGIN, Math.multiplyExact(SpigotConfig.DONOR_TIMER.get(Integer.class), 20), 1);
-
+                TaskScheduler scheduler = UniversalScheduler.getScheduler(PLUGIN);
+                scheduler.runTaskLaterAsynchronously(() ->
+                        PlayerCache.getCooldown().remove(event.getPlayer().getUniqueId()), SpigotConfig.DONOR_TIMER.get(Integer.class) * 20L);
             }
 
             if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {

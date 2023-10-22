@@ -1,5 +1,7 @@
 package it.frafol.cleanstaffchat.bukkit;
 
+import com.github.Anon8281.universalScheduler.UniversalScheduler;
+import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import it.frafol.cleanstaffchat.bukkit.enums.*;
 import it.frafol.cleanstaffchat.bukkit.objects.TextFile;
@@ -163,7 +165,6 @@ public class CleanStaffChat extends JavaPlugin {
 
             versionTextFile.getConfig().set("version", getDescription().getVersion());
             versionTextFile.getConfig().save();
-
         }
 
         configTextFile = new TextFile(getDataFolder().toPath(), "config.yml");
@@ -466,7 +467,8 @@ public class CleanStaffChat extends JavaPlugin {
     }
 
     private void updateJDATask() {
-        getServer().getScheduler().runTaskTimerAsynchronously(this, this::updateJDA, 1, 20 * 30);
+        TaskScheduler scheduler = UniversalScheduler.getScheduler(this);
+        scheduler.runTaskTimerAsynchronously(this::updateJDA, 1, 20 * 30);
     }
 
     public void updateJDA() {

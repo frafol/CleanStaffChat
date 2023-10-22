@@ -87,6 +87,15 @@ public class CleanStaffChat extends JavaPlugin {
                 .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.15/JDA-5.0.0-beta.15-withDependencies-min.jar")
                 .build();
 
+        final Relocation schedulerrelocation = new Relocation("scheduler", "it{}frafol{}libs{}scheduler");
+        Library scheduler;
+        scheduler = Library.builder()
+                .groupId("com{}github{}Anon8281")
+                .artifactId("UniversalScheduler")
+                .version("0.1.6")
+                .relocate(schedulerrelocation)
+                .build();
+
         bukkitLibraryManager.addMavenCentral();
         bukkitLibraryManager.addJitPack();
 
@@ -111,6 +120,7 @@ public class CleanStaffChat extends JavaPlugin {
 
         bukkitLibraryManager.loadLibrary(yaml);
         bukkitLibraryManager.loadLibrary(updater);
+        bukkitLibraryManager.loadLibrary(scheduler);
 
         getLogger().info("\n  ___  __    ____    __    _  _    ___   ___ \n" +
                 " / __)(  )  ( ___)  /__\\  ( \\( )  / __) / __)\n" +

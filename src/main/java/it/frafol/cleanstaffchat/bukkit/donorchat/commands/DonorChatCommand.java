@@ -1,5 +1,7 @@
 package it.frafol.cleanstaffchat.bukkit.donorchat.commands;
 
+import com.github.Anon8281.universalScheduler.UniversalScheduler;
+import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
@@ -23,8 +25,6 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 public class DonorChatCommand extends CommandBase {
 
@@ -48,12 +48,9 @@ public class DonorChatCommand extends CommandBase {
                 if (!PlayerCache.getToggled_2_donor().contains(player.getUniqueId())) {
 
                     if (!(SpigotConfig.DONORCHAT_TALK_MODULE.get(Boolean.class))) {
-
                         sender.sendMessage((SpigotMessages.DONORARGUMENTS.color()
                                 .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
-
                         return false;
-
                     }
 
                     if (!PlayerCache.getMuted().contains("true")) {
@@ -77,28 +74,21 @@ public class DonorChatCommand extends CommandBase {
                     return false;
 
                 } else if (PlayerCache.getToggled_2_donor().contains(player.getUniqueId())) {
-
                     PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
-
                     sender.sendMessage((SpigotMessages.DONORCHAT_TALK_DISABLED.color()
                             .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
 
                     return false;
-
                 }
 
             } else {
-
                 if (SpigotConfig.HIDE_ADVERTS.get(Boolean.class) != null && !SpigotConfig.HIDE_ADVERTS.get(Boolean.class)) {
                     sender.sendMessage(("§7This server is using §dCleanStaffChat §7by §dfrafol§7."));
                 }
-
                 return false;
-
             }
 
             return false;
-
         }
 
         String message = String.join(" ", Arrays.copyOfRange(args, 0, args.length));
@@ -112,25 +102,22 @@ public class DonorChatCommand extends CommandBase {
 
                 if (sender instanceof Player) {
 
-                    if (SpigotConfig.PREVENT_COLOR_CODES.get(Boolean.class)) {
-                        if (PlayerCache.hasColorCodes(message)) {
-
-                            sender.sendMessage(SpigotMessages.COLOR_CODES.color()
-                                    .replace("%prefix%", SpigotMessages.DONORPREFIX.color())
-                                    .replace("&", "§"));
-
-                            return false;
-
-                        }
+                    if (!SpigotConfig.PREVENT_COLOR_CODES.get(Boolean.class)) {
+                        return false;
                     }
 
-                    if (PlayerCache.getCooldown().contains(((Player) sender).getUniqueId())) {
+                    if (PlayerCache.hasColorCodes(message)) {
+                        sender.sendMessage(SpigotMessages.COLOR_CODES.color()
+                                .replace("%prefix%", SpigotMessages.DONORPREFIX.color())
+                                .replace("&", "§"));
+                        return false;
+                    }
 
+
+                    if (PlayerCache.getCooldown().contains(((Player) sender).getUniqueId())) {
                         sender.sendMessage(SpigotMessages.DONORCHAT_COOLDOWN_MESSAGE.color()
                                 .replace("%prefix%", SpigotMessages.DONORPREFIX.color()));
-
                         return false;
-
                     }
 
                     if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
@@ -138,9 +125,11 @@ public class DonorChatCommand extends CommandBase {
                         LuckPerms api = LuckPermsProvider.get();
 
                         User user = api.getUserManager().getUser(((Player) sender).getUniqueId());
+
                         if (user == null) {
                             return false;
                         }
+
                         final String prefix = user.getCachedData().getMetaData().getPrefix();
                         final String suffix = user.getCachedData().getMetaData().getSuffix();
                         final String user_prefix = prefix == null ? "" : prefix;
@@ -228,24 +217,19 @@ public class DonorChatCommand extends CommandBase {
                             channel.sendMessageEmbeds(embed.build()).queue();
 
                         } else {
-
                             channel.sendMessageFormat(SpigotMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                                             .replace("%user%", commandsender)
                                             .replace("%message%", message)
                                             .replace("%server%", ""))
                                     .queue();
-
                         }
                     }
 
                     if (!sender.hasPermission(SpigotConfig.COOLDOWN_BYPASS_PERMISSION.get(String.class))) {
-
                         PlayerCache.getCooldown().add(((Player) sender).getUniqueId());
-
-                        ScheduledThreadPoolExecutor service = new ScheduledThreadPoolExecutor(1);
-                        service.schedule(() -> {
-                            PlayerCache.getCooldown().remove(((Player) sender).getUniqueId());
-                        }, SpigotConfig.DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS);
+                        TaskScheduler scheduler = UniversalScheduler.getScheduler(plugin);
+                        scheduler.runTaskLaterAsynchronously(() ->
+                                PlayerCache.getCooldown().remove(((Player) sender).getUniqueId()), SpigotConfig.DONOR_TIMER.get(Integer.class) * 20L);
                     }
 
                 } else if (SpigotConfig.CONSOLE_CAN_TALK.get(Boolean.class)) {
@@ -265,12 +249,9 @@ public class DonorChatCommand extends CommandBase {
                                         .replace("%message%", message))));
 
                     } else {
-
                         sender.sendMessage((SpigotMessages.DONORCHAT_MUTED_ERROR.color()
                                 .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
-
                         return false;
-
                     }
 
                     sender.sendMessage((SpigotMessages.DONORCHAT_FORMAT.color()
@@ -307,44 +288,33 @@ public class DonorChatCommand extends CommandBase {
                             channel.sendMessageEmbeds(embed.build()).queue();
 
                         } else {
-
                             channel.sendMessageFormat(SpigotMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                                             .replace("%user%", commandsender)
                                             .replace("%message%", message)
                                             .replace("%server%", ""))
                                     .queue();
-
                         }
                     }
 
                     return false;
 
                 } else {
-
                     sender.sendMessage((SpigotMessages.PLAYER_ONLY.color()
                             .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
-
                 }
 
                 return false;
-
             } else {
-
                 sender.sendMessage((SpigotMessages.DONORCHAT_MUTED_ERROR.color()
                         .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
-
             }
 
             return false;
-
         } else {
-
             sender.sendMessage((SpigotMessages.NO_PERMISSION.color()
                     .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
-
         }
 
         return false;
-
     }
 }

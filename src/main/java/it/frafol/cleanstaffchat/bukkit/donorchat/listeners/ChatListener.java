@@ -1,5 +1,7 @@
 package it.frafol.cleanstaffchat.bukkit.donorchat.listeners;
 
+import com.github.Anon8281.universalScheduler.UniversalScheduler;
+import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
@@ -24,8 +26,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Optional;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 public class ChatListener extends ListenerAdapter implements Listener {
 
@@ -211,13 +211,11 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 channel.sendMessageEmbeds(embed.build()).queue();
 
             } else {
-
                 channel.sendMessageFormat(SpigotMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                                 .replace("%user%", event.getPlayer().getName())
                                 .replace("%message%", message)
                                 .replace("%server%", ""))
                         .queue();
-
             }
             event.setCancelled(true);
         } else {
@@ -237,44 +235,28 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
         if (event.getMessage().getContentDisplay().equalsIgnoreCase(SpigotMessages.DONORCHAT_COOLDOWN_ERROR_DISCORD.get(String.class))
                 || event.getMessage().getContentDisplay().equalsIgnoreCase(SpigotMessages.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class))) {
-
-            ScheduledThreadPoolExecutor service = new ScheduledThreadPoolExecutor(1);
-            service.schedule(() -> event.getMessage().delete().queue(), 5, TimeUnit.SECONDS);
-            service.shutdown();
-
+            TaskScheduler scheduler = UniversalScheduler.getScheduler(PLUGIN);
+            scheduler.runTaskLaterAsynchronously(() -> event.getMessage().delete().queue(), 5L * 20L);
             return;
-
         }
 
         if (event.getAuthor().isBot()) {
-
             return;
-
         }
 
         if (PlayerCache.getMuted_donor().contains("true")) {
-
             event.getMessage().reply(SpigotMessages.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class)).queue();
-
-            ScheduledThreadPoolExecutor service = new ScheduledThreadPoolExecutor(1);
-            service.schedule(() -> event.getMessage().delete().queue(), 5, TimeUnit.SECONDS);
-            service.shutdown();
-
+            TaskScheduler scheduler = UniversalScheduler.getScheduler(PLUGIN);
+            scheduler.runTaskLaterAsynchronously(() -> event.getMessage().delete().queue(), 5L * 20L);
             return;
-
         }
 
         if (PlayerCache.getCooldown_discord().contains(event.getAuthor().getId())
                 && (!SpigotConfig.COOLDOWN_BYPASS_DISCORD.get(Boolean.class))) {
-
             event.getMessage().reply(SpigotMessages.DONORCHAT_COOLDOWN_ERROR_DISCORD.get(String.class)).queue();
-
-            ScheduledThreadPoolExecutor service = new ScheduledThreadPoolExecutor(1);
-            service.schedule(() -> event.getMessage().delete().queue(), 5, TimeUnit.SECONDS);
-            service.shutdown();
-
+            TaskScheduler scheduler = UniversalScheduler.getScheduler(PLUGIN);
+            scheduler.runTaskLaterAsynchronously(() -> event.getMessage().delete().queue(), 5L * 20L);
             return;
-
         }
 
         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
@@ -287,20 +269,9 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         .replace("&", "§"))));
 
         if (!SpigotConfig.COOLDOWN_BYPASS_DISCORD.get(Boolean.class)) {
-
             PlayerCache.getCooldown_discord().add(event.getAuthor().getId());
-
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-
-                    PlayerCache.getCooldown_discord().remove(event.getAuthor().getId());
-                    cancel();
-
-                }
-
-            }.runTaskTimer(PLUGIN, Math.multiplyExact(SpigotConfig.DONOR_TIMER.get(Integer.class), 20), 1);
-
+            TaskScheduler scheduler = UniversalScheduler.getScheduler(PLUGIN);
+            scheduler.runTaskLaterAsynchronously(() -> PlayerCache.getCooldown_discord().remove(event.getAuthor().getId()), 5L * 20L);
         }
     }
 }

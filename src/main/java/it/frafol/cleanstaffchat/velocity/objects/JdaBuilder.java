@@ -24,7 +24,7 @@ public class JdaBuilder {
     public void startJDA() {
         try {
             jda = JDABuilder.createDefault(VelocityDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception ignored) {
             System.out.println("§cInvalid Discord configuration, please check your discord.yml file.");
         }
     }

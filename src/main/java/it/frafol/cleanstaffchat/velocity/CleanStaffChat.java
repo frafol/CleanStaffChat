@@ -47,7 +47,7 @@ import java.util.concurrent.TimeUnit;
         id = "cleanstaffchat",
         name = "CleanStaffChat",
         version = "1.13.4",
-        dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true), @Dependency(id = "spicord", optional = true)},
+        dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true), @Dependency(id = "spicord", optional = true), @Dependency(id = "leaf", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
 )
@@ -106,7 +106,7 @@ public class CleanStaffChat {
                 .relocate(updaterrelocation)
                 .build();
 
-        final Relocation discordrelocation = new Relocation("discord", "it{}frafol{}libs{}discord");
+        final Relocation discordrelocation = new Relocation("kotlin", "it{}frafol{}libs{}kotlin");
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")

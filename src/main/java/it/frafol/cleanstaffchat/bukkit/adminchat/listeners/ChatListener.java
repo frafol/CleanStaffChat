@@ -1,5 +1,7 @@
 package it.frafol.cleanstaffchat.bukkit.adminchat.listeners;
 
+import com.github.Anon8281.universalScheduler.UniversalScheduler;
+import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
@@ -23,8 +25,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Optional;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 public class ChatListener extends ListenerAdapter implements Listener {
 
@@ -203,9 +203,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
         }
 
         if (event.getMessage().getContentDisplay().equalsIgnoreCase(SpigotMessages.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class))) {
-            ScheduledThreadPoolExecutor service = new ScheduledThreadPoolExecutor(1);
-            service.schedule(() -> event.getMessage().delete().queue(), 5, TimeUnit.SECONDS);
-            service.shutdown();
+            TaskScheduler scheduler = UniversalScheduler.getScheduler(PLUGIN);
+            scheduler.runTaskLaterAsynchronously(() -> event.getMessage().delete().queue(), 5L * 20L);
             return;
         }
 
@@ -214,13 +213,10 @@ public class ChatListener extends ListenerAdapter implements Listener {
         }
 
         if (PlayerCache.getMuted_admin().contains("true")) {
-
             event.getMessage().reply(SpigotMessages.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class)).queue();
-            ScheduledThreadPoolExecutor service = new ScheduledThreadPoolExecutor(1);
-            service.schedule(() -> event.getMessage().delete().queue(), 5, TimeUnit.SECONDS);
-            service.shutdown();
+            TaskScheduler scheduler = UniversalScheduler.getScheduler(PLUGIN);
+            scheduler.runTaskLaterAsynchronously(() -> event.getMessage().delete().queue(), 5L * 20L);
             return;
-
         }
 
         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter

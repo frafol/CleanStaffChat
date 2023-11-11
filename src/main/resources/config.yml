@@ -98,7 +98,6 @@ modules:
   stats: true
 
   # SuperVanish support is only for the Bukkit version.
-  # PremiumVanish support is only for the Bukkit/BungeeCord, Velocity is not supported by PremiumVanish.
   premiumvanish_hook: true
   supervanish_hook: true
 

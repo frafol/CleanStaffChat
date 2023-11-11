@@ -21,6 +21,7 @@ import it.frafol.cleanstaffchat.velocity.staffchat.commands.*;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.ChatListener;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.JoinListener;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.ServerListener;
+import it.frafol.cleanstaffchat.velocity.utils.VanishUtil;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.byteflux.libby.Library;
@@ -46,7 +47,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.13.4",
+        version = "1.13.5",
         dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true), @Dependency(id = "spicord", optional = true), @Dependency(id = "leaf", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
@@ -201,6 +202,10 @@ public class CleanStaffChat {
         if (VelocityRedis.REDIS_ENABLE.get(Boolean.class) && getRedisBungee()) {
             registerRedisBungee();
             getLogger().info("§7Hooked into RedisBungee §dsuccessfully§7!");
+        }
+
+        if (isPremiumVanish()) {
+            getLogger().info("Hooked into PremiumVanish successfully!");
         }
 
         if (VelocityConfig.STATS.get(Boolean.class)) {
@@ -516,11 +521,18 @@ public class CleanStaffChat {
             return;
         }
 
+        if (isPremiumVanish()) {
+            jda.getJda().getPresence().setActivity(net.dv8tion.jda.api.entities.Activity.of(net.dv8tion.jda.api.entities.Activity.ActivityType.valueOf
+                            (VelocityDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
+                    VelocityDiscordConfig.DISCORD_ACTIVITY.get(String.class)
+                            .replace("%players%", String.valueOf(server.getAllPlayers().size() - VanishUtil.getVanishedPlayers().size()))));
+            return;
+        }
+
         jda.getJda().getPresence().setActivity(net.dv8tion.jda.api.entities.Activity.of(net.dv8tion.jda.api.entities.Activity.ActivityType.valueOf
                         (VelocityDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
                 VelocityDiscordConfig.DISCORD_ACTIVITY.get(String.class)
                         .replace("%players%", String.valueOf(server.getAllPlayers().size()))));
-
     }
 
     public void autoUpdate() {
@@ -555,6 +567,12 @@ public class CleanStaffChat {
         }
     }
 
+    public boolean isPremiumVanish() {
+        if (VelocityConfig.PREMIUMVANISH.get(Boolean.class)) {
+            return getServer().getPluginManager().isLoaded("premiumvanish");
+        }
+        return false;
+    }
 
     public boolean getRedisBungee() {
         return getServer().getPluginManager().isLoaded("redisbungee");

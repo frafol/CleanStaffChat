@@ -10,6 +10,7 @@ import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
+import it.frafol.cleanstaffchat.velocity.utils.VanishUtil;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
@@ -57,6 +58,10 @@ public class StaffListCommand implements SimpleCommand {
             }
 
             if (VelocityConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(VelocityConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
+                continue;
+            }
+
+            if (PLUGIN.isPremiumVanish() && VanishUtil.isVanished(players)) {
                 continue;
             }
 

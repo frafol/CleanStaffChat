@@ -47,7 +47,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.13.5",
+        version = "1.13.6",
         dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true), @Dependency(id = "spicord", optional = true), @Dependency(id = "leaf", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
@@ -170,6 +170,8 @@ public class CleanStaffChat {
                 .metaBuilder("scdebug")
                 .aliases("staffchatdebug", "staffdebug", "cleanscdebug", "cleanstaffchatdebug")
                 .build(), new DebugCommand(this));
+
+        server.getEventManager().register(this, new DebugCommand(this));
 
         if (VelocityConfig.STAFFLIST_MODULE.get(Boolean.class)) {
             registerStaffList();
@@ -354,7 +356,6 @@ public class CleanStaffChat {
         redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteStaffChat-RedisBungee");
         redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteAdminChat-RedisBungee");
         redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteDonorChat-RedisBungee");
-
     }
 
     @SneakyThrows
@@ -365,48 +366,56 @@ public class CleanStaffChat {
             return;
         }
 
+        if (VelocityCommandsConfig.STAFFLIST.getStringList() == null) {
+            return;
+        }
+
         final String[] aliases_stafflist = VelocityCommandsConfig.STAFFLIST.getStringList().toArray(new String[0]);
 
         server.getCommandManager().register(server.getCommandManager()
                 .metaBuilder(VelocityCommandsConfig.STAFFLIST.getStringList().get(0))
                 .aliases(aliases_stafflist)
                 .build(), new StaffListCommand(this));
-
     }
 
     @SneakyThrows
     private void registerStaffChat() {
 
-        final String[] aliases_staffchat = VelocityCommandsConfig.STAFFCHAT.getStringList().toArray(new String[0]);
+        if (VelocityCommandsConfig.STAFFCHAT.getStringList() != null) {
+            final String[] aliases_staffchat = VelocityCommandsConfig.STAFFCHAT.getStringList().toArray(new String[0]);
 
-        server.getCommandManager().register(server.getCommandManager()
-                .metaBuilder(VelocityCommandsConfig.STAFFCHAT.getStringList().get(0))
-                .aliases(aliases_staffchat)
-                .build(), new StaffChatCommand(this));
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder(VelocityCommandsConfig.STAFFCHAT.getStringList().get(0))
+                    .aliases(aliases_staffchat)
+                    .build(), new StaffChatCommand(this));
+        }
 
+        if (VelocityCommandsConfig.STAFFCHAT_MUTE.getStringList() != null) {
+            final String[] aliases_staffchatmute = VelocityCommandsConfig.STAFFCHAT_MUTE.getStringList().toArray(new String[0]);
 
-        final String[] aliases_staffchatmute = VelocityCommandsConfig.STAFFCHAT_MUTE.getStringList().toArray(new String[0]);
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder(VelocityCommandsConfig.STAFFCHAT_MUTE.getStringList().get(0))
+                    .aliases(aliases_staffchatmute)
+                    .build(), new MuteCommand(this));
+        }
 
-        server.getCommandManager().register(server.getCommandManager()
-                .metaBuilder(VelocityCommandsConfig.STAFFCHAT_MUTE.getStringList().get(0))
-                .aliases(aliases_staffchatmute)
-                .build(), new MuteCommand(this));
+        if (VelocityCommandsConfig.STAFFCHAT_TOGGLE.getStringList() != null) {
+            final String[] aliases_staffchattoggle = VelocityCommandsConfig.STAFFCHAT_TOGGLE.getStringList().toArray(new String[0]);
 
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder(VelocityCommandsConfig.STAFFCHAT_TOGGLE.getStringList().get(0))
+                    .aliases(aliases_staffchattoggle)
+                    .build(), new ToggleCommand(this));
+        }
 
-        final String[] aliases_staffchattoggle = VelocityCommandsConfig.STAFFCHAT_TOGGLE.getStringList().toArray(new String[0]);
+        if (VelocityCommandsConfig.STAFFCHAT_AFK.getStringList() != null) {
+            final String[] aliases_staffchatafk = VelocityCommandsConfig.STAFFCHAT_AFK.getStringList().toArray(new String[0]);
 
-        server.getCommandManager().register(server.getCommandManager()
-                .metaBuilder(VelocityCommandsConfig.STAFFCHAT_TOGGLE.getStringList().get(0))
-                .aliases(aliases_staffchattoggle)
-                .build(), new ToggleCommand(this));
-
-
-        final String[] aliases_staffchatafk = VelocityCommandsConfig.STAFFCHAT_AFK.getStringList().toArray(new String[0]);
-
-        server.getCommandManager().register(server.getCommandManager()
-                .metaBuilder(VelocityCommandsConfig.STAFFCHAT_AFK.getStringList().get(0))
-                .aliases(aliases_staffchatafk)
-                .build(), new AFKCommand(this));
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder(VelocityCommandsConfig.STAFFCHAT_AFK.getStringList().get(0))
+                    .aliases(aliases_staffchatafk)
+                    .build(), new AFKCommand(this));
+        }
 
         server.getEventManager().register(this, new JoinListener(this));
         server.getEventManager().register(this, new ServerListener(this));
@@ -422,26 +431,32 @@ public class CleanStaffChat {
     @SneakyThrows
     private void registerDonorChat() {
 
-        final String[] aliases_donorchat = VelocityCommandsConfig.DONORCHAT.getStringList().toArray(new String[0]);
+        if (VelocityCommandsConfig.DONORCHAT.getStringList() != null) {
+            final String[] aliases_donorchat = VelocityCommandsConfig.DONORCHAT.getStringList().toArray(new String[0]);
 
-        server.getCommandManager().register(server.getCommandManager()
-                .metaBuilder(VelocityCommandsConfig.DONORCHAT.getStringList().get(0))
-                .aliases(aliases_donorchat)
-                .build(), new DonorChatCommand(this));
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder(VelocityCommandsConfig.DONORCHAT.getStringList().get(0))
+                    .aliases(aliases_donorchat)
+                    .build(), new DonorChatCommand(this));
+        }
 
-        final String[] aliases_donormute = VelocityCommandsConfig.DONORCHAT_MUTE.getStringList().toArray(new String[0]);
+        if (VelocityCommandsConfig.DONORCHAT_MUTE.getStringList() != null) {
+            final String[] aliases_donormute = VelocityCommandsConfig.DONORCHAT_MUTE.getStringList().toArray(new String[0]);
 
-        server.getCommandManager().register(server.getCommandManager()
-                .metaBuilder(VelocityCommandsConfig.DONORCHAT_MUTE.getStringList().get(0))
-                .aliases(aliases_donormute)
-                .build(), new it.frafol.cleanstaffchat.velocity.donorchat.commands.MuteCommand(this));
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder(VelocityCommandsConfig.DONORCHAT_MUTE.getStringList().get(0))
+                    .aliases(aliases_donormute)
+                    .build(), new it.frafol.cleanstaffchat.velocity.donorchat.commands.MuteCommand(this));
+        }
 
-        final String[] aliases_donortoggle = VelocityCommandsConfig.DONORCHAT_TOGGLE.getStringList().toArray(new String[0]);
+        if (VelocityCommandsConfig.DONORCHAT_TOGGLE.getStringList() != null) {
+            final String[] aliases_donortoggle = VelocityCommandsConfig.DONORCHAT_TOGGLE.getStringList().toArray(new String[0]);
 
-        server.getCommandManager().register(server.getCommandManager()
-                .metaBuilder(VelocityCommandsConfig.DONORCHAT_TOGGLE.getStringList().get(0))
-                .aliases(aliases_donortoggle)
-                .build(), new it.frafol.cleanstaffchat.velocity.donorchat.commands.ToggleCommand(this));
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder(VelocityCommandsConfig.DONORCHAT_TOGGLE.getStringList().get(0))
+                    .aliases(aliases_donortoggle)
+                    .build(), new it.frafol.cleanstaffchat.velocity.donorchat.commands.ToggleCommand(this));
+        }
 
         server.getEventManager().register(this, new it.frafol.cleanstaffchat.velocity.donorchat.listeners.ChatListener(this));
 
@@ -455,38 +470,46 @@ public class CleanStaffChat {
     @SneakyThrows
     private void registerAdminChat() {
 
-        final String[] aliases_adminchat = VelocityCommandsConfig.ADMINCHAT.getStringList().toArray(new String[0]);
+        if (VelocityCommandsConfig.ADMINCHAT.getStringList() != null) {
+            final String[] aliases_adminchat = VelocityCommandsConfig.ADMINCHAT.getStringList().toArray(new String[0]);
 
-        server.getCommandManager().register(server.getCommandManager()
-                .metaBuilder(VelocityCommandsConfig.ADMINCHAT.getStringList().get(0))
-                .aliases(aliases_adminchat)
-                .build(), new AdminChatCommand(this));
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder(VelocityCommandsConfig.ADMINCHAT.getStringList().get(0))
+                    .aliases(aliases_adminchat)
+                    .build(), new AdminChatCommand(this));
+        }
 
-        final String[] aliases_adminchatmute = VelocityCommandsConfig.ADMINCHAT_MUTE.getStringList().toArray(new String[0]);
+        if (VelocityCommandsConfig.ADMINCHAT_MUTE.getStringList() != null) {
+            final String[] aliases_adminchatmute = VelocityCommandsConfig.ADMINCHAT_MUTE.getStringList().toArray(new String[0]);
 
-        server.getCommandManager().register(server.getCommandManager()
-                .metaBuilder(VelocityCommandsConfig.ADMINCHAT_MUTE.getStringList().get(0))
-                .aliases(aliases_adminchatmute)
-                .build(), new it.frafol.cleanstaffchat.velocity.adminchat.commands.MuteCommand(this));
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder(VelocityCommandsConfig.ADMINCHAT_MUTE.getStringList().get(0))
+                    .aliases(aliases_adminchatmute)
+                    .build(), new it.frafol.cleanstaffchat.velocity.adminchat.commands.MuteCommand(this));
+        }
 
-        final String[] aliases_adminchattoggle = VelocityCommandsConfig.ADMINCHAT_TOGGLE.getStringList().toArray(new String[0]);
+        if (VelocityCommandsConfig.ADMINCHAT_TOGGLE.getStringList() != null) {
+            final String[] aliases_adminchattoggle = VelocityCommandsConfig.ADMINCHAT_TOGGLE.getStringList().toArray(new String[0]);
 
-        server.getCommandManager().register(server.getCommandManager()
-                .metaBuilder(VelocityCommandsConfig.ADMINCHAT_TOGGLE.getStringList().get(0))
-                .aliases(aliases_adminchattoggle)
-                .build(), new it.frafol.cleanstaffchat.velocity.adminchat.commands.ToggleCommand(this));
+            server.getCommandManager().register(server.getCommandManager()
+                    .metaBuilder(VelocityCommandsConfig.ADMINCHAT_TOGGLE.getStringList().get(0))
+                    .aliases(aliases_adminchattoggle)
+                    .build(), new it.frafol.cleanstaffchat.velocity.adminchat.commands.ToggleCommand(this));
+        }
 
         server.getEventManager().register(this, new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
 
         if (VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-
             jda.getJda().addEventListener(new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
-
         }
     }
 
     @SneakyThrows
     private void registerMuteChat() {
+
+        if (VelocityCommandsConfig.MUTECHAT.getStringList() == null) {
+            return;
+        }
 
         final String[] aliases = VelocityCommandsConfig.MUTECHAT.getStringList().toArray(new String[0]);
 

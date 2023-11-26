@@ -1,6 +1,7 @@
 package it.frafol.cleanstaffchat.bungee;
 
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
+import de.myzelyam.api.vanish.BungeeVanishAPI;
 import it.frafol.cleanstaffchat.bungee.adminchat.commands.AdminChatCommand;
 import it.frafol.cleanstaffchat.bungee.donorchat.commands.DonorChatCommand;
 import it.frafol.cleanstaffchat.bungee.enums.*;
@@ -137,6 +138,7 @@ public class CleanStaffChat extends Plugin {
 
         getProxy().getPluginManager().registerCommand(this, new ReloadCommand());
         getProxy().getPluginManager().registerCommand(this, new DebugCommand(this));
+        getProxy().getPluginManager().registerListener(this, new DebugCommand(this));
 
         if (BungeeConfig.STAFFLIST_MODULE.get(Boolean.class)) {
             registerStaffList();
@@ -406,11 +408,18 @@ public class CleanStaffChat extends Plugin {
             return;
         }
 
+        if (isPremiumVanish()) {
+            jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
+                            (BungeeDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
+                    BungeeDiscordConfig.DISCORD_ACTIVITY.get(String.class)
+                            .replace("%players%", String.valueOf(getProxy().getOnlineCount() - BungeeVanishAPI.getInvisiblePlayers().size()))));
+            return;
+        }
+
         jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
                         (BungeeDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
                 BungeeDiscordConfig.DISCORD_ACTIVITY.get(String.class)
                         .replace("%players%", String.valueOf(getProxy().getOnlineCount()))));
-
     }
 
     public void autoUpdate() {

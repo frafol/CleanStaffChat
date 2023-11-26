@@ -17,7 +17,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -80,7 +79,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 }
             }
 
-            if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
+            if (PLUGIN.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
 
                 final LuckPerms api = LuckPermsProvider.get();
 
@@ -108,7 +107,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                 .replace("%usersuffix%", PlayerCache.color(user_suffix))
                                 .replace("&", "§")));
 
-            } else if (Bukkit.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {
+            } else if (PLUGIN.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {
 
                 final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();

@@ -19,10 +19,10 @@ Clean StaffChat is a basic StaffChat plugin, compatible with BungeeCord, Spigot 
 
 ## Velocity, BungeeCord and Spigot compatibility is here.
 ```
-» BungeeCord 1.7 - 1.20.1 & forks
-» Velocity 3.1.2/3.2.0 & forks
-» Spigot 1.7 - 1.20.1 & forks
-» Folia 1.20.1
+» BungeeCord 1.7 - 1.20.4 & forks
+» Velocity 3.1.2/3.3.0 & forks
+» Spigot 1.7 - 1.20.4 & forks
+» Folia 1.20.4
 ```
 
 ## Commands
@@ -41,6 +41,7 @@ Clean StaffChat is a basic StaffChat plugin, compatible with BungeeCord, Spigot 
 » /dcmute • Deactivate DonorChat globally;
 
 » /stafflist • Show a list of online staff.
+» /mutechat (server) • Mute the chat globally or in a specific server.
 
 » /screload • Reloads the plugin.
 

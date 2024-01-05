@@ -47,8 +47,8 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.13.6",
-        dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true), @Dependency(id = "spicord", optional = true), @Dependency(id = "leaf", optional = true)},
+        version = "1.13.7",
+        dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true), @Dependency(id = "signedvelocity", optional = true), @Dependency(id = "spicord", optional = true), @Dependency(id = "leaf", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
 )
@@ -87,7 +87,110 @@ public class CleanStaffChat {
     public void onProxyInitialization(ProxyInitializeEvent event) {
 
         instance = this;
+        loadLibraries();
 
+        getLogger().info("\n  ___  __    ____    __    _  _    ___   ___ \n" +
+                " / __)(  )  ( ___)  /__\\  ( \\( )  / __) / __)\n" +
+                "( (__  )(__  )__)  /(__)\\  )  (   \\__ \\( (__ \n" +
+                " \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)\n");
+
+        loadFiles();
+        updateConfig();
+        getLogger().info("Configurations loaded successfully!");
+
+        if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            jda = new JdaBuilder();
+            jda.startJDA();
+            updateJDATask();
+            getLogger().info("Hooked into Discord successfully!");
+        }
+
+        server.getCommandManager().register(server.getCommandManager()
+                .metaBuilder("screload")
+                .aliases("staffchatreload", "staffreload", "cleanscreload", "cleanstaffchatreload")
+                .build(), new ReloadCommand(this));
+
+        server.getCommandManager().register(server.getCommandManager()
+                .metaBuilder("scdebug")
+                .aliases("staffchatdebug", "staffdebug", "cleanscdebug", "cleanstaffchatdebug")
+                .build(), new DebugCommand(this));
+
+        server.getEventManager().register(this, new DebugCommand(this));
+
+        if (VelocityConfig.STAFFLIST_MODULE.get(Boolean.class)) {
+            registerStaffList();
+        }
+
+        if (VelocityConfig.STAFFCHAT.get(Boolean.class)) {
+            registerStaffChat();
+        }
+
+        if (VelocityConfig.DONORCHAT.get(Boolean.class)) {
+            registerDonorChat();
+        }
+
+        if (VelocityConfig.ADMINCHAT.get(Boolean.class)) {
+            registerAdminChat();
+        }
+
+        if (VelocityConfig.MUTECHAT_MODULE.get(Boolean.class)) {
+            registerMuteChat();
+        }
+
+        if (VelocityRedis.REDIS_ENABLE.get(Boolean.class) && !getRedisBungee()) {
+            getLogger().error("RedisBungee was not found, the RedisBungee hook won't work.");
+        }
+
+        if (VelocityRedis.REDIS_ENABLE.get(Boolean.class) && getRedisBungee()) {
+            registerRedisBungee();
+            getLogger().info("Hooked into RedisBungee successfully!");
+        }
+
+        if (isPremiumVanish()) {
+            getLogger().info("Hooked into PremiumVanish successfully!");
+        }
+
+        if (VelocityConfig.STATS.get(Boolean.class)) {
+            metricsFactory.make(this, 16447);
+            getLogger().info("Metrics loaded successfully!");
+        }
+
+        if (VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {
+            UpdateChecker();
+        }
+
+        if (!getUnsignedVelocityAddon() && !getSignedVelocity()) {
+            getLogger().warn("If you get kicked out in 1.19+ while typing in a staffchat on Velocity, " +
+                    "consider downloading plugins like unSignedVelocity or SignedVelocity (Recommended).");
+        }
+
+        getLogger().info("Plugin successfully enabled!");
+    }
+
+    @Subscribe
+    public void onProxyShutdown(ProxyShutdownEvent event) throws LoginException {
+        getLogger().info("Deleting instances...");
+
+        if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            jda.getJda().shutdownNow();
+        }
+
+        instance = null;
+        configTextFile = null;
+        logger.info("Successfully disabled.");
+    }
+
+    private void loadFiles() {
+        configTextFile = new TextFile(path, "config.yml");
+        messagesTextFile = new TextFile(path, "messages.yml");
+        discordTextFile = new TextFile(path, "discord.yml");
+        aliasesTextFile = new TextFile(path, "aliases.yml");
+        redisTextFile = new TextFile(path, "redis.yml");
+        serversTextFile = new TextFile(path, "servers.yml");
+        versionTextFile = new TextFile(path, "version.yml");
+    }
+
+    private void loadLibraries() {
         VelocityLibraryManager<CleanStaffChat> velocityLibraryManager = new VelocityLibraryManager<>(getLogger(), path, getServer().getPluginManager(), this);
 
         Library yaml;
@@ -140,118 +243,6 @@ public class CleanStaffChat {
         } catch (ClassNotFoundException ignored) {
             velocityLibraryManager.loadLibrary(discord);
         }
-
-        getLogger().info("\n§d  ___  __    ____    __    _  _    ___   ___ \n" +
-                " / __)(  )  ( ___)  /__\\  ( \\( )  / __) / __)\n" +
-                "( (__  )(__  )__)  /(__)\\  )  (   \\__ \\( (__ \n" +
-                " \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)\n");
-
-
-        loadFiles();
-        updateConfig();
-        getLogger().info("§7Configurations loaded §dsuccessfully§7!");
-
-        if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-
-            jda = new JdaBuilder();
-            jda.startJDA();
-            updateJDATask();
-
-            getLogger().info("§7Hooked into Discord §dsuccessfully§7!");
-
-        }
-
-        server.getCommandManager().register(server.getCommandManager()
-                .metaBuilder("screload")
-                .aliases("staffchatreload", "staffreload", "cleanscreload", "cleanstaffchatreload")
-                .build(), new ReloadCommand(this));
-
-        server.getCommandManager().register(server.getCommandManager()
-                .metaBuilder("scdebug")
-                .aliases("staffchatdebug", "staffdebug", "cleanscdebug", "cleanstaffchatdebug")
-                .build(), new DebugCommand(this));
-
-        server.getEventManager().register(this, new DebugCommand(this));
-
-        if (VelocityConfig.STAFFLIST_MODULE.get(Boolean.class)) {
-            registerStaffList();
-        }
-
-        if (VelocityConfig.STAFFCHAT.get(Boolean.class)) {
-            registerStaffChat();
-        }
-
-        if (VelocityConfig.DONORCHAT.get(Boolean.class)) {
-            registerDonorChat();
-        }
-
-        if (VelocityConfig.ADMINCHAT.get(Boolean.class)) {
-            registerAdminChat();
-        }
-
-        if (VelocityConfig.MUTECHAT_MODULE.get(Boolean.class)) {
-            if (!getUnsignedVelocityAddon()) {
-                logger.error("You need UnsignedVelocity to use the mutechat feature on Velocity.");
-            } else {
-                registerMuteChat();
-            }
-        }
-
-        if (VelocityRedis.REDIS_ENABLE.get(Boolean.class) && !getRedisBungee()) {
-            getLogger().error("RedisBungee was not found, the RedisBungee hook won't work.");
-        }
-
-        if (VelocityRedis.REDIS_ENABLE.get(Boolean.class) && getRedisBungee()) {
-            registerRedisBungee();
-            getLogger().info("§7Hooked into RedisBungee §dsuccessfully§7!");
-        }
-
-        if (isPremiumVanish()) {
-            getLogger().info("Hooked into PremiumVanish successfully!");
-        }
-
-        if (VelocityConfig.STATS.get(Boolean.class)) {
-            metricsFactory.make(this, 16447);
-            getLogger().info("§7Metrics loaded §dsuccessfully§7!");
-        }
-
-        if (VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {
-            UpdateChecker();
-        }
-
-        if (!getUnsignedVelocityAddon()) {
-            getLogger().warn("If you get kicked out in 1.19+ while typing in a staffchat on Velocity, " +
-                    "consider downloading https://github.com/4drian3d/UnSignedVelocity/releases/latest");
-        }
-
-        getLogger().info("§7Plugin successfully §denabled§7!");
-
-    }
-
-    @Subscribe
-    public void onProxyShutdown(ProxyShutdownEvent event) throws LoginException {
-        getLogger().info("Deleting instances...");
-
-        if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-            jda.getJda().shutdownNow();
-        }
-
-        instance = null;
-        configTextFile = null;
-
-        logger.info("§7Successfully §ddisabled§7.");
-    }
-
-    private void loadFiles() {
-
-        configTextFile = new TextFile(path, "config.yml");
-        messagesTextFile = new TextFile(path, "messages.yml");
-        discordTextFile = new TextFile(path, "discord.yml");
-        aliasesTextFile = new TextFile(path, "aliases.yml");
-        redisTextFile = new TextFile(path, "redis.yml");
-        serversTextFile = new TextFile(path, "servers.yml");
-        versionTextFile = new TextFile(path, "version.yml");
-
     }
 
     private void UpdateChecker() {
@@ -540,7 +531,7 @@ public class CleanStaffChat {
         }
 
         if (jda.getJda() == null) {
-            logger.error("Fatal error while updating JDA, please report this error on https://dsc.gg/futuredevelopment.");
+            logger.error("Fatal error while updating JDA. Is Discord Bot configured correctly?");
             return;
         }
 
@@ -597,12 +588,15 @@ public class CleanStaffChat {
         return false;
     }
 
-    public boolean getRedisBungee() {
+    private boolean getRedisBungee() {
         return getServer().getPluginManager().isLoaded("redisbungee");
     }
 
-    @SuppressWarnings("ALL")
-    public boolean getUnsignedVelocityAddon() {
+    private boolean getUnsignedVelocityAddon() {
         return getServer().getPluginManager().isLoaded("unsignedvelocity");
+    }
+
+    private boolean getSignedVelocity() {
+        return getServer().getPluginManager().isLoaded("signedvelocity");
     }
 }

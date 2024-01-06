@@ -60,6 +60,12 @@ messages:
       discord_join_message_format: "%user% joined the server."
       discord_quit_message_format: "%user% left the server."
 
+      # WARNING: This will work only for BungeeCord or Velocity.
+      discord_switch_message_format: "%user% switched server from %from% to %server%."
+
+      discord_afk_on_message_format: "%user% is now AFK."
+      discord_afk_off_message_format: "%user% is no longer AFK."
+
   adminchat:
 
     # General messages.

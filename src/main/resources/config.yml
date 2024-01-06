@@ -110,6 +110,8 @@ modules:
   staffchat_toggle_module: true
   staffchat_discord_module: true
   staffchat_discord_join_leave_module: true
+  staffchat_discord_switch_module: true
+  staffchat_discord_afk_module: true
 
   adminchat_switch_module: true
   adminchat_afk_module: true

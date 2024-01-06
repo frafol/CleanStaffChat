@@ -20,7 +20,6 @@ import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 import org.jetbrains.annotations.NotNull;
 
-import javax.security.auth.login.LoginException;
 import java.awt.*;
 
 import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.*;
@@ -146,7 +145,7 @@ public class JoinListener {
 
                 }
 
-                if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+                if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityConfig.STAFFCHAT_DISCORD_JOINLEAVE_MODULE.get(Boolean.class)) {
 
                     final TextChannel channel = PLUGIN.getJda().JdaWorker().getTextChannelById(VelocityDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
@@ -181,7 +180,7 @@ public class JoinListener {
     }
 
     @Subscribe
-    public void handle(@NotNull DisconnectEvent event) throws LoginException {
+    public void handle(@NotNull DisconnectEvent event) {
 
         final Player player = event.getPlayer();
 
@@ -298,7 +297,7 @@ public class JoinListener {
 
             if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
                     && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
-                    && VelocityConfig.JOIN_LEAVE_DISCORD_MODULE.get(Boolean.class)) {
+                    && VelocityConfig.STAFFCHAT_DISCORD_JOINLEAVE_MODULE.get(Boolean.class)) {
 
                 final TextChannel channel = PLUGIN.getJda().JdaWorker().getTextChannelById(VelocityDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 

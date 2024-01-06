@@ -2,14 +2,13 @@ package it.frafol.cleanstaffchat.bungee.staffchat.commands;
 
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeCommandsConfig;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeRedis;
+import it.frafol.cleanstaffchat.bungee.enums.*;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import me.TechsCode.UltraPermissions.UltraPermissionsAPI;
 import me.TechsCode.UltraPermissions.bungee.UltraPermissionsBungee;
 import me.TechsCode.UltraPermissions.storage.collection.UserList;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -19,6 +18,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
+import java.awt.*;
 import java.util.Optional;
 
 public class AFKCommand extends Command {
@@ -168,6 +168,35 @@ public class AFKCommand extends Command {
 
             }
             PlayerCache.getAfk().add(((ProxiedPlayer) sender).getUniqueId());
+            if (BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
+                    && BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
+                    && BungeeConfig.STAFFCHAT_DISCORD_AFK_MODULE.get(Boolean.class)) {
+
+                final TextChannel channel = CleanStaffChat.getInstance().getJda().getTextChannelById(BungeeDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
+
+                if (channel == null) {
+                    return;
+                }
+
+                if (BungeeDiscordConfig.USE_EMBED.get(Boolean.class)) {
+
+                    EmbedBuilder embed = new EmbedBuilder();
+
+                    embed.setTitle(BungeeDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+
+                    embed.setDescription(BungeeMessages.STAFF_DISCORD_AFK_ON_MESSAGE_FORMAT.get(String.class)
+                            .replace("%user%", sender.getName()));
+
+                    embed.setColor(Color.YELLOW);
+                    embed.setFooter(BungeeDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
+
+                    channel.sendMessageEmbeds(embed.build()).queue();
+
+                } else {
+                    channel.sendMessageFormat(BungeeMessages.STAFF_DISCORD_AFK_ON_MESSAGE_FORMAT.get(String.class)
+                            .replace("%user%", sender.getName())).queue();
+                }
+            }
 
         } else {
 
@@ -246,6 +275,35 @@ public class AFKCommand extends Command {
 
             }
             PlayerCache.getAfk().remove(((ProxiedPlayer) sender).getUniqueId());
+            if (BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
+                    && BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
+                    && BungeeConfig.STAFFCHAT_DISCORD_AFK_MODULE.get(Boolean.class)) {
+
+                final TextChannel channel = CleanStaffChat.getInstance().getJda().getTextChannelById(BungeeDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
+
+                if (channel == null) {
+                    return;
+                }
+
+                if (BungeeDiscordConfig.USE_EMBED.get(Boolean.class)) {
+
+                    EmbedBuilder embed = new EmbedBuilder();
+
+                    embed.setTitle(BungeeDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+
+                    embed.setDescription(BungeeMessages.STAFF_DISCORD_AFK_OFF_MESSAGE_FORMAT.get(String.class)
+                            .replace("%user%", sender.getName()));
+
+                    embed.setColor(Color.YELLOW);
+                    embed.setFooter(BungeeDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
+
+                    channel.sendMessageEmbeds(embed.build()).queue();
+
+                } else {
+                    channel.sendMessageFormat(BungeeMessages.STAFF_DISCORD_AFK_OFF_MESSAGE_FORMAT.get(String.class)
+                            .replace("%user%", sender.getName())).queue();
+                }
+            }
         }
     }
 }

@@ -6,14 +6,19 @@ import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityDiscordConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityRedis;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
+
+import java.awt.*;
 
 public class AFKCommand implements SimpleCommand {
 
@@ -124,7 +129,40 @@ public class AFKCommand implements SimpleCommand {
                                 new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
             }
+
             PlayerCache.getAfk().add(((Player) commandSource).getUniqueId());
+            if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
+                    && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
+                    && VelocityConfig.STAFFCHAT_DISCORD_AFK_MODULE.get(Boolean.class)) {
+
+                final TextChannel channel = PLUGIN.getJda().JdaWorker().getTextChannelById(VelocityDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
+
+                if (channel == null) {
+                    return;
+                }
+
+                if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
+
+                    EmbedBuilder embed = new EmbedBuilder();
+
+                    embed.setTitle(VelocityDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+
+                    embed.setDescription(VelocityMessages.STAFF_DISCORD_AFK_ON_MESSAGE_FORMAT.get(String.class)
+                            .replace("%user%", ((Player) commandSource).getUsername()));
+
+                    embed.setColor(Color.YELLOW);
+                    embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
+
+                    channel.sendMessageEmbeds(embed.build()).queue();
+
+                } else {
+
+                    channel.sendMessageFormat(VelocityMessages.STAFF_DISCORD_AFK_ON_MESSAGE_FORMAT.get(String.class)
+                                    .replace("%user%", ((Player) commandSource).getUsername()))
+                            .queue();
+
+                }
+            }
 
         } else {
 
@@ -201,7 +239,38 @@ public class AFKCommand implements SimpleCommand {
                                 new Placeholder("server", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()),
                                 new Placeholder("prefix", VelocityMessages.PREFIX.color())));
             }
+
             PlayerCache.getAfk().remove(((Player) commandSource).getUniqueId());
+            if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
+                    && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
+                    && VelocityConfig.STAFFCHAT_DISCORD_AFK_MODULE.get(Boolean.class)) {
+
+                final TextChannel channel = PLUGIN.getJda().JdaWorker().getTextChannelById(VelocityDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
+
+                if (channel == null) {
+                    return;
+                }
+
+                if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
+
+                    EmbedBuilder embed = new EmbedBuilder();
+
+                    embed.setTitle(VelocityDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+
+                    embed.setDescription(VelocityMessages.STAFF_DISCORD_AFK_OFF_MESSAGE_FORMAT.get(String.class)
+                            .replace("%user%", ((Player) commandSource).getUsername()));
+
+                    embed.setColor(Color.YELLOW);
+                    embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
+
+                    channel.sendMessageEmbeds(embed.build()).queue();
+
+                } else {
+                    channel.sendMessageFormat(VelocityMessages.STAFF_DISCORD_AFK_OFF_MESSAGE_FORMAT.get(String.class)
+                                    .replace("%user%", ((Player) commandSource).getUsername()))
+                            .queue();
+                }
+            }
         }
     }
 }

@@ -192,7 +192,7 @@ public class JoinListener implements Listener {
 
                     if (BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
                             && BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
-                            && BungeeConfig.JOIN_LEAVE_DISCORD_MODULE.get(Boolean.class)) {
+                            && BungeeConfig.STAFFCHAT_DISCORD_JOINLEAVE_MODULE.get(Boolean.class)) {
 
                         final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
@@ -386,7 +386,7 @@ public class JoinListener implements Listener {
 
             if (BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
                     && BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
-                    && BungeeConfig.JOIN_LEAVE_DISCORD_MODULE.get(Boolean.class)) {
+                    && BungeeConfig.STAFFCHAT_DISCORD_JOINLEAVE_MODULE.get(Boolean.class)) {
 
                 final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 

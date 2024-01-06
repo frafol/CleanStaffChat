@@ -36,6 +36,9 @@ public enum BungeeMessages {
 
     STAFF_DISCORD_JOIN_MESSAGE_FORMAT("messages.staffchat.discord.discord_join_message_format"),
     STAFF_DISCORD_QUIT_MESSAGE_FORMAT("messages.staffchat.discord.discord_quit_message_format"),
+    STAFF_DISCORD_SWITCH_MESSAGE_FORMAT("messages.staffchat.discord.discord_switch_message_format"),
+    STAFF_DISCORD_AFK_ON_MESSAGE_FORMAT("messages.staffchat.discord.discord_afk_on_message_format"),
+    STAFF_DISCORD_AFK_OFF_MESSAGE_FORMAT("messages.staffchat.discord.discord_afk_off_message_format"),
     STAFF_JOIN_MESSAGE_FORMAT("messages.staffchat.staff_join_message_format"),
     STAFF_QUIT_MESSAGE_FORMAT("messages.staffchat.staff_quit_message_format"),
 

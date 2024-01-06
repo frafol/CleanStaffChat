@@ -39,7 +39,6 @@ public enum BungeeConfig {
     STAFF_QUIT_MESSAGE("settings.staffchat.staff_quit_message"),
     COOLDOWN_BYPASS_DISCORD("settings.donorchat.donorchat_discord_cooldown_bypass"),
     COOLDOWN_BYPASS_PERMISSION("settings.donorchat.donorchat_cooldown_bypass_permission"),
-    JOIN_LEAVE_DISCORD_MODULE("modules.staffchat_discord_join_leave_module"),
 
     STAFFCHAT_USE_PERMISSION("settings.staffchat.staffchat_use_permission"),
     ADMINCHAT_USE_PERMISSION("settings.adminchat.adminchat_use_permission"),
@@ -82,6 +81,10 @@ public enum BungeeConfig {
     STAFFCHAT_DISCORD_MODULE("modules.staffchat_discord_module"),
     ADMINCHAT_DISCORD_MODULE("modules.adminchat_discord_module"),
     DONORCHAT_DISCORD_MODULE("modules.donorchat_discord_module"),
+
+    STAFFCHAT_DISCORD_JOINLEAVE_MODULE("modules.staffchat_discord_join_leave_module"),
+    STAFFCHAT_DISCORD_SWITCH_MODULE("modules.staffchat_discord_switch_module"),
+    STAFFCHAT_DISCORD_AFK_MODULE("modules.staffchat_discord_afk_module"),
 
     STAFFCHAT("settings.use_staffchat"),
     ADMINCHAT("settings.use_adminchat"),

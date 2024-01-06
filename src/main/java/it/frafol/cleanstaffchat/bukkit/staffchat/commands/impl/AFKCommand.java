@@ -2,12 +2,15 @@ package it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl;
 
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.CommandBase;
 import me.TechsCode.UltraPermissions.UltraPermissions;
 import me.TechsCode.UltraPermissions.UltraPermissionsAPI;
 import me.TechsCode.UltraPermissions.storage.collection.UserList;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -16,6 +19,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -116,6 +120,36 @@ public class AFKCommand extends CommandBase {
 
             PlayerCache.getAfk().add(player.getUniqueId());
 
+            if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
+                    && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
+                    && SpigotConfig.STAFFCHAT_DISCORD_AFK_MODULE.get(Boolean.class)) {
+
+                final TextChannel channel = plugin.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
+
+                if (channel == null) {
+                    return false;
+                }
+
+                if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
+
+                    EmbedBuilder embed = new EmbedBuilder();
+
+                    embed.setTitle(SpigotDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+
+                    embed.setDescription(SpigotMessages.STAFF_DISCORD_AFK_ON_MESSAGE_FORMAT.get(String.class)
+                            .replace("%user%", player.getName()));
+
+                    embed.setColor(Color.YELLOW);
+                    embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
+
+                    channel.sendMessageEmbeds(embed.build()).queue();
+
+                } else {
+                    channel.sendMessageFormat(SpigotMessages.STAFF_DISCORD_AFK_ON_MESSAGE_FORMAT.get(String.class)
+                            .replace("%user%", player.getName())).queue();
+                }
+            }
+
         } else {
 
             if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
@@ -186,7 +220,37 @@ public class AFKCommand extends CommandBase {
                                 .replace("%displayname%", player.getName())));
 
             }
+
             PlayerCache.getAfk().remove(player.getUniqueId());
+            if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
+                    && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
+                    && SpigotConfig.STAFFCHAT_DISCORD_AFK_MODULE.get(Boolean.class)) {
+
+                final TextChannel channel = plugin.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
+
+                if (channel == null) {
+                    return false;
+                }
+
+                if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
+
+                    EmbedBuilder embed = new EmbedBuilder();
+
+                    embed.setTitle(SpigotDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+
+                    embed.setDescription(SpigotMessages.STAFF_DISCORD_AFK_OFF_MESSAGE_FORMAT.get(String.class)
+                            .replace("%user%", player.getName()));
+
+                    embed.setColor(Color.YELLOW);
+                    embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
+
+                    channel.sendMessageEmbeds(embed.build()).queue();
+
+                } else {
+                    channel.sendMessageFormat(SpigotMessages.STAFF_DISCORD_AFK_OFF_MESSAGE_FORMAT.get(String.class)
+                            .replace("%user%", player.getName())).queue();
+                }
+            }
         }
         return false;
     }

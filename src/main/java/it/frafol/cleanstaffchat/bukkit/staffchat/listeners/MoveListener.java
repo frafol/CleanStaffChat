@@ -2,17 +2,21 @@ package it.frafol.cleanstaffchat.bukkit.staffchat.listeners;
 
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
+import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.NotNull;
+
+import java.awt.*;
 
 public class MoveListener implements Listener {
 
@@ -41,7 +45,7 @@ public class MoveListener implements Listener {
 
         if (PlayerCache.getAfk().contains(player.getUniqueId())) {
 
-            if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
+            if (PLUGIN.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
 
                 final LuckPerms api = LuckPermsProvider.get();
                 final User user = api.getUserManager().getUser(player.getUniqueId());
@@ -78,7 +82,37 @@ public class MoveListener implements Listener {
                                 .replace("%displayname%", player.getName())));
 
             }
+
             PlayerCache.getAfk().remove(player.getUniqueId());
+            if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
+                    && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
+                    && SpigotConfig.STAFFCHAT_DISCORD_AFK_MODULE.get(Boolean.class)) {
+
+                final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
+
+                if (channel == null) {
+                    return;
+                }
+
+                if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
+
+                    EmbedBuilder embed = new EmbedBuilder();
+
+                    embed.setTitle(SpigotDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+
+                    embed.setDescription(SpigotMessages.STAFF_DISCORD_AFK_OFF_MESSAGE_FORMAT.get(String.class)
+                            .replace("%user%", player.getName()));
+
+                    embed.setColor(Color.YELLOW);
+                    embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
+
+                    channel.sendMessageEmbeds(embed.build()).queue();
+
+                } else {
+                    channel.sendMessageFormat(SpigotMessages.STAFF_DISCORD_AFK_OFF_MESSAGE_FORMAT.get(String.class)
+                            .replace("%user%", player.getName())).queue();
+                }
+            }
         }
     }
 }

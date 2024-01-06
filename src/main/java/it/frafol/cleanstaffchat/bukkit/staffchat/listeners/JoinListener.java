@@ -120,7 +120,7 @@ public class JoinListener implements Listener {
 
             if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
                     && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
-                    && SpigotConfig.JOIN_LEAVE_DISCORD_MODULE.get(Boolean.class)) {
+                    && SpigotConfig.STAFFCHAT_DISCORD_JOINLEAVE_MODULE.get(Boolean.class)) {
 
                 final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
@@ -236,7 +236,7 @@ public class JoinListener implements Listener {
 
             if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
                     && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
-                    && SpigotConfig.JOIN_LEAVE_DISCORD_MODULE.get(Boolean.class)) {
+                    && SpigotConfig.STAFFCHAT_DISCORD_JOINLEAVE_MODULE.get(Boolean.class)) {
 
                 final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 

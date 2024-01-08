@@ -252,35 +252,35 @@ public class ServerListener {
                                         new Placeholder("server", event.getServer().getServerInfo().getName())));
 
                     }
-                }
 
-                if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
-                        && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
-                        && VelocityConfig.STAFFCHAT_DISCORD_SWITCH_MODULE.get(Boolean.class)) {
+                    if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
+                            && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
+                            && VelocityConfig.STAFFCHAT_DISCORD_SWITCH_MODULE.get(Boolean.class)) {
 
-                    final TextChannel channel = PLUGIN.getJda().JdaWorker().getTextChannelById(VelocityDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
+                        final TextChannel channel = PLUGIN.getJda().JdaWorker().getTextChannelById(VelocityDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
 
-                    if (channel == null) {
-                        return;
-                    }
+                        if (channel == null) {
+                            return;
+                        }
 
-                    if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
+                        if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
 
-                        EmbedBuilder embed = new EmbedBuilder();
+                            EmbedBuilder embed = new EmbedBuilder();
 
-                        embed.setTitle(VelocityDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+                            embed.setTitle(VelocityDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
-                        embed.setDescription(VelocityMessages.STAFF_DISCORD_SWITCH_MESSAGE_FORMAT.get(String.class)
-                                .replace("%user%", player.getUsername()));
+                            embed.setDescription(VelocityMessages.STAFF_DISCORD_SWITCH_MESSAGE_FORMAT.get(String.class)
+                                    .replace("%user%", player.getUsername()));
 
-                        embed.setColor(Color.YELLOW);
-                        embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
+                            embed.setColor(Color.YELLOW);
+                            embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
-                        channel.sendMessageEmbeds(embed.build()).queue();
+                            channel.sendMessageEmbeds(embed.build()).queue();
 
-                    } else {
-                        channel.sendMessageFormat(VelocityMessages.STAFF_DISCORD_SWITCH_MESSAGE_FORMAT.get(String.class)
-                                        .replace("%user%", player.getUsername())).queue();
+                        } else {
+                            channel.sendMessageFormat(VelocityMessages.STAFF_DISCORD_SWITCH_MESSAGE_FORMAT.get(String.class)
+                                    .replace("%user%", player.getUsername())).queue();
+                        }
                     }
                 }
             }

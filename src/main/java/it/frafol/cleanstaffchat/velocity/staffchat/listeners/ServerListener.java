@@ -270,7 +270,9 @@ public class ServerListener {
                             embed.setTitle(VelocityDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
                             embed.setDescription(VelocityMessages.STAFF_DISCORD_SWITCH_MESSAGE_FORMAT.get(String.class)
-                                    .replace("%user%", player.getUsername()));
+                                    .replace("%user%", player.getUsername())
+                                    .replace("%from%", event.getPreviousServer().get().getServerInfo().getName())
+                                    .replace("%server%", event.getServer().getServerInfo().getName()));
 
                             embed.setColor(Color.YELLOW);
                             embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
@@ -279,7 +281,9 @@ public class ServerListener {
 
                         } else {
                             channel.sendMessageFormat(VelocityMessages.STAFF_DISCORD_SWITCH_MESSAGE_FORMAT.get(String.class)
-                                    .replace("%user%", player.getUsername())).queue();
+                                    .replace("%user%", player.getUsername())
+                                    .replace("%from%", event.getPreviousServer().get().getServerInfo().getName())
+                                    .replace("%server%", event.getServer().getServerInfo().getName())).queue();
                         }
                     }
                 }

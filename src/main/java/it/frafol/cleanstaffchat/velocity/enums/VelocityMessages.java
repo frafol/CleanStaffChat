@@ -4,6 +4,7 @@ import com.velocitypowered.api.command.CommandSource;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.regex.Matcher;
@@ -156,9 +157,18 @@ public enum VelocityMessages {
         return message.matches(".*" + hexColorPattern + ".*");
     }
 
+    private MiniMessage getMiniMessage() {
+        return MiniMessage.miniMessage();
+    }
+
     public void send(CommandSource commandSource, Placeholder... placeholders) {
 
         if (ChatUtil.getString(this).isEmpty()) {
+            return;
+        }
+
+        if (VelocityConfig.MINIMESSAGE.get(Boolean.class)) {
+            commandSource.sendMessage(getMiniMessage().deserialize(ChatUtil.getFormattedString(this, placeholders)));
             return;
         }
 

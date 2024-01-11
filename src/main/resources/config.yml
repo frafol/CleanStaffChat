@@ -97,6 +97,9 @@ modules:
   auto_update: true
   stats: true
 
+  # WARNING: This option is only for the Velocity version.
+  minimessage_support: false
+
   # SuperVanish support is only for the Bukkit version.
   premiumvanish_hook: true
   supervanish_hook: true

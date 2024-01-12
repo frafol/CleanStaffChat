@@ -86,7 +86,7 @@ public enum VelocityConfig {
     STAFFCHAT_DISCORD_SWITCH_MODULE("modules.staffchat_discord_switch_module"),
     STAFFCHAT_DISCORD_AFK_MODULE("modules.staffchat_discord_afk_module"),
 
-    MINIMESSAGE("settings.modules.minimessage_support"),
+    MINIMESSAGE("modules.minimessage_support"),
 
     STAFFCHAT("settings.use_staffchat"),
     ADMINCHAT("settings.use_adminchat"),

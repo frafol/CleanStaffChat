@@ -84,9 +84,9 @@ public class CleanStaffChat extends JavaPlugin {
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.0.0-beta.15")
+                .version("5.0.0-beta.20")
                 .relocate(discordrelocation)
-                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.15/JDA-5.0.0-beta.15-withDependencies-min.jar")
+                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.20/JDA-5.0.0-beta.20-withDependencies-min.jar")
                 .build();
 
         final Relocation schedulerrelocation = new Relocation("scheduler", "it{}frafol{}libs{}scheduler");
@@ -180,18 +180,7 @@ public class CleanStaffChat extends JavaPlugin {
             registerStaffListCommands();
         }
 
-        if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-
-            try {
-                jda = JDABuilder.createDefault(SpigotDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
-            } catch (ExceptionInInitializerError e) {
-                getLogger().severe("§cInvalid Discord configuration, please check your discord.yml file.");
-            }
-            updateJDATask();
-
-            getLogger().info("Hooked into Discord successfully!");
-
-        }
+        startJDA();
 
         if (isPremiumVanish()) {
             getLogger().info("Hooked into PremiumVanish successfully!");
@@ -244,6 +233,21 @@ public class CleanStaffChat extends JavaPlugin {
         UpdateChecker();
         getLogger().info("Plugin successfully enabled!");
 
+    }
+
+    public void startJDA() {
+        if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+
+            try {
+                jda = JDABuilder.createDefault(SpigotDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
+            } catch (ExceptionInInitializerError e) {
+                getLogger().severe("§cInvalid Discord configuration, please check your discord.yml file.");
+            }
+            updateJDATask();
+
+            getLogger().info("Hooked into Discord successfully!");
+
+        }
     }
 
     private void UpdateChecker() {

@@ -1,6 +1,8 @@
 package it.frafol.cleanstaffchat.bungee.staffchat.commands;
 
+import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
+import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
 import it.frafol.cleanstaffchat.bungee.objects.TextFile;
 import net.md_5.bungee.api.CommandSender;
@@ -13,6 +15,8 @@ public class ReloadCommand extends Command {
     public ReloadCommand() {
         super("screload","","staffchatreload","cleanscreload","cleanstaffchatreload", "staffreload");
     }
+
+    private final CleanStaffChat plugin = CleanStaffChat.getInstance();
 
     @Override
     public void execute(@NotNull CommandSender sender, String[] args) {
@@ -27,5 +31,8 @@ public class ReloadCommand extends Command {
         sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.RELOADED.color()
                 .replace("%prefix%", BungeeMessages.PREFIX.color())));
 
+        if (plugin.getJda() == null && BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            plugin.startJDA();
+        }
     }
 }

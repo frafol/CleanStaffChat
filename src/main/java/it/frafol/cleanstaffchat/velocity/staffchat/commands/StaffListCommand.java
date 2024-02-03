@@ -1,12 +1,15 @@
 package it.frafol.cleanstaffchat.velocity.staffchat.commands;
 
 import com.google.common.collect.Lists;
+import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
+import de.myzelyam.api.vanish.VelocityVanishAPI;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityRedis;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
@@ -51,22 +54,26 @@ public class StaffListCommand implements SimpleCommand {
         String user_suffix;
 
         List<UUID> list = Lists.newArrayList();
-        for (Player players : PLUGIN.getServer().getAllPlayers()) {
 
-            if (!players.hasPermission(VelocityConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
-                continue;
+        if (PLUGIN.getServer().getPluginManager().getPlugin("redisbungee").isPresent() && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
+            list = handleRedis();
+        } else {
+            for (Player players : PLUGIN.getServer().getAllPlayers()) {
+
+                if (!players.hasPermission(VelocityConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
+                    continue;
+                }
+
+                if (VelocityConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(VelocityConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
+                    continue;
+                }
+
+                if (PLUGIN.isPremiumVanish() && VanishUtil.isVanished(players)) {
+                    continue;
+                }
+
+                list.add(players.getUniqueId());
             }
-
-            if (VelocityConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(VelocityConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
-                continue;
-            }
-
-            if (PLUGIN.isPremiumVanish() && VanishUtil.isVanished(players)) {
-                continue;
-            }
-
-            list.add(players.getUniqueId());
-
         }
 
         VelocityMessages.LIST_HEADER.send(invocation.source(),
@@ -178,5 +185,34 @@ public class StaffListCommand implements SimpleCommand {
         VelocityMessages.LIST_FOOTER.send(invocation.source(),
                 new Placeholder("prefix", VelocityMessages.PREFIX.color()),
                 new Placeholder("online", String.valueOf(list.size())));
+    }
+
+    private List<UUID> handleRedis() {
+        List<UUID> list = Lists.newArrayList();
+        final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+        for (UUID players : redisBungeeAPI.getPlayersOnline()) {
+
+            LuckPerms api = LuckPermsProvider.get();
+            User user = api.getUserManager().getUser(players);
+
+            if (user == null) {
+                continue;
+            }
+
+            if (!user.getCachedData().getPermissionData().checkPermission(VelocityConfig.STAFFLIST_SHOW_PERMISSION.get(String.class)).asBoolean()) {
+                continue;
+            }
+
+            if (VelocityConfig.STAFFLIST_BYPASS.get(Boolean.class) && user.getCachedData().getPermissionData().checkPermission(VelocityConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class)).asBoolean()) {
+                continue;
+            }
+
+            if (PLUGIN.isPremiumVanish() && VelocityVanishAPI.getInvisiblePlayers().contains(players)) {
+                continue;
+            }
+
+            list.add(players);
+        }
+        return list;
     }
 }

@@ -98,12 +98,7 @@ public class CleanStaffChat {
         updateConfig();
         getLogger().info("Configurations loaded successfully!");
 
-        if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-            jda = new JdaBuilder();
-            jda.startJDA();
-            updateJDATask();
-            getLogger().info("Hooked into Discord successfully!");
-        }
+        startJDA();
 
         server.getCommandManager().register(server.getCommandManager()
                 .metaBuilder("screload")
@@ -214,8 +209,8 @@ public class CleanStaffChat {
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.0.0-beta.15")
-                .url("https://github.com/discord-jda/JDA/releases/download/v5.0.0-beta.15/JDA-5.0.0-beta.15-withDependencies-min.jar")
+                .version("5.0.0-beta.20")
+                .url("https://github.com/discord-jda/JDA/releases/download/v5.0.0-beta.20/JDA-5.0.0-beta.20-withDependencies-min.jar")
                 .relocate(discordrelocation)
                 .build();
 
@@ -242,6 +237,15 @@ public class CleanStaffChat {
             Class.forName("net.dv8tion.jda.api.entities.Member");
         } catch (ClassNotFoundException ignored) {
             velocityLibraryManager.loadLibrary(discord);
+        }
+    }
+
+    public void startJDA() {
+        if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            jda = new JdaBuilder();
+            jda.startJDA();
+            updateJDATask();
+            getLogger().info("Hooked into Discord successfully!");
         }
     }
 

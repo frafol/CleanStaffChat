@@ -1,14 +1,17 @@
 package it.frafol.cleanstaffchat.bungee.staffchat.commands;
 
 import com.google.common.collect.Lists;
+import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import de.myzelyam.api.vanish.BungeeVanishAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeCommandsConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
+import it.frafol.cleanstaffchat.bungee.enums.BungeeRedis;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import me.TechsCode.UltraPermissions.UltraPermissionsAPI;
 import me.TechsCode.UltraPermissions.bungee.UltraPermissionsBungee;
+import me.TechsCode.UltraPermissions.storage.objects.Permission;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
@@ -51,21 +54,26 @@ public class StaffListCommand extends Command {
             String user_suffix;
 
             List<UUID> list = Lists.newArrayList();
-            for (ProxiedPlayer players : plugin.getProxy().getPlayers()) {
 
-                if (!players.hasPermission(BungeeConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
-                    continue;
+            if (plugin.getProxy().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+                list = handleRedis();
+            } else {
+                for (ProxiedPlayer players : plugin.getProxy().getPlayers()) {
+
+                    if (!players.hasPermission(BungeeConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
+                        continue;
+                    }
+
+                    if (BungeeConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(BungeeConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
+                        continue;
+                    }
+
+                    if (plugin.isPremiumVanish() && BungeeVanishAPI.getInvisiblePlayers().contains(players.getUniqueId())) {
+                        continue;
+                    }
+
+                    list.add(players.getUniqueId());
                 }
-
-                if (BungeeConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(BungeeConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
-                    continue;
-                }
-
-                if (plugin.isPremiumVanish() && BungeeVanishAPI.getInvisiblePlayers().contains(players.getUniqueId())) {
-                    continue;
-                }
-
-                list.add(players.getUniqueId());
             }
 
             sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_HEADER.color()
@@ -312,5 +320,69 @@ public class StaffListCommand extends Command {
         sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FOOTER.color()
                 .replace("%prefix%", BungeeMessages.PREFIX.color())
                 .replace("%online%", String.valueOf(list.size()))));
+    }
+
+    private List<UUID> handleRedis() {
+        List<UUID> list = Lists.newArrayList();
+        final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+        for (UUID players : redisBungeeAPI.getPlayersOnline()) {
+
+            if (plugin.getProxy().getPluginManager().getPlugin("LuckPerms") != null) {
+                LuckPerms api = LuckPermsProvider.get();
+                User user = api.getUserManager().getUser(players);
+
+                if (user == null) {
+                    continue;
+                }
+
+                if (!user.getCachedData().getPermissionData().checkPermission(BungeeConfig.STAFFLIST_SHOW_PERMISSION.get(String.class)).asBoolean()) {
+                    continue;
+                }
+
+                if (BungeeConfig.STAFFLIST_BYPASS.get(Boolean.class) && user.getCachedData().getPermissionData().checkPermission(BungeeConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class)).asBoolean()) {
+                    continue;
+                }
+
+                if (plugin.isPremiumVanish() && BungeeVanishAPI.getInvisiblePlayers().contains(players)) {
+                    continue;
+                }
+
+                list.add(players);
+                continue;
+            }
+
+            UltraPermissionsAPI api = UltraPermissionsBungee.getAPI();
+
+            if (!api.getUsers().uuid(players).isPresent()) {
+                continue;
+            }
+
+            me.TechsCode.UltraPermissions.storage.objects.User user = api.getUsers().uuid(players).get();
+            boolean hasShowPermission = false;
+            boolean hasBypassPermission = false;
+            for (Permission permission : user.getPermissions()) {
+                if (permission.getName().equalsIgnoreCase(BungeeConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
+                    hasShowPermission = true;
+                }
+                if (permission.getName().equalsIgnoreCase(BungeeConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
+                    hasBypassPermission = true;
+                }
+            }
+
+            if (!hasShowPermission) {
+                continue;
+            }
+
+            if (BungeeConfig.STAFFLIST_BYPASS.get(Boolean.class) && hasBypassPermission) {
+                continue;
+            }
+
+            if (plugin.isPremiumVanish() && BungeeVanishAPI.getInvisiblePlayers().contains(players)) {
+                continue;
+            }
+
+            list.add(players);
+        }
+        return list;
     }
 }

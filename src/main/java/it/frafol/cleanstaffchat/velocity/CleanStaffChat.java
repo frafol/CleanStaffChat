@@ -1,5 +1,8 @@
 package it.frafol.cleanstaffchat.velocity;
 
+import com.alessiodp.libby.Library;
+import com.alessiodp.libby.VelocityLibraryManager;
+import com.alessiodp.libby.relocation.Relocation;
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
@@ -24,9 +27,6 @@ import it.frafol.cleanstaffchat.velocity.staffchat.listeners.ServerListener;
 import it.frafol.cleanstaffchat.velocity.utils.VanishUtil;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import net.byteflux.libby.Library;
-import net.byteflux.libby.VelocityLibraryManager;
-import net.byteflux.libby.relocation.Relocation;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.slf4j.Logger;
 import ru.vyarus.yaml.updater.YamlUpdater;
@@ -186,7 +186,7 @@ public class CleanStaffChat {
     }
 
     private void loadLibraries() {
-        VelocityLibraryManager<CleanStaffChat> velocityLibraryManager = new VelocityLibraryManager<>(getLogger(), path, getServer().getPluginManager(), this);
+        VelocityLibraryManager<CleanStaffChat> velocityLibraryManager = new VelocityLibraryManager<>(this, getLogger(), path, getServer().getPluginManager());
 
         Library yaml;
         final Relocation yamlrelocation = new Relocation("simpleyaml", "it{}frafol{}libs{}simpleyaml");
@@ -209,8 +209,8 @@ public class CleanStaffChat {
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.0.0-beta.20")
-                .url("https://github.com/discord-jda/JDA/releases/download/v5.0.0-beta.20/JDA-5.0.0-beta.20-withDependencies-min.jar")
+                .version("5.0.0-beta.18")
+                .url("https://github.com/discord-jda/JDA/releases/download/v5.0.0-beta.18/JDA-5.0.0-beta.18-withDependencies-min.jar")
                 .relocate(discordrelocation)
                 .build();
 

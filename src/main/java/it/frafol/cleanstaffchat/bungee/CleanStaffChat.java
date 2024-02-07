@@ -1,5 +1,8 @@
 package it.frafol.cleanstaffchat.bungee;
 
+import com.alessiodp.libby.BungeeLibraryManager;
+import com.alessiodp.libby.Library;
+import com.alessiodp.libby.relocation.Relocation;
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import de.myzelyam.api.vanish.BungeeVanishAPI;
 import it.frafol.cleanstaffchat.bungee.adminchat.commands.AdminChatCommand;
@@ -15,9 +18,6 @@ import it.frafol.cleanstaffchat.bungee.staffchat.listeners.JoinListener;
 import it.frafol.cleanstaffchat.bungee.staffchat.listeners.ServerListener;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import net.byteflux.libby.BungeeLibraryManager;
-import net.byteflux.libby.Library;
-import net.byteflux.libby.relocation.Relocation;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -84,9 +84,9 @@ public class CleanStaffChat extends Plugin {
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.0.0-beta.20")
+                .version("5.0.0-beta.18")
                 .relocate(discordrelocation)
-                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.20/JDA-5.0.0-beta.20-withDependencies-min.jar")
+                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.18/JDA-5.0.0-beta.18-withDependencies-min.jar")
                 .build();
 
         bungeeLibraryManager.addMavenCentral();

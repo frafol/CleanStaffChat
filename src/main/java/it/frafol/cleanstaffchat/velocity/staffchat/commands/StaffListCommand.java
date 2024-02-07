@@ -113,7 +113,9 @@ public class StaffListCommand implements SimpleCommand {
             });
         }
 
-        for (UUID uuids : list) {
+        if (VelocityRedis.REDIS_ENABLE.get(Boolean.class) && PLUGIN.getServer().getPluginManager().getPlugin("redisbungee").isPresent()) {
+            sendRedisList(invocation, list, api);
+        } else for (UUID uuids : list) {
 
             Player players = PLUGIN.getServer().getPlayer(uuids).orElse(null);
 
@@ -185,6 +187,73 @@ public class StaffListCommand implements SimpleCommand {
         VelocityMessages.LIST_FOOTER.send(invocation.source(),
                 new Placeholder("prefix", VelocityMessages.PREFIX.color()),
                 new Placeholder("online", String.valueOf(list.size())));
+    }
+
+    private void sendRedisList(Invocation invocation, List<UUID> list, LuckPerms api) {
+        String user_prefix;
+        String user_suffix;
+        RedisBungeeAPI redisApi = RedisBungeeAPI.getRedisBungeeApi();
+        for (UUID uuids : list) {
+
+            User user = api.getUserManager().getUser(uuids);
+
+            if (user == null) {
+                continue;
+            }
+
+            final String prefix = user.getCachedData().getMetaData().getPrefix();
+            final String suffix = user.getCachedData().getMetaData().getSuffix();
+            Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
+
+            String isAFK = "";
+            if (PlayerCache.getAfk().contains(uuids)) {
+                isAFK = VelocityMessages.DISCORDLIST_AFK.get(String.class);
+            }
+
+            if (group == null || group.getDisplayName() == null) {
+
+                if (prefix != null) {
+                    user_prefix = prefix;
+                } else {
+                    user_prefix = "";
+                }
+
+                if (suffix != null) {
+                    user_suffix = suffix;
+                } else {
+                    user_suffix = "";
+                }
+
+                if (redisApi.getServerFor(uuids) == null || redisApi.getNameFromUuid(uuids) == null || redisApi.getServerNameFor(uuids) == null) {
+                    continue;
+                }
+
+                VelocityMessages.LIST_FORMAT.send(invocation.source(),
+                        new Placeholder("prefix", VelocityMessages.PREFIX.color()),
+                        new Placeholder("userprefix", ChatUtil.translateHex(user_prefix)),
+                        new Placeholder("usersuffix", ChatUtil.translateHex(user_suffix)),
+                        new Placeholder("afk", isAFK),
+                        new Placeholder("player", redisApi.getNameFromUuid(uuids)),
+                        new Placeholder("server", redisApi.getServerNameFor(uuids)));
+
+                continue;
+            }
+
+            user_prefix = prefix == null ? group.getDisplayName() : prefix;
+            user_suffix = suffix == null ? group.getDisplayName() : suffix;
+
+            if (redisApi.getServerFor(uuids) == null || redisApi.getNameFromUuid(uuids) == null || redisApi.getServerNameFor(uuids) == null) {
+                continue;
+            }
+
+            VelocityMessages.LIST_FORMAT.send(invocation.source(),
+                    new Placeholder("prefix", VelocityMessages.PREFIX.color()),
+                    new Placeholder("userprefix", ChatUtil.translateHex(user_prefix)),
+                    new Placeholder("usersuffix", ChatUtil.translateHex(user_suffix)),
+                    new Placeholder("afk", isAFK),
+                    new Placeholder("player", redisApi.getNameFromUuid(uuids)),
+                    new Placeholder("server", redisApi.getServerNameFor(uuids)));
+        }
     }
 
     private List<UUID> handleRedis() {

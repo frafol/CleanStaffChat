@@ -55,7 +55,7 @@ public class StaffListCommand extends Command {
 
             List<UUID> list = Lists.newArrayList();
 
-            if (plugin.getProxy().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+            if (BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
                 list = handleRedis();
             } else {
                 for (ProxiedPlayer players : plugin.getProxy().getPlayers()) {
@@ -113,10 +113,12 @@ public class StaffListCommand extends Command {
                 });
             }
 
-            for (UUID uuids : list) {
+            if (BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+                sendRedisUsers(sender, list, api);
+            } else for (UUID uuids : list) {
 
                 ProxiedPlayer players = plugin.getProxy().getPlayer(uuids);
-                User user = api.getUserManager().getUser(players.getUniqueId());
+                User user = api.getUserManager().getUser(uuids);
 
                 if (user == null) {
                     continue;
@@ -320,6 +322,73 @@ public class StaffListCommand extends Command {
         sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FOOTER.color()
                 .replace("%prefix%", BungeeMessages.PREFIX.color())
                 .replace("%online%", String.valueOf(list.size()))));
+    }
+
+    private void sendRedisUsers(CommandSender sender, List<UUID> list, LuckPerms api) {
+        String user_prefix;
+        String user_suffix;
+        RedisBungeeAPI redisApi = RedisBungeeAPI.getRedisBungeeApi();
+        for (UUID uuids : list) {
+
+            User user = api.getUserManager().getUser(uuids);
+
+            if (user == null) {
+                continue;
+            }
+
+            final String prefix = user.getCachedData().getMetaData().getPrefix();
+            final String suffix = user.getCachedData().getMetaData().getSuffix();
+            Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
+
+            String isAFK = "";
+            if (PlayerCache.getAfk().contains(uuids)) {
+                isAFK = BungeeMessages.STAFFLIST_AFK.get(String.class);
+            }
+
+            if (group == null || group.getDisplayName() == null) {
+
+                if (prefix != null) {
+                    user_prefix = prefix;
+                } else {
+                    user_prefix = "";
+                }
+
+                if (suffix != null) {
+                    user_suffix = suffix;
+                } else {
+                    user_suffix = "";
+                }
+
+                if (redisApi.getServerFor(uuids) == null || redisApi.getServerNameFor(uuids) == null || redisApi.getNameFromUuid(uuids) == null) {
+                    continue;
+                }
+
+                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FORMAT.color()
+                        .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                        .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
+                        .replace("%player%", redisApi.getNameFromUuid(uuids))
+                        .replace("%afk%", isAFK)
+                        .replace("%server%", redisApi.getServerNameFor(uuids))
+                        .replace("%prefix%", BungeeMessages.PREFIX.color())));
+
+                continue;
+            }
+
+            user_prefix = prefix == null ? group.getDisplayName() : prefix;
+            user_suffix = suffix == null ? group.getDisplayName() : suffix;
+
+            if (redisApi.getServerFor(uuids) == null || redisApi.getServerNameFor(uuids) == null || redisApi.getNameFromUuid(uuids) == null) {
+                continue;
+            }
+
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FORMAT.color()
+                    .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
+                    .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
+                    .replace("%player%", redisApi.getNameFromUuid(uuids))
+                    .replace("%afk%", isAFK)
+                    .replace("%server%", redisApi.getServerNameFor(uuids))
+                    .replace("%prefix%", BungeeMessages.PREFIX.color())));
+        }
     }
 
     private List<UUID> handleRedis() {

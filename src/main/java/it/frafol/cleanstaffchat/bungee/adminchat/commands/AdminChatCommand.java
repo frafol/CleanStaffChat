@@ -285,7 +285,7 @@ public class AdminChatCommand extends Command {
                             .replace("%message%", message)
                             .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName()));
 
-                    embed.setColor(Color.RED);
+                    embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_COLOR.get(String.class)));
                     embed.setFooter(BungeeDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                     channel.sendMessageEmbeds(embed.build()).queue();
@@ -365,7 +365,7 @@ public class AdminChatCommand extends Command {
                         .replace("%message%", message)
                         .replace("%server%", ""));
 
-                embed.setColor(Color.RED);
+                embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_COLOR.get(String.class)));
                 embed.setFooter(BungeeDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                 channel.sendMessageEmbeds(embed.build()).queue();

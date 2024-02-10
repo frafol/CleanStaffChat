@@ -179,7 +179,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         .replace("%message%", message)
                         .replace("%server%", ""));
 
-                embed.setColor(Color.RED);
+                embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_COLOR.get(String.class)));
                 embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                 channel.sendMessageEmbeds(embed.build()).queue();
@@ -332,7 +332,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 EmbedBuilder embed = new EmbedBuilder();
                 embed.setTitle(SpigotDiscordConfig.STAFFLIST_EMBED_TITLE.get(String.class), null);
                 embed.setDescription(sb.toString());
-                embed.setColor(Color.RED);
+                embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_COLOR.get(String.class)));
                 embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
                 event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
@@ -353,7 +353,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
             return;
         }
 
-        if (event.getAuthor().isBot()) {
+        if (event.getAuthor().isBot() && !SpigotDiscordConfig.FORWARD_BOT.get(Boolean.class)) {
             return;
         }
 

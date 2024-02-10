@@ -11,6 +11,9 @@ discord: # The Discord Integration is an experimental feature, report all proble
   # Toggle discord feature.
   enabled: false
 
+  # Select if send to chat the messages sent by bots in the channels.
+  forward_bot_messages: false
+
   # Your Discord bot's token.
   token: ""
 
@@ -41,6 +44,9 @@ discord: # The Discord Integration is an experimental feature, report all proble
 
     # Use embeds instead of messages.
     use_embeds: true
+
+    # Embeds color.
+    color: "0x00ff00"
 
     # Embeds footer.
     footer: "Powered by CleanStaffChat"

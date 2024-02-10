@@ -216,7 +216,7 @@ public class AdminChatCommand extends CommandBase {
                             .replace("%message%", message)
                             .replace("%server%", ""));
 
-                    embed.setColor(Color.RED);
+                    embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_COLOR.get(String.class)));
                     embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                     channel.sendMessageEmbeds(embed.build()).queue();
@@ -287,7 +287,7 @@ public class AdminChatCommand extends CommandBase {
                             .replace("%message%", message)
                             .replace("%server%", ""));
 
-                    embed.setColor(Color.RED);
+                    embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_COLOR.get(String.class)));
                     embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                     channel.sendMessageEmbeds(embed.build()).queue();

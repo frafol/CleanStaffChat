@@ -177,7 +177,7 @@ public class ChatListener extends ListenerAdapter {
                                         .replace("%message%", message)
                                         .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()));
 
-                                embed.setColor(Color.RED);
+                                embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_COLOR.get(String.class)));
                                 embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                                 channel.sendMessageEmbeds(embed.build()).queue();
@@ -346,7 +346,7 @@ public class ChatListener extends ListenerAdapter {
                 EmbedBuilder embed = new EmbedBuilder();
                 embed.setTitle(VelocityDiscordConfig.STAFFLIST_EMBED_TITLE.get(String.class), null);
                 embed.setDescription(sb.toString());
-                embed.setColor(Color.RED);
+                embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_COLOR.get(String.class)));
                 embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
                 event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
@@ -372,7 +372,7 @@ public class ChatListener extends ListenerAdapter {
 
         }
 
-        if (event.getAuthor().isBot()) {
+        if (event.getAuthor().isBot() && !VelocityDiscordConfig.FORWARD_BOT.get(Boolean.class)) {
             return;
         }
 

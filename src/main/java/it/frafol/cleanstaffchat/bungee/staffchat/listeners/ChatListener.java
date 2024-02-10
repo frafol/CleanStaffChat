@@ -247,7 +247,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         .replace("%message%", message)
                         .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName()));
 
-                embed.setColor(Color.RED);
+                embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_COLOR.get(String.class)));
                 embed.setFooter(BungeeDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                 channel.sendMessageEmbeds(embed.build()).queue();
@@ -397,7 +397,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 EmbedBuilder embed = new EmbedBuilder();
                 embed.setTitle(BungeeDiscordConfig.STAFFLIST_EMBED_TITLE.get(String.class), null);
                 embed.setDescription(sb.toString());
-                embed.setColor(Color.RED);
+                embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_COLOR.get(String.class)));
                 embed.setFooter(BungeeDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
                 event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
@@ -421,7 +421,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
         }
 
-        if (event.getAuthor().isBot()) {
+        if (event.getAuthor().isBot() && !BungeeDiscordConfig.FORWARD_BOT.get(Boolean.class)) {
             return;
         }
 

@@ -185,7 +185,7 @@ public class ChatListener extends ListenerAdapter {
                     .replace("%message%", message)
                     .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()));
 
-            embed.setColor(Color.RED);
+            embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_COLOR.get(String.class)));
             embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
             channel.sendMessageEmbeds(embed.build()).queue();
@@ -222,7 +222,7 @@ public class ChatListener extends ListenerAdapter {
             return;
         }
 
-        if (event.getAuthor().isBot()) {
+        if (event.getAuthor().isBot() && !VelocityDiscordConfig.FORWARD_BOT.get(Boolean.class)) {
             return;
         }
 

@@ -100,10 +100,10 @@ public class ChatListener extends ListenerAdapter {
 
         }
 
+        event.setResult(PlayerChatEvent.ChatResult.denied());
         if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
             LuckPerms api = LuckPermsProvider.get();
-            event.setResult(PlayerChatEvent.ChatResult.denied());
 
             User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
             if (user == null) {

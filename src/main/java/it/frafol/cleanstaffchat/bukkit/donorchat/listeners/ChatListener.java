@@ -79,19 +79,14 @@ public class ChatListener extends ListenerAdapter implements Listener {
         } else if (event.getPlayer().hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))) {
 
             final String message = event.getMessage();
+            event.setCancelled(true);
 
             if (SpigotConfig.PREVENT_COLOR_CODES.get(Boolean.class)) {
-
                 if (PlayerCache.hasColorCodes(message)) {
-
                     event.getPlayer().sendMessage(SpigotMessages.COLOR_CODES.color()
                             .replace("%prefix%", SpigotMessages.DONORPREFIX.color())
                             .replace("&", "§"));
-
-                    event.setCancelled(true);
-
                     return;
-
                 }
             }
 
@@ -105,18 +100,18 @@ public class ChatListener extends ListenerAdapter implements Listener {
             if (PLUGIN.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
 
                 final LuckPerms api = LuckPermsProvider.get();
-
                 final User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
 
                 if (user == null) {
                     return;
                 }
+
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
                 final String user_prefix = prefix == null ? "" : prefix;
                 final String user_suffix = suffix == null ? "" : suffix;
 
-                CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
                         .forEach(players -> players.sendMessage(SpigotMessages.DONORCHAT_FORMAT.color()
@@ -145,7 +140,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
                 final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
 
-                CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
                         .forEach(players -> players.sendMessage(SpigotMessages.DONORCHAT_FORMAT.color()
@@ -160,7 +155,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
             } else {
 
-                CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
                         .forEach(players -> players.sendMessage(SpigotMessages.DONORCHAT_FORMAT.color()
@@ -247,7 +242,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
             return;
         }
 
-        CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+        PLUGIN.getServer().getOnlinePlayers().stream().filter
                         (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                 && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
                 .forEach(players -> players.sendMessage((SpigotMessages.DISCORD_DONOR_FORMAT.color()

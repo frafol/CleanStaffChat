@@ -27,6 +27,7 @@ public class ChatListener implements Listener {
         if (player.getServer() == null) {
             return;
         }
+
         Server server = player.getServer();
 
         if (PlayerCache.getMutedservers().contains(server.getInfo().getName()) || PlayerCache.getMutedservers().contains("all")) {

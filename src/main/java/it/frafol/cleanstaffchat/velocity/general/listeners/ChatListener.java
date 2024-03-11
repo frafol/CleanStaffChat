@@ -28,8 +28,8 @@ public class ChatListener extends ListenerAdapter {
         if (!player.getCurrentServer().isPresent()) {
             return;
         }
-        RegisteredServer server = player.getCurrentServer().get().getServer();
 
+        RegisteredServer server = player.getCurrentServer().get().getServer();
         if (PlayerCache.getMutedservers().contains(server.getServerInfo().getName()) || PlayerCache.getMutedservers().contains("all")) {
 
             if (player.hasPermission(VelocityConfig.MUTECHAT_BYPASS_PERMISSION.get(String.class))) {

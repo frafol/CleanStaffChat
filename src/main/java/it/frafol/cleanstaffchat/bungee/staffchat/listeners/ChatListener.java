@@ -87,13 +87,10 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
             if (BungeeConfig.PREVENT_COLOR_CODES.get(Boolean.class)) {
                 if (PlayerCache.hasColorCodes(message)) {
-
                     ((ProxiedPlayer) event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeMessages.COLOR_CODES.color()
                             .replace("%prefix%", BungeeMessages.PREFIX.color())
                             .replace("&", "§")));
-
                     return;
-
                 }
             }
 

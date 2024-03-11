@@ -84,11 +84,10 @@ public class ChatListener extends ListenerAdapter {
             }
         }
 
+        event.setResult(PlayerChatEvent.ChatResult.denied());
         if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
             LuckPerms api = LuckPermsProvider.get();
-            event.setResult(PlayerChatEvent.ChatResult.denied());
-
             User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
 
             if (user == null) {
@@ -118,7 +117,7 @@ public class ChatListener extends ListenerAdapter {
                 return;
             }
 
-            CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+            PLUGIN.getServer().getAllPlayers().stream().filter
                             (players -> players.hasPermission(VelocityConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                     && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
                     .forEach(players -> VelocityMessages.ADMINCHAT_FORMAT.send(players,
@@ -150,7 +149,7 @@ public class ChatListener extends ListenerAdapter {
                 return;
             }
 
-            CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+            PLUGIN.getServer().getAllPlayers().stream().filter
                             (players -> players.hasPermission(VelocityConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                     && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
                     .forEach(players -> VelocityMessages.ADMINCHAT_FORMAT.send(players,
@@ -204,9 +203,7 @@ public class ChatListener extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
 
         if (PLUGIN.getConfigTextFile() == null || PLUGIN.getMessagesTextFile() == null) {
-
             return;
-
         }
 
         if (!event.getChannel().getId().equalsIgnoreCase(VelocityDiscordConfig.ADMIN_CHANNEL_ID.get(String.class))) {
@@ -214,7 +211,6 @@ public class ChatListener extends ListenerAdapter {
         }
 
         if (event.getMessage().getContentDisplay().equalsIgnoreCase(VelocityMessages.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class))) {
-
             PLUGIN.getServer().getScheduler()
                     .buildTask(PLUGIN, scheduledTask -> event.getMessage().delete().queue())
                     .delay(5, TimeUnit.SECONDS)
@@ -250,7 +246,7 @@ public class ChatListener extends ListenerAdapter {
 
         } else {
 
-            CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+            PLUGIN.getServer().getAllPlayers().stream().filter
                             (players -> players.hasPermission(VelocityConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                     && !(PlayerCache.getToggled().contains(players.getUniqueId())))
                     .forEach(players -> VelocityMessages.DISCORD_ADMIN_FORMAT.send(players,

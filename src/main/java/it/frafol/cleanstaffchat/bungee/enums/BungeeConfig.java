@@ -75,6 +75,7 @@ public enum BungeeConfig {
     STAFFCHAT_SWITCH_ALL("settings.staffchat.staff_switch_all_players"),
 
     STATS("modules.stats"),
+    WORKAROUND_KICK("modules.kick_workaround"),
 
     UPDATE_CHECK("modules.update_check"),
 

@@ -414,12 +414,13 @@ public class CleanStaffChat {
 
         server.getEventManager().register(this, new JoinListener(this));
         server.getEventManager().register(this, new ServerListener(this));
-        server.getEventManager().register(this, new ChatListener(this));
+
+        if (getLuckPerms()) {
+            server.getEventManager().register(this, new ChatListener(this));
+        }
 
         if (VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-
-            jda.getJda().addEventListener(new it.frafol.cleanstaffchat.velocity.staffchat.listeners.ChatListener(this));
-
+            jda.getJda().addEventListener(new ChatListener(this));
         }
     }
 
@@ -453,12 +454,12 @@ public class CleanStaffChat {
                     .build(), new it.frafol.cleanstaffchat.velocity.donorchat.commands.ToggleCommand(this));
         }
 
-        server.getEventManager().register(this, new it.frafol.cleanstaffchat.velocity.donorchat.listeners.ChatListener(this));
+        if (getLuckPerms()) {
+            server.getEventManager().register(this, new it.frafol.cleanstaffchat.velocity.donorchat.listeners.ChatListener(this));
+        }
 
         if (VelocityConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-
             jda.getJda().addEventListener(new it.frafol.cleanstaffchat.velocity.donorchat.listeners.ChatListener(this));
-
         }
     }
 
@@ -492,7 +493,9 @@ public class CleanStaffChat {
                     .build(), new it.frafol.cleanstaffchat.velocity.adminchat.commands.ToggleCommand(this));
         }
 
-        server.getEventManager().register(this, new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
+        if (getLuckPerms()) {
+            server.getEventManager().register(this, new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
+        }
 
         if (VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
             jda.getJda().addEventListener(new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
@@ -590,6 +593,10 @@ public class CleanStaffChat {
             return getServer().getPluginManager().isLoaded("premiumvanish");
         }
         return false;
+    }
+
+    private boolean getLuckPerms() {
+        return getServer().getPluginManager().isLoaded("luckperms");
     }
 
     private boolean getRedisBungee() {

@@ -52,6 +52,9 @@ public class PlayerCache {
     @Getter
     private final HashSet<String> mutedservers = new HashSet<>();
 
+    @Getter
+    private final HashSet<UUID> nochat = new HashSet<>();
+
     public boolean hasColorCodes(@NotNull String message) {
         return message.contains("&0") ||
                 message.contains("&1") ||

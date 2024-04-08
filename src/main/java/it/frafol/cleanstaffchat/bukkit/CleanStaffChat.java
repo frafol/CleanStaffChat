@@ -7,6 +7,7 @@ import com.github.Anon8281.universalScheduler.UniversalScheduler;
 import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import it.frafol.cleanstaffchat.bukkit.enums.*;
+import it.frafol.cleanstaffchat.bukkit.objects.PluginMessageReceiver;
 import it.frafol.cleanstaffchat.bukkit.objects.TextFile;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.CommandBase;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl.DebugCommand;
@@ -20,7 +21,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.entity.Player;
@@ -130,20 +130,7 @@ public class CleanStaffChat extends JavaPlugin {
                 " \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)\n");
 
 
-        getLogger().info("Server version: " + Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3] + ".");
-
-        if (Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_6_R")
-            || Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_5_R")
-                || Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_4_R")
-                || Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_3_R")
-                || Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_2_R")
-                || Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_1_R")
-                || Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].contains("1_0_R")) {
-
-            getLogger().severe("Support for your version was declined.");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
+        getLogger().info("Server version: " + getServer().getBukkitVersion());
 
         File configFile = new File(getDataFolder(), "config.yml");
         File messageFile = new File(getDataFolder(), "messages.yml");
@@ -175,6 +162,13 @@ public class CleanStaffChat extends JavaPlugin {
 
         getCommandMap().register(getName().toLowerCase(), new ReloadCommand(this));
         getServer().getPluginManager().registerEvents(new DebugCommand(), this);
+
+        if (SpigotConfig.WORKAROUND_KICK.get(Boolean.class)) {
+            getServer().getMessenger().registerIncomingPluginChannel(this, "cleanss:join", new PluginMessageReceiver());
+            getServer().getPluginManager().registerEvents(new it.frafol.cleanstaffchat.bukkit.objects.ChatListener(), this);
+            getLogger().info("Plugin successfully enabled in BungeeCord mode!");
+            return;
+        }
 
         if (SpigotConfig.STAFFLIST_MODULE.get(Boolean.class)) {
             registerStaffListCommands();
@@ -441,7 +435,7 @@ public class CleanStaffChat extends JavaPlugin {
     public void onDisable() {
         getLogger().info("Deleting instances...");
 
-        if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+        if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && !SpigotConfig.WORKAROUND_KICK.get(Boolean.class)) {
             jda.shutdownNow();
         }
 

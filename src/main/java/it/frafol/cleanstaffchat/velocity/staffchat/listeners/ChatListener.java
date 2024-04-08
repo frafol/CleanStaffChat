@@ -2,7 +2,6 @@ package it.frafol.cleanstaffchat.velocity.staffchat.listeners;
 
 import com.google.common.collect.Lists;
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
-import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.Player;
@@ -36,7 +35,7 @@ public class ChatListener extends ListenerAdapter {
         this.PLUGIN = plugin;
     }
 
-    @Subscribe(order = PostOrder.FIRST)
+    @Subscribe
     public void onChat(PlayerChatEvent event) {
 
         final String message = event.getMessage();
@@ -54,13 +53,10 @@ public class ChatListener extends ListenerAdapter {
                 if (!event.getMessage().startsWith("/")) {
 
                     if (!PlayerCache.getMuted().contains("true")) {
-
                         if (PREVENT_COLOR_CODES.get(Boolean.class)) {
                             if (ChatUtil.hasColorCodes(message)) {
-
                                 VelocityMessages.COLOR_CODES.send(event.getPlayer(),
                                         new Placeholder("prefix", VelocityMessages.PREFIX.color()));
-
                                 return;
                             }
                         }

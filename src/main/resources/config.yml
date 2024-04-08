@@ -132,4 +132,11 @@ modules:
 
   stafflist_module: true
 
+  # Are you getting kicked on BungeeCord when switching staffchat mode to globalchat mode?
+  # You have to activate this option to fix it, please follow these steps:
+  # 1. Add this plugin in Spigot and BungeeCord servers.
+  # 2. Activate this option in both servers (this option will disable all staffchat modules in Spigot also).
+  # 3. Your problem is now fixed, note that Velocity is not affected by this issue if you install SignedVelocity in both Velocity and Spigot server.
+  kick_workaround: false
+
 # Enjoy.

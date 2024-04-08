@@ -87,19 +87,17 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
         } else if (((ProxiedPlayer) event.getSender()).hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))) {
 
-            event.setCancelled(true);
+            if (!BungeeConfig.WORKAROUND_KICK.get(Boolean.class)) {
+                event.setCancelled(true);
+            }
 
             if (BungeeConfig.PREVENT_COLOR_CODES.get(Boolean.class)) {
                 if (PlayerCache.hasColorCodes(message)) {
-
                     ((ProxiedPlayer) event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeMessages.COLOR_CODES.color()
                             .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
                             .replace("&", "§")));
-
                     return;
-
                 }
-
             }
 
             if (!((ProxiedPlayer) event.getSender()).hasPermission(BungeeConfig.COOLDOWN_BYPASS_PERMISSION.get(String.class))) {
@@ -284,9 +282,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
 
         if (PLUGIN.getConfigTextFile() == null) {
-
             return;
-
         }
 
         if (!event.getChannel().getId().equalsIgnoreCase(BungeeDiscordConfig.DONOR_CHANNEL_ID.get(String.class))) {

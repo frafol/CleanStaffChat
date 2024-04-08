@@ -1,8 +1,11 @@
 package it.frafol.cleanstaffchat.bungee.objects;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -97,6 +100,28 @@ public class PlayerCache {
             str = str.replace(color,ChatColor.of(color.replace("&","")) + "");
             match = pattern.matcher(str);
         }
+        Pattern pattern2 = Pattern.compile("#[a-fA-F0-9]{6}");
+        match = pattern2.matcher(str);
+        while (match.find()) {
+            String color = str.substring(match.start(),match.end());
+            str = str.replace(color,ChatColor.of(color) + "");
+            match = pattern2.matcher(str);
+        }
         return ChatColor.translateAlternateColorCodes('&',str);
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    public void sendChannelMessage(ProxiedPlayer player, boolean cancel) {
+
+        final ByteArrayDataOutput buf = ByteStreams.newDataOutput();
+
+        buf.writeUTF(String.valueOf(cancel));
+        buf.writeUTF(player.getName());
+
+        if (player.getServer() == null) {
+            return;
+        }
+
+        player.getServer().sendData("cleansc:cancel", buf.toByteArray());
     }
 }

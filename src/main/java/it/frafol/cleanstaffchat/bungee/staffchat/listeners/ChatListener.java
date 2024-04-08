@@ -83,7 +83,9 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
         } else if (((ProxiedPlayer) event.getSender()).hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
 
-            event.setCancelled(true);
+            if (!BungeeConfig.WORKAROUND_KICK.get(Boolean.class)) {
+                event.setCancelled(true);
+            }
 
             if (BungeeConfig.PREVENT_COLOR_CODES.get(Boolean.class)) {
                 if (PlayerCache.hasColorCodes(message)) {

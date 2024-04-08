@@ -1,7 +1,6 @@
 package it.frafol.cleanstaffchat.velocity.adminchat.listeners;
 
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
-import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
@@ -31,7 +30,7 @@ public class ChatListener extends ListenerAdapter {
         this.PLUGIN = plugin;
     }
 
-    @Subscribe(order = PostOrder.FIRST)
+    @Subscribe 
     public void onChat(PlayerChatEvent event) {
 
         final String message = event.getMessage();

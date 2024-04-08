@@ -171,6 +171,7 @@ public class CleanStaffChat extends Plugin {
             UpdateChecker();
         }
 
+        getProxy().registerChannel("cleansc:cancel");
         getLogger().info("§7Plugin successfully §denabled§7!");
     }
 
@@ -213,6 +214,7 @@ public class CleanStaffChat extends Plugin {
         instance = null;
         configTextFile = null;
 
+        getProxy().unregisterChannel("cleansc:cancel");
         getLogger().info("§7Successfully §ddisabled§7.");
     }
 

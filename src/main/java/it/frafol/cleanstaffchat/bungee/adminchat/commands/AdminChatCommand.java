@@ -71,6 +71,7 @@ public class AdminChatCommand extends Command {
                         PlayerCache.getToggled_2_admin().add(player.getUniqueId());
                         PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
                         PlayerCache.getToggled_2().remove(player.getUniqueId());
+                        PlayerCache.sendChannelMessage(player, true);
                         sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_TALK_ENABLED.color()
                                 .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
                         return;
@@ -82,6 +83,7 @@ public class AdminChatCommand extends Command {
 
                 } else if (PlayerCache.getToggled_2_admin().contains(player.getUniqueId())) {
                     PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
+                    PlayerCache.sendChannelMessage(player, false);
                     sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_TALK_DISABLED.color()
                             .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
                     return;

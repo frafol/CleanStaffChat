@@ -74,6 +74,8 @@ public enum SpigotConfig {
 
     STATS("modules.stats"),
 
+    WORKAROUND_KICK("modules.kick_workaround"),
+
     UPDATE_CHECK("modules.update_check"),
 
     STAFFCHAT_DISCORD_MODULE("modules.staffchat_discord_module"),

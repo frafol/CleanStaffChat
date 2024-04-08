@@ -81,6 +81,7 @@ public class DonorChatCommand extends Command {
                         PlayerCache.getToggled_2_donor().add(player.getUniqueId());
                         PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
                         PlayerCache.getToggled_2().remove(player.getUniqueId());
+                        PlayerCache.sendChannelMessage(player, true);
                         sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_TALK_ENABLED.color()
                                 .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
                         return;
@@ -90,6 +91,7 @@ public class DonorChatCommand extends Command {
                     }
                 } else if (PlayerCache.getToggled_2_donor().contains(player.getUniqueId())) {
                     PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
+                    PlayerCache.sendChannelMessage(player, false);
                     sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_TALK_DISABLED.color()
                             .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
                     return;

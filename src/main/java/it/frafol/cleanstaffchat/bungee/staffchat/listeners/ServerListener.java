@@ -40,6 +40,12 @@ public class ServerListener implements Listener {
             return;
         }
 
+        if (PlayerCache.getToggled_2().contains(event.getPlayer().getUniqueId())
+                || PlayerCache.getToggled_2_admin().contains(event.getPlayer().getUniqueId())
+                || PlayerCache.getToggled_2_donor().contains(event.getPlayer().getUniqueId())) {
+            PlayerCache.sendChannelMessage(event.getPlayer(), true);
+        }
+
         if (BungeeConfig.STAFFCHAT_NO_AFK_ONCHANGE_SERVER.get(Boolean.class)
                 && PlayerCache.getAfk().contains(event.getPlayer().getUniqueId())) {
 

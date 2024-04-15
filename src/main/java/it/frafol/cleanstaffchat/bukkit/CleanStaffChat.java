@@ -164,7 +164,7 @@ public class CleanStaffChat extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new DebugCommand(), this);
 
         if (SpigotConfig.WORKAROUND_KICK.get(Boolean.class)) {
-            getServer().getMessenger().registerIncomingPluginChannel(this, "cleanss:join", new PluginMessageReceiver());
+            getServer().getMessenger().registerIncomingPluginChannel(this, "cleansc:cancel", new PluginMessageReceiver());
             getServer().getPluginManager().registerEvents(new it.frafol.cleanstaffchat.bukkit.objects.ChatListener(), this);
             getLogger().info("Plugin successfully enabled in BungeeCord mode!");
             return;
@@ -434,6 +434,10 @@ public class CleanStaffChat extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("Deleting instances...");
+
+        if (SpigotConfig.WORKAROUND_KICK.get(Boolean.class)) {
+            getServer().getMessenger().unregisterIncomingPluginChannel(this, "cleansc:cancel", new PluginMessageReceiver());
+        }
 
         if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && !SpigotConfig.WORKAROUND_KICK.get(Boolean.class)) {
             jda.shutdownNow();

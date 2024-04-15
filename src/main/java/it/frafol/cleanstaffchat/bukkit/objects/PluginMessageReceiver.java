@@ -43,7 +43,7 @@ public class PluginMessageReceiver implements PluginMessageListener {
                 return;
             }
 
-            PlayerCache.getNochat().add(final_player.getUniqueId());
+            PlayerCache.getNochat().remove(final_player.getUniqueId());
         }
     }
 }

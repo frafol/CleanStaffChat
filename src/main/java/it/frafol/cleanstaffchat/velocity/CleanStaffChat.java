@@ -47,8 +47,8 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.15.0",
-        dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true), @Dependency(id = "signedvelocity", optional = true), @Dependency(id = "spicord", optional = true), @Dependency(id = "leaf", optional = true)},
+        version = "1.15.1",
+        dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true), @Dependency(id = "signedvelocity", optional = true), @Dependency(id = "spicord", optional = true), @Dependency(id = "leaf", optional = true), @Dependency(id = "clientcatcher", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
 )
@@ -93,6 +93,9 @@ public class CleanStaffChat {
                 " / __)(  )  ( ___)  /__\\  ( \\( )  / __) / __)\n" +
                 "( (__  )(__  )__)  /(__)\\  )  (   \\__ \\( (__ \n" +
                 " \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)\n");
+
+        logger.info("Server version: " + getServer().getVersion());
+        checkIncompatibilities();
 
         loadFiles();
         updateConfig();
@@ -175,6 +178,12 @@ public class CleanStaffChat {
         logger.info("Successfully disabled.");
     }
 
+    private void checkIncompatibilities() {
+        if (getSpicord()) {
+            logger.error("Spicord found, this plugin is completely unsupported and you won't receive any support.");
+        }
+    }
+
     private void loadFiles() {
         configTextFile = new TextFile(path, "config.yml");
         messagesTextFile = new TextFile(path, "messages.yml");
@@ -189,7 +198,7 @@ public class CleanStaffChat {
         VelocityLibraryManager<CleanStaffChat> velocityLibraryManager = new VelocityLibraryManager<>(this, getLogger(), path, getServer().getPluginManager());
 
         Library yaml;
-        final Relocation yamlrelocation = new Relocation("simpleyaml", "it{}frafol{}libs{}simpleyaml");
+        final Relocation yamlrelocation = new Relocation("me{}carleslc{}Simple-YAML", "it{}frafol{}libs{}me{}carleslc{}Simple-YAML");
         yaml = Library.builder()
                 .groupId("me{}carleslc{}Simple-YAML")
                 .artifactId("Simple-Yaml")
@@ -197,7 +206,7 @@ public class CleanStaffChat {
                 .relocate(yamlrelocation)
                 .build();
 
-        final Relocation updaterrelocation = new Relocation("updater", "it{}frafol{}libs{}updater");
+        final Relocation updaterrelocation = new Relocation("ru{}vyarus", "it{}frafol{}libs{}ru{}vyarus");
         Library updater = Library.builder()
                 .groupId("ru{}vyarus")
                 .artifactId("yaml-config-updater")
@@ -205,7 +214,13 @@ public class CleanStaffChat {
                 .relocate(updaterrelocation)
                 .build();
 
-        final Relocation discordrelocation = new Relocation("kotlin", "it{}frafol{}libs{}kotlin");
+       Relocation discordrelocation;
+       if (getClientCatcher()) {
+           discordrelocation = new Relocation("kotlin", "it{}frafol{}libs{}kotlin");
+       } else {
+           discordrelocation = new Relocation("net{}dv8tion", "it{}frafol{}libs{}net{}dv8tion");
+       }
+
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
@@ -609,5 +624,13 @@ public class CleanStaffChat {
 
     private boolean getSignedVelocity() {
         return getServer().getPluginManager().isLoaded("signedvelocity");
+    }
+
+    private boolean getSpicord() {
+        return getServer().getPluginManager().isLoaded("spicord");
+    }
+
+    private boolean getClientCatcher() {
+        return getServer().getPluginManager().isLoaded("clientcatcher");
     }
 }

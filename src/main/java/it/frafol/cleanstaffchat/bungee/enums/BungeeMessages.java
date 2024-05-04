@@ -136,6 +136,20 @@ public enum BungeeMessages {
             str = str.replace(color,ChatColor.of(color.replace("&","")) + "");
             match = pattern.matcher(str);
         }
+        Pattern pattern2 = Pattern.compile("#[a-fA-F0-9]{6}");
+        match = pattern2.matcher(str);
+        while (match.find()) {
+            String color = str.substring(match.start(),match.end());
+            str = str.replace(color,ChatColor.of(color) + "");
+            match = pattern2.matcher(str);
+        }
+        Pattern pattern3 = Pattern.compile("<#[a-fA-F0-9]]{6}>");
+        match = pattern3.matcher(str);
+        while (match.find()) {
+            String color = str.substring(match.start(),match.end());
+            str = str.replace(color,ChatColor.of(color.replace("&","")) + "");
+            match = pattern.matcher(str);
+        }
         return ChatColor.translateAlternateColorCodes('&',str);
     }
 }

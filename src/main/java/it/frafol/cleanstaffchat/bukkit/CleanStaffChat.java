@@ -62,7 +62,7 @@ public class CleanStaffChat extends JavaPlugin {
 
         BukkitLibraryManager bukkitLibraryManager = new BukkitLibraryManager(this);
 
-        final Relocation yamlrelocation = new Relocation("simpleyaml", "it{}frafol{}libs{}simpleyaml");
+        final Relocation yamlrelocation = new Relocation("me{}carleslc{}Simple-YAML", "it{}frafol{}libs{}me{}carleslc{}Simple-YAML");
         Library yaml;
         yaml = Library.builder()
                 .groupId("me{}carleslc{}Simple-YAML")
@@ -71,7 +71,7 @@ public class CleanStaffChat extends JavaPlugin {
                 .relocate(yamlrelocation)
                 .build();
 
-        final Relocation updaterrelocation = new Relocation("updater", "it{}frafol{}libs{}updater");
+        final Relocation updaterrelocation = new Relocation("com{}tchristofferson", "it{}frafol{}libs{}com{}tchristofferson");
         Library updater = Library.builder()
                 .groupId("com{}tchristofferson")
                 .artifactId("ConfigUpdater")
@@ -80,7 +80,7 @@ public class CleanStaffChat extends JavaPlugin {
                 .url("https://github.com/frafol/Config-Updater/releases/download/compile/ConfigUpdater-2.1-SNAPSHOT.jar")
                 .build();
 
-        final Relocation discordrelocation = new Relocation("discord", "it{}frafol{}libs{}discord");
+        final Relocation discordrelocation = new Relocation("net{}dv8tion", "it{}frafol{}libs{}net{}dv8tion");
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
@@ -89,7 +89,7 @@ public class CleanStaffChat extends JavaPlugin {
                 .url("https://github.com/discord-jda/JDA/releases/download/v5.0.0-beta.18/JDA-5.0.0-beta.18-withDependencies.jar")
                 .build();
 
-        final Relocation schedulerrelocation = new Relocation("scheduler", "it{}frafol{}libs{}scheduler");
+        final Relocation schedulerrelocation = new Relocation("com{}github{}Anon8281", "it{}frafol{}libs{}com{}github{}Anon8281ler");
         Library scheduler;
         scheduler = Library.builder()
                 .groupId("com{}github{}Anon8281")

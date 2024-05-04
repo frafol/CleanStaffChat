@@ -107,6 +107,13 @@ public class PlayerCache {
             str = str.replace(color,ChatColor.of(color) + "");
             match = pattern2.matcher(str);
         }
+        Pattern pattern3 = Pattern.compile("<#[0-9a-fA-F]{6}>");
+        match = pattern3.matcher(str);
+        while (match.find()) {
+            String color = str.substring(match.start(),match.end());
+            str = str.replace(color,ChatColor.of(color.replace("&","")) + "");
+            match = pattern.matcher(str);
+        }
         return ChatColor.translateAlternateColorCodes('&',str);
     }
 

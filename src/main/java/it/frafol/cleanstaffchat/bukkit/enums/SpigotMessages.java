@@ -122,14 +122,28 @@ public enum SpigotMessages {
         Matcher match = unicode.matcher(str);
         while (match.find()) {
             String code = str.substring(match.start(),match.end());
-            str = str.replace(code,Character.toString((char) Integer.parseInt(code.replace("\\u+",""),16)));
+            str = str.replace(code, Character.toString((char) Integer.parseInt(code.replace("\\u+",""),16)));
             match = unicode.matcher(str);
         }
         Pattern pattern = Pattern.compile("&#[a-fA-F0-9]{6}");
         match = pattern.matcher(str);
         while (match.find()) {
-            String color = str.substring(match.start(),match.end());
-            str = str.replace(color, net.md_5.bungee.api.ChatColor.of(color.replace("&","")) + "");
+            String code = str.substring(match.start(),match.end());
+            str = str.replace(code, ChatColor.stripColor(code.replace("&", "")));
+            match = pattern.matcher(str);
+        }
+        Pattern pattern2 = Pattern.compile("#[a-fA-F0-9]{6}");
+        match = pattern2.matcher(str);
+        while (match.find()) {
+            String code = str.substring(match.start(),match.end());
+            str = str.replace(code, ChatColor.stripColor(code.replace("&", "")));
+            match = pattern.matcher(str);
+        }
+        Pattern pattern3 = Pattern.compile("<#[a-fA-F0-9]]{6}>");
+        match = pattern3.matcher(str);
+        while (match.find()) {
+            String code = str.substring(match.start(),match.end());
+            str = str.replace(code, ChatColor.stripColor(code.replace("&", "")));
             match = pattern.matcher(str);
         }
         return ChatColor.translateAlternateColorCodes('&',str);

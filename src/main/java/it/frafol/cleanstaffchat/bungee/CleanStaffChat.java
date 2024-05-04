@@ -52,6 +52,8 @@ public class CleanStaffChat extends Plugin {
 
     public boolean updated = false;
 
+    private final boolean getSpicord = instance.getProxy().getPluginManager().getPlugin("Spicord") != null;
+
     @Getter
     public static CleanStaffChat instance;
 
@@ -64,7 +66,7 @@ public class CleanStaffChat extends Plugin {
         BungeeLibraryManager bungeeLibraryManager = new BungeeLibraryManager(this);
 
         Library yaml;
-        final Relocation yamlrelocation = new Relocation("simpleyaml", "it{}frafol{}libs{}simpleyaml");
+        final Relocation yamlrelocation = new Relocation("me{}carleslc{}Simple-YAML", "it{}frafol{}libs{}me{}carleslc{}Simple-YAML");
         yaml = Library.builder()
                 .groupId("me{}carleslc{}Simple-YAML")
                 .artifactId("Simple-Yaml")
@@ -72,7 +74,7 @@ public class CleanStaffChat extends Plugin {
                 .relocate(yamlrelocation)
                 .build();
 
-        final Relocation updaterrelocation = new Relocation("updater", "it{}frafol{}libs{}updater");
+        final Relocation updaterrelocation = new Relocation("ru{}vyarus", "it{}frafol{}libs{}ru{}vyarus");
         Library updater = Library.builder()
                 .groupId("ru{}vyarus")
                 .artifactId("yaml-config-updater")
@@ -80,7 +82,7 @@ public class CleanStaffChat extends Plugin {
                 .relocate(updaterrelocation)
                 .build();
 
-        final Relocation discordrelocation = new Relocation("discord", "it{}frafol{}libs{}discord");
+        final Relocation discordrelocation = new Relocation("net{}dv8tion", "it{}frafol{}libs{}net{}dv8tion");
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
@@ -92,12 +94,7 @@ public class CleanStaffChat extends Plugin {
         bungeeLibraryManager.addMavenCentral();
         bungeeLibraryManager.addJitPack();
         bungeeLibraryManager.loadLibrary(updater);
-
-        try {
-            Class.forName("net.dv8tion.jda.api.entities.Member");
-        } catch (ClassNotFoundException ignored) {
-            bungeeLibraryManager.loadLibrary(discord);
-        }
+        bungeeLibraryManager.loadLibrary(discord);
 
         try {
             bungeeLibraryManager.loadLibrary(yaml);
@@ -118,6 +115,9 @@ public class CleanStaffChat extends Plugin {
                 " / __)(  )  ( ___)  /__\\  ( \\( )  / __) / __)\n" +
                 "( (__  )(__  )__)  /(__)\\  )  (   \\__ \\( (__ \n" +
                 " \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)\n");
+
+        getLogger().info("Server version: " + getProxy().getVersion());
+        checkIncompatibilities();
 
         loadFiles();
         updateConfig();
@@ -201,6 +201,12 @@ public class CleanStaffChat extends Plugin {
 
     public YamlFile getVersionTextFile() {
         return getInstance().versionTextFile.getConfig();
+    }
+
+    private void checkIncompatibilities() {
+        if (getSpicord) {
+            getLogger().severe("Spicord found, this plugin is completely unsupported and you won't receive any support.");
+        }
     }
 
     @Override
@@ -466,5 +472,4 @@ public class CleanStaffChat extends Plugin {
         }
         return false;
     }
-
 }

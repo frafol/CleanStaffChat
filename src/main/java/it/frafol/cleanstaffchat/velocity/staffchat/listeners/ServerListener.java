@@ -74,11 +74,8 @@ public class ServerListener {
 
 
                         final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
                         redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffAFKMessage-RedisBungee", final_message);
-
                         return;
-
                     }
 
                     CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
@@ -107,11 +104,8 @@ public class ServerListener {
 
 
                         final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
                         redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffAFKMessage-RedisBungee", final_message);
-
                         return;
-
                     }
 
                     CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
@@ -123,7 +117,6 @@ public class ServerListener {
                                     new Placeholder("userprefix", ""),
                                     new Placeholder("usersuffix", ""),
                                     new Placeholder("prefix", VelocityMessages.PREFIX.color())));
-
                 }
 
                 PlayerCache.getAfk().remove(event.getPlayer().getUniqueId());
@@ -170,6 +163,10 @@ public class ServerListener {
 
                 if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                         || VelocityConfig.STAFFCHAT_SWITCH_ALL.get(Boolean.class)) {
+
+                    if (VelocityConfig.STAFFCHAT_SWITCH_SILENT_MODULE.get(Boolean.class) && player.hasPermission(VelocityConfig.STAFFCHAT_SWITCH_SILENT_PERMISSION.get(String.class))) {
+                        return;
+                    }
 
                     if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 

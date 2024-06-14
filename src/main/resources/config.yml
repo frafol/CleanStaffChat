@@ -42,6 +42,7 @@ settings:
 
     staff_join_silent: false # By activating it, the staff will not receive a message when another staff member with a permission enters the server.
     staff_quit_silent: false # By activating it, the staff will not receive a message when another staff member with a permission leaves the server.
+    staff_switch_silent: false # By activating it, the staff will not receive a message when another staff member with a permission changes server. (Velocity and BungeeCord only)
 
     # You can customise permissions.
     staffchat_use_permission: "staffchat.use"
@@ -50,6 +51,7 @@ settings:
     staffchat_afk_permission: "staffchat.afk"
     staffchat_join_silent_permission: "staffchat.join.silent"
     staffchat_quit_silent_permission: "staffchat.quit.silent"
+    staffchat_switch_silent_permission: "staffchat.switch.silent"
 
   adminchat:
 

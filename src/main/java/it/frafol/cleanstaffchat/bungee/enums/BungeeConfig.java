@@ -9,8 +9,10 @@ public enum BungeeConfig {
 
     STAFFCHAT_JOIN_SILENT_MODULE("settings.staffchat.staff_join_silent"),
     STAFFCHAT_QUIT_SILENT_MODULE("settings.staffchat.staff_quit_silent"),
+    STAFFCHAT_SWITCH_SILENT_MODULE("settings.staffchat.staff_switch_silent"),
     STAFFCHAT_JOIN_SILENT_PERMISSION("settings.staffchat.staffchat_join_silent_permission"),
     STAFFCHAT_QUIT_SILENT_PERMISSION("settings.staffchat.staffchat_quit_silent_permission"),
+    STAFFCHAT_SWITCH_SILENT_PERMISSION("settings.staffchat.staffchat_switch_silent_permission"),
 
     SORTING("settings.stafflist.sorting"),
 

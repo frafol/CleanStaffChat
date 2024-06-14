@@ -204,6 +204,10 @@ public class ServerListener implements Listener {
         if (player.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                 || BungeeConfig.STAFFCHAT_SWITCH_ALL.get(Boolean.class)) {
 
+            if (BungeeConfig.STAFFCHAT_SWITCH_SILENT_MODULE.get(Boolean.class) && player.hasPermission(BungeeConfig.STAFFCHAT_SWITCH_SILENT_PERMISSION.get(String.class))) {
+                return;
+            }
+
             if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
 
                 LuckPerms api = LuckPermsProvider.get();

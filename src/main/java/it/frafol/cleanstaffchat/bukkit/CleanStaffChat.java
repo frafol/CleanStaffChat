@@ -170,6 +170,7 @@ public class CleanStaffChat extends JavaPlugin {
             registerStaffListCommands();
         }
 
+        UpdateChecker();
         startJDA();
 
         if (isPremiumVanish()) {
@@ -220,7 +221,6 @@ public class CleanStaffChat extends JavaPlugin {
             getLogger().info("Metrics loaded successfully!");
         }
 
-        UpdateChecker();
         getLogger().info("Plugin successfully enabled!");
 
     }

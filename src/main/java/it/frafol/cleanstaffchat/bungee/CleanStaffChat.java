@@ -124,6 +124,10 @@ public class CleanStaffChat extends Plugin {
         updateConfig();
         getLogger().info("§7Configurations loaded §dsuccessfully§7!");
 
+        if (BungeeConfig.UPDATE_CHECK.get(Boolean.class)) {
+            UpdateChecker();
+        }
+
         startJDA();
 
         getProxy().getPluginManager().registerCommand(this, new ReloadCommand());
@@ -166,10 +170,6 @@ public class CleanStaffChat extends Plugin {
         if (BungeeConfig.STATS.get(Boolean.class)) {
             new Metrics(this, 16449);
             getLogger().info("§7Metrics loaded §asuccessfully§7!");
-        }
-
-        if (BungeeConfig.UPDATE_CHECK.get(Boolean.class)) {
-            UpdateChecker();
         }
 
         getProxy().registerChannel("cleansc:cancel");

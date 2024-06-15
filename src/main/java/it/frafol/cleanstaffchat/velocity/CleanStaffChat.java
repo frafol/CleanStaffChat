@@ -101,6 +101,10 @@ public class CleanStaffChat {
         updateConfig();
         getLogger().info("Configurations loaded successfully!");
 
+        if (VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {
+            UpdateChecker();
+        }
+
         startJDA();
 
         server.getCommandManager().register(server.getCommandManager()
@@ -151,10 +155,6 @@ public class CleanStaffChat {
         if (VelocityConfig.STATS.get(Boolean.class)) {
             metricsFactory.make(this, 16447);
             getLogger().info("Metrics loaded successfully!");
-        }
-
-        if (VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {
-            UpdateChecker();
         }
 
         if (!getUnsignedVelocityAddon() && !getSignedVelocity()) {

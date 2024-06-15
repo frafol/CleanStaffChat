@@ -47,7 +47,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.15.1",
+        version = "1.15.2",
         dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true), @Dependency(id = "signedvelocity", optional = true), @Dependency(id = "spicord", optional = true), @Dependency(id = "leaf", optional = true), @Dependency(id = "clientcatcher", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
@@ -214,19 +214,14 @@ public class CleanStaffChat {
                 .relocate(updaterrelocation)
                 .build();
 
-       Relocation discordrelocation;
-       if (getClientCatcher()) {
-           discordrelocation = new Relocation("kotlin", "it{}frafol{}libs{}kotlin");
-       } else {
-           discordrelocation = new Relocation("net{}dv8tion", "it{}frafol{}libs{}net{}dv8tion");
-       }
-
+        // JDA should be beta.18 because of Java 8 incompatibility.
+        final Relocation kotlin = new Relocation("kotlin", "it{}frafol{}libs{}kotlin");
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
                 .version("5.0.0-beta.18")
-                .url("https://github.com/discord-jda/JDA/releases/download/v5.0.0-beta.18/JDA-5.0.0-beta.18-withDependencies-min.jar")
-                .relocate(discordrelocation)
+                .relocate(kotlin)
+                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.18/JDA-5.0.0-beta.18-withDependencies-min.jar")
                 .build();
 
         velocityLibraryManager.addMavenCentral();

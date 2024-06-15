@@ -52,7 +52,7 @@ public class CleanStaffChat extends Plugin {
 
     public boolean updated = false;
 
-    private final boolean getSpicord = instance.getProxy().getPluginManager().getPlugin("Spicord") != null;
+    private final boolean getSpicord = getProxy().getPluginManager().getPlugin("Spicord") != null;
 
     @Getter
     public static CleanStaffChat instance;
@@ -82,12 +82,13 @@ public class CleanStaffChat extends Plugin {
                 .relocate(updaterrelocation)
                 .build();
 
-        final Relocation discordrelocation = new Relocation("net{}dv8tion", "it{}frafol{}libs{}net{}dv8tion");
+        // JDA should be beta.18 because of Java 8 incompatibility.
+        final Relocation kotlin = new Relocation("kotlin", "it{}frafol{}libs{}kotlin");
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
                 .version("5.0.0-beta.18")
-                .relocate(discordrelocation)
+                .relocate(kotlin)
                 .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.18/JDA-5.0.0-beta.18-withDependencies-min.jar")
                 .build();
 

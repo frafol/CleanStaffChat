@@ -80,13 +80,14 @@ public class CleanStaffChat extends JavaPlugin {
                 .url("https://github.com/frafol/Config-Updater/releases/download/compile/ConfigUpdater-2.1-SNAPSHOT.jar")
                 .build();
 
-        final Relocation discordrelocation = new Relocation("net{}dv8tion", "it{}frafol{}libs{}net{}dv8tion");
+        // JDA should be beta.18 because of Java 8 incompatibility.
+        final Relocation kotlin = new Relocation("kotlin", "it{}frafol{}libs{}kotlin");
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
                 .version("5.0.0-beta.18")
-                .relocate(discordrelocation)
-                .url("https://github.com/discord-jda/JDA/releases/download/v5.0.0-beta.18/JDA-5.0.0-beta.18-withDependencies.jar")
+                .relocate(kotlin)
+                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.18/JDA-5.0.0-beta.18-withDependencies-min.jar")
                 .build();
 
         final Relocation schedulerrelocation = new Relocation("com{}github{}Anon8281", "it{}frafol{}libs{}com{}github{}Anon8281ler");
@@ -100,12 +101,6 @@ public class CleanStaffChat extends JavaPlugin {
 
         bukkitLibraryManager.addMavenCentral();
         bukkitLibraryManager.addJitPack();
-
-        try {
-            Class.forName("net.dv8tion.jda.api.entities.Member");
-        } catch (ClassNotFoundException ignored) {
-            bukkitLibraryManager.loadLibrary(discord);
-        }
 
         try {
             bukkitLibraryManager.loadLibrary(yaml);
@@ -122,6 +117,7 @@ public class CleanStaffChat extends JavaPlugin {
 
         bukkitLibraryManager.loadLibrary(yaml);
         bukkitLibraryManager.loadLibrary(updater);
+        bukkitLibraryManager.loadLibrary(discord);
         bukkitLibraryManager.loadLibrary(scheduler);
 
         getLogger().info("\n  ___  __    ____    __    _  _    ___   ___ \n" +
@@ -231,16 +227,13 @@ public class CleanStaffChat extends JavaPlugin {
 
     public void startJDA() {
         if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-
             try {
                 jda = JDABuilder.createDefault(SpigotDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
             } catch (ExceptionInInitializerError e) {
-                getLogger().severe("§cInvalid Discord configuration, please check your discord.yml file.");
+                getLogger().severe("Invalid Discord configuration, please check your discord.yml file.");
             }
             updateJDATask();
-
             getLogger().info("Hooked into Discord successfully!");
-
         }
     }
 

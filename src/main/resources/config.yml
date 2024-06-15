@@ -96,7 +96,7 @@ settings:
 modules:
 
   update_check: true
-  auto_update: true
+  auto_update: false
   stats: true
 
   # WARNING: This option is only for the Velocity version.

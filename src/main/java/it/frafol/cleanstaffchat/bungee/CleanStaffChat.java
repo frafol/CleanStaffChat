@@ -66,7 +66,7 @@ public class CleanStaffChat extends Plugin {
         BungeeLibraryManager bungeeLibraryManager = new BungeeLibraryManager(this);
 
         Library yaml;
-        final Relocation yamlrelocation = new Relocation("me{}carleslc{}Simple-YAML", "it{}frafol{}libs{}me{}carleslc{}Simple-YAML");
+        final Relocation yamlrelocation = new Relocation("yaml", "it{}frafol{}libs{}yaml");
         yaml = Library.builder()
                 .groupId("me{}carleslc{}Simple-YAML")
                 .artifactId("Simple-Yaml")
@@ -74,7 +74,7 @@ public class CleanStaffChat extends Plugin {
                 .relocate(yamlrelocation)
                 .build();
 
-        final Relocation updaterrelocation = new Relocation("ru{}vyarus", "it{}frafol{}libs{}ru{}vyarus");
+        final Relocation updaterrelocation = new Relocation("updater", "it{}frafol{}libs{}updater");
         Library updater = Library.builder()
                 .groupId("ru{}vyarus")
                 .artifactId("yaml-config-updater")

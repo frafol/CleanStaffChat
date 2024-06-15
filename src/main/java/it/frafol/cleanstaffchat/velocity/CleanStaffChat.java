@@ -198,7 +198,7 @@ public class CleanStaffChat {
         VelocityLibraryManager<CleanStaffChat> velocityLibraryManager = new VelocityLibraryManager<>(this, getLogger(), path, getServer().getPluginManager());
 
         Library yaml;
-        final Relocation yamlrelocation = new Relocation("me{}carleslc{}Simple-YAML", "it{}frafol{}libs{}me{}carleslc{}Simple-YAML");
+        final Relocation yamlrelocation = new Relocation("yaml", "it{}frafol{}libs{}yaml");
         yaml = Library.builder()
                 .groupId("me{}carleslc{}Simple-YAML")
                 .artifactId("Simple-Yaml")
@@ -206,7 +206,7 @@ public class CleanStaffChat {
                 .relocate(yamlrelocation)
                 .build();
 
-        final Relocation updaterrelocation = new Relocation("ru{}vyarus", "it{}frafol{}libs{}ru{}vyarus");
+        final Relocation updaterrelocation = new Relocation("updater", "it{}frafol{}libs{}updater");
         Library updater = Library.builder()
                 .groupId("ru{}vyarus")
                 .artifactId("yaml-config-updater")
@@ -215,7 +215,7 @@ public class CleanStaffChat {
                 .build();
 
         // JDA should be beta.18 because of Java 8 incompatibility.
-        final Relocation kotlin = new Relocation("kotlin", "it{}frafol{}libs{}kotlin");
+        final Relocation kotlin = new Relocation("discord", "it{}frafol{}libs{}discord");
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")

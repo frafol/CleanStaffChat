@@ -62,7 +62,7 @@ public class CleanStaffChat extends JavaPlugin {
 
         BukkitLibraryManager bukkitLibraryManager = new BukkitLibraryManager(this);
 
-        final Relocation yamlrelocation = new Relocation("me{}carleslc{}Simple-YAML", "it{}frafol{}libs{}me{}carleslc{}Simple-YAML");
+        final Relocation yamlrelocation = new Relocation("yaml", "it{}frafol{}libs{}yaml");
         Library yaml;
         yaml = Library.builder()
                 .groupId("me{}carleslc{}Simple-YAML")
@@ -71,7 +71,7 @@ public class CleanStaffChat extends JavaPlugin {
                 .relocate(yamlrelocation)
                 .build();
 
-        final Relocation updaterrelocation = new Relocation("com{}tchristofferson", "it{}frafol{}libs{}com{}tchristofferson");
+        final Relocation updaterrelocation = new Relocation("updater", "it{}frafol{}libs{}updater");
         Library updater = Library.builder()
                 .groupId("com{}tchristofferson")
                 .artifactId("ConfigUpdater")
@@ -81,7 +81,7 @@ public class CleanStaffChat extends JavaPlugin {
                 .build();
 
         // JDA should be beta.18 because of Java 8 incompatibility.
-        final Relocation kotlin = new Relocation("kotlin", "it{}frafol{}libs{}kotlin");
+        final Relocation kotlin = new Relocation("discord", "it{}frafol{}libs{}discord");
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
@@ -90,7 +90,7 @@ public class CleanStaffChat extends JavaPlugin {
                 .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.18/JDA-5.0.0-beta.18-withDependencies-min.jar")
                 .build();
 
-        final Relocation schedulerrelocation = new Relocation("com{}github{}Anon8281", "it{}frafol{}libs{}com{}github{}Anon8281ler");
+        final Relocation schedulerrelocation = new Relocation("scheduler", "it{}frafol{}libs{}scheduler");
         Library scheduler;
         scheduler = Library.builder()
                 .groupId("com{}github{}Anon8281")

@@ -1,6 +1,7 @@
 package it.frafol.cleanstaffchat.velocity.enums;
 
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.proxy.Player;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
@@ -204,6 +205,16 @@ public enum VelocityMessages {
     public void send(CommandSource commandSource, Placeholder... placeholders) {
 
         if (ChatUtil.getString(this).isEmpty()) {
+            return;
+        }
+
+        if (commandSource instanceof Player) {
+            if (VelocityConfig.MINIMESSAGE.get(Boolean.class)) {
+                commandSource.sendMessage(getMiniMessage().deserialize(ChatUtil.getFormattedString((Player) commandSource, this, placeholders)));
+                return;
+            }
+
+            commandSource.sendMessage(LegacyComponentSerializer.legacy('§').deserialize(ChatUtil.getFormattedString((Player) commandSource,this, placeholders)));
             return;
         }
 

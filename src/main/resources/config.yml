@@ -102,6 +102,9 @@ modules:
   # WARNING: This option is only for the Velocity version.
   minimessage_support: false
 
+  # EXPERIMENTAL: This option is only for the Paper/Velocity version.
+  miniplaceholders_support: false
+
   # SuperVanish support is only for the Bukkit version.
   premiumvanish_hook: true
   supervanish_hook: true

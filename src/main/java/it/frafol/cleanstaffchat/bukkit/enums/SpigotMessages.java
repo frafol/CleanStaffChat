@@ -1,7 +1,13 @@
 package it.frafol.cleanstaffchat.bukkit.enums;
 
+import io.github.miniplaceholders.api.MiniPlaceholders;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -127,7 +133,15 @@ public enum SpigotMessages {
     public String color(Player player) {
         String hex = convertHexColors(get(String.class));
         if (instance.getPAPI()) {
-            return PlaceholderAPI.setPlaceholders(player, hex.replace("&", "§"));
+            hex = PlaceholderAPI.setPlaceholders(player, hex);
+        }
+        if (instance.getMiniPlaceholders()) {
+            TagResolver resolver = MiniPlaceholders.getAudiencePlaceholders((Audience) player);
+            Component parsedMessage = MiniMessage.miniMessage().deserialize(hex, resolver);
+            hex = LegacyComponentSerializer.legacyAmpersand().serialize(parsedMessage);
+            TagResolver globalResolver = MiniPlaceholders.getGlobalPlaceholders();
+            Component parsedGlobalMessage = MiniMessage.miniMessage().deserialize(hex, globalResolver);
+            hex = LegacyComponentSerializer.legacyAmpersand().serialize(parsedGlobalMessage);
         }
         return hex.replace("&", "§");
     }

@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit;
         id = "cleanstaffchat",
         name = "CleanStaffChat",
         version = "1.15.3",
-        dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true), @Dependency(id = "signedvelocity", optional = true), @Dependency(id = "spicord", optional = true), @Dependency(id = "leaf", optional = true), @Dependency(id = "clientcatcher", optional = true)},
+        dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true), @Dependency(id = "signedvelocity", optional = true), @Dependency(id = "spicord", optional = true), @Dependency(id = "leaf", optional = true), @Dependency(id = "miniplaceholders", optional = true), @Dependency(id = "clientcatcher", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
 )
@@ -150,6 +150,10 @@ public class CleanStaffChat {
 
         if (isPremiumVanish()) {
             getLogger().info("Hooked into PremiumVanish successfully!");
+        }
+
+        if (getMiniPlaceholders()) {
+            getLogger().info("Hooked into MiniPlaceholders successfully!");
         }
 
         if (VelocityConfig.STATS.get(Boolean.class)) {
@@ -627,5 +631,9 @@ public class CleanStaffChat {
 
     private boolean getClientCatcher() {
         return getServer().getPluginManager().isLoaded("clientcatcher");
+    }
+
+    public boolean getMiniPlaceholders() {
+        return getServer().getPluginManager().isLoaded("miniplaceholders") && VelocityConfig.MINIPLACEHOLDERS.get(Boolean.class);
     }
 }

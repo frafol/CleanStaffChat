@@ -89,6 +89,7 @@ public enum VelocityConfig {
     STAFFCHAT_DISCORD_AFK_MODULE("modules.staffchat_discord_afk_module"),
 
     MINIMESSAGE("modules.minimessage_support"),
+    MINIPLACEHOLDERS("modules.miniplaceholders_support"),
 
     STAFFCHAT("settings.use_staffchat"),
     ADMINCHAT("settings.use_adminchat"),

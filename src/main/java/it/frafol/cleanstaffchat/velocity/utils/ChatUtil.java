@@ -1,9 +1,15 @@
 package it.frafol.cleanstaffchat.velocity.utils;
 
+import com.velocitypowered.api.proxy.Player;
+import io.github.miniplaceholders.api.MiniPlaceholders;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import lombok.experimental.UtilityClass;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
@@ -25,6 +31,10 @@ public class ChatUtil {
         return color(getString(velocityMessages, placeholders));
     }
 
+    public String getFormattedString(Player player, VelocityMessages velocityMessages, Placeholder... placeholders) {
+        return color(player, getString(velocityMessages, placeholders));
+    }
+
     public String applyPlaceholder(String s, Placeholder @NotNull ... placeholders) {
         for (Placeholder placeholder : placeholders) {
             s = s.replace(placeholder.getKey(), placeholder.getValue());
@@ -34,7 +44,19 @@ public class ChatUtil {
     }
 
     public String color(@NotNull String s) {
-        return s.replace("&", "§");
+        return convertHexColors(s);
+    }
+
+    public String color(@NotNull Player p, @NotNull String s) {
+        if (instance.getMiniPlaceholders()) {
+            TagResolver resolver = MiniPlaceholders.getAudiencePlaceholders(p);
+            Component parsedMessage = MiniMessage.miniMessage().deserialize(s, resolver);
+            s = LegacyComponentSerializer.legacyAmpersand().serialize(parsedMessage);
+            TagResolver globalResolver = MiniPlaceholders.getGlobalPlaceholders();
+            Component parsedGlobalMessage = MiniMessage.miniMessage().deserialize(s, globalResolver);
+            s = LegacyComponentSerializer.legacyAmpersand().serialize(parsedGlobalMessage);
+        }
+        return convertHexColors(s);
     }
 
     public boolean hasColorCodes(@NotNull String message) {

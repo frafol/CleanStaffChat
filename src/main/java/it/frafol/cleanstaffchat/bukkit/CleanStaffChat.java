@@ -181,6 +181,14 @@ public class CleanStaffChat extends JavaPlugin {
             getLogger().info("Hooked into SuperVanish successfully!");
         }
 
+        if (getPAPI()) {
+            getLogger().info("Hooked into PlaceholderAPI successfully!");
+        }
+
+        if (getMiniPlaceholders()) {
+            getLogger().info("Hooked into MiniPlaceholders successfully!");
+        }
+
         if (SpigotConfig.STAFFCHAT.get(Boolean.class)) {
             registerStaffChatCommands();
             getServer().getPluginManager().registerEvents(new JoinListener(this), this);
@@ -500,5 +508,9 @@ public class CleanStaffChat extends JavaPlugin {
 
     public boolean getPAPI() {
         return getServer().getPluginManager().getPlugin("PlaceholderAPI") != null;
+    }
+
+    public boolean getMiniPlaceholders() {
+        return getServer().getPluginManager().getPlugin("MiniPlaceholders") != null && SpigotConfig.MINIPLACEHOLDERS.get(Boolean.class);
     }
 }

@@ -44,7 +44,7 @@ public class ChatUtil {
     }
 
     public String color(@NotNull String s) {
-        return convertHexColors(s);
+        return convertHexColors(s).replace("&", "§");
     }
 
     public String color(@NotNull Player p, @NotNull String s) {
@@ -56,7 +56,7 @@ public class ChatUtil {
             Component parsedGlobalMessage = MiniMessage.miniMessage().deserialize(s, globalResolver);
             s = LegacyComponentSerializer.legacyAmpersand().serialize(parsedGlobalMessage);
         }
-        return convertHexColors(s);
+        return convertHexColors(s).replace("&", "§");
     }
 
     public boolean hasColorCodes(@NotNull String message) {
@@ -92,55 +92,36 @@ public class ChatUtil {
     private String convertHexColors(String message) {
 
         if (!containsHexColor(message)) {
-            return message.replace('&', '§');
+            return message;
         }
 
-        Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
-        Matcher matcher = pattern.matcher(message);
+        Pattern hexPattern = Pattern.compile("(#[A-Fa-f0-9]{6}|<#[A-Fa-f0-9]{6}>|&#[A-Fa-f0-9]{6})");
+        Matcher matcher = hexPattern.matcher(message);
+        StringBuffer buffer = new StringBuffer();
         while (matcher.find()) {
-            String hexCode = message.substring(matcher.start(), matcher.end());
-            String replaceSharp = hexCode.replace('#', 'x');
-
-            char[] ch = replaceSharp.toCharArray();
-            StringBuilder builder = new StringBuilder();
-            for (char c : ch) {
-                builder.append("&").append(c);
+            String hexCode = matcher.group();
+            String colorCode = hexCode.substring(1, 7);
+            if (hexCode.startsWith("<#") && hexCode.endsWith(">")) {
+                colorCode = hexCode.substring(2, 8);
+            } else if (hexCode.startsWith("&#")) {
+                colorCode = hexCode.substring(2, 8);
             }
-
-            message = message.replace(hexCode, builder.toString());
-            matcher = pattern.matcher(message);
+            String minecraftColorCode = translateHexToMinecraftColorCode(colorCode);
+            matcher.appendReplacement(buffer, minecraftColorCode);
         }
-        pattern = Pattern.compile("&#[a-fA-F0-9]{6}");
-        matcher = pattern.matcher(message);
-        while (matcher.find()) {
-            String hexCode = message.substring(matcher.start(), matcher.end());
-            String replaceSharp = hexCode.replace('#', 'x');
+        matcher.appendTail(buffer);
+        return buffer.toString();
+    }
 
-            char[] ch = replaceSharp.toCharArray();
-            StringBuilder builder = new StringBuilder();
-            for (char c : ch) {
-                builder.append("&").append(c);
-            }
-
-            message = message.replace(hexCode, builder.toString());
-            matcher = pattern.matcher(message);
-        }
-        pattern = Pattern.compile("<#[a-fA-F0-9]]{6}>");
-        matcher = pattern.matcher(message);
-        while (matcher.find()) {
-            String hexCode = message.substring(matcher.start(), matcher.end());
-            String replaceSharp = hexCode.replace('#', 'x');
-
-            char[] ch = replaceSharp.toCharArray();
-            StringBuilder builder = new StringBuilder();
-            for (char c : ch) {
-                builder.append("&").append(c);
-            }
-
-            message = message.replace(hexCode, builder.toString());
-            matcher = pattern.matcher(message);
-        }
-        return message;
+    private String translateHexToMinecraftColorCode(String hex) {
+        char[] chars = hex.toCharArray();
+        return "§x" +
+                '§' + chars[0] +
+                '§' + chars[1] +
+                '§' + chars[2] +
+                '§' + chars[3] +
+                '§' + chars[4] +
+                '§' + chars[5];
     }
 
     private boolean containsHexColor(String message) {

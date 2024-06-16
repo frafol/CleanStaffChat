@@ -5,6 +5,9 @@ import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
+import me.TechsCode.UltraPermissions.UltraPermissions;
+import me.TechsCode.UltraPermissions.UltraPermissionsAPI;
+import me.TechsCode.UltraPermissions.storage.collection.UserList;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.luckperms.api.LuckPerms;
@@ -17,6 +20,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.Optional;
 
 public class MoveListener implements Listener {
 
@@ -62,19 +66,45 @@ public class MoveListener implements Listener {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_OFF.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_OFF.color(event.getPlayer())
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", player.getName())
                                 .replace("%displayname%", PlayerCache.color(user_prefix) + player.getName() + PlayerCache.color(user_suffix))
                                 .replace("%userprefix%", PlayerCache.color(user_prefix))
                                 .replace("%usersuffix%", PlayerCache.color(user_suffix))));
 
+            } else if (PLUGIN.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {
+
+                final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
+                final UserList userList = ultraPermissionsAPI.getUsers();
+
+                if (!userList.uuid(event.getPlayer().getUniqueId()).isPresent()) {
+                    return;
+                }
+
+                final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(event.getPlayer().getUniqueId()).get();
+
+                final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
+                final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
+                final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
+                final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+
+                CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                                (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                        && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_OFF.color(event.getPlayer())
+                                .replace("%prefix%", SpigotMessages.PREFIX.color())
+                                .replace("%user%", player.getName())
+                                .replace("%displayname%", PlayerCache.color(ultraPermissionsUserPrefixFinal) + player.getName() + PlayerCache.color(ultraPermissionsUserSuffixFinal))
+                                .replace("%userprefix%", PlayerCache.color(ultraPermissionsUserPrefixFinal))
+                                .replace("%usersuffix%", PlayerCache.color(ultraPermissionsUserSuffixFinal))));
+
             } else {
 
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_OFF.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_OFF.color(event.getPlayer())
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", player.getName())
                                 .replace("%userprefix%", "")

@@ -336,7 +336,7 @@ public class DonorChatCommand extends Command {
 
                     final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
 
-                    final String final_message = BungeeMessages.DONORCHAT_FORMAT.get(String.class)
+                    final String final_message = BungeeMessages.DONORCHAT_CONSOLE_FORMAT.get(String.class)
                             .replace("%user%", commandsender)
                             .replace("%message%", message)
                             .replace("%displayname%", commandsender)
@@ -355,7 +355,7 @@ public class DonorChatCommand extends Command {
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_CONSOLE_FORMAT.color()
                                 .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
                                 .replace("%user%", commandsender)
                                 .replace("%userprefix%", "")
@@ -369,7 +369,7 @@ public class DonorChatCommand extends Command {
                         .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
             }
 
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_FORMAT.color()
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_CONSOLE_FORMAT.color()
                     .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
                     .replace("%user%", commandsender)
                     .replace("%displayname%", commandsender)

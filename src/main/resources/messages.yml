@@ -39,15 +39,19 @@ messages:
     staffchat_toggled_off: "%prefix% &7The StaffChat is now &ainvisible&7."
 
     # Chat Formats (If you use LuckPerms/UltraPermissions you can use %displayname%, %userprefix% and %usersuffix%).
+    # In the Bukkit version, you can use all PlaceholderAPI placeholders (Not supported on console format).
     staffchat_format: "%prefix% &7%userprefix% %user% &8» &7%message%" # You can use %server% on BungeeCord or Velocity.
+    staffchat_console_format: "%prefix% &7%user% &8» &7%message%" # You can use %server% on BungeeCord or Velocity.
 
     # You can use %server% on BungeeCord or Velocity.
+    # In the Bukkit version, you can use all PlaceholderAPI placeholders.
     staff_join_message_format: "%prefix% &7[&a+&7] &f&d%user%"
     staff_quit_message_format: "%prefix% &7[&c-&7] &f&d%user%"
 
     staff_switch_message_format: "%prefix% &7%user% &8(&d%serverbefore% &e➜ &d%server%&8)" # This won't work if you run your plugin on bukkit.
 
     # You can use %server% on BungeeCord or Velocity.
+    # In the Bukkit version, you can use all PlaceholderAPI placeholders.
     staff_afk_on_message_format: "%prefix% &7%user% is now &aAFK&7."
     staff_afk_off_message_format: "%prefix% &7%user% is no longer &aAFK&7."
 
@@ -85,7 +89,9 @@ messages:
     adminchat_toggled_off: "%prefix% &7The AdminChat is now &ainvisible&7."
 
     # Chat Format (If you use LuckPerms/UltraPermissions you can use %displayname%, %userprefix% and %usersuffix%).
+    # In the Bukkit version, you can use all PlaceholderAPI placeholders (Not supported on console format).
     adminchat_format: "%prefix% &7%userprefix% %user% &8» &7%message%" # You can use %server% on BungeeCord or Velocity.
+    adminchat_console_format: "%prefix% &7%user% &8» &7%message%" # You can use %server% on BungeeCord or Velocity.
 
     discord:
 
@@ -113,7 +119,9 @@ messages:
     donorchat_toggled_off: "%prefix% &7The DonorChat is now &ainvisible&7."
 
     # Chat Formats (If you use LuckPerms/UltraPermissions you can use %displayname%, %userprefix% and %usersuffix%).
+    # In the Bukkit version, you can use all PlaceholderAPI placeholders (Not supported on console format).
     donorchat_format: "%prefix% &7%userprefix% %user% &8» &7%message%" # You can use %server% on BungeeCord or Velocity.
+    donorchat_console_format: "%prefix% &7%user% &8» &7%message%" # You can use %server% on BungeeCord or Velocity.
 
     discord:
 
@@ -129,6 +137,7 @@ messages:
 
     # Server StaffList Format, you can use %player% (and %userprefix%/%usersuffix% only if you're using LuckPerms).
     # You can use %server% on BungeeCord or Velocity and you can use %online% to display online staff (only in header/footer).
+    # In the Bukkit version, you can use all PlaceholderAPI placeholders, placeholder is different for every staffer printed.
     header: "&8&m------&5&m------&d&m------&5&m------&8&m------&f"
     format: "%userprefix%%player% &7(&d%server%&7) %afk%"
     footer: "&8&m------&5&m------&d&m------&5&m------&8&m------&f"

@@ -67,7 +67,7 @@ public class AFKCommand extends CommandBase {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_ON.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_ON.color(player)
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", player.getName())
                                 .replace("%displayname%", PlayerCache.color(user_prefix) + player.getName() + PlayerCache.color(user_suffix))
@@ -94,7 +94,7 @@ public class AFKCommand extends CommandBase {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_ON.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_ON.color(player)
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", player.getName())
                                 .replace("%displayname%", ultraPermissionsUserPrefixFinal + player.getName() + ultraPermissionsUserSuffixFinal)
@@ -108,7 +108,7 @@ public class AFKCommand extends CommandBase {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_ON.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_ON.color(player)
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", player.getName())
                                 .replace("%userprefix%", "")
@@ -170,7 +170,7 @@ public class AFKCommand extends CommandBase {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_OFF.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_OFF.color(player)
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", player.getName())
                                 .replace("%displayname%", PlayerCache.color(user_prefix) + player.getName() + PlayerCache.color(user_suffix))
@@ -197,7 +197,7 @@ public class AFKCommand extends CommandBase {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_OFF.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_OFF.color(player)
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", player.getName())
                                 .replace("%displayname%", ultraPermissionsUserPrefixFinal + player.getName() + ultraPermissionsUserSuffixFinal)
@@ -211,7 +211,7 @@ public class AFKCommand extends CommandBase {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_OFF.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_AFK_OFF.color(player)
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", player.getName())
                                 .replace("%userprefix%", "")

@@ -23,8 +23,13 @@ public enum VelocityMessages {
     DONORCHAT_COOLDOWN_MESSAGE("messages.donorchat.cooldown"),
 
     STAFFCHAT_FORMAT("messages.staffchat.staffchat_format"),
+    STAFFCHAT_CONSOLE_FORMAT("messages.staffchat.staffchat_console_format"),
+
     ADMINCHAT_FORMAT("messages.adminchat.adminchat_format"),
+    ADMINCHAT_CONSOLE_FORMAT("messages.adminchat.adminchat_console_format"),
+
     DONORCHAT_FORMAT("messages.donorchat.donorchat_format"),
+    DONORCHAT_CONSOLE_FORMAT("messages.donorchat.donorchat_console_format"),
 
     GLOBALPREFIX("messages.globalchat.prefix"),
     MUTECHAT_USAGE("messages.globalchat.mutechat_usage"),

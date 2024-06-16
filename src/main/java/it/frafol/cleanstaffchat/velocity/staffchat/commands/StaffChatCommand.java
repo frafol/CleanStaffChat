@@ -271,7 +271,7 @@ public class StaffChatCommand implements SimpleCommand {
             if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
 
                 final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-                final String final_message = VelocityMessages.STAFFCHAT_FORMAT.get(String.class)
+                final String final_message = VelocityMessages.STAFFCHAT_CONSOLE_FORMAT.get(String.class)
                         .replace("%user%", sender)
                         .replace("%message%", message)
                         .replace("%displayname%", sender)
@@ -289,7 +289,7 @@ public class StaffChatCommand implements SimpleCommand {
             CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                             (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                     && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                    .forEach(players -> VelocityMessages.STAFFCHAT_FORMAT.send(players,
+                    .forEach(players -> VelocityMessages.STAFFCHAT_CONSOLE_FORMAT.send(players,
                             new Placeholder("user", sender),
                             new Placeholder("message", message),
                             new Placeholder("displayname", sender),
@@ -333,7 +333,7 @@ public class StaffChatCommand implements SimpleCommand {
                 }
             }
 
-            VelocityMessages.STAFFCHAT_FORMAT.send(commandSource,
+            VelocityMessages.STAFFCHAT_CONSOLE_FORMAT.send(commandSource,
                     new Placeholder("user", sender),
                     new Placeholder("message", message),
                     new Placeholder("displayname", sender),

@@ -298,7 +298,7 @@ public class StaffChatCommand extends Command {
 
                     final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
 
-                    final String final_message = BungeeMessages.STAFFCHAT_FORMAT.get(String.class)
+                    final String final_message = BungeeMessages.STAFFCHAT_CONSOLE_FORMAT.get(String.class)
                             .replace("%user%", commandsender)
                             .replace("%message%", message)
                             .replace("%displayname%", commandsender)
@@ -315,7 +315,7 @@ public class StaffChatCommand extends Command {
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_CONSOLE_FORMAT.color()
                                 .replace("%prefix%", BungeeMessages.PREFIX.color())
                                 .replace("%user%", commandsender)
                                 .replace("%userprefix%", "")
@@ -332,7 +332,7 @@ public class StaffChatCommand extends Command {
 
             }
 
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_FORMAT.color()
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_CONSOLE_FORMAT.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())
                     .replace("%user%", commandsender)
                     .replace("%displayname%", commandsender)

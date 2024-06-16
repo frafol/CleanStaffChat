@@ -309,7 +309,7 @@ public class AdminChatCommand extends Command {
 
                 final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
 
-                final String final_message = BungeeMessages.ADMINCHAT_FORMAT.get(String.class)
+                final String final_message = BungeeMessages.ADMINCHAT_CONSOLE_FORMAT.get(String.class)
                         .replace("%user%", commandsender)
                         .replace("%message%", message)
                         .replace("%displayname%", commandsender)
@@ -328,7 +328,7 @@ public class AdminChatCommand extends Command {
             CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                             (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                     && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                    .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_FORMAT.color()
+                    .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_CONSOLE_FORMAT.color()
                             .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                             .replace("%user%", commandsender)
                             .replace("%userprefix%", "")
@@ -337,7 +337,7 @@ public class AdminChatCommand extends Command {
                             .replace("%server%", "")
                             .replace("%message%", message))));
 
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_FORMAT.color()
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_CONSOLE_FORMAT.color()
                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                     .replace("%user%", commandsender)
                     .replace("%displayname%", commandsender)

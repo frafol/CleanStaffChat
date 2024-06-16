@@ -1,7 +1,9 @@
 package it.frafol.cleanstaffchat.bukkit.enums;
 
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,8 +21,13 @@ public enum SpigotMessages {
     DONORCHAT_COOLDOWN_MESSAGE("messages.donorchat.cooldown"),
 
     STAFFCHAT_FORMAT("messages.staffchat.staffchat_format"),
+    STAFFCHAT_CONSOLE_FORMAT("messages.staffchat.staffchat_console_format"),
+
     ADMINCHAT_FORMAT("messages.adminchat.adminchat_format"),
+    ADMINCHAT_CONSOLE_FORMAT("messages.adminchat.adminchat_console_format"),
+
     DONORCHAT_FORMAT("messages.donorchat.donorchat_format"),
+    DONORCHAT_CONSOLE_FORMAT("messages.donorchat.donorchat_console_format"),
 
     GLOBALPREFIX("messages.globalchat.prefix"),
     MUTECHAT_ENABLED("messages.globalchat.mutechat_enabled"),
@@ -114,6 +121,14 @@ public enum SpigotMessages {
 
     public String color() {
         String hex = convertHexColors(get(String.class));
+        return hex.replace("&", "§");
+    }
+
+    public String color(Player player) {
+        String hex = convertHexColors(get(String.class));
+        if (instance.getPAPI()) {
+            return PlaceholderAPI.setPlaceholders(player, hex.replace("&", "§"));
+        }
         return hex.replace("&", "§");
     }
 

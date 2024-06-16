@@ -131,7 +131,7 @@ public class StaffChatCommand extends CommandBase {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color((Player) sender)
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", commandsender)
                                 .replace("%displayname%", PlayerCache.color(user_prefix) + commandsender + PlayerCache.color(user_suffix))
@@ -159,7 +159,7 @@ public class StaffChatCommand extends CommandBase {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color((Player) sender)
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", commandsender)
                                 .replace("%displayname%", PlayerCache.color(ultraPermissionsUserPrefixFinal) + commandsender + PlayerCache.color(ultraPermissionsUserSuffixFinal))
@@ -173,7 +173,7 @@ public class StaffChatCommand extends CommandBase {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color((Player) sender)
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", commandsender)
                                 .replace("%userprefix%", "")
@@ -226,7 +226,7 @@ public class StaffChatCommand extends CommandBase {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage((SpigotMessages.STAFFCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage((SpigotMessages.STAFFCHAT_CONSOLE_FORMAT.color()
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", commandsender)
                                 .replace("%userprefix%", "")
@@ -244,7 +244,7 @@ public class StaffChatCommand extends CommandBase {
 
             }
 
-            sender.sendMessage((SpigotMessages.STAFFCHAT_FORMAT.color()
+            sender.sendMessage((SpigotMessages.STAFFCHAT_CONSOLE_FORMAT.color()
                     .replace("%prefix%", SpigotMessages.PREFIX.color())
                     .replace("%user%", commandsender)
                     .replace("%displayname%", commandsender)

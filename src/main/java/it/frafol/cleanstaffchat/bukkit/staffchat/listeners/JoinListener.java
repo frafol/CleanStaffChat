@@ -74,7 +74,7 @@ public class JoinListener implements Listener {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission
                                         (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
-                        .forEach(players -> players.sendMessage(SpigotMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFF_JOIN_MESSAGE_FORMAT.color(player)
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%displayname%", PlayerCache.color(user_prefix) + player.getName() + PlayerCache.color(user_suffix))
                                 .replace("%userprefix%", PlayerCache.color(user_prefix))
@@ -100,7 +100,7 @@ public class JoinListener implements Listener {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission
                                         (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
-                        .forEach(players -> players.sendMessage(SpigotMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFF_JOIN_MESSAGE_FORMAT.color(player)
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%displayname%", ultraPermissionsUserPrefixFinal + player.getName() + ultraPermissionsUserSuffixFinal)
                                 .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
@@ -112,7 +112,7 @@ public class JoinListener implements Listener {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission
                                         (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
-                        .forEach(players -> players.sendMessage(SpigotMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFF_JOIN_MESSAGE_FORMAT.color(player)
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", player.getName())));
 

@@ -267,7 +267,7 @@ public class AdminChatCommand implements SimpleCommand {
 
                 final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
 
-                final String final_message = VelocityMessages.ADMINCHAT_FORMAT.get(String.class)
+                final String final_message = VelocityMessages.ADMINCHAT_CONSOLE_FORMAT.get(String.class)
                         .replace("%user%", sender)
                         .replace("%message%", message)
                         .replace("%displayname%", sender)
@@ -286,7 +286,7 @@ public class AdminChatCommand implements SimpleCommand {
             CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                             (players -> players.hasPermission(VelocityConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                     && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                    .forEach(players -> VelocityMessages.ADMINCHAT_FORMAT.send(players,
+                    .forEach(players -> VelocityMessages.ADMINCHAT_CONSOLE_FORMAT.send(players,
                             new Placeholder("user", sender),
                             new Placeholder("message", message),
                             new Placeholder("displayname", sender),
@@ -330,7 +330,7 @@ public class AdminChatCommand implements SimpleCommand {
                 }
             }
 
-            VelocityMessages.ADMINCHAT_FORMAT.send(commandSource,
+            VelocityMessages.ADMINCHAT_CONSOLE_FORMAT.send(commandSource,
                     new Placeholder("user", sender),
                     new Placeholder("message", message),
                     new Placeholder("displayname", sender),

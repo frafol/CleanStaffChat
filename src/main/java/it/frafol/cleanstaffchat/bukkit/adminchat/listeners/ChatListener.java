@@ -91,7 +91,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.ADMINCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.ADMINCHAT_FORMAT.color(event.getPlayer())
                                 .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
                                 .replace("%user%", event.getPlayer().getName())
                                 .replace("%message%", event.getMessage())
@@ -120,7 +120,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.ADMINCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.ADMINCHAT_FORMAT.color(event.getPlayer())
                                 .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
                                 .replace("%user%", event.getPlayer().getName())
                                 .replace("%message%", event.getMessage())
@@ -135,7 +135,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.ADMINCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.ADMINCHAT_FORMAT.color(event.getPlayer())
                                 .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
                                 .replace("%user%", event.getPlayer().getName())
                                 .replace("%message%", event.getMessage())

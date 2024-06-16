@@ -144,7 +144,7 @@ public class StaffListCommand extends CommandBase {
                         continue;
                     }
 
-                    sender.sendMessage(SpigotMessages.LIST_FORMAT.color()
+                    sender.sendMessage(SpigotMessages.LIST_FORMAT.color(players)
                             .replace("%userprefix%", PlayerCache.color(user_prefix))
                             .replace("%usersuffix%", PlayerCache.color(user_suffix))
                             .replace("%player%", players.getName())
@@ -162,7 +162,7 @@ public class StaffListCommand extends CommandBase {
                     continue;
                 }
 
-                sender.sendMessage(SpigotMessages.LIST_FORMAT.color()
+                sender.sendMessage(SpigotMessages.LIST_FORMAT.color(players)
                         .replace("%userprefix%", PlayerCache.color(user_prefix))
                         .replace("%usersuffix%", PlayerCache.color(user_suffix))
                         .replace("%player%", players.getName())

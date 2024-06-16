@@ -95,7 +95,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color(event.getPlayer())
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", event.getPlayer().getName())
                                 .replace("%message%", event.getMessage())
@@ -124,7 +124,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color(event.getPlayer())
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", event.getPlayer().getName())
                                 .replace("%displayname%", ultraPermissionsUserPrefixFinal + event.getPlayer().getName() + ultraPermissionsUserSuffixFinal)
@@ -139,7 +139,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color(event.getPlayer())
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", event.getPlayer().getName())
                                 .replace("%message%", event.getMessage())

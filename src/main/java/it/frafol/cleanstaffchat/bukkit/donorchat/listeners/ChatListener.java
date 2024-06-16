@@ -114,7 +114,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.DONORCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.DONORCHAT_FORMAT.color(event.getPlayer())
                                 .replace("%prefix%", SpigotMessages.DONORPREFIX.color())
                                 .replace("%user%", event.getPlayer().getName())
                                 .replace("%message%", event.getMessage())
@@ -143,7 +143,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.DONORCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.DONORCHAT_FORMAT.color(event.getPlayer())
                                 .replace("%prefix%", SpigotMessages.DONORPREFIX.color())
                                 .replace("%user%", event.getPlayer().getName())
                                 .replace("%displayname%", ultraPermissionsUserPrefixFinal + event.getPlayer().getName() + ultraPermissionsUserSuffixFinal)
@@ -158,7 +158,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.DONORCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.DONORCHAT_FORMAT.color(event.getPlayer())
                                 .replace("%prefix%", SpigotMessages.DONORPREFIX.color())
                                 .replace("%user%", event.getPlayer().getName())
                                 .replace("%message%", event.getMessage())

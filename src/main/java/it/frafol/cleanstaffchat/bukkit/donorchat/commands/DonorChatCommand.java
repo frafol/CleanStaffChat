@@ -138,7 +138,7 @@ public class DonorChatCommand extends CommandBase {
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                         (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(SpigotMessages.DONORCHAT_FORMAT.color()
+                                .forEach(players -> players.sendMessage(SpigotMessages.DONORCHAT_FORMAT.color((Player) sender)
                                         .replace("%prefix%", SpigotMessages.DONORPREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%displayname%", PlayerCache.color(user_prefix) + commandsender + PlayerCache.color(user_suffix))
@@ -167,7 +167,7 @@ public class DonorChatCommand extends CommandBase {
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                         (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(SpigotMessages.DONORCHAT_FORMAT.color()
+                                .forEach(players -> players.sendMessage(SpigotMessages.DONORCHAT_FORMAT.color((Player) sender)
                                         .replace("%prefix%", SpigotMessages.DONORPREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%displayname%", ultraPermissionsUserPrefixFinal + commandsender + ultraPermissionsUserSuffixFinal)
@@ -182,7 +182,7 @@ public class DonorChatCommand extends CommandBase {
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                         (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(SpigotMessages.DONORCHAT_FORMAT.color()
+                                .forEach(players -> players.sendMessage(SpigotMessages.DONORCHAT_FORMAT.color((Player) sender)
                                         .replace("%prefix%", SpigotMessages.DONORPREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%userprefix%", "")
@@ -239,7 +239,7 @@ public class DonorChatCommand extends CommandBase {
                         CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                         (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage((SpigotMessages.DONORCHAT_FORMAT.color()
+                                .forEach(players -> players.sendMessage((SpigotMessages.DONORCHAT_CONSOLE_FORMAT.color()
                                         .replace("%prefix%", SpigotMessages.DONORPREFIX.color())
                                         .replace("%user%", commandsender)
                                         .replace("%userprefix%", "")
@@ -254,7 +254,7 @@ public class DonorChatCommand extends CommandBase {
                         return false;
                     }
 
-                    sender.sendMessage((SpigotMessages.DONORCHAT_FORMAT.color()
+                    sender.sendMessage((SpigotMessages.DONORCHAT_CONSOLE_FORMAT.color()
                             .replace("%prefix%", SpigotMessages.DONORPREFIX.color())
                             .replace("%user%", commandsender)
                             .replace("%displayname%", commandsender)

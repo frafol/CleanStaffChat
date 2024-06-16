@@ -287,7 +287,7 @@ public class DonorChatCommand implements SimpleCommand {
 
                 final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
 
-                final String final_message = VelocityMessages.DONORCHAT_FORMAT.get(String.class)
+                final String final_message = VelocityMessages.DONORCHAT_CONSOLE_FORMAT.get(String.class)
                         .replace("%user%", sender)
                         .replace("%message%", message)
                         .replace("%displayname%", sender)
@@ -305,7 +305,7 @@ public class DonorChatCommand implements SimpleCommand {
             CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                             (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                     && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                    .forEach(players -> VelocityMessages.DONORCHAT_FORMAT.send(players,
+                    .forEach(players -> VelocityMessages.DONORCHAT_CONSOLE_FORMAT.send(players,
                             new Placeholder("user", sender),
                             new Placeholder("message", message),
                             new Placeholder("displayname", sender),
@@ -349,7 +349,7 @@ public class DonorChatCommand implements SimpleCommand {
                 }
             }
 
-            VelocityMessages.DONORCHAT_FORMAT.send(commandSource,
+            VelocityMessages.DONORCHAT_CONSOLE_FORMAT.send(commandSource,
                     new Placeholder("user", sender),
                     new Placeholder("message", message),
                     new Placeholder("displayname", sender),

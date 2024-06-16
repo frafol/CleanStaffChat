@@ -497,4 +497,8 @@ public class CleanStaffChat extends JavaPlugin {
         }
         return false;
     }
+
+    public boolean getPAPI() {
+        return getServer().getPluginManager().getPlugin("PlaceholderAPI") != null;
+    }
 }

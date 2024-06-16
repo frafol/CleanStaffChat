@@ -141,7 +141,7 @@ public class AdminChatCommand extends CommandBase {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.ADMINCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.ADMINCHAT_FORMAT.color((Player) sender)
                                 .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
                                 .replace("%user%", commandsender)
                                 .replace("%displayname%", PlayerCache.color(user_prefix) + commandsender + PlayerCache.color(user_suffix))
@@ -170,7 +170,7 @@ public class AdminChatCommand extends CommandBase {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.ADMINCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.ADMINCHAT_FORMAT.color((Player) sender)
                                 .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
                                 .replace("%user%", commandsender)
                                 .replace("%displayname%", ultraPermissionsUserPrefixFinal + commandsender + ultraPermissionsUserSuffixFinal)
@@ -185,7 +185,7 @@ public class AdminChatCommand extends CommandBase {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(SpigotMessages.ADMINCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.ADMINCHAT_FORMAT.color((Player) sender)
                                 .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
                                 .replace("%user%", commandsender)
                                 .replace("%userprefix%", "")
@@ -239,7 +239,7 @@ public class AdminChatCommand extends CommandBase {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage((SpigotMessages.ADMINCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage((SpigotMessages.ADMINCHAT_CONSOLE_FORMAT.color()
                                 .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
                                 .replace("%user%", commandsender)
                                 .replace("%userprefix%", "")
@@ -257,7 +257,7 @@ public class AdminChatCommand extends CommandBase {
 
             }
 
-            sender.sendMessage((SpigotMessages.ADMINCHAT_FORMAT.color()
+            sender.sendMessage((SpigotMessages.ADMINCHAT_CONSOLE_FORMAT.color()
                     .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
                     .replace("%user%", commandsender)
                     .replace("%displayname%", commandsender)

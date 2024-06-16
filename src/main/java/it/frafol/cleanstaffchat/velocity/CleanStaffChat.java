@@ -47,7 +47,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.15.3",
+        version = "1.16.0",
         dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true), @Dependency(id = "signedvelocity", optional = true), @Dependency(id = "spicord", optional = true), @Dependency(id = "leaf", optional = true), @Dependency(id = "miniplaceholders", optional = true), @Dependency(id = "clientcatcher", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
@@ -627,10 +627,6 @@ public class CleanStaffChat {
 
     private boolean getSpicord() {
         return getServer().getPluginManager().isLoaded("spicord");
-    }
-
-    private boolean getClientCatcher() {
-        return getServer().getPluginManager().isLoaded("clientcatcher");
     }
 
     public boolean getMiniPlaceholders() {

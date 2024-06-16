@@ -29,8 +29,9 @@ public class DebugCommand implements Listener {
         player.sendMessage("§d| ");
         player.sendMessage("§d| §7CleanStaffChat Informations");
         player.sendMessage("§d| ");
-        player.sendMessage("§d| §7Version: §d" + CleanStaffChat.getInstance().getDescription().getVersion());
-        player.sendMessage("§d| §7Server Version: §d" + CleanStaffChat.getInstance().getServer().getVersion());
+        player.sendMessage("§d| §7Version: §d" + instance.getDescription().getVersion());
+        player.sendMessage("§d| §7Server Software: §d" + instance.getServer().getVersion());
+        player.sendMessage("§d| §7Server Version: §d" + instance.getServer().getBukkitVersion());
         player.sendMessage("§d| ");
 
     }
@@ -50,7 +51,8 @@ public class DebugCommand implements Listener {
         player.sendMessage("§d| §7CleanStaffChat Informations");
         player.sendMessage("§d| ");
         player.sendMessage("§d| §7Version: §d" + instance.getDescription().getVersion());
-        player.sendMessage("§d| §7Server Version: §d" + instance.getServer().getVersion());
+        player.sendMessage("§d| §7Server Software: §d" + instance.getServer().getVersion());
+        player.sendMessage("§d| §7Server Version: §d" + instance.getServer().getBukkitVersion());
         player.sendMessage("§d| ");
     }
 }

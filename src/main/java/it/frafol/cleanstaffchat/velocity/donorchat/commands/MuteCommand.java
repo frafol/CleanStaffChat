@@ -61,7 +61,6 @@ public class MuteCommand implements SimpleCommand {
             PlayerCache.getMuted_donor().remove("true");
             VelocityMessages.DONORCHAT_UNMUTED.send(commandSource,
                     new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
-
         }
     }
 }

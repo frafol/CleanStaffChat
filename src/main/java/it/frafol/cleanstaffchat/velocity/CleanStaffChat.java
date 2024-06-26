@@ -13,6 +13,8 @@ import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.messages.ChannelIdentifier;
+import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import it.frafol.cleanstaffchat.velocity.adminchat.commands.AdminChatCommand;
 import it.frafol.cleanstaffchat.velocity.donorchat.commands.DonorChatCommand;
 import it.frafol.cleanstaffchat.velocity.enums.*;
@@ -47,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.16.0",
+        version = "1.16.1",
         dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true), @Dependency(id = "signedvelocity", optional = true), @Dependency(id = "spicord", optional = true), @Dependency(id = "leaf", optional = true), @Dependency(id = "miniplaceholders", optional = true), @Dependency(id = "clientcatcher", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
@@ -66,6 +68,8 @@ public class CleanStaffChat {
     private TextFile redisTextFile;
     private TextFile serversTextFile;
     private TextFile versionTextFile;
+
+    public static final ChannelIdentifier channel = MinecraftChannelIdentifier.create("cleansc", "cancel");
 
     @Getter
     private static CleanStaffChat instance;
@@ -118,6 +122,10 @@ public class CleanStaffChat {
                 .build(), new DebugCommand(this));
 
         server.getEventManager().register(this, new DebugCommand(this));
+
+        if (VelocityConfig.DOUBLE_MESSAGE.get(Boolean.class)) {
+            loadChannelRegistrar();
+        }
 
         if (VelocityConfig.STAFFLIST_MODULE.get(Boolean.class)) {
             registerStaffList();
@@ -172,6 +180,7 @@ public class CleanStaffChat {
     @Subscribe
     public void onProxyShutdown(ProxyShutdownEvent event) throws LoginException {
         getLogger().info("Deleting instances...");
+        server.getChannelRegistrar().unregister(channel);
 
         if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
             jda.getJda().shutdownNow();
@@ -631,5 +640,9 @@ public class CleanStaffChat {
 
     public boolean getMiniPlaceholders() {
         return getServer().getPluginManager().isLoaded("miniplaceholders") && VelocityConfig.MINIPLACEHOLDERS.get(Boolean.class);
+    }
+
+    private void loadChannelRegistrar() {
+        server.getChannelRegistrar().register(channel);
     }
 }

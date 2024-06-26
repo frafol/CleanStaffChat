@@ -1,8 +1,11 @@
 package it.frafol.cleanstaffchat.velocity.utils;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import com.velocitypowered.api.proxy.Player;
 import io.github.miniplaceholders.api.MiniPlaceholders;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
+import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import lombok.experimental.UtilityClass;
@@ -132,5 +135,17 @@ public class ChatUtil {
             }
         }
         return false;
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    public void sendChannelMessage(Player player, boolean cancel) {
+        if (!VelocityConfig.DOUBLE_MESSAGE.get(Boolean.class)) {
+            return;
+        }
+        final ByteArrayDataOutput buf = ByteStreams.newDataOutput();
+        buf.writeUTF(String.valueOf(cancel));
+        buf.writeUTF(player.getUsername());
+        player.getCurrentServer().ifPresent(sv ->
+                sv.sendPluginMessage(CleanStaffChat.channel, buf.toByteArray()));
     }
 }

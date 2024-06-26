@@ -70,13 +70,17 @@ public class ChatListener extends ListenerAdapter {
                                 if (event.getPlayer().getCurrentServer().get().getServer().getServerInfo().getName().equalsIgnoreCase(server)) {
                                     PlayerCache.getToggled_2().remove(event.getPlayer().getUniqueId());
                                     event.setResult(PlayerChatEvent.ChatResult.denied());
+                                    ChatUtil.sendChannelMessage(event.getPlayer(), false);
                                     VelocityMessages.STAFFCHAT_MUTED_ERROR.send(event.getPlayer(), new Placeholder("prefix", VelocityMessages.PREFIX.color()));
                                     return;
                                 }
                             }
                         }
 
-                        event.setResult(PlayerChatEvent.ChatResult.denied());
+                        if (!VelocityConfig.DOUBLE_MESSAGE.get(Boolean.class)) {
+                            event.setResult(PlayerChatEvent.ChatResult.denied());
+                        }
+
                         if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
                             LuckPerms api = LuckPermsProvider.get();
@@ -189,14 +193,14 @@ public class ChatListener extends ListenerAdapter {
                         }
 
                     } else {
-
+                        event.setResult(PlayerChatEvent.ChatResult.denied());
                         VelocityMessages.STAFFCHAT_MUTED_ERROR.send(event.getPlayer(),
                                 new Placeholder("prefix", VelocityMessages.PREFIX.color()));
-
                     }
                 }
 
             } else {
+                ChatUtil.sendChannelMessage(event.getPlayer(), false);
                 PlayerCache.getToggled_2().remove(event.getPlayer().getUniqueId());
             }
         }

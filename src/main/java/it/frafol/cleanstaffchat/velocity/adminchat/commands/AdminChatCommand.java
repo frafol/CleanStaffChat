@@ -74,7 +74,7 @@ public class AdminChatCommand implements SimpleCommand {
                         PlayerCache.getToggled_2_admin().add(player.getUniqueId());
                         PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
                         PlayerCache.getToggled_2().remove(player.getUniqueId());
-
+                        ChatUtil.sendChannelMessage(player, true);
                         VelocityMessages.ADMINCHAT_TALK_ENABLED.send(commandSource,
                                 new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
 
@@ -89,7 +89,7 @@ public class AdminChatCommand implements SimpleCommand {
                     PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
                     PlayerCache.getToggled_2().remove(player.getUniqueId());
                     PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
-
+                    ChatUtil.sendChannelMessage(player, false);
                     VelocityMessages.ADMINCHAT_TALK_DISABLED.send(commandSource,
                             new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
 

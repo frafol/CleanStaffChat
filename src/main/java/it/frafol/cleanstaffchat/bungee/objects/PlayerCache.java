@@ -2,6 +2,7 @@ package it.frafol.cleanstaffchat.bungee.objects;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -131,6 +132,10 @@ public class PlayerCache {
 
     @SuppressWarnings("UnstableApiUsage")
     public void sendChannelMessage(ProxiedPlayer player, boolean cancel) {
+
+        if (!BungeeConfig.WORKAROUND_KICK.get(Boolean.class)) {
+            return;
+        }
 
         final ByteArrayDataOutput buf = ByteStreams.newDataOutput();
 

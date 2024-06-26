@@ -42,11 +42,14 @@ public class ChatListener extends ListenerAdapter {
 
         if (PlayerCache.getCooldown().contains(event.getPlayer().getUniqueId())) {
             VelocityMessages.DONORCHAT_COOLDOWN_MESSAGE.send(event.getPlayer(), new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
-            event.setResult(PlayerChatEvent.ChatResult.denied());
+            if (!VelocityConfig.DOUBLE_MESSAGE.get(Boolean.class)) {
+                event.setResult(PlayerChatEvent.ChatResult.denied());
+            }
             return;
         }
 
         if (!event.getPlayer().hasPermission(DONORCHAT_USE_PERMISSION.get(String.class))) {
+            ChatUtil.sendChannelMessage(event.getPlayer(), false);
             PlayerCache.getToggled_2_donor().remove(event.getPlayer().getUniqueId());
             return;
         }
@@ -61,6 +64,7 @@ public class ChatListener extends ListenerAdapter {
         }
 
         if (PlayerCache.getMuted_donor().contains("true")) {
+            event.setResult(PlayerChatEvent.ChatResult.denied());
             VelocityMessages.DONORCHAT_MUTED_ERROR.send(event.getPlayer(),
                     new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
             return;
@@ -83,6 +87,7 @@ public class ChatListener extends ListenerAdapter {
                 if (event.getPlayer().getCurrentServer().get().getServer().getServerInfo().getName().equalsIgnoreCase(server)) {
                     PlayerCache.getToggled_2_donor().remove(event.getPlayer().getUniqueId());
                     event.setResult(PlayerChatEvent.ChatResult.denied());
+                    ChatUtil.sendChannelMessage(event.getPlayer(), false);
                     VelocityMessages.DONORCHAT_MUTED_ERROR.send(event.getPlayer(), new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
                     return;
                 }
@@ -90,16 +95,17 @@ public class ChatListener extends ListenerAdapter {
         }
 
         if (!event.getPlayer().hasPermission(COOLDOWN_BYPASS_PERMISSION.get(String.class))) {
-
             PlayerCache.getCooldown().add(event.getPlayer().getUniqueId());
             PLUGIN.getServer().getScheduler()
                     .buildTask(PLUGIN, scheduledTask -> PlayerCache.getCooldown().remove(event.getPlayer().getUniqueId()))
                     .delay(DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS)
                     .schedule();
-
         }
 
-        event.setResult(PlayerChatEvent.ChatResult.denied());
+        if (!VelocityConfig.DOUBLE_MESSAGE.get(Boolean.class)) {
+            event.setResult(PlayerChatEvent.ChatResult.denied());
+        }
+                        
         if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
             LuckPerms api = LuckPermsProvider.get();

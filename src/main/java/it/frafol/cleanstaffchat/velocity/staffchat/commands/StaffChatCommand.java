@@ -75,7 +75,7 @@ public class StaffChatCommand implements SimpleCommand {
                         PlayerCache.getToggled_2().add(player.getUniqueId());
                         PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
                         PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
-
+                        ChatUtil.sendChannelMessage(player, true);
                         VelocityMessages.STAFFCHAT_TALK_ENABLED.send(commandSource,
                                 new Placeholder("prefix", VelocityMessages.PREFIX.color()));
                         return;
@@ -90,7 +90,7 @@ public class StaffChatCommand implements SimpleCommand {
                     PlayerCache.getToggled_2().remove(player.getUniqueId());
                     PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
                     PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
-
+                    ChatUtil.sendChannelMessage(player, false);
                     VelocityMessages.STAFFCHAT_TALK_DISABLED.send(commandSource,
                             new Placeholder("prefix", VelocityMessages.PREFIX.color()));
                     return;

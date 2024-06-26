@@ -159,10 +159,10 @@ public class CleanStaffChat extends JavaPlugin {
         getCommandMap().register(getName().toLowerCase(), new ReloadCommand(this));
         getServer().getPluginManager().registerEvents(new DebugCommand(), this);
 
-        if (SpigotConfig.WORKAROUND_KICK.get(Boolean.class)) {
+        if (SpigotConfig.WORKAROUND_KICK.get(Boolean.class) || SpigotConfig.DOUBLE_MESSAGE.get(Boolean.class)) {
             getServer().getMessenger().registerIncomingPluginChannel(this, "cleansc:cancel", new PluginMessageReceiver());
             getServer().getPluginManager().registerEvents(new it.frafol.cleanstaffchat.bukkit.objects.ChatListener(), this);
-            getLogger().info("Plugin successfully enabled in BungeeCord mode!");
+            getLogger().info("Successfully enabled in Proxy mode!");
             return;
         }
 

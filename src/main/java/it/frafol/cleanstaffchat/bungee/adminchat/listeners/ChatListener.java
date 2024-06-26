@@ -46,6 +46,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
         if (PlayerCache.getMuted_admin().contains("true")) {
             PlayerCache.getToggled_2_admin().remove(((ProxiedPlayer) event.getSender()).getUniqueId());
             event.setCancelled(true);
+            PlayerCache.sendChannelMessage((ProxiedPlayer) event.getSender(), false);
             ((ProxiedPlayer) event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_MUTED_ERROR.color()
                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
             return;
@@ -65,6 +66,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 if (((ProxiedPlayer) event.getSender()).getServer().getInfo().getName().equalsIgnoreCase(server)) {
                     PlayerCache.getToggled_2_admin().remove(((ProxiedPlayer) event.getSender()).getUniqueId());
                     event.setCancelled(true);
+                    PlayerCache.sendChannelMessage((ProxiedPlayer) event.getSender(), false);
                     ((ProxiedPlayer) event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_MUTED_ERROR.color()
                             .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
                     return;

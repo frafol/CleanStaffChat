@@ -75,10 +75,9 @@ public class DonorChatCommand implements SimpleCommand {
                         PlayerCache.getToggled_2_donor().add(player.getUniqueId());
                         PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
                         PlayerCache.getToggled_2().remove(player.getUniqueId());
-
+                        ChatUtil.sendChannelMessage(player, true);
                         VelocityMessages.DONORCHAT_TALK_ENABLED.send(commandSource,
                                 new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
-
                         return;
 
                     } else {
@@ -90,7 +89,7 @@ public class DonorChatCommand implements SimpleCommand {
                     PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
                     PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
                     PlayerCache.getToggled_2().remove(player.getUniqueId());
-
+                    ChatUtil.sendChannelMessage(player, false);
                     VelocityMessages.DONORCHAT_TALK_DISABLED.send(commandSource,
                             new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
                     return;

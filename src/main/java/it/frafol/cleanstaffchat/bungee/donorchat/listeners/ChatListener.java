@@ -53,6 +53,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
         if (PlayerCache.getCooldown().contains(((ProxiedPlayer) event.getSender()).getUniqueId())) {
             PlayerCache.getToggled_2_donor().remove(((ProxiedPlayer) event.getSender()).getUniqueId());
+            PlayerCache.sendChannelMessage((ProxiedPlayer) event.getSender(), false);
             event.setCancelled(true);
             ((ProxiedPlayer) event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_COOLDOWN_MESSAGE.color()
                     .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
@@ -72,6 +73,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                 if (((ProxiedPlayer) event.getSender()).getServer().getInfo().getName().equalsIgnoreCase(server)) {
                     PlayerCache.getToggled_2_donor().remove(((ProxiedPlayer) event.getSender()).getUniqueId());
+                    PlayerCache.sendChannelMessage((ProxiedPlayer) event.getSender(), false);
                     event.setCancelled(true);
                     ((ProxiedPlayer) event.getSender()).sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_MUTED_ERROR.color()
                             .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
@@ -101,12 +103,9 @@ public class ChatListener extends ListenerAdapter implements Listener {
             }
 
             if (!((ProxiedPlayer) event.getSender()).hasPermission(BungeeConfig.COOLDOWN_BYPASS_PERMISSION.get(String.class))) {
-
                 PlayerCache.getCooldown().add(((ProxiedPlayer) event.getSender()).getUniqueId());
-
                 ProxyServer.getInstance().getScheduler().schedule(PLUGIN, () ->
                         PlayerCache.getCooldown().remove(((ProxiedPlayer) event.getSender()).getUniqueId()), BungeeConfig.DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS);
-
             }
 
             if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {

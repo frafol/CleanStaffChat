@@ -41,6 +41,7 @@ public class ChatListener extends ListenerAdapter {
         }
 
         if (!event.getPlayer().hasPermission(ADMINCHAT_USE_PERMISSION.get(String.class))) {
+            ChatUtil.sendChannelMessage(event.getPlayer(), false);
             PlayerCache.getToggled_2_admin().remove(event.getPlayer().getUniqueId());
             return;
         }
@@ -55,6 +56,7 @@ public class ChatListener extends ListenerAdapter {
         }
 
         if (PlayerCache.getMuted().contains("true")) {
+            event.setResult(PlayerChatEvent.ChatResult.denied());
             VelocityMessages.ADMINCHAT_MUTED_ERROR.send(event.getPlayer(),
                     new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
             return;
@@ -77,13 +79,17 @@ public class ChatListener extends ListenerAdapter {
                 if (event.getPlayer().getCurrentServer().get().getServer().getServerInfo().getName().equalsIgnoreCase(server)) {
                     PlayerCache.getToggled_2_admin().remove(event.getPlayer().getUniqueId());
                     event.setResult(PlayerChatEvent.ChatResult.denied());
+                    ChatUtil.sendChannelMessage(event.getPlayer(), false);
                     VelocityMessages.ADMINCHAT_MUTED_ERROR.send(event.getPlayer(), new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
                     return;
                 }
             }
         }
 
-        event.setResult(PlayerChatEvent.ChatResult.denied());
+        if (!VelocityConfig.DOUBLE_MESSAGE.get(Boolean.class)) {
+            event.setResult(PlayerChatEvent.ChatResult.denied());
+        }
+                        
         if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
             LuckPerms api = LuckPermsProvider.get();

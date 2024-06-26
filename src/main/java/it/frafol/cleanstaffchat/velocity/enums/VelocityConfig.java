@@ -91,6 +91,8 @@ public enum VelocityConfig {
     MINIMESSAGE("modules.minimessage_support"),
     MINIPLACEHOLDERS("modules.miniplaceholders_support"),
 
+    DOUBLE_MESSAGE("modules.double_message_workaround"),
+
     STAFFCHAT("settings.use_staffchat"),
     ADMINCHAT("settings.use_adminchat"),
     DONORCHAT("settings.use_donorchat");

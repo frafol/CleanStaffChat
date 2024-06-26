@@ -75,6 +75,8 @@ public enum SpigotConfig {
     STATS("modules.stats"),
 
     WORKAROUND_KICK("modules.kick_workaround"),
+    DOUBLE_MESSAGE("modules.double_message_workaround"),
+
     MINIPLACEHOLDERS("modules.miniplaceholders_support"),
 
     UPDATE_CHECK("modules.update_check"),

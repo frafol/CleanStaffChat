@@ -173,7 +173,7 @@ public class CleanStaffChat {
         }
 
         if (VelocityConfig.STATS.get(Boolean.class)) {
-            //metricsFactory.make(this, 16447);
+            metricsFactory.make(this, 16447);
             getLogger().info("Metrics loaded successfully!");
         }
 

@@ -46,7 +46,9 @@ discord: # The Discord Integration is an experimental feature, report all proble
     use_embeds: true
 
     # Embeds color.
-    color: "0x00ff00"
+    staffchat_color: "0x00ff00"
+    adminchat_color: "0xff0000"
+    donorchat_color: "0x0000ff"
 
     # Embeds footer.
     footer: "Powered by CleanStaffChat"

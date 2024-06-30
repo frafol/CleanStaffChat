@@ -19,13 +19,13 @@ public class ToggleCommand extends Command {
     public void execute(CommandSender sender, String[] args) {
 
         if (!(BungeeConfig.ADMINCHAT_TOGGLE_MODULE.get(Boolean.class))) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.MODULE_DISABLED.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.MODULE_DISABLED.color()
                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
             return;
         }
 
         if (!(sender instanceof ProxiedPlayer)) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.PLAYER_ONLY.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.PLAYER_ONLY.color()
                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
             return;
         }
@@ -33,20 +33,20 @@ public class ToggleCommand extends Command {
         ProxiedPlayer player = (ProxiedPlayer) sender;
 
         if (!player.hasPermission(BungeeConfig.ADMINCHAT_TOGGLE_PERMISSION.get(String.class))) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.NO_PERMISSION.color()
                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
             return;
         }
 
         if (!PlayerCache.getToggled_admin().contains(player.getUniqueId())) {
             PlayerCache.getToggled_admin().add(player.getUniqueId());
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_TOGGLED_OFF.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_TOGGLED_OFF.color()
                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
             return;
         }
 
         PlayerCache.getToggled_admin().remove(player.getUniqueId());
-        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_TOGGLED_ON.color()
+        sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_TOGGLED_ON.color()
                 .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
     }
 }

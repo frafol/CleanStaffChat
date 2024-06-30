@@ -21,13 +21,13 @@ public class MuteCommand extends Command {
     public void execute(CommandSender sender, String[] args) {
 
         if (!(BungeeConfig.STAFFCHAT_MUTE_MODULE.get(Boolean.class))) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.MODULE_DISABLED.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.MODULE_DISABLED.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
             return;
         }
 
         if (!sender.hasPermission(BungeeConfig.STAFFCHAT_MUTE_PERMISSION.get(String.class))) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.NO_PERMISSION.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
             return;
         }
@@ -39,10 +39,10 @@ public class MuteCommand extends Command {
             final String final_message = "set.staffchat.mute";
 
             if (!PlayerCache.getMuted().contains("true")) {
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_MUTED.color()
+                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFFCHAT_MUTED.color()
                         .replace("%prefix%", BungeeMessages.PREFIX.color())));
             } else {
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_UNMUTED.color()
+                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFFCHAT_UNMUTED.color()
                         .replace("%prefix%", BungeeMessages.PREFIX.color())));
             }
 
@@ -50,11 +50,11 @@ public class MuteCommand extends Command {
 
         } else if (!PlayerCache.getMuted().contains("true")) {
             PlayerCache.getMuted().add("true");
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_MUTED.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFFCHAT_MUTED.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
         } else {
             PlayerCache.getMuted().remove("true");
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_UNMUTED.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFFCHAT_UNMUTED.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
         }
     }

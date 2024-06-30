@@ -27,9 +27,9 @@ public class RedisListener implements Listener {
             CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                             (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                     && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                    .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(player_message)));
+                    .forEach(players -> players.sendMessage(TextComponent.fromLegacy(player_message)));
 
-            PLUGIN.getProxy().getConsole().sendMessage(TextComponent.fromLegacyText(player_message));
+            PLUGIN.getProxy().getConsole().sendMessage(TextComponent.fromLegacy(player_message));
 
         }
 
@@ -40,9 +40,9 @@ public class RedisListener implements Listener {
             CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                             (players -> players.hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                     && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                    .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(player_message)));
+                    .forEach(players -> players.sendMessage(TextComponent.fromLegacy(player_message)));
 
-            PLUGIN.getProxy().getConsole().sendMessage(TextComponent.fromLegacyText(player_message));
+            PLUGIN.getProxy().getConsole().sendMessage(TextComponent.fromLegacy(player_message));
 
         }
 
@@ -53,9 +53,9 @@ public class RedisListener implements Listener {
             CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                             (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                     && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                    .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(player_message)));
+                    .forEach(players -> players.sendMessage(TextComponent.fromLegacy(player_message)));
 
-            PLUGIN.getProxy().getConsole().sendMessage(TextComponent.fromLegacyText(player_message));
+            PLUGIN.getProxy().getConsole().sendMessage(TextComponent.fromLegacy(player_message));
 
         }
 
@@ -66,7 +66,7 @@ public class RedisListener implements Listener {
             CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                             (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                     && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                    .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(player_message)));
+                    .forEach(players -> players.sendMessage(TextComponent.fromLegacy(player_message)));
 
         }
 
@@ -77,7 +77,7 @@ public class RedisListener implements Listener {
             CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                             (players -> players.hasPermission(BungeeConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))
                                     && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                    .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(player_message)));
+                    .forEach(players -> players.sendMessage(TextComponent.fromLegacy(player_message)));
 
         }
 

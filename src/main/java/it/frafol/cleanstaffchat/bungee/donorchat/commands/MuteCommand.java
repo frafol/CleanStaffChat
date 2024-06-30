@@ -20,13 +20,13 @@ public class MuteCommand extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (!(BungeeConfig.DONORCHAT_MUTE_MODULE.get(Boolean.class))) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.MODULE_DISABLED.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.MODULE_DISABLED.color()
                     .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
             return;
         }
 
         if (!sender.hasPermission(BungeeConfig.DONORCHAT_MUTE_PERMISSION.get(String.class))) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.NO_PERMISSION.color()
                     .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
             return;
         }
@@ -37,10 +37,10 @@ public class MuteCommand extends Command {
             final String final_message = "set.donorchat.mute";
 
             if (!PlayerCache.getMuted_donor().contains("true")) {
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_MUTED.color()
+                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_MUTED.color()
                         .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
             } else {
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_UNMUTED.color()
+                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_UNMUTED.color()
                         .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
             }
 
@@ -49,13 +49,13 @@ public class MuteCommand extends Command {
 
         } else if (!PlayerCache.getMuted_donor().contains("true")) {
             PlayerCache.getMuted_donor().add("true");
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_MUTED.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_MUTED.color()
                     .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
             return;
         }
 
         PlayerCache.getMuted_donor().remove("true");
-        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_UNMUTED.color()
+        sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_UNMUTED.color()
                 .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
     }
 }

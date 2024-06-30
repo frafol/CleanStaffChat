@@ -99,7 +99,7 @@ public class JoinListener implements Listener {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
                                         .replace("%prefix%", BungeeMessages.PREFIX.color())
                                         .replace("%displayname%", PlayerCache.translateHex(user_prefix) + player.getName() + PlayerCache.translateHex(user_suffix))
                                         .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
@@ -146,7 +146,7 @@ public class JoinListener implements Listener {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
                                         .replace("%prefix%", BungeeMessages.PREFIX.color())
                                         .replace("%displayname%", ultraPermissionsUserPrefixFinal + player.getName() + ultraPermissionsUserSuffixFinal)
                                         .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
@@ -179,7 +179,7 @@ public class JoinListener implements Listener {
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                         (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                                .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
+                                .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFF_JOIN_MESSAGE_FORMAT.color()
                                         .replace("%prefix%", BungeeMessages.PREFIX.color())
                                         .replace("%server%", player.getServer().getInfo().getName())
                                         .replace("%displayname%", player.getName())
@@ -287,7 +287,7 @@ public class JoinListener implements Listener {
                     CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                     (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                             && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                            .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFF_QUIT_MESSAGE_FORMAT.color()
+                            .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFF_QUIT_MESSAGE_FORMAT.color()
                                     .replace("%prefix%", BungeeMessages.PREFIX.color())
                                     .replace("%displayname%", PlayerCache.translateHex(user_prefix) + player.getName() + PlayerCache.translateHex(user_suffix))
                                     .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
@@ -338,7 +338,7 @@ public class JoinListener implements Listener {
                     CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                     (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                             && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                            .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFF_QUIT_MESSAGE_FORMAT.color()
+                            .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFF_QUIT_MESSAGE_FORMAT.color()
                                     .replace("%prefix%", BungeeMessages.PREFIX.color())
                                     .replace("%displayname%", ultraPermissionsUserPrefixFinal + player.getName() + ultraPermissionsUserSuffixFinal)
                                     .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
@@ -373,7 +373,7 @@ public class JoinListener implements Listener {
                     CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                     (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                             && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                            .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFF_QUIT_MESSAGE_FORMAT.color()
+                            .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFF_QUIT_MESSAGE_FORMAT.color()
                                     .replace("%prefix%", BungeeMessages.PREFIX.color())
                                     .replace("%server%", player.getServer().getInfo().getName())
                                     .replace("%displayname%", player.getName())

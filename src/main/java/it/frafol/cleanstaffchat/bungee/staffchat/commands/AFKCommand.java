@@ -31,19 +31,19 @@ public class AFKCommand extends Command {
     public void execute(CommandSender sender, String[] args) {
 
         if (!(sender instanceof ProxiedPlayer)) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.PLAYER_ONLY.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.PLAYER_ONLY.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
             return;
         }
 
         if (!BungeeConfig.STAFFCHAT_AFK_MODULE.get(Boolean.class)) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.MODULE_DISABLED.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.MODULE_DISABLED.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
             return;
         }
 
         if (!sender.hasPermission(BungeeConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.NO_PERMISSION.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
             return;
         }
@@ -84,7 +84,7 @@ public class AFKCommand extends Command {
                     CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                     (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                             && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                            .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_AFK_ON.color()
+                            .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFFCHAT_AFK_ON.color()
                                     .replace("%prefix%", BungeeMessages.PREFIX.color())
                                     .replace("%user%", sender.getName())
                                     .replace("%displayname%", PlayerCache.translateHex(user_prefix) + sender.getName() + PlayerCache.translateHex(user_suffix))
@@ -128,7 +128,7 @@ public class AFKCommand extends Command {
                     CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                     (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                             && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                            .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_AFK_ON.color()
+                            .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFFCHAT_AFK_ON.color()
                                     .replace("%prefix%", BungeeMessages.PREFIX.color())
                                     .replace("%user%", sender.getName())
                                     .replace("%displayname%", ultraPermissionsUserPrefixFinal + sender.getName() + ultraPermissionsUserSuffixFinal)
@@ -158,7 +158,7 @@ public class AFKCommand extends Command {
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_AFK_ON.color()
+                        .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFFCHAT_AFK_ON.color()
                                 .replace("%prefix%", BungeeMessages.PREFIX.color())
                                 .replace("%user%", sender.getName())
                                 .replace("%userprefix%", "")
@@ -235,7 +235,7 @@ public class AFKCommand extends Command {
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_AFK_OFF.color()
+                        .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFFCHAT_AFK_OFF.color()
                                 .replace("%prefix%", BungeeMessages.PREFIX.color())
                                 .replace("%user%", sender.getName())
                                 .replace("%displayname%", PlayerCache.translateHex(user_prefix) + sender.getName() + PlayerCache.translateHex(user_suffix))
@@ -265,7 +265,7 @@ public class AFKCommand extends Command {
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_AFK_OFF.color()
+                        .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFFCHAT_AFK_OFF.color()
                                 .replace("%prefix%", BungeeMessages.PREFIX.color())
                                 .replace("%user%", sender.getName())
                                 .replace("%userprefix%", "")

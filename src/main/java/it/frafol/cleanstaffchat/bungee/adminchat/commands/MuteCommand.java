@@ -20,13 +20,13 @@ public class MuteCommand extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (!(BungeeConfig.ADMINCHAT_MUTE_MODULE.get(Boolean.class))) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.MODULE_DISABLED.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.MODULE_DISABLED.color()
                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
             return;
         }
 
         if (!sender.hasPermission(BungeeConfig.ADMINCHAT_MUTE_PERMISSION.get(String.class))) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.NO_PERMISSION.color()
                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
             return;
         }
@@ -37,10 +37,10 @@ public class MuteCommand extends Command {
             final String final_message = "set.adminchat.mute";
 
             if (!PlayerCache.getMuted_admin().contains("true")) {
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_MUTED.color()
+                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_MUTED.color()
                         .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
             } else {
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_UNMUTED.color()
+                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_UNMUTED.color()
                         .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
             }
 
@@ -49,13 +49,13 @@ public class MuteCommand extends Command {
 
         } else if (!PlayerCache.getMuted_admin().contains("true")) {
             PlayerCache.getMuted_admin().add("true");
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_MUTED.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_MUTED.color()
                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
             return;
         }
 
         PlayerCache.getMuted_admin().remove("true");
-        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_UNMUTED.color()
+        sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_UNMUTED.color()
                 .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
     }
 }

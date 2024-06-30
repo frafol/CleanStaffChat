@@ -26,12 +26,12 @@ public class DebugCommand extends Command implements Listener {
             return;
         }
 
-        invocation.sendMessage(TextComponent.fromLegacyText("§d| "));
-        invocation.sendMessage(TextComponent.fromLegacyText("§d| §7CleanStaffChat Informations"));
-        invocation.sendMessage(TextComponent.fromLegacyText("§d| "));
-        invocation.sendMessage(TextComponent.fromLegacyText("§d| §7Version: §d" + instance.getDescription().getVersion()));
-        invocation.sendMessage(TextComponent.fromLegacyText("§d| §7BungeeCord: §d" + instance.getProxy().getVersion()));
-        invocation.sendMessage(TextComponent.fromLegacyText("§d| "));
+        invocation.sendMessage(TextComponent.fromLegacy("§d| "));
+        invocation.sendMessage(TextComponent.fromLegacy("§d| §7CleanStaffChat Informations"));
+        invocation.sendMessage(TextComponent.fromLegacy("§d| "));
+        invocation.sendMessage(TextComponent.fromLegacy("§d| §7Version: §d" + instance.getDescription().getVersion()));
+        invocation.sendMessage(TextComponent.fromLegacy("§d| §7BungeeCord: §d" + instance.getProxy().getVersion()));
+        invocation.sendMessage(TextComponent.fromLegacy("§d| "));
     }
 
     @EventHandler
@@ -45,11 +45,11 @@ public class DebugCommand extends Command implements Listener {
     }
 
     private void credits(ProxiedPlayer invocation) {
-        invocation.sendMessage(TextComponent.fromLegacyText("§d| "));
-        invocation.sendMessage(TextComponent.fromLegacyText("§d| §7CleanStaffChat Informations"));
-        invocation.sendMessage(TextComponent.fromLegacyText("§d| "));
-        invocation.sendMessage(TextComponent.fromLegacyText("§d| §7Version: §d" + instance.getDescription().getVersion()));
-        invocation.sendMessage(TextComponent.fromLegacyText("§d| §7BungeeCord: §d" + instance.getProxy().getVersion()));
-        invocation.sendMessage(TextComponent.fromLegacyText("§d| "));
+        invocation.sendMessage(TextComponent.fromLegacy("§d| "));
+        invocation.sendMessage(TextComponent.fromLegacy("§d| §7CleanStaffChat Informations"));
+        invocation.sendMessage(TextComponent.fromLegacy("§d| "));
+        invocation.sendMessage(TextComponent.fromLegacy("§d| §7Version: §d" + instance.getDescription().getVersion()));
+        invocation.sendMessage(TextComponent.fromLegacy("§d| §7BungeeCord: §d" + instance.getProxy().getVersion()));
+        invocation.sendMessage(TextComponent.fromLegacy("§d| "));
     }
 }

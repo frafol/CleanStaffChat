@@ -168,7 +168,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         .replace("%message%", message)
                         .replace("%server%", ""));
 
-                embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_COLOR.get(String.class)));
+                embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                 embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                 channel.sendMessageEmbeds(embed.build()).queue();
@@ -265,6 +265,11 @@ public class ChatListener extends ListenerAdapter implements Listener {
             for (UUID uuids : list) {
 
                 Player players = PLUGIN.getServer().getPlayer(uuids);
+
+                if (players == null) {
+                    continue;
+                }
+
                 User user = api.getUserManager().getUser(players.getUniqueId());
 
                 if (user == null) {
@@ -288,10 +293,6 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         user_prefix = "";
                     }
 
-                    if (players.getServer() == null) {
-                        continue;
-                    }
-
                     sb.append((SpigotMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
                             .replace("%usergroup%", PlayerCache.color(user_prefix))
                             .replace("%player%", players.getName())
@@ -303,10 +304,6 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                 final String prefix = group.getDisplayName();
                 user_prefix = prefix == null ? group.getDisplayName() : prefix;
-
-                if (players.getServer() == null) {
-                    continue;
-                }
 
                 sb.append((SpigotMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
                         .replace("%usergroup%", PlayerCache.color(user_prefix))
@@ -321,7 +318,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 EmbedBuilder embed = new EmbedBuilder();
                 embed.setTitle(SpigotDiscordConfig.STAFFLIST_EMBED_TITLE.get(String.class), null);
                 embed.setDescription(sb.toString());
-                embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_COLOR.get(String.class)));
+                embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                 embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
                 event.getChannel().sendMessageEmbeds(embed.build()).queue();
 

@@ -282,7 +282,7 @@ public class CleanStaffChat extends Plugin {
                 }
 
                 if (!updated) {
-                    player.sendMessage(TextComponent.fromLegacyText(BungeeMessages.UPDATE.color()
+                    player.sendMessage(TextComponent.fromLegacy(BungeeMessages.UPDATE.color()
                             .replace("%version%", version)
                             .replace("%prefix%", BungeeMessages.PREFIX.color())));
                 }

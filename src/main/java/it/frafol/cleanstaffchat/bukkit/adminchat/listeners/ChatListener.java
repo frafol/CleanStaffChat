@@ -165,7 +165,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         .replace("%message%", message)
                         .replace("%server%", ""));
 
-                embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_COLOR.get(String.class)));
+                embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_ADMINCHATCOLOR.get(String.class)));
                 embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                 channel.sendMessageEmbeds(embed.build()).queue();

@@ -19,13 +19,13 @@ public class ToggleCommand extends Command {
     public void execute(CommandSender sender, String[] args) {
 
         if (!(BungeeConfig.STAFFCHAT_TOGGLE_MODULE.get(Boolean.class))) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.MODULE_DISABLED.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.MODULE_DISABLED.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
             return;
         }
 
         if (!(sender instanceof ProxiedPlayer)) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.PLAYER_ONLY.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.PLAYER_ONLY.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
             return;
         }
@@ -33,20 +33,20 @@ public class ToggleCommand extends Command {
         ProxiedPlayer player = (ProxiedPlayer) sender;
 
         if (!player.hasPermission(BungeeConfig.STAFFCHAT_TOGGLE_PERMISSION.get(String.class))) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.NO_PERMISSION.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
             return;
         }
 
         if (!PlayerCache.getToggled().contains(player.getUniqueId())) {
             PlayerCache.getToggled().add(player.getUniqueId());
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_TOGGLED_OFF.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFFCHAT_TOGGLED_OFF.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
             return;
         }
 
         PlayerCache.getToggled().remove(player.getUniqueId());
-        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_TOGGLED_ON.color()
+        sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFFCHAT_TOGGLED_ON.color()
                 .replace("%prefix%", BungeeMessages.PREFIX.color())));
     }
 }

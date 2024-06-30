@@ -5,7 +5,11 @@ import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 public enum VelocityDiscordConfig {
 
     USE_EMBED("discord.embeds.use_embeds"),
-    EMBEDS_COLOR("discord.embeds.color"),
+
+    EMBEDS_STAFFCHATCOLOR("discord.embeds.staffchat_color"),
+    EMBEDS_ADMINCHATCOLOR("discord.embeds.adminchat_color"),
+    EMBEDS_DONORCHATCOLOR("discord.embeds.donorchat_color"),
+
     EMBEDS_FOOTER("discord.embeds.footer"),
     FORWARD_BOT("discord.forward_bot_messages"),
 

@@ -189,7 +189,7 @@ public class ChatListener extends ListenerAdapter {
                     .replace("%message%", message)
                     .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()));
 
-            embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_COLOR.get(String.class)));
+            embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_ADMINCHATCOLOR.get(String.class)));
             embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
             channel.sendMessageEmbeds(embed.build()).queue();

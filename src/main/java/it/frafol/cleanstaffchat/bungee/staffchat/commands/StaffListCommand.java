@@ -38,13 +38,13 @@ public class StaffListCommand extends Command {
         if (plugin.getProxy().getPluginManager().getPlugin("LuckPerms") != null) {
 
             if (!sender.hasPermission(BungeeConfig.STAFFLIST_PERMISSION.get(String.class))) {
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
+                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.NO_PERMISSION.color()
                         .replace("%prefix%", BungeeMessages.PREFIX.color())));
                 return;
             }
 
             if (args.length != 0) {
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_USAGE.color()
+                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.LIST_USAGE.color()
                         .replace("%prefix%", BungeeMessages.PREFIX.color())));
                 return;
             }
@@ -76,12 +76,12 @@ public class StaffListCommand extends Command {
                 }
             }
 
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_HEADER.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.LIST_HEADER.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())
                     .replace("%online%", String.valueOf(list.size()))));
 
             if (list.isEmpty()) {
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_NONE.color()
+                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.LIST_NONE.color()
                         .replace("%prefix%", BungeeMessages.PREFIX.color())));
             }
 
@@ -151,7 +151,7 @@ public class StaffListCommand extends Command {
                         continue;
                     }
 
-                    sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FORMAT.color()
+                    sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.LIST_FORMAT.color()
                             .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
                             .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                             .replace("%player%", players.getName())
@@ -169,7 +169,7 @@ public class StaffListCommand extends Command {
                     continue;
                 }
 
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FORMAT.color()
+                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.LIST_FORMAT.color()
                         .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
                         .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                         .replace("%player%", players.getName())
@@ -179,20 +179,20 @@ public class StaffListCommand extends Command {
 
 
             }
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FOOTER.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.LIST_FOOTER.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())
                     .replace("%online%", String.valueOf(list.size()))));
             return;
         }
 
         if (!sender.hasPermission(BungeeConfig.STAFFLIST_PERMISSION.get(String.class))) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.NO_PERMISSION.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
             return;
         }
 
         if (args.length != 0) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_USAGE.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.LIST_USAGE.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
             return;
         }
@@ -219,12 +219,12 @@ public class StaffListCommand extends Command {
             list.add(players.getUniqueId());
         }
 
-        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_HEADER.color()
+        sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.LIST_HEADER.color()
                 .replace("%prefix%", BungeeMessages.PREFIX.color())
                 .replace("%online%", String.valueOf(list.size()))));
 
         if (list.isEmpty()) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_NONE.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.LIST_NONE.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
         }
 
@@ -290,7 +290,7 @@ public class StaffListCommand extends Command {
                     continue;
                 }
 
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FORMAT.color()
+                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.LIST_FORMAT.color()
                         .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
                         .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                         .replace("%player%", players.getName())
@@ -308,7 +308,7 @@ public class StaffListCommand extends Command {
                 continue;
             }
 
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FORMAT.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.LIST_FORMAT.color()
                     .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
                     .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                     .replace("%player%", players.getName())
@@ -319,7 +319,7 @@ public class StaffListCommand extends Command {
 
         }
 
-        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FOOTER.color()
+        sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.LIST_FOOTER.color()
                 .replace("%prefix%", BungeeMessages.PREFIX.color())
                 .replace("%online%", String.valueOf(list.size()))));
     }
@@ -363,7 +363,7 @@ public class StaffListCommand extends Command {
                     continue;
                 }
 
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FORMAT.color()
+                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.LIST_FORMAT.color()
                         .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
                         .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                         .replace("%player%", redisApi.getNameFromUuid(uuids))
@@ -381,7 +381,7 @@ public class StaffListCommand extends Command {
                 continue;
             }
 
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.LIST_FORMAT.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.LIST_FORMAT.color()
                     .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
                     .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
                     .replace("%player%", redisApi.getNameFromUuid(uuids))

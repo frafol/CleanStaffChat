@@ -22,13 +22,13 @@ public class ReloadCommand extends Command {
     public void execute(@NotNull CommandSender sender, String[] args) {
 
         if (!sender.hasPermission(BungeeConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class))) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.NO_PERMISSION.color()
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
             return;
         }
 
         TextFile.reloadAll();
-        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.RELOADED.color()
+        sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.RELOADED.color()
                 .replace("%prefix%", BungeeMessages.PREFIX.color())));
 
         if (plugin.getJda() == null && BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {

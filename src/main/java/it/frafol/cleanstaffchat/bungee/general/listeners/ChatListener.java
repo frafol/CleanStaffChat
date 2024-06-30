@@ -40,7 +40,7 @@ public class ChatListener implements Listener {
                 return;
             }
 
-            player.sendMessage(TextComponent.fromLegacyText(BungeeMessages.STAFFCHAT_MUTED_ERROR.color()
+            player.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFFCHAT_MUTED_ERROR.color()
                     .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())));
             event.setCancelled(true);
         }

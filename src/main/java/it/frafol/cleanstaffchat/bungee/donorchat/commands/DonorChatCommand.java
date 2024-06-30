@@ -41,7 +41,7 @@ public class DonorChatCommand extends Command {
         if (args.length == 0) {
 
             if (!(sender instanceof ProxiedPlayer)) {
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORARGUMENTS.color()
+                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORARGUMENTS.color()
                         .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
                 return;
             }
@@ -56,7 +56,7 @@ public class DonorChatCommand extends Command {
                     }
 
                     if (((ProxiedPlayer) sender).getServer().getInfo().getName().equalsIgnoreCase(server)) {
-                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_MUTED_ERROR.color()
+                        sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_MUTED_ERROR.color()
                                 .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
                         return;
                     }
@@ -66,14 +66,14 @@ public class DonorChatCommand extends Command {
             if (sender.hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))) {
 
                 if (PlayerCache.getCooldown().contains(player.getUniqueId())) {
-                    player.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_COOLDOWN_MESSAGE.color()
+                    player.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_COOLDOWN_MESSAGE.color()
                             .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
                     return;
                 }
 
                 if (!PlayerCache.getToggled_2_donor().contains(player.getUniqueId())) {
                     if (!(BungeeConfig.DONORCHAT_TALK_MODULE.get(Boolean.class))) {
-                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORARGUMENTS.color()
+                        sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORARGUMENTS.color()
                                 .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
                         return;
                     }
@@ -82,24 +82,24 @@ public class DonorChatCommand extends Command {
                         PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
                         PlayerCache.getToggled_2().remove(player.getUniqueId());
                         PlayerCache.sendChannelMessage(player, true);
-                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_TALK_ENABLED.color()
+                        sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_TALK_ENABLED.color()
                                 .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
                         return;
                     } else {
-                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORARGUMENTS.color()
+                        sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORARGUMENTS.color()
                                 .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
                     }
                 } else if (PlayerCache.getToggled_2_donor().contains(player.getUniqueId())) {
                     PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
                     PlayerCache.sendChannelMessage(player, false);
-                    sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_TALK_DISABLED.color()
+                    sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_TALK_DISABLED.color()
                             .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
                     return;
                 }
 
             } else {
                 if (BungeeConfig.HIDE_ADVERTS.get(Boolean.class) != null && !BungeeConfig.HIDE_ADVERTS.get(Boolean.class)) {
-                    sender.sendMessage(TextComponent.fromLegacyText("§7This server is using §dCleanStaffChat §7by §dfrafol§7."));
+                    sender.sendMessage(TextComponent.fromLegacy("§7This server is using §dCleanStaffChat §7by §dfrafol§7."));
                 }
             }
             return;
@@ -111,13 +111,13 @@ public class DonorChatCommand extends Command {
                 sender.getName();
 
         if (!sender.hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.NO_PERMISSION.color()
                     .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
             return;
         }
 
         if (PlayerCache.getMuted_donor().contains("true")) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_MUTED_ERROR.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_MUTED_ERROR.color()
                     .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
             return;
         }
@@ -126,7 +126,7 @@ public class DonorChatCommand extends Command {
 
             if (BungeeConfig.PREVENT_COLOR_CODES.get(Boolean.class)) {
                 if (PlayerCache.hasColorCodes(message)) {
-                    sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.COLOR_CODES.color()
+                    sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.COLOR_CODES.color()
                             .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
                             .replace("&", "§")));
                     return;
@@ -141,7 +141,7 @@ public class DonorChatCommand extends Command {
                     }
 
                     if (((ProxiedPlayer) sender).getServer().getInfo().getName().equalsIgnoreCase(server)) {
-                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_MUTED_ERROR.color()
+                        sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_MUTED_ERROR.color()
                                 .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
                         return;
                     }
@@ -149,7 +149,7 @@ public class DonorChatCommand extends Command {
             }
 
             if (PlayerCache.getCooldown().contains(((ProxiedPlayer) sender).getUniqueId())) {
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_COOLDOWN_MESSAGE.color()
+                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_COOLDOWN_MESSAGE.color()
                         .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
                 return;
             }
@@ -192,7 +192,7 @@ public class DonorChatCommand extends Command {
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_FORMAT.color()
                                 .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
                                 .replace("%user%", commandsender)
                                 .replace("%message%", message)
@@ -240,7 +240,7 @@ public class DonorChatCommand extends Command {
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_FORMAT.color()
                                 .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
                                 .replace("%user%", commandsender)
                                 .replace("%message%", message)
@@ -275,7 +275,7 @@ public class DonorChatCommand extends Command {
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_FORMAT.color()
                                 .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
                                 .replace("%user%", commandsender)
                                 .replace("%userprefix%", "")
@@ -305,7 +305,7 @@ public class DonorChatCommand extends Command {
                             .replace("%message%", message)
                             .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName()));
 
-                    embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_COLOR.get(String.class)));
+                    embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_DONORCHATCOLOR.get(String.class)));
                     embed.setFooter(BungeeDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                     channel.sendMessageEmbeds(embed.build()).queue();
@@ -355,7 +355,7 @@ public class DonorChatCommand extends Command {
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_CONSOLE_FORMAT.color()
+                        .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_CONSOLE_FORMAT.color()
                                 .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
                                 .replace("%user%", commandsender)
                                 .replace("%userprefix%", "")
@@ -365,11 +365,11 @@ public class DonorChatCommand extends Command {
                                 .replace("%message%", message))));
 
             } else {
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_MUTED_ERROR.color()
+                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_MUTED_ERROR.color()
                         .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
             }
 
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.DONORCHAT_CONSOLE_FORMAT.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_CONSOLE_FORMAT.color()
                     .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
                     .replace("%user%", commandsender)
                     .replace("%displayname%", commandsender)
@@ -399,7 +399,7 @@ public class DonorChatCommand extends Command {
                         .replace("%message%", message)
                         .replace("%server%", ""));
 
-                embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_COLOR.get(String.class)));
+                embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_DONORCHATCOLOR.get(String.class)));
                 embed.setFooter(BungeeDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                 channel.sendMessageEmbeds(embed.build()).queue();
@@ -413,7 +413,7 @@ public class DonorChatCommand extends Command {
             }
 
         } else {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.PLAYER_ONLY.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.PLAYER_ONLY.color()
                     .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
         }
     }

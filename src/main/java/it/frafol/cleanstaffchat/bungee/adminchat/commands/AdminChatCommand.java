@@ -36,7 +36,7 @@ public class AdminChatCommand extends Command {
         if (args.length == 0) {
 
             if (!(sender instanceof ProxiedPlayer)) {
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINARGUMENTS.color()
+                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINARGUMENTS.color()
                         .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
                 return;
             }
@@ -51,7 +51,7 @@ public class AdminChatCommand extends Command {
                     }
 
                     if (player.getServer().getInfo().getName().equalsIgnoreCase(server)) {
-                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_MUTED_ERROR.color()
+                        sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_MUTED_ERROR.color()
                                 .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
                         return;
                     }
@@ -62,7 +62,7 @@ public class AdminChatCommand extends Command {
 
                 if (!PlayerCache.getToggled_2_admin().contains(player.getUniqueId())) {
                     if (!(BungeeConfig.ADMINCHAT_TALK_MODULE.get(Boolean.class))) {
-                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINARGUMENTS.color()
+                        sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINARGUMENTS.color()
                                 .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
                         return;
                     }
@@ -72,26 +72,26 @@ public class AdminChatCommand extends Command {
                         PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
                         PlayerCache.getToggled_2().remove(player.getUniqueId());
                         PlayerCache.sendChannelMessage(player, true);
-                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_TALK_ENABLED.color()
+                        sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_TALK_ENABLED.color()
                                 .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
                         return;
 
                     } else {
-                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINARGUMENTS.color()
+                        sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINARGUMENTS.color()
                                 .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
                     }
 
                 } else if (PlayerCache.getToggled_2_admin().contains(player.getUniqueId())) {
                     PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
                     PlayerCache.sendChannelMessage(player, false);
-                    sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_TALK_DISABLED.color()
+                    sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_TALK_DISABLED.color()
                             .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
                     return;
                 }
 
             } else {
                 if (BungeeConfig.HIDE_ADVERTS.get(Boolean.class) != null && !BungeeConfig.HIDE_ADVERTS.get(Boolean.class)) {
-                    sender.sendMessage(TextComponent.fromLegacyText("§7This server is using §dCleanStaffChat §7by §dfrafol§7."));
+                    sender.sendMessage(TextComponent.fromLegacy("§7This server is using §dCleanStaffChat §7by §dfrafol§7."));
                 }
             }
             return;
@@ -102,13 +102,13 @@ public class AdminChatCommand extends Command {
                 sender.getName();
 
         if (!sender.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.NO_PERMISSION.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.NO_PERMISSION.color()
                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
             return;
         }
 
         if (PlayerCache.getMuted_admin().contains("true")) {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_MUTED_ERROR.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_MUTED_ERROR.color()
                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
             return;
         }
@@ -116,7 +116,7 @@ public class AdminChatCommand extends Command {
         if (sender instanceof ProxiedPlayer) {
 
             if (BungeeConfig.PREVENT_COLOR_CODES.get(Boolean.class) && PlayerCache.hasColorCodes(message)) {
-                sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.COLOR_CODES.color()
+                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.COLOR_CODES.color()
                         .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                         .replace("&", "§")));
                 return;
@@ -130,7 +130,7 @@ public class AdminChatCommand extends Command {
                     }
 
                     if (((ProxiedPlayer) sender).getServer().getInfo().getName().equalsIgnoreCase(server)) {
-                        sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_MUTED_ERROR.color()
+                        sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_MUTED_ERROR.color()
                                 .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
                         return;
                     }
@@ -172,7 +172,7 @@ public class AdminChatCommand extends Command {
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_FORMAT.color()
                                 .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                                 .replace("%user%", commandsender)
                                 .replace("%message%", message)
@@ -221,7 +221,7 @@ public class AdminChatCommand extends Command {
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_FORMAT.color()
                                 .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                                 .replace("%user%", commandsender)
                                 .replace("%message%", message)
@@ -257,7 +257,7 @@ public class AdminChatCommand extends Command {
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_FORMAT.color()
+                        .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_FORMAT.color()
                                 .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                                 .replace("%user%", commandsender)
                                 .replace("%userprefix%", "")
@@ -287,7 +287,7 @@ public class AdminChatCommand extends Command {
                             .replace("%message%", message)
                             .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName()));
 
-                    embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_COLOR.get(String.class)));
+                    embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_ADMINCHATCOLOR.get(String.class)));
                     embed.setFooter(BungeeDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                     channel.sendMessageEmbeds(embed.build()).queue();
@@ -328,7 +328,7 @@ public class AdminChatCommand extends Command {
             CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                             (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                     && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
-                    .forEach(players -> players.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_CONSOLE_FORMAT.color()
+                    .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_CONSOLE_FORMAT.color()
                             .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                             .replace("%user%", commandsender)
                             .replace("%userprefix%", "")
@@ -337,7 +337,7 @@ public class AdminChatCommand extends Command {
                             .replace("%server%", "")
                             .replace("%message%", message))));
 
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.ADMINCHAT_CONSOLE_FORMAT.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_CONSOLE_FORMAT.color()
                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                     .replace("%user%", commandsender)
                     .replace("%displayname%", commandsender)
@@ -367,7 +367,7 @@ public class AdminChatCommand extends Command {
                         .replace("%message%", message)
                         .replace("%server%", ""));
 
-                embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_COLOR.get(String.class)));
+                embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_ADMINCHATCOLOR.get(String.class)));
                 embed.setFooter(BungeeDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                 channel.sendMessageEmbeds(embed.build()).queue();
@@ -382,7 +382,7 @@ public class AdminChatCommand extends Command {
 
             }
         } else {
-            sender.sendMessage(TextComponent.fromLegacyText(BungeeMessages.PLAYER_ONLY.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.PLAYER_ONLY.color()
                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
         }
     }

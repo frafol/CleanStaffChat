@@ -244,7 +244,7 @@ public class StaffChatCommand implements SimpleCommand {
                             .replace("%message%", message)
                             .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()));
 
-                    embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_COLOR.get(String.class)));
+                    embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                     embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                     channel.sendMessageEmbeds(embed.build()).queue();
@@ -317,7 +317,7 @@ public class StaffChatCommand implements SimpleCommand {
                             .replace("%message%", message)
                             .replace("%server%", ""));
 
-                    embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_COLOR.get(String.class)));
+                    embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                     embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                     channel.sendMessageEmbeds(embed.build()).queue();

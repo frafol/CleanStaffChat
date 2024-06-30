@@ -209,7 +209,7 @@ public class JoinListener implements Listener {
                             embed.setDescription(BungeeMessages.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
                                     .replace("%user%", player.getName()));
 
-                            embed.setColor(Color.YELLOW);
+                            embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                             embed.setFooter(BungeeDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                             channel.sendMessageEmbeds(embed.build()).queue();
@@ -403,7 +403,7 @@ public class JoinListener implements Listener {
                     embed.setDescription(BungeeMessages.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
                             .replace("%user%", player.getName()));
 
-                    embed.setColor(Color.YELLOW);
+                    embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                     embed.setFooter(BungeeDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                     channel.sendMessageEmbeds(embed.build()).queue();

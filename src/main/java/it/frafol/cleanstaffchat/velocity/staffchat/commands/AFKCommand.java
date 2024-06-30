@@ -150,7 +150,7 @@ public class AFKCommand implements SimpleCommand {
                     embed.setDescription(VelocityMessages.STAFF_DISCORD_AFK_ON_MESSAGE_FORMAT.get(String.class)
                             .replace("%user%", ((Player) commandSource).getUsername()));
 
-                    embed.setColor(Color.YELLOW);
+                    embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                     embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                     channel.sendMessageEmbeds(embed.build()).queue();
@@ -260,7 +260,7 @@ public class AFKCommand implements SimpleCommand {
                     embed.setDescription(VelocityMessages.STAFF_DISCORD_AFK_OFF_MESSAGE_FORMAT.get(String.class)
                             .replace("%user%", ((Player) commandSource).getUsername()));
 
-                    embed.setColor(Color.YELLOW);
+                    embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                     embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                     channel.sendMessageEmbeds(embed.build()).queue();

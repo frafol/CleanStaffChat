@@ -137,7 +137,7 @@ public class JoinListener implements Listener {
                     embed.setDescription(SpigotMessages.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
                             .replace("%user%", player.getName()));
 
-                    embed.setColor(Color.YELLOW);
+                    embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                     embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                     channel.sendMessageEmbeds(embed.build()).queue();
@@ -253,7 +253,7 @@ public class JoinListener implements Listener {
                     embed.setDescription(SpigotMessages.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
                             .replace("%user%", player.getName()));
 
-                    embed.setColor(Color.YELLOW);
+                    embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                     embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
 
                     channel.sendMessageEmbeds(embed.build()).queue();

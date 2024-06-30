@@ -3,6 +3,7 @@ package it.frafol.cleanstaffchat.velocity;
 import com.alessiodp.libby.Library;
 import com.alessiodp.libby.VelocityLibraryManager;
 import com.alessiodp.libby.relocation.Relocation;
+import com.google.inject.Inject;
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
@@ -34,7 +35,6 @@ import org.slf4j.Logger;
 import ru.vyarus.yaml.updater.YamlUpdater;
 import ru.vyarus.yaml.updater.util.FileUtils;
 
-import javax.inject.Inject;
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.IOException;
@@ -56,11 +56,18 @@ import java.util.concurrent.TimeUnit;
 )
 public class CleanStaffChat {
 
+    @Inject
     private final Metrics.Factory metricsFactory;
+
+    @Inject
     private final ProxyServer server;
+
+    @Inject
     private final Logger logger;
+
     private final Path path;
     private JdaBuilder jda;
+
     private TextFile configTextFile;
     private TextFile messagesTextFile;
     private TextFile discordTextFile;
@@ -69,6 +76,7 @@ public class CleanStaffChat {
     private TextFile serversTextFile;
     private TextFile versionTextFile;
 
+    @Inject
     public static final ChannelIdentifier channel = MinecraftChannelIdentifier.create("cleansc", "cancel");
 
     @Getter
@@ -165,7 +173,7 @@ public class CleanStaffChat {
         }
 
         if (VelocityConfig.STATS.get(Boolean.class)) {
-            metricsFactory.make(this, 16447);
+            //metricsFactory.make(this, 16447);
             getLogger().info("Metrics loaded successfully!");
         }
 
@@ -303,7 +311,7 @@ public class CleanStaffChat {
     private void updateConfig() {
         if (container.getDescription().getVersion().isPresent() && (!container.getDescription().getVersion().get().equals(VelocityVersion.VERSION.get(String.class)))) {
 
-            logger.info("§7Creating new §dconfigurations§7...");
+            logger.info("Creating new §dconfigurations...");
             YamlUpdater.create(new File(path + "/config.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/config.yml"))
                     .backup(true)
                     .update();

@@ -171,7 +171,13 @@ public enum VelocityMessages {
     }
 
     private boolean containsHexColor(String message) {
-        String[] hexColorPattern = new String[]{"#[a-fA-F0-9]{6}", "&#[a-fA-F0-9]{6}", "<#[a-fA-F0-9]]{6}>"};
+        String[] hexColorPattern;
+        if (VelocityConfig.MINIMESSAGE.get(Boolean.class)) {
+            hexColorPattern = new String[]{"#[a-fA-F0-9]{6}", "&#[a-fA-F0-9]{6}"};
+        } else {
+            hexColorPattern = new String[]{"#[a-fA-F0-9]{6}", "&#[a-fA-F0-9]{6}", "<#[a-fA-F0-9]]{6}>"};
+        }
+
         for (String pattern : hexColorPattern) {
             if (Pattern.compile(pattern).matcher(message).find()) {
                 return true;
@@ -192,6 +198,14 @@ public enum VelocityMessages {
 
         if (commandSource instanceof Player) {
             if (VelocityConfig.MINIMESSAGE.get(Boolean.class)) {
+
+                if (ChatUtil.hasColorCodes(get(String.class))) {
+                    instance.getLogger().error("Legacy color codes are not supported in MiniMessage mode.");
+                    instance.getLogger().error("Please remove them from the message: {} in the messages.yml file.", getPath());
+                    commandSource.sendMessage(LegacyComponentSerializer.legacy('§').deserialize(ChatUtil.getFormattedString((Player) commandSource,this, placeholders)));
+                    return;
+                }
+
                 commandSource.sendMessage(getMiniMessage().deserialize(ChatUtil.getFormattedString((Player) commandSource, this, placeholders)));
                 return;
             }
@@ -201,6 +215,14 @@ public enum VelocityMessages {
         }
 
         if (VelocityConfig.MINIMESSAGE.get(Boolean.class)) {
+
+            if (ChatUtil.hasColorCodes(get(String.class))) {
+                instance.getLogger().error("Legacy color codes are not supported in MiniMessage mode.");
+                instance.getLogger().error("Please remove them from the message: {} in the messages.yml file.", getPath());
+                commandSource.sendMessage(LegacyComponentSerializer.legacy('§').deserialize(ChatUtil.getFormattedString(this, placeholders)));
+                return;
+            }
+
             commandSource.sendMessage(getMiniMessage().deserialize(ChatUtil.getFormattedString(this, placeholders)));
             return;
         }

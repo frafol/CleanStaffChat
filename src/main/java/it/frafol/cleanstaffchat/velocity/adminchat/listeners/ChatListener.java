@@ -124,7 +124,8 @@ public class ChatListener extends ListenerAdapter {
 
             PLUGIN.getServer().getAllPlayers().stream().filter
                             (players -> players.hasPermission(VelocityConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
-                                    && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
+                                    && !(PlayerCache.getToggled_admin().contains(players.getUniqueId()))
+                                    && !instance.isInBlockedAdminChatServer(players))
                     .forEach(players -> VelocityMessages.ADMINCHAT_FORMAT.send(players,
                             new Placeholder("user", sender),
                             new Placeholder("message", message),
@@ -156,7 +157,8 @@ public class ChatListener extends ListenerAdapter {
 
             PLUGIN.getServer().getAllPlayers().stream().filter
                             (players -> players.hasPermission(VelocityConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
-                                    && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
+                                    && !(PlayerCache.getToggled_admin().contains(players.getUniqueId()))
+                                    && !instance.isInBlockedAdminChatServer(players))
                     .forEach(players -> VelocityMessages.ADMINCHAT_FORMAT.send(players,
                             new Placeholder("user", sender),
                             new Placeholder("message", message),
@@ -253,7 +255,8 @@ public class ChatListener extends ListenerAdapter {
 
             PLUGIN.getServer().getAllPlayers().stream().filter
                             (players -> players.hasPermission(VelocityConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
-                                    && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                    && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                    && !instance.isInBlockedAdminChatServer(players))
                     .forEach(players -> VelocityMessages.DISCORD_ADMIN_FORMAT.send(players,
                             new Placeholder("user", event.getAuthor().getName()),
                             new Placeholder("message", event.getMessage().getContentDisplay()),

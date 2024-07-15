@@ -181,7 +181,8 @@ public class StaffChatCommand implements SimpleCommand {
 
                 CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                 (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                        && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                        && !instance.isInBlockedStaffChatServer(players))
                         .forEach(players -> VelocityMessages.STAFFCHAT_FORMAT.send(players,
                                 new Placeholder("user", sender),
                                 new Placeholder("message", message),
@@ -213,7 +214,8 @@ public class StaffChatCommand implements SimpleCommand {
 
                 CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                 (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                        && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                        && !instance.isInBlockedStaffChatServer(players))
                         .forEach(players -> VelocityMessages.STAFFCHAT_FORMAT.send(players,
                                 new Placeholder("user", sender),
                                 new Placeholder("message", message),
@@ -288,7 +290,8 @@ public class StaffChatCommand implements SimpleCommand {
 
             CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                             (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                    && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                    && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                    && !instance.isInBlockedStaffChatServer(players))
                     .forEach(players -> VelocityMessages.STAFFCHAT_CONSOLE_FORMAT.send(players,
                             new Placeholder("user", sender),
                             new Placeholder("message", message),

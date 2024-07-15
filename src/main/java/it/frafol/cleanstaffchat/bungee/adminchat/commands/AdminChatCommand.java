@@ -171,7 +171,8 @@ public class AdminChatCommand extends Command {
 
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
+                                        && !(PlayerCache.getToggled_admin().contains(players.getUniqueId()))
+                                        && !CleanStaffChat.getInstance().isInBlockedAdminChatServer(players))
                         .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_FORMAT.color()
                                 .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                                 .replace("%user%", commandsender)
@@ -220,7 +221,8 @@ public class AdminChatCommand extends Command {
 
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
+                                        && !(PlayerCache.getToggled_admin().contains(players.getUniqueId()))
+                                        && !CleanStaffChat.getInstance().isInBlockedAdminChatServer(players))
                         .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_FORMAT.color()
                                 .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                                 .replace("%user%", commandsender)
@@ -256,7 +258,8 @@ public class AdminChatCommand extends Command {
 
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
+                                        && !(PlayerCache.getToggled_admin().contains(players.getUniqueId()))
+                                        && !CleanStaffChat.getInstance().isInBlockedAdminChatServer(players))
                         .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_FORMAT.color()
                                 .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                                 .replace("%user%", commandsender)
@@ -327,7 +330,8 @@ public class AdminChatCommand extends Command {
 
             CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                             (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
-                                    && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
+                                    && !(PlayerCache.getToggled_admin().contains(players.getUniqueId()))
+                                    && !CleanStaffChat.getInstance().isInBlockedAdminChatServer(players))
                     .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_CONSOLE_FORMAT.color()
                             .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                             .replace("%user%", commandsender)

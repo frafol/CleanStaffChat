@@ -143,7 +143,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
+                                        && !(PlayerCache.getToggled_donor().contains(players.getUniqueId()))
+                                        && !CleanStaffChat.getInstance().isInBlockedDonorChatServer(players))
                         .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_FORMAT.color()
                                 .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
                                 .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
@@ -192,7 +193,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
+                                        && !(PlayerCache.getToggled_donor().contains(players.getUniqueId()))
+                                        && !CleanStaffChat.getInstance().isInBlockedDonorChatServer(players))
                         .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_FORMAT.color()
                                 .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
                                 .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
@@ -227,7 +229,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
+                                        && !(PlayerCache.getToggled_donor().contains(players.getUniqueId()))
+                                        && !CleanStaffChat.getInstance().isInBlockedDonorChatServer(players))
                         .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_FORMAT.color()
                                 .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
                                 .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
@@ -341,7 +344,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
             CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                             (players -> players.hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))
-                                    && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
+                                    && !(PlayerCache.getToggled_donor().contains(players.getUniqueId()))
+                                    && !CleanStaffChat.getInstance().isInBlockedDonorChatServer(players))
                     .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.DISCORD_DONOR_FORMAT.color()
                             .replace("%prefix%", BungeeMessages.DONORPREFIX.color())
                             .replace("%user%", event.getAuthor().getName())

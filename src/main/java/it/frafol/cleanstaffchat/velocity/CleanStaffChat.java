@@ -653,4 +653,25 @@ public class CleanStaffChat {
     private void loadChannelRegistrar() {
         server.getChannelRegistrar().register(channel);
     }
+
+    public boolean isInBlockedStaffChatServer(Player player) {
+        if (player.getCurrentServer().isPresent()) {
+            return (!VelocityServers.SC_BLOCKED_SRV.getStringList().isEmpty() && VelocityServers.SC_BLOCKED_SRV.getStringList().contains(player.getCurrentServer().get().getServerInfo().getName()));
+        }
+        return false;
+    }
+
+    public boolean isInBlockedAdminChatServer(Player player) {
+        if (player.getCurrentServer().isPresent()) {
+            return (!VelocityServers.AC_BLOCKED_SRV.getStringList().isEmpty() && VelocityServers.AC_BLOCKED_SRV.getStringList().contains(player.getCurrentServer().get().getServerInfo().getName()));
+        }
+        return false;
+    }
+
+    public boolean isInBlockedDonorChatServer(Player player) {
+        if (player.getCurrentServer().isPresent()) {
+            return (!VelocityServers.DC_BLOCKED_SRV.getStringList().isEmpty() && VelocityServers.DC_BLOCKED_SRV.getStringList().contains(player.getCurrentServer().get().getServerInfo().getName()));
+        }
+        return false;
+    }
 }

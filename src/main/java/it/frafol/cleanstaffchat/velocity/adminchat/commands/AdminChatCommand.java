@@ -180,7 +180,8 @@ public class AdminChatCommand implements SimpleCommand {
 
                 CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                 (players -> players.hasPermission(VelocityConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
+                                        && !(PlayerCache.getToggled_admin().contains(players.getUniqueId()))
+                                        && !instance.isInBlockedAdminChatServer(players))
                         .forEach(players -> VelocityMessages.ADMINCHAT_FORMAT.send(players,
                                 new Placeholder("user", sender),
                                 new Placeholder("message", message),
@@ -213,7 +214,8 @@ public class AdminChatCommand implements SimpleCommand {
 
                 CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                 (players -> players.hasPermission(VelocityConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
+                                        && !(PlayerCache.getToggled_admin().contains(players.getUniqueId()))
+                                        && !instance.isInBlockedAdminChatServer(players))
                         .forEach(players -> VelocityMessages.ADMINCHAT_FORMAT.send(players,
                                 new Placeholder("user", sender),
                                 new Placeholder("message", message),
@@ -285,7 +287,8 @@ public class AdminChatCommand implements SimpleCommand {
 
             CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                             (players -> players.hasPermission(VelocityConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
-                                    && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
+                                    && !(PlayerCache.getToggled_admin().contains(players.getUniqueId()))
+                                    && !instance.isInBlockedAdminChatServer(players))
                     .forEach(players -> VelocityMessages.ADMINCHAT_CONSOLE_FORMAT.send(players,
                             new Placeholder("user", sender),
                             new Placeholder("message", message),

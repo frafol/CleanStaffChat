@@ -323,7 +323,8 @@ public class ServerListener implements Listener {
 
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                        && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                        && !CleanStaffChat.getInstance().isInBlockedStaffChatServer(players))
                         .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFF_SWITCH_MESSAGE_FORMAT.color()
                                 .replace("%prefix%", BungeeMessages.PREFIX.color())
                                 .replace("%user%", player.getName())

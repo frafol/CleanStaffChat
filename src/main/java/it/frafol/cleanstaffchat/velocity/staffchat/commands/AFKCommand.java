@@ -20,6 +20,8 @@ import net.luckperms.api.model.user.User;
 
 import java.awt.*;
 
+import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.instance;
+
 public class AFKCommand implements SimpleCommand {
 
     public final CleanStaffChat PLUGIN;
@@ -89,7 +91,8 @@ public class AFKCommand implements SimpleCommand {
 
                 CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                 (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                        && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                        && !instance.isInBlockedStaffChatServer(players))
                         .forEach(players -> VelocityMessages.STAFFCHAT_AFK_ON.send(players,
                                 new Placeholder("user", ((Player) commandSource).getUsername()),
                                 new Placeholder("displayname", ChatUtil.translateHex(user_prefix) + commandSource + ChatUtil.translateHex(user_suffix)),
@@ -119,7 +122,8 @@ public class AFKCommand implements SimpleCommand {
 
                 CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                 (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                        && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                        && !instance.isInBlockedStaffChatServer(players))
                         .forEach(players -> VelocityMessages.STAFFCHAT_AFK_ON.send(players,
                                 new Placeholder("user", ((Player) commandSource).getUsername()),
                                 new Placeholder("displayname", ((Player) commandSource).getUsername()),
@@ -200,7 +204,8 @@ public class AFKCommand implements SimpleCommand {
 
                 CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                 (players -> players.hasPermission(VelocityConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                        && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                        && !instance.isInBlockedStaffChatServer(players))
                         .forEach(players -> VelocityMessages.STAFFCHAT_AFK_OFF.send(players,
                                 new Placeholder("user", ((Player) commandSource).getUsername()),
                                 new Placeholder("displayname", ChatUtil.translateHex(user_prefix) + commandSource + ChatUtil.translateHex(user_suffix)),
@@ -230,7 +235,8 @@ public class AFKCommand implements SimpleCommand {
 
                 CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                 (players -> players.hasPermission(VelocityConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                        && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                        && !instance.isInBlockedStaffChatServer(players))
                         .forEach(players -> VelocityMessages.STAFFCHAT_AFK_OFF.send(players,
                                 new Placeholder("user", ((Player) commandSource).getUsername()),
                                 new Placeholder("displayname", ((Player) commandSource).getUsername()),

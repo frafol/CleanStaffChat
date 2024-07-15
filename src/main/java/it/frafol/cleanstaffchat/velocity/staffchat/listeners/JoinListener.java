@@ -102,7 +102,8 @@ public class JoinListener {
 
                     CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                     (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                            && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                            && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                            && !instance.isInBlockedStaffChatServer(players))
                             .forEach(players -> VelocityMessages.STAFF_JOIN_MESSAGE_FORMAT.send(players,
                                     new Placeholder("user", player.getUsername()),
                                     new Placeholder("displayname", ChatUtil.translateHex(user_prefix) + player.getUsername() + ChatUtil.translateHex(user_suffix)),
@@ -134,7 +135,8 @@ public class JoinListener {
 
                     CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                     (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                            && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                            && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                            && !instance.isInBlockedStaffChatServer(players))
                             .forEach(players -> VelocityMessages.STAFF_JOIN_MESSAGE_FORMAT.send(players,
                                     new Placeholder("user", player.getUsername()),
                                     new Placeholder("displayname", player.getUsername()),
@@ -245,7 +247,8 @@ public class JoinListener {
 
                     CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                     (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                            && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                            && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                            && !instance.isInBlockedStaffChatServer(players))
                             .forEach(players -> VelocityMessages.STAFF_QUIT_MESSAGE_FORMAT.send(players,
                                     new Placeholder("user", player.getUsername()),
                                     new Placeholder("displayname", ChatUtil.translateHex(user_prefix) + player.getUsername() + ChatUtil.translateHex(user_suffix)),
@@ -282,7 +285,8 @@ public class JoinListener {
 
                     CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                     (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                            && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                            && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                            && !instance.isInBlockedStaffChatServer(players))
                             .forEach(players -> VelocityMessages.STAFF_QUIT_MESSAGE_FORMAT.send(players,
                                     new Placeholder("user", player.getUsername()),
                                     new Placeholder("displayname", player.getUsername()),

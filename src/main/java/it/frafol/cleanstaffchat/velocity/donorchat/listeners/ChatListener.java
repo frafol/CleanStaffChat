@@ -139,7 +139,8 @@ public class ChatListener extends ListenerAdapter {
 
             CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                             (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
-                                    && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
+                                    && !(PlayerCache.getToggled_donor().contains(players.getUniqueId()))
+                                    && !instance.isInBlockedDonorChatServer(players))
                     .forEach(players -> VelocityMessages.DONORCHAT_FORMAT.send(players,
                             new Placeholder("user", sender),
                             new Placeholder("message", message),
@@ -171,7 +172,8 @@ public class ChatListener extends ListenerAdapter {
 
             CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                             (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
-                                    && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
+                                    && !(PlayerCache.getToggled_donor().contains(players.getUniqueId()))
+                                    && !instance.isInBlockedDonorChatServer(players))
                     .forEach(players -> VelocityMessages.DONORCHAT_FORMAT.send(players,
                             new Placeholder("user", sender),
                             new Placeholder("message", message),
@@ -286,7 +288,8 @@ public class ChatListener extends ListenerAdapter {
 
             CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                             (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
-                                    && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                    && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                    && !instance.isInBlockedDonorChatServer(players))
                     .forEach(players -> VelocityMessages.DISCORD_DONOR_FORMAT.send(players,
                             new Placeholder("user", event.getAuthor().getName()),
                             new Placeholder("message", event.getMessage().getContentDisplay()),

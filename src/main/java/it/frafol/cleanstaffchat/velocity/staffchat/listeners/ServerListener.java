@@ -21,6 +21,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
+import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.instance;
+
 public class ServerListener {
 
     public final CleanStaffChat PLUGIN;
@@ -80,7 +82,8 @@ public class ServerListener {
 
                     CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                     (players -> players.hasPermission(VelocityConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))
-                                            && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                            && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                            && !instance.isInBlockedStaffChatServer(players))
                             .forEach(players -> VelocityMessages.STAFFCHAT_AFK_OFF.send(players,
                                     new Placeholder("user", event.getPlayer().getUsername()),
                                     new Placeholder("displayname", ChatUtil.translateHex(user_prefix) + event.getPlayer() + ChatUtil.translateHex(user_suffix)),
@@ -110,7 +113,8 @@ public class ServerListener {
 
                     CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                     (players -> players.hasPermission(VelocityConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))
-                                            && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                            && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                            && !instance.isInBlockedStaffChatServer(players))
                             .forEach(players -> VelocityMessages.STAFFCHAT_AFK_OFF.send(players,
                                     new Placeholder("user", event.getPlayer().getUsername()),
                                     new Placeholder("displayname", event.getPlayer().getUsername()),
@@ -206,7 +210,8 @@ public class ServerListener {
 
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                                && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                                && !instance.isInBlockedStaffChatServer(players))
                                 .forEach(players -> VelocityMessages.STAFF_SWITCH_MESSAGE_FORMAT.send(players,
                                         new Placeholder("user", player.getUsername()),
                                         new Placeholder("prefix", VelocityMessages.PREFIX.color()),
@@ -238,7 +243,8 @@ public class ServerListener {
 
                         CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                                && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                                && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                                && !instance.isInBlockedStaffChatServer(players))
                                 .forEach(players -> VelocityMessages.STAFF_SWITCH_MESSAGE_FORMAT.send(players,
                                         new Placeholder("user", player.getUsername()),
                                         new Placeholder("prefix", VelocityMessages.PREFIX.color()),

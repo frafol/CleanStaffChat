@@ -473,4 +473,16 @@ public class CleanStaffChat extends Plugin {
         }
         return false;
     }
+
+    public boolean isInBlockedStaffChatServer(ProxiedPlayer player) {
+        return (!BungeeServers.SC_BLOCKED_SRV.getStringList().isEmpty() && BungeeServers.SC_BLOCKED_SRV.getStringList().contains(player.getServer().getInfo().getName()));
+    }
+
+    public boolean isInBlockedAdminChatServer(ProxiedPlayer player) {
+        return (!BungeeServers.AC_BLOCKED_SRV.getStringList().isEmpty() && BungeeServers.AC_BLOCKED_SRV.getStringList().contains(player.getServer().getInfo().getName()));
+    }
+
+    public boolean isInBlockedDonorChatServer(ProxiedPlayer player) {
+        return (!BungeeServers.DC_BLOCKED_SRV.getStringList().isEmpty() && BungeeServers.DC_BLOCKED_SRV.getStringList().contains(player.getServer().getInfo().getName()));
+    }
 }

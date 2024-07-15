@@ -166,7 +166,8 @@ public class StaffChatCommand extends Command {
 
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                        && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                        && !CleanStaffChat.getInstance().isInBlockedStaffChatServer(players))
                         .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFFCHAT_FORMAT.color()
                                 .replace("%prefix%", BungeeMessages.PREFIX.color())
                                 .replace("%user%", commandsender)
@@ -212,7 +213,8 @@ public class StaffChatCommand extends Command {
 
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.color())
-                                        && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                        && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                        && !CleanStaffChat.getInstance().isInBlockedStaffChatServer(players))
                         .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFFCHAT_FORMAT.color()
                                 .replace("%prefix%", BungeeMessages.PREFIX.color())
                                 .replace("%user%", commandsender)
@@ -244,7 +246,8 @@ public class StaffChatCommand extends Command {
 
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
                                 (players -> players.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                                        && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                        && !CleanStaffChat.getInstance().isInBlockedStaffChatServer(players))
                         .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFFCHAT_FORMAT.color()
                                 .replace("%prefix%", BungeeMessages.PREFIX.color())
                                 .replace("%user%", commandsender)

@@ -199,7 +199,8 @@ public class DonorChatCommand implements SimpleCommand {
 
                 CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                 (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
+                                        && !(PlayerCache.getToggled_donor().contains(players.getUniqueId()))
+                                        && !instance.isInBlockedDonorChatServer(players))
                         .forEach(players -> VelocityMessages.DONORCHAT_FORMAT.send(players,
                                 new Placeholder("user", sender),
                                 new Placeholder("message", message),
@@ -233,7 +234,8 @@ public class DonorChatCommand implements SimpleCommand {
 
                 CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                                 (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
+                                        && !(PlayerCache.getToggled_donor().contains(players.getUniqueId()))
+                                        && !instance.isInBlockedDonorChatServer(players))
                         .forEach(players -> VelocityMessages.DONORCHAT_FORMAT.send(players,
                                 new Placeholder("user", sender),
                                 new Placeholder("message", message),
@@ -303,7 +305,8 @@ public class DonorChatCommand implements SimpleCommand {
 
             CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
                             (players -> players.hasPermission(VelocityConfig.DONORCHAT_USE_PERMISSION.get(String.class))
-                                    && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
+                                    && !(PlayerCache.getToggled_donor().contains(players.getUniqueId()))
+                                    && !instance.isInBlockedDonorChatServer(players))
                     .forEach(players -> VelocityMessages.DONORCHAT_CONSOLE_FORMAT.send(players,
                             new Placeholder("user", sender),
                             new Placeholder("message", message),

@@ -27,7 +27,7 @@ public enum BungeeServers {
     }
 
     public List<String> getStringList() {
-        return instance.getAliasesTextFile().getStringList(path);
+        return instance.getServersTextFile().getStringList(path);
     }
 
 }

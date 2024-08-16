@@ -18,10 +18,10 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.types.InheritanceNode;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class StaffListCommand implements SimpleCommand {
 
@@ -92,13 +92,13 @@ public class StaffListCommand implements SimpleCommand {
                 User user2 = api.getUserManager().getUser(o2);
 
                 Group group1 = null;
-                if (user1 != null) {
-                    group1 = api.getGroupManager().getGroup(user1.getPrimaryGroup());
+                if (user1 != null && getHighestWeightGroup(user1).isPresent()) {
+                    group1 = api.getGroupManager().getGroup(getHighestWeightGroup(user1).get());
                 }
 
                 Group group2 = null;
-                if (user2 != null) {
-                    group2 = api.getGroupManager().getGroup(user2.getPrimaryGroup());
+                if (user2 != null && getHighestWeightGroup(user2).isPresent()) {
+                    group2 = api.getGroupManager().getGroup(getHighestWeightGroup(user2).get());
                 }
 
                 if (group1 == null || group2 == null) {
@@ -135,7 +135,11 @@ public class StaffListCommand implements SimpleCommand {
 
             String isAFK = "";
             if (PlayerCache.getAfk().contains(uuids)) {
-                isAFK = VelocityMessages.DISCORDLIST_AFK.get(String.class);
+                if (invocation.source() instanceof Player) {
+                    isAFK = ChatUtil.color((Player) invocation.source(), VelocityMessages.STAFFLIST_AFK.get(String.class));
+                } else {
+                    isAFK = VelocityMessages.STAFFLIST_AFK.color();
+                }
             }
 
             if (group == null || group.getDisplayName() == null) {
@@ -207,7 +211,11 @@ public class StaffListCommand implements SimpleCommand {
 
             String isAFK = "";
             if (PlayerCache.getAfk().contains(uuids)) {
-                isAFK = VelocityMessages.DISCORDLIST_AFK.get(String.class);
+                if (invocation.source() instanceof Player) {
+                    isAFK = ChatUtil.color((Player) invocation.source(), VelocityMessages.STAFFLIST_AFK.get(String.class));
+                } else {
+                    isAFK = VelocityMessages.STAFFLIST_AFK.color();
+                }
             }
 
             if (group == null || group.getDisplayName() == null) {
@@ -283,5 +291,15 @@ public class StaffListCommand implements SimpleCommand {
             list.add(players);
         }
         return list;
+    }
+
+    private Optional<String> getHighestWeightGroup(User user) {
+        return user.getNodes().stream()
+                .filter(node -> node instanceof InheritanceNode)
+                .map(node -> (InheritanceNode) node)
+                .map(node -> LuckPermsProvider.get().getGroupManager().getGroup(node.getGroupName()))
+                .filter(Objects::nonNull)
+                .max(Comparator.comparingInt(group -> group.getWeight().orElse(0)))
+                .map(Group::getName);
     }
 }

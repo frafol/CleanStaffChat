@@ -1,27 +1,24 @@
 package it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl;
 
 import com.google.common.collect.Lists;
-import de.myzelyam.api.vanish.BungeeVanishAPI;
 import de.myzelyam.api.vanish.VanishAPI;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.CommandBase;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
-import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
 import me.TechsCode.UltraPermissions.UltraPermissions;
 import me.TechsCode.UltraPermissions.UltraPermissionsAPI;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class StaffListCommand extends CommandBase {
 
@@ -87,13 +84,13 @@ public class StaffListCommand extends CommandBase {
                     User user2 = api.getUserManager().getUser(o2);
 
                     Group group1 = null;
-                    if (user1 != null) {
-                        group1 = api.getGroupManager().getGroup(user1.getPrimaryGroup());
+                    if (user1 != null && getHighestWeightGroup(user1).isPresent()) {
+                        group1 = api.getGroupManager().getGroup(getHighestWeightGroup(user1).get());
                     }
 
                     Group group2 = null;
-                    if (user2 != null) {
-                        group2 = api.getGroupManager().getGroup(user2.getPrimaryGroup());
+                    if (user2 != null && getHighestWeightGroup(user2).isPresent()) {
+                        group2 = api.getGroupManager().getGroup(getHighestWeightGroup(user2).get());
                     }
 
                     if (group1 == null || group2 == null) {
@@ -197,15 +194,15 @@ public class StaffListCommand extends CommandBase {
         List<UUID> list = Lists.newArrayList();
         for (Player players : plugin.getServer().getOnlinePlayers()) {
 
-            if (!players.hasPermission(BungeeConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
+            if (!players.hasPermission(SpigotConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
                 continue;
             }
 
-            if (BungeeConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(BungeeConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
+            if (SpigotConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(SpigotConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
                 continue;
             }
 
-            if (plugin.isPremiumVanish() && BungeeVanishAPI.getInvisiblePlayers().contains(players.getUniqueId())) {
+            if (plugin.isPremiumVanish() && VanishAPI.getInvisiblePlayers().contains(players.getUniqueId())) {
                 continue;
             }
 
@@ -221,7 +218,7 @@ public class StaffListCommand extends CommandBase {
                     .replace("%prefix%", SpigotMessages.PREFIX.color()));
         }
 
-        if (BungeeConfig.SORTING.get(Boolean.class)) {
+        if (SpigotConfig.SORTING.get(Boolean.class)) {
             list.sort((o1, o2) -> {
 
                 if (!api.getUsers().uuid(o1).isPresent()) {
@@ -270,18 +267,14 @@ public class StaffListCommand extends CommandBase {
             me.TechsCode.UltraPermissions.storage.objects.Group group = user.getActiveGroups().bestToWorst().get(1);
 
             String isAFK = "";
-            if (it.frafol.cleanstaffchat.bungee.objects.PlayerCache.getAfk().contains(uuids)) {
-                isAFK = BungeeMessages.STAFFLIST_AFK.get(String.class);
+            if (PlayerCache.getAfk().contains(uuids)) {
+                    isAFK = SpigotMessages.STAFFLIST_AFK.color();
             }
 
             if (group == null || group.getName() == null) {
 
                 user_prefix = prefix;
                 user_suffix = suffix;
-
-                if (players.getServer() == null) {
-                    continue;
-                }
 
                 sender.sendMessage(SpigotMessages.LIST_FORMAT.color()
                         .replace("%userprefix%", PlayerCache.color(user_prefix))
@@ -297,10 +290,6 @@ public class StaffListCommand extends CommandBase {
             user_prefix = prefix;
             user_suffix = suffix;
 
-            if (players.getServer() == null) {
-                continue;
-            }
-
             sender.sendMessage(SpigotMessages.LIST_FORMAT.color()
                     .replace("%userprefix%", PlayerCache.color(user_prefix))
                     .replace("%usersuffix%", PlayerCache.color(user_suffix))
@@ -314,5 +303,15 @@ public class StaffListCommand extends CommandBase {
                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                 .replace("%online%", String.valueOf(list.size())));
         return false;
+    }
+
+    private Optional<String> getHighestWeightGroup(User user) {
+        return user.getNodes().stream()
+                .filter(node -> node instanceof InheritanceNode)
+                .map(node -> (InheritanceNode) node)
+                .map(node -> LuckPermsProvider.get().getGroupManager().getGroup(node.getGroupName()))
+                .filter(Objects::nonNull)
+                .max(Comparator.comparingInt(group -> group.getWeight().orElse(0)))
+                .map(Group::getName);
     }
 }

@@ -235,14 +235,13 @@ public class CleanStaffChat {
                 .relocate(updaterrelocation)
                 .build();
 
-        // JDA should be beta.18 because of Java 8 incompatibility.
         final Relocation kotlin = new Relocation("discord", "it{}frafol{}libs{}discord");
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.0.0-beta.18")
+                .version("5.0.1")
                 .relocate(kotlin)
-                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.18/JDA-5.0.0-beta.18-withDependencies-min.jar")
+                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.1/JDA-5.0.1-withDependencies-min.jar")
                 .build();
 
         velocityLibraryManager.addMavenCentral();
@@ -656,7 +655,7 @@ public class CleanStaffChat {
 
     public boolean isInBlockedStaffChatServer(Player player) {
         if (player.getCurrentServer().isPresent()) {
-            return (!VelocityServers.SC_BLOCKED_SRV.getStringList().isEmpty() && VelocityServers.SC_BLOCKED_SRV.getStringList().contains(player.getCurrentServer().get().getServerInfo().getName()));
+             return (!VelocityServers.SC_BLOCKED_SRV.getStringList().isEmpty() && VelocityServers.SC_BLOCKED_SRV.getStringList().contains(player.getCurrentServer().get().getServerInfo().getName()));
         }
         return false;
     }

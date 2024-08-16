@@ -16,13 +16,13 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.types.InheritanceNode;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class StaffListCommand extends Command {
 
@@ -92,13 +92,13 @@ public class StaffListCommand extends Command {
                     User user2 = api.getUserManager().getUser(o2);
 
                     Group group1 = null;
-                    if (user1 != null) {
-                        group1 = api.getGroupManager().getGroup(user1.getPrimaryGroup());
+                    if (user1 != null && getHighestWeightGroup(user1).isPresent()) {
+                        group1 = api.getGroupManager().getGroup(getHighestWeightGroup(user1).get());
                     }
 
                     Group group2 = null;
-                    if (user2 != null) {
-                        group2 = api.getGroupManager().getGroup(user2.getPrimaryGroup());
+                    if (user2 != null && getHighestWeightGroup(user2).isPresent()) {
+                        group2 = api.getGroupManager().getGroup(getHighestWeightGroup(user2).get());
                     }
 
                     if (group1 == null || group2 == null) {
@@ -283,8 +283,8 @@ public class StaffListCommand extends Command {
 
             if (group == null || group.getName() == null) {
 
-                user_prefix = prefix;
-                user_suffix = suffix;
+                user_prefix = "";
+                user_suffix = "";
 
                 if (players.getServer() == null) {
                     continue;
@@ -453,5 +453,15 @@ public class StaffListCommand extends Command {
             list.add(players);
         }
         return list;
+    }
+
+    private Optional<String> getHighestWeightGroup(User user) {
+        return user.getNodes().stream()
+                .filter(node -> node instanceof InheritanceNode)
+                .map(node -> (InheritanceNode) node)
+                .map(node -> LuckPermsProvider.get().getGroupManager().getGroup(node.getGroupName()))
+                .filter(Objects::nonNull)
+                .max(Comparator.comparingInt(group -> group.getWeight().orElse(0)))
+                .map(Group::getName);
     }
 }

@@ -227,8 +227,6 @@ public class ChatListener extends ListenerAdapter {
             LuckPerms api = LuckPermsProvider.get();
             StringBuilder sb = new StringBuilder();
 
-
-
             String user_prefix;
             List<UUID> list = Lists.newArrayList();
 
@@ -244,7 +242,6 @@ public class ChatListener extends ListenerAdapter {
                     }
 
                     list.add(players.getUniqueId());
-
                 }
             }
 
@@ -301,7 +298,7 @@ public class ChatListener extends ListenerAdapter {
 
                 String isAFK = "";
                 if (PlayerCache.getAfk().contains(uuids)) {
-                    isAFK = VelocityMessages.STAFFLIST_AFK.color();
+                    isAFK = VelocityMessages.DISCORDLIST_AFK.get(String.class);
                 }
 
                 if (group == null || group.getDisplayName() == null) {

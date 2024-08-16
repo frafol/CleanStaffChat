@@ -82,14 +82,13 @@ public class CleanStaffChat extends Plugin {
                 .relocate(updaterrelocation)
                 .build();
 
-        // JDA should be beta.18 because of Java 8 incompatibility.
         final Relocation kotlin = new Relocation("kotlin", "it{}frafol{}libs{}kotlin");
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.0.0-beta.18")
+                .version("5.0.1")
                 .relocate(kotlin)
-                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.0-beta.18/JDA-5.0.0-beta.18-withDependencies-min.jar")
+                .url("https://github.com/DV8FromTheWorld/JDA/releases/download/v5.0.1/JDA-5.0.1-withDependencies-min.jar")
                 .build();
 
         bungeeLibraryManager.addMavenCentral();

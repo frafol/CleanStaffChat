@@ -14,6 +14,8 @@ import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.types.InheritanceNode;
+import net.luckperms.api.query.QueryMode;
+import net.luckperms.api.query.QueryOptions;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -77,7 +79,20 @@ public class StaffListCommand extends CommandBase {
                         .replace("%prefix%", SpigotMessages.PREFIX.color()));
             }
 
-            if (SpigotConfig.SORTING.get(Boolean.class)) {
+            if (SpigotConfig.SORTING_LIST_ENABLE.get(Boolean.class)) {
+                List<UUID> sortedList = new ArrayList<>();
+                for (String groups : SpigotConfig.SORTING_LIST.get(String[].class)) {
+                    for (User user : api.getUserManager().getLoadedUsers()) {
+                        Group group = api.getGroupManager().getGroup(groups);
+                        if (user.getInheritedGroups(QueryOptions.builder(QueryMode.CONTEXTUAL).build()).contains(group)) {
+                            sortedList.add(user.getUniqueId());
+                        }
+                    }
+                }
+                list.removeAll(sortedList);
+                sortedList.addAll(list);
+                list = sortedList;
+            } else if (SpigotConfig.SORTING.get(Boolean.class)) {
                 list.sort((o1, o2) -> {
 
                     User user1 = api.getUserManager().getUser(o1);
@@ -218,7 +233,20 @@ public class StaffListCommand extends CommandBase {
                     .replace("%prefix%", SpigotMessages.PREFIX.color()));
         }
 
-        if (SpigotConfig.SORTING.get(Boolean.class)) {
+        if (SpigotConfig.SORTING_LIST_ENABLE.get(Boolean.class)) {
+            List<UUID> sortedList = new ArrayList<>();
+            for (String groups : SpigotConfig.SORTING_LIST.get(String[].class)) {
+                for (me.TechsCode.UltraPermissions.storage.objects.User user : api.getUsers()) {
+                    Optional<me.TechsCode.UltraPermissions.storage.objects.Group> group = api.getGroups().name(groups);
+                    if (group.isPresent() && user.getActiveGroups().contains(group.get())) {
+                        sortedList.add(user.getUuid());
+                    }
+                }
+            }
+            list.removeAll(sortedList);
+            sortedList.addAll(list);
+            list = sortedList;
+        } else if (SpigotConfig.SORTING.get(Boolean.class)) {
             list.sort((o1, o2) -> {
 
                 if (!api.getUsers().uuid(o1).isPresent()) {

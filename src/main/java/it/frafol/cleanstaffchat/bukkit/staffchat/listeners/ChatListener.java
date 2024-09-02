@@ -19,6 +19,8 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
+import net.luckperms.api.query.QueryMode;
+import net.luckperms.api.query.QueryOptions;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,6 +28,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -234,7 +237,20 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 sb.append(SpigotMessages.DISCORDLIST_NONE.get(String.class)).append("\n");
             }
 
-            if (SpigotConfig.SORTING.get(Boolean.class)) {
+            if (SpigotConfig.SORTING_LIST_ENABLE.get(Boolean.class)) {
+                List<UUID> sortedList = new ArrayList<>();
+                for (String groups : SpigotConfig.SORTING_LIST.get(String[].class)) {
+                    for (User user : api.getUserManager().getLoadedUsers()) {
+                        Group group = api.getGroupManager().getGroup(groups);
+                        if (user.getInheritedGroups(QueryOptions.builder(QueryMode.CONTEXTUAL).build()).contains(group)) {
+                            sortedList.add(user.getUniqueId());
+                        }
+                    }
+                }
+                list.removeAll(sortedList);
+                sortedList.addAll(list);
+                list = sortedList;
+            } else if (SpigotConfig.SORTING.get(Boolean.class)) {
                 list.sort((o1, o2) -> {
 
                     User user1 = api.getUserManager().getUser(o1);

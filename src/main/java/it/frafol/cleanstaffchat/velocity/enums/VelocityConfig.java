@@ -65,6 +65,8 @@ public enum VelocityConfig {
     STAFFLIST_BYPASS("settings.stafflist.bypass_enabled"),
 
     SORTING("settings.stafflist.sorting"),
+    SORTING_LIST_ENABLE("settings.stafflist.sorting_by_list.enabled"),
+    SORTING_LIST("settings.stafflist.sorting_by_list.list"),
 
     STAFFCHAT_RELOAD_PERMISSION("settings.reload_permission"),
 

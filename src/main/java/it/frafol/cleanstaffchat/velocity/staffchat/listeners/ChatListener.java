@@ -18,9 +18,12 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
+import net.luckperms.api.query.QueryMode;
+import net.luckperms.api.query.QueryOptions;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -252,7 +255,20 @@ public class ChatListener extends ListenerAdapter {
                 sb.append(VelocityMessages.DISCORDLIST_NOBODY.get(String.class)).append("\n");
             }
 
-            if (VelocityConfig.SORTING.get(Boolean.class)) {
+            if (VelocityConfig.SORTING_LIST_ENABLE.get(Boolean.class)) {
+                List<UUID> sortedList = new ArrayList<>();
+                for (String groups : VelocityConfig.SORTING_LIST.get(String[].class)) {
+                    for (User user : api.getUserManager().getLoadedUsers()) {
+                        Group group = api.getGroupManager().getGroup(groups);
+                        if (user.getInheritedGroups(QueryOptions.builder(QueryMode.CONTEXTUAL).build()).contains(group)) {
+                            sortedList.add(user.getUniqueId());
+                        }
+                    }
+                }
+                list.removeAll(sortedList);
+                sortedList.addAll(list);
+                list = sortedList;
+            } else if (VelocityConfig.SORTING.get(Boolean.class)) {
                 list.sort((o1, o2) -> {
 
                     User user1 = api.getUserManager().getUser(o1);

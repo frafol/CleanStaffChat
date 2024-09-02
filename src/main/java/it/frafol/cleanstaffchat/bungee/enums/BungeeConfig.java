@@ -15,6 +15,8 @@ public enum BungeeConfig {
     STAFFCHAT_SWITCH_SILENT_PERMISSION("settings.staffchat.staffchat_switch_silent_permission"),
 
     SORTING("settings.stafflist.sorting"),
+    SORTING_LIST_ENABLE("settings.stafflist.sorting_by_list.enabled"),
+    SORTING_LIST("settings.stafflist.sorting_by_list.list"),
 
     STAFFLIST_MODULE("modules.stafflist_module"),
     STAFFLIST_PERMISSION("settings.stafflist.stafflist_permission"),

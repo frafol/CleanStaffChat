@@ -16,6 +16,8 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
+import net.luckperms.api.query.QueryMode;
+import net.luckperms.api.query.QueryOptions;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -25,6 +27,7 @@ import net.md_5.bungee.event.EventHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -315,7 +318,20 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         .replace("%prefix%", BungeeMessages.PREFIX.color()));
             }
 
-            if (BungeeConfig.SORTING.get(Boolean.class)) {
+            if (BungeeConfig.SORTING_LIST_ENABLE.get(Boolean.class)) {
+                List<UUID> sortedList = new ArrayList<>();
+                for (String groups : BungeeConfig.SORTING_LIST.get(String[].class)) {
+                    for (User user : api.getUserManager().getLoadedUsers()) {
+                        Group group = api.getGroupManager().getGroup(groups);
+                        if (user.getInheritedGroups(QueryOptions.builder(QueryMode.CONTEXTUAL).build()).contains(group)) {
+                            sortedList.add(user.getUniqueId());
+                        }
+                    }
+                }
+                list.removeAll(sortedList);
+                sortedList.addAll(list);
+                list = sortedList;
+            } else if (BungeeConfig.SORTING.get(Boolean.class)) {
                 list.sort((o1, o2) -> {
 
                     User user1 = api.getUserManager().getUser(o1);

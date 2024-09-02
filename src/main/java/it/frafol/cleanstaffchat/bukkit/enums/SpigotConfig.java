@@ -13,6 +13,8 @@ public enum SpigotConfig {
     STAFFCHAT_QUIT_SILENT_PERMISSION("settings.staffchat.staffchat_quit_silent_permission"),
 
     SORTING("settings.stafflist.sorting"),
+    SORTING_LIST_ENABLE("settings.stafflist.sorting_by_list.enabled"),
+    SORTING_LIST("settings.stafflist.sorting_by_list.list"),
 
     PREMIUMVANISH("modules.premiumvanish_hook"),
     SUPERVANISH("modules.supervanish_hook"),

@@ -17,6 +17,8 @@ import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.types.InheritanceNode;
+import net.luckperms.api.query.QueryMode;
+import net.luckperms.api.query.QueryOptions;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -85,7 +87,20 @@ public class StaffListCommand extends Command {
                         .replace("%prefix%", BungeeMessages.PREFIX.color())));
             }
 
-            if (BungeeConfig.SORTING.get(Boolean.class)) {
+            if (BungeeConfig.SORTING_LIST_ENABLE.get(Boolean.class)) {
+                List<UUID> sortedList = new ArrayList<>();
+                for (String groups : BungeeConfig.SORTING_LIST.get(String[].class)) {
+                    for (User user : api.getUserManager().getLoadedUsers()) {
+                        Group group = api.getGroupManager().getGroup(groups);
+                        if (user.getInheritedGroups(QueryOptions.builder(QueryMode.CONTEXTUAL).build()).contains(group)) {
+                            sortedList.add(user.getUniqueId());
+                        }
+                    }
+                }
+                list.removeAll(sortedList);
+                sortedList.addAll(list);
+                list = sortedList;
+            } else if (BungeeConfig.SORTING.get(Boolean.class)) {
                 list.sort((o1, o2) -> {
 
                     User user1 = api.getUserManager().getUser(o1);
@@ -228,7 +243,20 @@ public class StaffListCommand extends Command {
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));
         }
 
-        if (BungeeConfig.SORTING.get(Boolean.class)) {
+        if (BungeeConfig.SORTING_LIST_ENABLE.get(Boolean.class)) {
+            List<UUID> sortedList = new ArrayList<>();
+            for (String groups : BungeeConfig.SORTING_LIST.get(String[].class)) {
+                for (me.TechsCode.UltraPermissions.storage.objects.User user : api.getUsers()) {
+                    Optional<me.TechsCode.UltraPermissions.storage.objects.Group> group = api.getGroups().name(groups);
+                    if (group.isPresent() && user.getActiveGroups().contains(group.get())) {
+                        sortedList.add(user.getUuid());
+                    }
+                }
+            }
+            list.removeAll(sortedList);
+            sortedList.addAll(list);
+            list = sortedList;
+        } else if (BungeeConfig.SORTING.get(Boolean.class)) {
             list.sort((o1, o2) -> {
 
                 if (!api.getUsers().uuid(o1).isPresent()) {

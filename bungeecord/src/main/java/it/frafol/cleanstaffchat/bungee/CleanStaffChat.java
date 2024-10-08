@@ -294,22 +294,22 @@ public class CleanStaffChat extends Plugin {
         if (!getDescription().getVersion().equals(BungeeVersion.VERSION.get(String.class))) {
 
             getLogger().info("§7Creating new §dconfigurations§7...");
-            YamlUpdater.create(new File(getDataFolder().toPath() + "/config.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/config.yml"))
+            YamlUpdater.create(new File(getDataFolder().toPath() + "/config.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/main/bungeecord/src/main/resources/config.yml"))
                     .backup(true)
                     .update();
-            YamlUpdater.create(new File(getDataFolder().toPath() + "/messages.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/messages.yml"))
+            YamlUpdater.create(new File(getDataFolder().toPath() + "/messages.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/main/bungeecord/src/main/resources/messages.yml"))
                     .backup(true)
                     .update();
-            YamlUpdater.create(new File(getDataFolder().toPath() + "/discord.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/discord.yml"))
+            YamlUpdater.create(new File(getDataFolder().toPath() + "/discord.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/main/bungeecord/src/main/resources/discord.yml"))
                     .backup(true)
                     .update();
-            YamlUpdater.create(new File(getDataFolder().toPath() + "/redis.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/redis.yml"))
+            YamlUpdater.create(new File(getDataFolder().toPath() + "/redis.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/main/bungeecord/src/main/resources/redis.yml"))
                     .backup(true)
                     .update();
-            YamlUpdater.create(new File(getDataFolder().toPath() + "/aliases.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/aliases.yml"))
+            YamlUpdater.create(new File(getDataFolder().toPath() + "/aliases.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/main/bungeecord/src/main/resources/aliases.yml"))
                     .backup(true)
                     .update();
-            YamlUpdater.create(new File(getDataFolder().toPath() + "/servers.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/servers.yml"))
+            YamlUpdater.create(new File(getDataFolder().toPath() + "/servers.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/main/bungeecord/src/main/resources/servers.yml"))
                     .backup(true)
                     .update();
             versionTextFile.getConfig().set("version", getDescription().getVersion());

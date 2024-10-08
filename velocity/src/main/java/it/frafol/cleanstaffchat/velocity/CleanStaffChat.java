@@ -313,22 +313,22 @@ public class CleanStaffChat {
         if (container.getDescription().getVersion().isPresent() && (!container.getDescription().getVersion().get().equals(VelocityVersion.VERSION.get(String.class)))) {
 
             logger.info("Creating new §dconfigurations...");
-            YamlUpdater.create(new File(path + "/config.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/config.yml"))
+            YamlUpdater.create(new File(path + "/config.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/main/velocity/src/main/resources/config.yml"))
                     .backup(true)
                     .update();
-            YamlUpdater.create(new File(path + "/messages.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/messages.yml"))
+            YamlUpdater.create(new File(path + "/messages.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/main/velocity/src/main/resources/messages.yml"))
                     .backup(true)
                     .update();
-            YamlUpdater.create(new File(path + "/discord.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/discord.yml"))
+            YamlUpdater.create(new File(path + "/discord.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/main/velocity/src/main/resources/discord.yml"))
                     .backup(true)
                     .update();
-            YamlUpdater.create(new File(path + "/redis.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/redis.yml"))
+            YamlUpdater.create(new File(path + "/redis.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/main/velocity/src/main/resources/redis.yml"))
                     .backup(true)
                     .update();
-            YamlUpdater.create(new File(path + "/aliases.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/aliases.yml"))
+            YamlUpdater.create(new File(path + "/aliases.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/main/velocity/src/main/resources/aliases.yml"))
                     .backup(true)
                     .update();
-            YamlUpdater.create(new File(path + "/servers.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/main/src/main/resources/servers.yml"))
+            YamlUpdater.create(new File(path + "/servers.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/main/velocity/src/main/resources/servers.yml"))
                     .backup(true)
                     .update();
             versionTextFile.getConfig().set("version", container.getDescription().getVersion().get());

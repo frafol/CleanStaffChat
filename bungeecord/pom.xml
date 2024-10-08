@@ -75,6 +75,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>net.byteflux</groupId>
+            <artifactId>libby-bungee</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+        <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
             <version>1.21-R0.1-SNAPSHOT</version>
@@ -86,11 +91,6 @@
             <version>1.21-R0.1-SNAPSHOT</version>
             <type>javadoc</type>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.byteflux</groupId>
-            <artifactId>libby-bungee</artifactId>
-            <version>1.3.1</version>
         </dependency>
         <dependency>
             <groupId>com.github.proxiodev.redisbungee</groupId>

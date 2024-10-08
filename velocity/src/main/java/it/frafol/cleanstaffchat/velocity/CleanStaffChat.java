@@ -56,13 +56,8 @@ import java.util.concurrent.TimeUnit;
 )
 public class CleanStaffChat {
 
-    @Inject
     private final Metrics.Factory metricsFactory;
-
-    @Inject
     private final ProxyServer server;
-
-    @Inject
     private final Logger logger;
 
     private final Path path;
@@ -76,7 +71,6 @@ public class CleanStaffChat {
     private TextFile serversTextFile;
     private TextFile versionTextFile;
 
-    @Inject
     public static final ChannelIdentifier channel = MinecraftChannelIdentifier.create("cleansc", "cancel");
 
     @Getter
@@ -95,7 +89,6 @@ public class CleanStaffChat {
     @Inject
     public PluginContainer container;
 
-    @Inject
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
 
@@ -186,7 +179,6 @@ public class CleanStaffChat {
         getLogger().info("Plugin successfully enabled!");
     }
 
-    @Inject
     @Subscribe
     public void onProxyShutdown(ProxyShutdownEvent event) throws LoginException {
         getLogger().info("Deleting instances...");

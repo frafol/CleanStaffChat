@@ -49,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.16.1",
+        version = "1.16.2",
         dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true), @Dependency(id = "signedvelocity", optional = true), @Dependency(id = "spicord", optional = true), @Dependency(id = "leaf", optional = true), @Dependency(id = "miniplaceholders", optional = true), @Dependency(id = "clientcatcher", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"

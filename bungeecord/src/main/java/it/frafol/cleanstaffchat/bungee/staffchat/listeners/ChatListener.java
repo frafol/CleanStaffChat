@@ -129,9 +129,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                             .replace("&", "§");
 
                     redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffMessage-RedisBungee", final_message);
-
                     return;
-
                 }
 
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
@@ -214,9 +212,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                             .replace("&", "§");
 
                     redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffMessage-RedisBungee", final_message);
-
                     return;
-
                 }
 
                 CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter

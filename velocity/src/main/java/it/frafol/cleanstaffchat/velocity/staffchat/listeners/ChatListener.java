@@ -98,7 +98,6 @@ public class ChatListener extends ListenerAdapter {
                             final String user_suffix = suffix == null ? "" : suffix;
 
                             if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class))  {
-
                                 final String final_message = VelocityMessages.STAFFCHAT_FORMAT.get(String.class)
                                         .replace("%user%", sender)
                                         .replace("%message%", message)
@@ -108,10 +107,8 @@ public class ChatListener extends ListenerAdapter {
                                         .replace("%server%", event.getPlayer().getCurrentServer().get().getServer().getServerInfo().getName())
                                         .replace("%prefix%", VelocityMessages.PREFIX.color())
                                         .replace("&", "§");
-
-
                                 final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-                                redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffChatMessage-RedisBungee", final_message);
+                                redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffMessage-RedisBungee", final_message);
                                 return;
                             }
 
@@ -129,9 +126,7 @@ public class ChatListener extends ListenerAdapter {
                                             new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
                         } else {
-
                             if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
-
                                 final String final_message = VelocityMessages.STAFFCHAT_FORMAT.get(String.class)
                                         .replace("%user%", sender)
                                         .replace("%message%", message)
@@ -141,7 +136,6 @@ public class ChatListener extends ListenerAdapter {
                                         .replace("%server%", event.getPlayer().getCurrentServer().get().getServer().getServerInfo().getName())
                                         .replace("%prefix%", VelocityMessages.PREFIX.color())
                                         .replace("&", "§");
-
                                 final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
                                 redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffMessage-RedisBungee", final_message);
                                 return;

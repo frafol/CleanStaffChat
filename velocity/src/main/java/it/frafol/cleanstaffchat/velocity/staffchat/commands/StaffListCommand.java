@@ -61,19 +61,9 @@ public class StaffListCommand implements SimpleCommand {
             list = handleRedis();
         } else {
             for (Player players : PLUGIN.getServer().getAllPlayers()) {
-
-                if (!players.hasPermission(VelocityConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
-                    continue;
-                }
-
-                if (VelocityConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(VelocityConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
-                    continue;
-                }
-
-                if (PLUGIN.isPremiumVanish() && VanishUtil.isVanished(players)) {
-                    continue;
-                }
-
+                if (!players.hasPermission(VelocityConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) continue;
+                if (VelocityConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(VelocityConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) continue;
+                if (PLUGIN.isPremiumVanish() && VanishUtil.isVanished(players)) continue;
                 list.add(players.getUniqueId());
             }
         }
@@ -90,7 +80,9 @@ public class StaffListCommand implements SimpleCommand {
         if (VelocityConfig.SORTING_LIST_ENABLE.get(Boolean.class)) {
             List<UUID> sortedList = new ArrayList<>();
             for (String groups : VelocityConfig.SORTING_LIST.getStringList()) {
-                for (User user : api.getUserManager().getLoadedUsers()) {
+                for (UUID uuid : list) {
+                    User user = api.getUserManager().getUser(uuid);
+                    if (user == null) continue;
                     Group group = api.getGroupManager().getGroup(groups);
                     if (user.getInheritedGroups(QueryOptions.builder(QueryMode.CONTEXTUAL).build()).contains(group)) {
                         if (!sortedList.contains(user.getUniqueId()) && list.contains(user.getUniqueId())) {

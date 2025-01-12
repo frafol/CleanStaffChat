@@ -82,7 +82,9 @@ public class StaffListCommand extends CommandBase {
             if (SpigotConfig.SORTING_LIST_ENABLE.get(Boolean.class)) {
                 List<UUID> sortedList = new ArrayList<>();
                 for (String groups : SpigotConfig.SORTING_LIST.getStringList()) {
-                    for (User user : api.getUserManager().getLoadedUsers()) {
+                    for (UUID uuid : list) {
+                        User user = api.getUserManager().getUser(uuid);
+                        if (user == null) continue;
                         Group group = api.getGroupManager().getGroup(groups);
                         if (user.getInheritedGroups(QueryOptions.builder(QueryMode.CONTEXTUAL).build()).contains(group)) {
                             sortedList.add(user.getUniqueId());

@@ -38,7 +38,7 @@ settings:
     staff_quit_all_players: false # By activating it, the staff will receive a message every time any player leaves the server.
 
     staff_switch_all_players: false # By activating it, the staff will receive a message every time any player switch a server.
-    staff_disable_afk_on_move: true # On Velocity and BungeeCord, this works when a player changes server.
+    staff_disable_afk_on_move: true
 
     staff_join_silent: false # By activating it, the staff will not receive a message when another staff member with a permission enters the server.
     staff_quit_silent: false # By activating it, the staff will not receive a message when another staff member with a permission leaves the server.
@@ -82,7 +82,7 @@ settings:
     stafflist_bypass_permission: "stafflist.bypass"
 
     # You can enable or disable the bypass permission.
-    bypass_enabled: true
+    bypass_enabled: false
 
     # Select if you want to sort the staff list by group weight.
     # Set a weight in LP using: /lp group <group> setweight <weight>.

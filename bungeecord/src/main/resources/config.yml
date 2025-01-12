@@ -82,7 +82,7 @@ settings:
     stafflist_bypass_permission: "stafflist.bypass"
 
     # You can enable or disable the bypass permission.
-    bypass_enabled: true
+    bypass_enabled: false
 
     # Select if you want to sort the staff list by group weight.
     # Set a weight in LP using: /lp group <group> setweight <weight>.
@@ -152,14 +152,7 @@ modules:
   # You have to activate this option to fix it, please follow these steps:
   # 1. Add this plugin in Spigot and BungeeCord servers.
   # 2. Activate this option in both servers (this option will disable all staffchat modules in Spigot also).
-  # 3. Your problem is now fixed, note that Velocity is not affected by this issue if you install SignedVelocity in both Velocity and Spigot server.
+  # 3. Your problem is now fixed.
   kick_workaround: false
-
-  # Are you getting double messages on Velocity when talking in staffchat/adminchat/donorchat?
-  # You have to activate this option to fix it, please follow these steps:
-  # 1. Add this plugin in Spigot and Velocity servers.
-  # 2. Activate this option in both servers (this option will disable all staffchat modules in Spigot also).
-  # 3. Your problem is now fixed, note that BungeeCord is not affected by this issue.
-  double_message_workaround: false
 
 # Enjoy.

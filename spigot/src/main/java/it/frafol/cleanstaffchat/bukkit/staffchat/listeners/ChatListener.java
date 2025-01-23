@@ -218,15 +218,12 @@ public class ChatListener extends ListenerAdapter implements Listener {
             List<UUID> list = Lists.newArrayList();
             if (!PLUGIN.getServer().getOnlinePlayers().isEmpty()) {
                 for (Player players : PLUGIN.getServer().getOnlinePlayers()) {
-
                     if (!players.hasPermission(SpigotConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
                         continue;
                     }
-
                     if (SpigotConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(SpigotConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
                         continue;
                     }
-
                     list.add(players.getUniqueId());
                 }
             }
@@ -240,7 +237,9 @@ public class ChatListener extends ListenerAdapter implements Listener {
             if (SpigotConfig.SORTING_LIST_ENABLE.get(Boolean.class)) {
                 List<UUID> sortedList = new ArrayList<>();
                 for (String groups : SpigotConfig.SORTING_LIST.getStringList()) {
-                    for (User user : api.getUserManager().getLoadedUsers()) {
+                    for (UUID uuid : list) {
+                        User user = api.getUserManager().getUser(uuid);
+                        if (user == null) continue;
                         Group group = api.getGroupManager().getGroup(groups);
                         if (user.getInheritedGroups(QueryOptions.builder(QueryMode.CONTEXTUAL).build()).contains(group)) {
                             sortedList.add(user.getUniqueId());

@@ -54,7 +54,7 @@ You can manually configure all the permissions for each command in the config.ym
 
 ## The message is sent two times or you're getting kicked when switching/writing in staffchat?
 ```
-If you're on Velocity, you should add [SignedVelocity](https://modrinth.com/plugin/signedvelocity) to your velocity & 1.19+ paper servers.
+If you're on Velocity, you should add SignedVelocity (https://modrinth.com/plugin/signedvelocity) to your velocity & 1.19+ paper servers.
 If you're on BungeeCord or your issue is not fixed with the first method, you should look at the end of the config.yml.
 ```
 

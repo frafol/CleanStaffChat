@@ -111,6 +111,7 @@ modules:
   stats: true
 
   # WARNING: This option is only for the Velocity version.
+  # WARNING: You must have also your prefix/suffix formatted in MiniMessage.
   minimessage_support: false
 
   # EXPERIMENTAL: This option is only for the Paper/Velocity version.

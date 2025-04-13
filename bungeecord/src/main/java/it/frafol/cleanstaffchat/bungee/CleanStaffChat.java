@@ -86,9 +86,9 @@ public class CleanStaffChat extends Plugin {
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.1.2")
+                .version("5.3.2")
                 .relocate(kotlin)
-                .url("https://github.com/discord-jda/JDA/releases/download/v5.1.2/JDA-5.1.2-withDependencies-min.jar")
+                .url("https://github.com/discord-jda/JDA/releases/download/v5.3.2/JDA-5.3.2-withDependencies-min.jar")
                 .build();
 
         bungeeLibraryManager.addMavenCentral();
@@ -318,12 +318,10 @@ public class CleanStaffChat extends Plugin {
         }
     }
 
+    @SuppressWarnings("removal")
     private void registerRedisBungee() {
-
         final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
         getProxy().getPluginManager().registerListener(this, new RedisListener(this));
-
         redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffMessage-RedisBungee");
         redisBungeeAPI.registerPubSubChannels("CleanStaffChat-AdminMessage-RedisBungee");
         redisBungeeAPI.registerPubSubChannels("CleanStaffChat-DonorMessage-RedisBungee");
@@ -333,7 +331,6 @@ public class CleanStaffChat extends Plugin {
         redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteStaffChat-RedisBungee");
         redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteAdminChat-RedisBungee");
         redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteDonorChat-RedisBungee");
-
     }
 
     private void registerDonorChat() {

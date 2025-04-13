@@ -1,0 +1,148 @@
+#   ___  __    ____    __    _  _    ___   ___
+#  / __)(  )  ( ___)  /__\  ( \( )  / __) / __)
+# ( (__  )(__  )__)  /(__)\  )  (   \__ \( (__
+#  \___)(____)(____)(__)(__)(_)\_)  (___/ \___)
+#
+# Messages. Made with ❤ by frafol.
+# For support: https://dsc.gg/futuredevelopment
+
+messages:
+
+  globalchat:
+
+    # General messages.
+    prefix: "<dark_purple><bold>GLOBAL</bold><light_purple><bold>CHAT</bold> <dark_gray><bold>•</bold>"
+    usage: "<prefix> <gray>Use <light_purple>/mutechat</light_purple> <gray>(or <light_purple>/mutechat <server></light_purple><gray>)."
+
+    mutechat_enabled: "<prefix> <gray>The globalchat has been <red>muted</red><gray>."
+    mutechat_disabled: "<prefix> <gray>The globalchat has been <green>unmuted</green><gray>."
+
+    # Only for BungeeCord or Velocity.
+    server_not_found: "<prefix> <gray>The server you entered was <light_purple>not found</light_purple><gray>."
+
+  staffchat:
+
+    # General messages.
+    prefix: "<dark_purple><bold>STAFF</bold><light_purple><bold>CHAT</bold> <dark_gray><bold>•</bold>"
+    arguments: "<prefix> <gray>Use <light_purple>/sc <message></light_purple><gray>."
+
+    # StaffChat talk messages.
+    staffchat_talk_enabled: "<prefix> <gray>Now your messages will be sent in the <green>StaffChat</green><gray>."
+    staffchat_talk_disabled: "<prefix> <gray>Now your messages will be sent in the <green>chat</green><gray>."
+
+    # StaffChat mute messages.
+    staffchat_muted: "<prefix> <gray>StaffChat has been <green>muted</green><gray>."
+    staffchat_unmuted: "<prefix> <gray>StaffChat has been <green>unmuted</green><gray>."
+
+    # StaffChat toggle messages.
+    staffchat_toggled_on: "<prefix> <gray>The StaffChat is now <green>visible</green><gray>."
+    staffchat_toggled_off: "<prefix> <gray>The StaffChat is now <green>invisible</green><gray>."
+
+    # Chat Formats
+    staffchat_format: "<prefix> <gray><userprefix> <user> <dark_gray>»</dark_gray> <gray><message>"
+    staffchat_console_format: "<prefix> <gray><user> <dark_gray>»</dark_gray> <gray><message>"
+
+    staff_join_message_format: "<prefix> <gray>[<green>+</green>] <white><light_purple><user>"
+    staff_quit_message_format: "<prefix> <gray>[<red>-</red>] <white><light_purple><user>"
+
+    staff_switch_message_format: "<prefix> <gray><user> <dark_gray>(<light_purple><serverbefore> <gold>➜</gold> <light_purple><server></light_purple><dark_gray>)"
+
+    staff_afk_on_message_format: "<prefix> <gray><user> is now <green>AFK</green><gray>."
+    staff_afk_off_message_format: "<prefix> <gray><user> is no longer <green>AFK</green><gray>."
+
+    discord:
+
+      staffchat_discord_format: "<prefix> <gray>[<aqua>Discord</aqua>] <gray><user> <dark_gray>»</dark_gray> <gray><message>"
+      staffchat_to_discord_format: "<user> » <message>"
+
+      discord_join_message_format: "<user> joined the server."
+      discord_quit_message_format: "<user> left the server."
+
+      discord_switch_message_format: "<user> switched server from <from> to <server>."
+      discord_afk_on_message_format: "<user> is now AFK."
+      discord_afk_off_message_format: "<user> is no longer AFK."
+
+  adminchat:
+
+    # General messages.
+    prefix: "<dark_purple><bold>ADMIN</bold><light_purple><bold>CHAT</bold> <dark_gray><bold>•</bold>"
+    arguments: "<prefix> <gray>Use <light_purple>/ac <message></light_purple><gray>."
+
+    # AdminChat talk messages.
+    adminchat_talk_enabled: "<prefix> <gray>Now your messages will be sent in the <green>AdminChat</green><gray>."
+    adminchat_talk_disabled: "<prefix> <gray>Now your messages will be sent in the <green>chat</green><gray>."
+
+    # AdminChat mute messages.
+    adminchat_muted: "<prefix> <gray>AdminChat has been <green>muted</green><gray>."
+    adminchat_unmuted: "<prefix> <gray>AdminChat has been <green>unmuted</green><gray>."
+
+    # AdminChat toggle messages.
+    adminchat_toggled_on: "<prefix> <gray>The AdminChat is now <green>visible</green><gray>."
+    adminchat_toggled_off: "<prefix> <gray>The AdminChat is now <green>invisible</green><gray>."
+
+    # Chat Format
+    adminchat_format: "<prefix> <gray><userprefix> <user> <dark_gray>»</dark_gray> <gray><message>"
+    adminchat_console_format: "<prefix> <gray><user> <dark_gray>»</dark_gray> <gray><message>"
+
+    discord:
+
+      adminchat_discord_format: "<prefix> <gray>[<aqua>Discord</aqua>] <gray><user> <dark_gray>»</dark_gray> <gray><message>"
+      adminchat_to_discord_format: "<user> » <message>"
+
+  donorchat:
+    # General messages.
+    prefix: "<dark_purple><bold>DONOR</bold></dark_purple><light_purple><bold>CHAT</bold></light_purple> <dark_gray><bold>•</bold></dark_gray>"
+    arguments: "%prefix% <gray>Use <light_purple>/dc <message></light_purple>.</gray>"
+    cooldown: "%prefix% <gray>Please wait to be able to reuse this <light_purple>chat</light_purple>.</gray>"
+
+    # DonorChat talk messages.
+    donorchat_talk_enabled: "%prefix% <gray>Now your messages will be sent in the <green>DonorChat</green>.</gray>"
+    donorchat_talk_disabled: "%prefix% <gray>Now your messages will be sent in the <green>chat</green>.</gray>"
+
+    # DonorChat mute messages.
+    donorchat_muted: "%prefix% <gray>DonorChat has been <green>muted</green>.</gray>"
+    donorchat_unmuted: "%prefix% <gray>DonorChat has been <green>unmuted</green>.</gray>"
+
+    # DonorChat toggle messages.
+    donorchat_toggled_on: "%prefix% <gray>The DonorChat is now <green>visible</green>.</gray>"
+    donorchat_toggled_off: "%prefix% <gray>The DonorChat is now <green>invisible</green>.</gray>"
+
+    # Chat Formats.
+    donorchat_format: "%prefix% <gray>%userprefix% %user% <dark_gray>»</dark_gray> <gray>%message%</gray>"
+    donorchat_console_format: "%prefix% <gray>%user% <dark_gray>»</dark_gray> <gray>%message%</gray>"
+
+    discord:
+      # Discord Chat Format.
+      donorchat_discord_format: "%prefix% <gray>[<aqua>Discord</aqua>] %user% <dark_gray>»</dark_gray> <gray>%message%</gray>"
+      donorchat_to_discord_format: "%user% » %message%"
+      discord_cooldown_message: "You have to wait some seconds to send another message."
+
+  stafflist:
+
+    usage: "%prefix% <gray>Use <light_purple>/stafflist</light_purple>.</gray>"
+
+    # Server StaffList Format.
+    header: "<dark_gray><strikethrough>------</strikethrough></dark_gray><dark_purple><strikethrough>------</strikethrough></dark_purple><light_purple><strikethrough>------</strikethrough></light_purple><dark_purple><strikethrough>------</strikethrough></dark_purple><dark_gray><strikethrough>------</strikethrough></dark_gray><white>"
+    format: "%userprefix%%player% <gray>(<light_purple>%server%</light_purple>) %afk%</gray>"
+    footer: "<dark_gray><strikethrough>------</strikethrough></dark_gray><dark_purple><strikethrough>------</strikethrough></dark_purple><light_purple><strikethrough>------</strikethrough></light_purple><dark_purple><strikethrough>------</strikethrough></dark_purple><dark_gray><strikethrough>------</strikethrough></dark_gray><white>"
+
+    nobody: "%prefix% <gray>There is no staff <light_purple>online</light_purple>.</gray>"
+    afk: "<gray>[<light_purple>AFK</light_purple>]</gray>"
+
+    discord:
+      # Discord StaffList Format.
+      header: "Staff List"
+      format: "%usergroup%%player% (%server%) %afk%"
+      footer: "Staff List"
+      nobody: "There is no staff online."
+      afk: "[AFK]"
+
+  # Errors and reload.
+  deny_color_codes: "%prefix% <red>Color codes are not permitted.</red>"
+  no_permission: "%prefix% <red>You don't have the permission to do this.</red>"
+  console: "%prefix% <red>You must be a player to use that command.</red>"
+  chat_muted_error: "%prefix% <gray>Chat is currently <red>muted</red> by an operator!</gray>"
+  chat_muted_error_discord: "Chat is currently muted by an operator!"
+  reloaded: "%prefix% <gray>The plugin has been <green>reloaded</green>!</gray>"
+  module_disabled: "%prefix% <gray>This function is currently <red>disabled</red>!</gray>"
+  new_version: "%prefix% <gray>A new version of the plugin is <light_purple>available</light_purple>! <dark_gray>(<light_purple>%version%</light_purple>)</dark_gray></gray>"

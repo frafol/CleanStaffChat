@@ -2,6 +2,7 @@ package it.frafol.cleanstaffchat.velocity.utils;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import io.github.miniplaceholders.api.MiniPlaceholders;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
@@ -30,12 +31,9 @@ public class ChatUtil {
         return applyPlaceholder(getString(velocityMessages), placeholders);
     }
 
-    public String getFormattedString(VelocityMessages velocityMessages, Placeholder... placeholders) {
-        return color(getString(velocityMessages, placeholders));
-    }
-
-    public String getFormattedString(Player player, VelocityMessages velocityMessages, Placeholder... placeholders) {
-        return color(player, getString(velocityMessages, placeholders));
+    public String getFormattedString(CommandSource player, VelocityMessages velocityMessages, Placeholder... placeholders) {
+        if (player instanceof Player) return color((Player) player, getString(velocityMessages, placeholders));
+        else return color(getString(velocityMessages, placeholders));
     }
 
     public String applyPlaceholder(String s, Placeholder @NotNull ... placeholders) {

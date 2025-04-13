@@ -1,7 +1,6 @@
 package it.frafol.cleanstaffchat.velocity.enums;
 
 import com.velocitypowered.api.command.CommandSource;
-import com.velocitypowered.api.proxy.Player;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
@@ -196,37 +195,19 @@ public enum VelocityMessages {
             return;
         }
 
-        if (commandSource instanceof Player) {
-            if (VelocityConfig.MINIMESSAGE.get(Boolean.class)) {
-
-                if (ChatUtil.hasColorCodes(get(String.class))) {
-                    instance.getLogger().error("Legacy color codes are not supported in MiniMessage mode.");
-                    instance.getLogger().error("Please remove them from the message: {} in the messages.yml file.", getPath());
-                    commandSource.sendMessage(LegacyComponentSerializer.legacy('§').deserialize(ChatUtil.getFormattedString((Player) commandSource,this, placeholders)));
-                    return;
-                }
-
-                commandSource.sendMessage(getMiniMessage().deserialize(ChatUtil.getFormattedString((Player) commandSource, this, placeholders)));
-                return;
-            }
-
-            commandSource.sendMessage(LegacyComponentSerializer.legacy('§').deserialize(ChatUtil.getFormattedString((Player) commandSource,this, placeholders)));
+        if (!VelocityConfig.MINIMESSAGE.get(Boolean.class)) {
+            commandSource.sendMessage(LegacyComponentSerializer.legacy('§').deserialize(
+                    ChatUtil.getFormattedString(commandSource,this, placeholders)));
             return;
         }
 
-        if (VelocityConfig.MINIMESSAGE.get(Boolean.class)) {
-
-            if (ChatUtil.hasColorCodes(get(String.class))) {
-                instance.getLogger().error("Legacy color codes are not supported in MiniMessage mode.");
-                instance.getLogger().error("Please remove them from the message: {} in the messages.yml file.", getPath());
-                commandSource.sendMessage(LegacyComponentSerializer.legacy('§').deserialize(ChatUtil.getFormattedString(this, placeholders)));
-                return;
-            }
-
-            commandSource.sendMessage(getMiniMessage().deserialize(ChatUtil.getFormattedString(this, placeholders)));
+        if (ChatUtil.hasColorCodes(get(String.class))) {
+            commandSource.sendMessage(LegacyComponentSerializer.legacy('§').deserialize(
+                    ChatUtil.getFormattedString(commandSource,this, placeholders)));
             return;
         }
 
-        commandSource.sendMessage(LegacyComponentSerializer.legacy('§').deserialize(ChatUtil.getFormattedString(this, placeholders)));
+        commandSource.sendMessage(getMiniMessage().deserialize(
+                ChatUtil.getFormattedString(commandSource, this, placeholders)));
     }
 }

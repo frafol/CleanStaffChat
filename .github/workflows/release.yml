@@ -22,10 +22,10 @@ jobs:
       - name: Build with Maven
         run: mvn clean install
 
-      - name: Find JAR file
+      - name: Find JAR file in universal
         id: find_jar
         run: |
-          JAR_FILE=$(find target -maxdepth 1 -name "*.jar" ! -name "original*.jar" | head -n 1)
+          JAR_FILE=$(find universal/target -maxdepth 1 -name "*.jar" ! -name "original*.jar" | head -n 1)
           echo "JAR_FILE=$JAR_FILE" >> $GITHUB_ENV
 
       - name: Upload JAR artifact
@@ -46,12 +46,12 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: my-plugin-jar
-          path: ./target
+          path: ./universal/target
 
       - name: Find JAR file in downloaded artifacts
         id: find_downloaded_jar
         run: |
-          JAR_FILE=$(find ./target -maxdepth 1 -name "*.jar" ! -name "original*.jar" | head -n 1)
+          JAR_FILE=$(find ./universal/target -maxdepth 1 -name "*.jar" ! -name "original*.jar" | head -n 1)
           echo "JAR_FILE=$JAR_FILE" >> $GITHUB_ENV
 
       - name: Remove older releases

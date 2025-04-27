@@ -213,6 +213,10 @@ public class ChatListener extends ListenerAdapter {
 
         if (event.getMessage().getContentDisplay().equalsIgnoreCase("/stafflist")) {
 
+            if (!instance.getServer().getPluginManager().getPlugin("LuckPerms").isPresent()) {
+                return;
+            }
+
             if (VelocityDiscordConfig.STAFFLIST_CHANNEL_ID.get(String.class).equalsIgnoreCase("none")) {
                 return;
             }

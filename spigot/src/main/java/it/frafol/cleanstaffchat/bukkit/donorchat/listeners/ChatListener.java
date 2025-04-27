@@ -41,29 +41,19 @@ public class ChatListener extends ListenerAdapter implements Listener {
         }
 
         if (PlayerCache.getMuted().contains("true")) {
-
             PlayerCache.getToggled_2_donor().remove(event.getPlayer().getUniqueId());
-
             event.setCancelled(true);
-
             event.getPlayer().sendMessage(SpigotMessages.DONORCHAT_MUTED_ERROR.color()
                     .replace("%prefix%", SpigotMessages.DONORPREFIX.color()));
-
             return;
-
         }
 
         if (PlayerCache.getCooldown().contains(event.getPlayer().getUniqueId())) {
-
             PlayerCache.getToggled_2_donor().remove(event.getPlayer().getUniqueId());
-
             event.setCancelled(true);
-
             event.getPlayer().sendMessage(SpigotMessages.DONORCHAT_COOLDOWN_MESSAGE.color()
                     .replace("%prefix%", SpigotMessages.DONORPREFIX.color()));
-
             return;
-
         }
 
         if (event.getMessage().startsWith("/")) {
@@ -71,7 +61,6 @@ public class ChatListener extends ListenerAdapter implements Listener {
         }
 
         if (!(SpigotConfig.DONORCHAT_TALK_MODULE.get(Boolean.class))) {
-
             event.getPlayer().sendMessage((SpigotMessages.MODULE_DISABLED.color()
                     .replace("%prefix%", SpigotMessages.DONORPREFIX.color())
                     .replace("&", "§")));
@@ -80,7 +69,6 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
             final String message = event.getMessage();
             event.setCancelled(true);
-
             if (SpigotConfig.PREVENT_COLOR_CODES.get(Boolean.class)) {
                 if (PlayerCache.hasColorCodes(message)) {
                     event.getPlayer().sendMessage(SpigotMessages.COLOR_CODES.color()
@@ -90,7 +78,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 }
             }
 
-            if (event.getPlayer().hasPermission(SpigotConfig.COOLDOWN_BYPASS_PERMISSION.get(String.class))) {
+            if (!event.getPlayer().hasPermission(SpigotConfig.COOLDOWN_BYPASS_PERMISSION.get(String.class))) {
                 PlayerCache.getCooldown().add(event.getPlayer().getUniqueId());
                 TaskScheduler scheduler = UniversalScheduler.getScheduler(PLUGIN);
                 scheduler.runTaskLaterAsynchronously(() ->
@@ -101,11 +89,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                 final LuckPerms api = LuckPermsProvider.get();
                 final User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
-
-                if (user == null) {
-                    return;
-                }
-
+                if (user == null) return;
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
                 final String user_prefix = prefix == null ? "" : prefix;
@@ -128,13 +112,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                 final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();
-
-                if (!userList.uuid(event.getPlayer().getUniqueId()).isPresent()) {
-                    return;
-                }
-
+                if (!userList.uuid(event.getPlayer().getUniqueId()).isPresent()) return;
                 final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(event.getPlayer().getUniqueId()).get();
-
                 final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
                 final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
                 final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
@@ -154,7 +133,6 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                 .replace("&", "§")));
 
             } else {
-
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
@@ -172,33 +150,23 @@ public class ChatListener extends ListenerAdapter implements Listener {
             }
 
             final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotDiscordConfig.DONOR_CHANNEL_ID.get(String.class));
-
-            if (channel == null) {
-                return;
-            }
+            if (channel == null) return;
 
             if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
-
                 EmbedBuilder embed = new EmbedBuilder();
-
                 embed.setTitle(SpigotDiscordConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
-
                 embed.setDescription(SpigotMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                         .replace("%user%", event.getPlayer().getName())
                         .replace("%message%", message)
                         .replace("%server%", ""));
-
                 embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_DONORCHATCOLOR.get(String.class)));
                 embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
-
                 channel.sendMessageEmbeds(embed.build()).queue();
-
             } else {
                 channel.sendMessageFormat(SpigotMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                                 .replace("%user%", event.getPlayer().getName())
                                 .replace("%message%", message)
-                                .replace("%server%", ""))
-                        .queue();
+                                .replace("%server%", "")).queue();
             }
             event.setCancelled(true);
         } else {

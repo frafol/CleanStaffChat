@@ -11,6 +11,7 @@ import it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl.DebugCommand;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl.ReloadCommand;
 import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.ChatListener;
 import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.JoinListener;
+import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.ListChatListener;
 import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.MoveListener;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -348,6 +349,11 @@ public class CleanStaffChat extends JavaPlugin {
             ));
         }
         getCommandMap().registerAll(getName().toLowerCase(), staffListCommands);
+
+        if (getServer().getPluginManager().getPlugin("LuckPerms") == null) return;
+        if (SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class) && SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            jda.addEventListener(new ListChatListener(this));
+        }
     }
 
     @SneakyThrows

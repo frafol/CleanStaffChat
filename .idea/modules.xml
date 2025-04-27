@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/bungeecord/bungeecord-module.iml" filepath="$PROJECT_DIR$/bungeecord/bungeecord-module.iml" />
-      <module fileurl="file://$PROJECT_DIR$/spigot/spigot-module.iml" filepath="$PROJECT_DIR$/spigot/spigot-module.iml" />
-      <module fileurl="file://$PROJECT_DIR$/velocity/velocity-module.iml" filepath="$PROJECT_DIR$/velocity/velocity-module.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bungeecord/bungeecord.iml" filepath="$PROJECT_DIR$/bungeecord/bungeecord.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spigot/spigot.iml" filepath="$PROJECT_DIR$/spigot/spigot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/velocity/velocity.iml" filepath="$PROJECT_DIR$/velocity/velocity.iml" />
     </modules>
   </component>
 </project>

@@ -31,16 +31,15 @@ public class ToggleCommand extends CommandBase {
         }
 
         Player player = (Player) sender;
-
-        if (player.hasPermission(SpigotConfig.DONORCHAT_TOGGLE_PERMISSION.get(String.class))) {
-            if (!PlayerCache.getToggled_donor().contains(player.getUniqueId())) {
-                PlayerCache.getToggled_donor().add(player.getUniqueId());
-                sender.sendMessage((SpigotMessages.DONORCHAT_TOGGLED_OFF.color()
-                        .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
-                return false;
-            }
-        } else {
+        if (!player.hasPermission(SpigotConfig.DONORCHAT_TOGGLE_PERMISSION.get(String.class))) {
             sender.sendMessage((SpigotMessages.NO_PERMISSION.color()
+                    .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
+            return false;
+        }
+
+        if (!PlayerCache.getToggled_donor().contains(player.getUniqueId())) {
+            PlayerCache.getToggled_donor().add(player.getUniqueId());
+            sender.sendMessage((SpigotMessages.DONORCHAT_TOGGLED_OFF.color()
                     .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
             return false;
         }

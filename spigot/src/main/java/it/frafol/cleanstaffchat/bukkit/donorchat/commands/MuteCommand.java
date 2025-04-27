@@ -22,6 +22,7 @@ public class MuteCommand extends CommandBase {
         if (!(SpigotConfig.DONORCHAT_MUTE_MODULE.get(Boolean.class))) {
             sender.sendMessage((SpigotMessages.MODULE_DISABLED.color()
                     .replace("%prefix%", SpigotMessages.DONORPREFIX.color())));
+            return false;
         }
 
         if (!sender.hasPermission(SpigotConfig.DONORCHAT_MUTE_PERMISSION.get(String.class))) {

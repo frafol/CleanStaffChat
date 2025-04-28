@@ -169,10 +169,6 @@ public class CleanStaffChat extends JavaPlugin {
             return;
         }
 
-        if (SpigotConfig.STAFFLIST_MODULE.get(Boolean.class)) {
-            registerStaffListCommands();
-        }
-
         UpdateChecker();
         startJDA();
 
@@ -201,6 +197,10 @@ public class CleanStaffChat extends JavaPlugin {
             if (SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class) && SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
                 jda.addEventListener(new ChatListener(this));
             }
+        }
+
+        if (SpigotConfig.STAFFLIST_MODULE.get(Boolean.class)) {
+            registerStaffListCommands();
         }
 
         if (SpigotConfig.DONORCHAT.get(Boolean.class)) {

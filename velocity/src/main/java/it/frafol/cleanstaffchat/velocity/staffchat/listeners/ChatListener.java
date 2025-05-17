@@ -213,7 +213,7 @@ public class ChatListener extends ListenerAdapter {
 
         if (event.getMessage().getContentDisplay().equalsIgnoreCase("/stafflist")) {
 
-            if (!instance.getServer().getPluginManager().getPlugin("LuckPerms").isPresent()) {
+            if (!instance.getServer().getPluginManager().getPlugin("luckperms").isPresent()) {
                 return;
             }
 

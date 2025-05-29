@@ -24,6 +24,7 @@ import it.frafol.cleanstaffchat.velocity.staffchat.commands.*;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.ChatListener;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.JoinListener;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.ServerListener;
+import it.frafol.cleanstaffchat.velocity.utils.SwitchUtil;
 import it.frafol.cleanstaffchat.velocity.utils.VanishUtil;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -643,6 +644,7 @@ public class CleanStaffChat {
 
     private void loadChannelRegistrar() {
         server.getChannelRegistrar().register(channel);
+        server.getEventManager().register(this, new SwitchUtil(this));
     }
 
     public boolean isInBlockedStaffChatServer(Player player) {

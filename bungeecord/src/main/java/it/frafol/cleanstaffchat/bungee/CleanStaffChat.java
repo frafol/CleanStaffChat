@@ -7,6 +7,7 @@ import it.frafol.cleanstaffchat.bungee.donorchat.commands.DonorChatCommand;
 import it.frafol.cleanstaffchat.bungee.enums.*;
 import it.frafol.cleanstaffchat.bungee.general.commands.MuteChatCommand;
 import it.frafol.cleanstaffchat.bungee.hooks.RedisListener;
+import it.frafol.cleanstaffchat.bungee.objects.SwitchUtil;
 import it.frafol.cleanstaffchat.bungee.objects.TextFile;
 import it.frafol.cleanstaffchat.bungee.staffchat.commands.DebugCommand;
 import it.frafol.cleanstaffchat.bungee.staffchat.commands.ReloadCommand;
@@ -151,6 +152,10 @@ public class CleanStaffChat extends Plugin {
 
         if (BungeeConfig.MUTECHAT_MODULE.get(Boolean.class)) {
             registerMuteChat();
+        }
+
+        if (BungeeConfig.WORKAROUND_KICK.get(Boolean.class)) {
+            getProxy().getPluginManager().registerListener(this, new SwitchUtil(this));
         }
 
         if (BungeeRedis.REDIS_ENABLE.get(Boolean.class) && getProxy().getPluginManager().getPlugin("RedisBungee") == null) {

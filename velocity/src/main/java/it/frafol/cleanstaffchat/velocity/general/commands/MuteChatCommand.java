@@ -55,13 +55,21 @@ public class MuteChatCommand implements SimpleCommand {
                 user_suffix = suffix == null ? "" : suffix;
             }
 
+            String server = "";
+            String playerName = "Console";
+            if (commandSource instanceof Player player) {
+                if (player.getCurrentServer().isPresent()) server = player.getCurrentServer().get().getServerInfo().getName();
+                playerName = player.getUsername();
+            }
+
             if (PlayerCache.getMutedservers().contains("all")) {
                 PlayerCache.getMutedservers().remove("all");
                 VelocityMessages.MUTECHAT_DISABLED.send(commandSource,
                         new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()),
                         new Placeholder("userprefix", user_prefix),
+                        new Placeholder("user", playerName),
                         new Placeholder("usersuffix", user_suffix),
-                        new Placeholder("server", ""));
+                        new Placeholder("server", server));
                 return;
             }
 
@@ -69,14 +77,15 @@ public class MuteChatCommand implements SimpleCommand {
             VelocityMessages.MUTECHAT_ENABLED.send(commandSource,
                     new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()),
                     new Placeholder("userprefix", user_prefix),
+                    new Placeholder("user", playerName),
                     new Placeholder("usersuffix", user_suffix),
-                    new Placeholder("server", ""));
+                    new Placeholder("server", server));
             return;
         }
 
         if (args.length == 1) {
 
-            if (!(commandSource instanceof Player)) {
+            if (!(commandSource instanceof Player player)) {
                 VelocityMessages.PLAYER_ONLY.send(commandSource,
                         new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
                 return;
@@ -113,17 +122,25 @@ public class MuteChatCommand implements SimpleCommand {
                 if (PlayerCache.getMutedservers().contains("all")) {
                     PlayerCache.getMutedservers().remove("all");
                     VelocityMessages.MUTECHAT_DISABLED.send(commandSource,
-                            new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
+                            new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()),
+                            new Placeholder("userprefix", user_prefix),
+                            new Placeholder("user", player.getUsername()),
+                            new Placeholder("usersuffix", user_suffix),
+                            new Placeholder("server", server));
                     return;
                 }
 
                 PlayerCache.getMutedservers().add("all");
                 VelocityMessages.MUTECHAT_ENABLED.send(commandSource,
-                        new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
+                        new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()),
+                        new Placeholder("userprefix", user_prefix),
+                        new Placeholder("user", player.getUsername()),
+                        new Placeholder("usersuffix", user_suffix),
+                        new Placeholder("server", server));
                 return;
             }
 
-            if (!PLUGIN.getServer().getServer(server).isPresent()) {
+            if (PLUGIN.getServer().getServer(server).isEmpty()) {
                 VelocityMessages.SERVER_NOT_FOUND.send(commandSource,
                         new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
                 return;
@@ -134,6 +151,7 @@ public class MuteChatCommand implements SimpleCommand {
                 VelocityMessages.MUTECHAT_DISABLED.send(commandSource,
                         new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()),
                         new Placeholder("userprefix", user_prefix),
+                        new Placeholder("user", player.getUsername()),
                         new Placeholder("usersuffix", user_suffix),
                         new Placeholder("server", server));
                 return;
@@ -143,6 +161,7 @@ public class MuteChatCommand implements SimpleCommand {
             VelocityMessages.MUTECHAT_ENABLED.send(commandSource,
                     new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()),
                     new Placeholder("userprefix", user_prefix),
+                    new Placeholder("user", player.getUsername()),
                     new Placeholder("usersuffix", user_suffix),
                     new Placeholder("server", server));
 

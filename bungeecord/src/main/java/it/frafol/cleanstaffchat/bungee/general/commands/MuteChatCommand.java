@@ -132,18 +132,20 @@ public class MuteChatCommand extends Command implements TabExecutor {
                     PlayerCache.getMutedservers().remove("all");
                     commandSource.sendMessage(TextComponent.fromLegacy(BungeeMessages.MUTECHAT_DISABLED.color()
                             .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())
+                            .replace("%user%", commandSource.getName())
                             .replace("%userprefix%", user_prefix)
                             .replace("%usersuffix%", user_suffix)
-                            .replace("%server%", "")));
+                            .replace("%server%", ((ProxiedPlayer) commandSource).getServer().getInfo().getName())));
                     return;
                 }
 
                 PlayerCache.getMutedservers().add("all");
                 commandSource.sendMessage(TextComponent.fromLegacy(BungeeMessages.MUTECHAT_ENABLED.color()
                         .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())
+                        .replace("%user%", commandSource.getName())
                         .replace("%userprefix%", user_prefix)
                         .replace("%usersuffix%", user_suffix)
-                        .replace("%server%", "")));
+                        .replace("%server%", ((ProxiedPlayer) commandSource).getServer().getInfo().getName())));
                 return;
             }
 
@@ -157,6 +159,7 @@ public class MuteChatCommand extends Command implements TabExecutor {
                 PlayerCache.getMutedservers().remove(server);
                 commandSource.sendMessage(TextComponent.fromLegacy(BungeeMessages.MUTECHAT_DISABLED.color()
                         .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())
+                        .replace("%user%", commandSource.getName())
                         .replace("%userprefix%", user_prefix)
                         .replace("%usersuffix%", user_suffix)
                         .replace("%server%", server)));
@@ -166,6 +169,7 @@ public class MuteChatCommand extends Command implements TabExecutor {
             PlayerCache.getMutedservers().add(server);
             commandSource.sendMessage(TextComponent.fromLegacy(BungeeMessages.MUTECHAT_ENABLED.color()
                     .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())
+                    .replace("%user%", commandSource.getName())
                     .replace("%userprefix%", user_prefix)
                     .replace("%usersuffix%", user_suffix)
                     .replace("%server%", server)));

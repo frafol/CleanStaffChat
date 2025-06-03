@@ -61,6 +61,7 @@ public class MuteChatCommand extends CommandBase {
                 PlayerCache.getMutedservers().remove("all");
                 commandSource.sendMessage((SpigotMessages.MUTECHAT_DISABLED.color()
                         .replace("%prefix%", SpigotMessages.GLOBALPREFIX.color())
+                        .replace("%user%", commandSource.getName())
                         .replace("%userprefix%", user_prefix)
                         .replace("%usersuffix%", user_suffix)));
                 return false;
@@ -70,6 +71,7 @@ public class MuteChatCommand extends CommandBase {
             commandSource.sendMessage((SpigotMessages.MUTECHAT_ENABLED.color()
                     .replace("%prefix%", SpigotMessages.GLOBALPREFIX.color())
                     .replace("%userprefix%", user_prefix)
+                    .replace("%user%", commandSource.getName())
                     .replace("%usersuffix%", user_suffix)));
         } else {
             commandSource.sendMessage((SpigotMessages.MUTECHAT_USAGE.color()

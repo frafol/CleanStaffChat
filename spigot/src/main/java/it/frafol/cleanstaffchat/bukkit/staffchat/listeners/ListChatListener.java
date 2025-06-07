@@ -77,7 +77,7 @@ public class ListChatListener extends ListenerAdapter {
                         if (user == null) continue;
                         Group group = api.getGroupManager().getGroup(groups);
                         if (user.getInheritedGroups(QueryOptions.builder(QueryMode.CONTEXTUAL).build()).contains(group)) {
-                            sortedList.add(user.getUniqueId());
+                            if (!sortedList.contains(user.getUniqueId())) sortedList.add(user.getUniqueId());
                         }
                     }
                 }

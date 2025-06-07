@@ -35,6 +35,8 @@ public enum VelocityMessages {
     MUTECHAT_USAGE("messages.globalchat.mutechat_usage"),
     MUTECHAT_ENABLED("messages.globalchat.mutechat_enabled"),
     MUTECHAT_DISABLED("messages.globalchat.mutechat_disabled"),
+    MUTECHAT_ENABLED_BC("messages.globalchat.mutechat_enabled_broadcast"),
+    MUTECHAT_DISABLED_BC("messages.globalchat.mutechat_disabled_broadcast"),
     SERVER_NOT_FOUND("messages.globalchat.server_not_found"),
 
     STAFFCHAT_MUTED_ERROR_DISCORD("messages.chat_muted_error_discord"),

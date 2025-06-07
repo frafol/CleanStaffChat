@@ -59,6 +59,7 @@ public class MuteChatCommand extends CommandBase {
 
             if (PlayerCache.getMutedservers().contains("all")) {
                 PlayerCache.getMutedservers().remove("all");
+                broadcastMuteChat(commandSource, false);
                 commandSource.sendMessage((SpigotMessages.MUTECHAT_DISABLED.color()
                         .replace("%prefix%", SpigotMessages.GLOBALPREFIX.color())
                         .replace("%user%", commandSource.getName())
@@ -68,6 +69,7 @@ public class MuteChatCommand extends CommandBase {
             }
 
             PlayerCache.getMutedservers().add("all");
+            broadcastMuteChat(commandSource, true);
             commandSource.sendMessage((SpigotMessages.MUTECHAT_ENABLED.color()
                     .replace("%prefix%", SpigotMessages.GLOBALPREFIX.color())
                     .replace("%userprefix%", user_prefix)
@@ -78,5 +80,39 @@ public class MuteChatCommand extends CommandBase {
                     .replace("%prefix%", SpigotMessages.GLOBALPREFIX.color())));
         }
         return false;
+    }
+
+    private void broadcastMuteChat(CommandSender commandSource, boolean activated) {
+
+        String user_prefix = "";
+        String user_suffix = "";
+        if (plugin.getServer().getPluginManager().getPlugin("LuckPerms") != null && commandSource instanceof Player) {
+            final LuckPerms api = LuckPermsProvider.get();
+            final User user = api.getUserManager().getUser(((Player) commandSource).getUniqueId());
+            if (user == null) return;
+            final String prefix = user.getCachedData().getMetaData().getPrefix();
+            final String suffix = user.getCachedData().getMetaData().getSuffix();
+            user_prefix = prefix == null ? "" : prefix;
+            user_suffix = suffix == null ? "" : suffix;
+        }
+
+        if (activated) {
+            for (Player player : plugin.getServer().getOnlinePlayers()) {
+                player.sendMessage((SpigotMessages.MUTECHAT_ENABLED_BC.color()
+                        .replace("%prefix%", SpigotMessages.GLOBALPREFIX.color())
+                        .replace("%userprefix%", user_prefix)
+                        .replace("%user%", commandSource.getName())
+                        .replace("%usersuffix%", user_suffix)));
+            }
+            return;
+        }
+
+        for (Player player : plugin.getServer().getOnlinePlayers()) {
+            player.sendMessage((SpigotMessages.MUTECHAT_DISABLED_BC.color()
+                    .replace("%prefix%", SpigotMessages.GLOBALPREFIX.color())
+                    .replace("%userprefix%", user_prefix)
+                    .replace("%user%", commandSource.getName())
+                    .replace("%usersuffix%", user_suffix)));
+        }
     }
 }

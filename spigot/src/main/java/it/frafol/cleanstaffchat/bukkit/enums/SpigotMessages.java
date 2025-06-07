@@ -37,6 +37,8 @@ public enum SpigotMessages {
     GLOBALPREFIX("messages.globalchat.prefix"),
     MUTECHAT_ENABLED("messages.globalchat.mutechat_enabled"),
     MUTECHAT_DISABLED("messages.globalchat.mutechat_disabled"),
+    MUTECHAT_ENABLED_BC("messages.globalchat.mutechat_enabled_broadcast"),
+    MUTECHAT_DISABLED_BC("messages.globalchat.mutechat_disabled_broadcast"),
     MUTECHAT_USAGE("messages.globalchat.mutechat_usage"),
 
     STAFFCHAT_MUTED_ERROR_DISCORD("messages.chat_muted_error_discord"),

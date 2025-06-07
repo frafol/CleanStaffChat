@@ -65,6 +65,7 @@ public class MuteChatCommand extends Command implements TabExecutor {
 
             if (PlayerCache.getMutedservers().contains("all")) {
                 PlayerCache.getMutedservers().remove("all");
+                broadcastMuteChat(commandSource, "all", false);
                 commandSource.sendMessage(TextComponent.fromLegacy(BungeeMessages.MUTECHAT_DISABLED.color()
                         .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())
                         .replace("%userprefix%", user_prefix)
@@ -74,6 +75,7 @@ public class MuteChatCommand extends Command implements TabExecutor {
             }
 
             PlayerCache.getMutedservers().add("all");
+            broadcastMuteChat(commandSource, "all", true);
             commandSource.sendMessage(TextComponent.fromLegacy(BungeeMessages.MUTECHAT_ENABLED.color()
                     .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())
                     .replace("%userprefix%", user_prefix)
@@ -100,7 +102,6 @@ public class MuteChatCommand extends Command implements TabExecutor {
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
                 user_prefix = prefix == null ? "" : prefix;
                 user_suffix = suffix == null ? "" : suffix;
-
             } else if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {
                 final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissionsBungee.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();
@@ -130,6 +131,7 @@ public class MuteChatCommand extends Command implements TabExecutor {
 
                 if (PlayerCache.getMutedservers().contains("all")) {
                     PlayerCache.getMutedservers().remove("all");
+                    broadcastMuteChat(commandSource, server, false);
                     commandSource.sendMessage(TextComponent.fromLegacy(BungeeMessages.MUTECHAT_DISABLED.color()
                             .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())
                             .replace("%user%", commandSource.getName())
@@ -140,6 +142,7 @@ public class MuteChatCommand extends Command implements TabExecutor {
                 }
 
                 PlayerCache.getMutedservers().add("all");
+                broadcastMuteChat(commandSource, server, true);
                 commandSource.sendMessage(TextComponent.fromLegacy(BungeeMessages.MUTECHAT_ENABLED.color()
                         .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())
                         .replace("%user%", commandSource.getName())
@@ -157,6 +160,7 @@ public class MuteChatCommand extends Command implements TabExecutor {
 
             if (PlayerCache.getMutedservers().contains(server)) {
                 PlayerCache.getMutedservers().remove(server);
+                broadcastMuteChat(commandSource, server, false);
                 commandSource.sendMessage(TextComponent.fromLegacy(BungeeMessages.MUTECHAT_DISABLED.color()
                         .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())
                         .replace("%user%", commandSource.getName())
@@ -167,6 +171,7 @@ public class MuteChatCommand extends Command implements TabExecutor {
             }
 
             PlayerCache.getMutedservers().add(server);
+            broadcastMuteChat(commandSource, server, true);
             commandSource.sendMessage(TextComponent.fromLegacy(BungeeMessages.MUTECHAT_ENABLED.color()
                     .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())
                     .replace("%user%", commandSource.getName())
@@ -177,6 +182,77 @@ public class MuteChatCommand extends Command implements TabExecutor {
         } else {
             commandSource.sendMessage(TextComponent.fromLegacy(BungeeMessages.MUTECHAT_USAGE.color()
                     .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())));
+        }
+    }
+
+    private void broadcastMuteChat(CommandSender commandSource, String server, boolean activated) {
+
+        String user_prefix = "";
+        String user_suffix = "";
+        if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
+            final LuckPerms api = LuckPermsProvider.get();
+            final User user = api.getUserManager().getUser(((ProxiedPlayer) commandSource).getUniqueId());
+            if (user == null) return;
+            final String prefix = user.getCachedData().getMetaData().getPrefix();
+            final String suffix = user.getCachedData().getMetaData().getSuffix();
+            user_prefix = prefix == null ? "" : prefix;
+            user_suffix = suffix == null ? "" : suffix;
+        } else if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {
+            final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissionsBungee.getAPI();
+            final UserList userList = ultraPermissionsAPI.getUsers();
+            if (!userList.uuid(((ProxiedPlayer) commandSource).getUniqueId()).isPresent()) return;
+            final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(((ProxiedPlayer) commandSource).getUniqueId()).get();
+            final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
+            final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
+            user_prefix = ultraPermissionsUserPrefix.orElse("");
+            user_suffix = ultraPermissionsUserSuffix.orElse("");
+        }
+
+        if (activated) {
+            if (server.equals("all")) {
+                for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+                    player.sendMessage(TextComponent.fromLegacy(BungeeMessages.MUTECHAT_ENABLED_BC.color()
+                            .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())
+                            .replace("%user%", commandSource.getName())
+                            .replace("%userprefix%", user_prefix)
+                            .replace("%usersuffix%", user_suffix)
+                            .replace("%server%", server)));
+                }
+            } else {
+                for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+                    if (player.getServer() == null) continue;
+                    if (!player.getServer().getInfo().getName().equals(server)) continue;
+                    player.sendMessage(TextComponent.fromLegacy(BungeeMessages.MUTECHAT_ENABLED_BC.color()
+                            .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())
+                            .replace("%user%", commandSource.getName())
+                            .replace("%userprefix%", user_prefix)
+                            .replace("%usersuffix%", user_suffix)
+                            .replace("%server%", server)));
+                }
+            }
+            return;
+        }
+
+        if (server.equals("all")) {
+            for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+                player.sendMessage(TextComponent.fromLegacy(BungeeMessages.MUTECHAT_DISABLED_BC.color()
+                        .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())
+                        .replace("%user%", commandSource.getName())
+                        .replace("%userprefix%", user_prefix)
+                        .replace("%usersuffix%", user_suffix)
+                        .replace("%server%", server)));
+            }
+        } else {
+            for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+                if (player.getServer() == null) continue;
+                if (!player.getServer().getInfo().getName().equals(server)) continue;
+                player.sendMessage(TextComponent.fromLegacy(BungeeMessages.MUTECHAT_DISABLED_BC.color()
+                        .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())
+                        .replace("%user%", commandSource.getName())
+                        .replace("%userprefix%", user_prefix)
+                        .replace("%usersuffix%", user_suffix)
+                        .replace("%server%", server)));
+            }
         }
     }
 

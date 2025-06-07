@@ -17,6 +17,11 @@ messages:
     mutechat_enabled: "%prefix% &7The globalchat has been &cmuted&7."
     mutechat_disabled: "%prefix% &7The globalchat has been &aunmuted&7."
 
+    # This message will be sent to all players connected to the server where globalchat is muted/unmuted.
+    # You can use %userprefix%, %usersuffix%, %user%, %server%.
+    mutechat_enabled_broadcast: "%prefix% &7The globalchat has been &cmuted &7by %user%."
+    mutechat_disabled_broadcast: "%prefix% &7The globalchat has been &cunmuted &7by %user%."
+
     # Only for BungeeCord or Velocity.
     server_not_found: "%prefix% &7The server you entered was &dnot found&7."
 

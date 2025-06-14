@@ -23,6 +23,10 @@ settings:
 
   globalchat:
 
+    # When this is enabled, the alert on globalchat mute/unmute is sent to all players.
+    # When this is disabled, the alert will be sent only to staff members.
+    send_broadcast_to_all: true
+
     # You can customise permissions.
     global_mutechat_permission: "globalchat.mute"
     global_mutechat_all_permission: "globalchat.mute.all"

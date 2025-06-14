@@ -15,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +50,7 @@ public class MuteChatCommand extends CommandBase {
             } else if (plugin.getServer().getPluginManager().getPlugin("UltraPermissions") != null && commandSource instanceof Player) {
                 final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();
-                if (!userList.uuid(((Player) commandSource).getUniqueId()).isPresent()) return false;
+                if (userList.uuid(((Player) commandSource).getUniqueId()).isEmpty()) return false;
                 final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(((Player) commandSource).getUniqueId()).get();
                 final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
                 final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
@@ -96,8 +97,12 @@ public class MuteChatCommand extends CommandBase {
             user_suffix = suffix == null ? "" : suffix;
         }
 
+        Collection<? extends Player> players;
+        if (SpigotConfig.MUTECHAT_BC_ALL.get(Boolean.class)) players = plugin.getServer().getOnlinePlayers();
+        else players = plugin.getServer().getOnlinePlayers().stream().filter(player -> player.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)) && !(PlayerCache.getToggled().contains(player.getUniqueId()))).toList();
+
         if (activated) {
-            for (Player player : plugin.getServer().getOnlinePlayers()) {
+            for (Player player : players) {
                 player.sendMessage((SpigotMessages.MUTECHAT_ENABLED_BC.color()
                         .replace("%prefix%", SpigotMessages.GLOBALPREFIX.color())
                         .replace("%userprefix%", user_prefix)
@@ -107,7 +112,7 @@ public class MuteChatCommand extends CommandBase {
             return;
         }
 
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
+        for (Player player : players) {
             player.sendMessage((SpigotMessages.MUTECHAT_DISABLED_BC.color()
                     .replace("%prefix%", SpigotMessages.GLOBALPREFIX.color())
                     .replace("%userprefix%", user_prefix)

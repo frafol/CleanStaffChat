@@ -22,6 +22,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.internal.utils.JDALogger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.entity.Player;
@@ -239,6 +240,7 @@ public class CleanStaffChat extends JavaPlugin {
     public void startJDA() {
         if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
             try {
+                JDALogger.setFallbackLoggerEnabled(false);
                 jda = JDABuilder.createDefault(SpigotDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
             } catch (ExceptionInInitializerError e) {
                 getLogger().severe("Invalid Discord configuration, please check your discord.yml file.");

@@ -16,9 +16,12 @@ import net.luckperms.api.model.user.User;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+
+import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.instance;
 
 public class MuteChatCommand implements SimpleCommand {
 
@@ -181,6 +184,9 @@ public class MuteChatCommand implements SimpleCommand {
 
         String user_prefix = "";
         String user_suffix = "";
+        String playerName = "";
+        if (commandSource instanceof Player) playerName = ((Player) commandSource).getUsername();
+        else playerName = "Console";
         if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms") && commandSource instanceof Player) {
             final LuckPerms api = LuckPermsProvider.get();
             final User user = api.getUserManager().getUser(((Player) commandSource).getUniqueId());
@@ -191,24 +197,29 @@ public class MuteChatCommand implements SimpleCommand {
             user_suffix = suffix == null ? "" : suffix;
         }
 
+        Collection<Player> players = null;
+        if (VelocityConfig.MUTECHAT_BC_ALL.get(Boolean.class)) players = PLUGIN.getServer().getAllPlayers();
+        if (!VelocityConfig.MUTECHAT_BC_ALL.get(Boolean.class)) players = PLUGIN.getServer().getAllPlayers().stream().filter(player -> player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class)) && !(PlayerCache.getToggled().contains(player.getUniqueId())) && !instance.isInBlockedStaffChatServer(player)).toList();
+        if (players == null) return;
+
         if (activated) {
             if (server.equals("all")) {
-                for (Player player : PLUGIN.getServer().getAllPlayers()) {
-                    VelocityMessages.MUTECHAT_ENABLED_BC.send(commandSource,
+                for (Player player : players) {
+                    VelocityMessages.MUTECHAT_ENABLED_BC.send(player,
                             new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()),
                             new Placeholder("userprefix", user_prefix),
-                            new Placeholder("user", player.getUsername()),
+                            new Placeholder("user", playerName),
                             new Placeholder("usersuffix", user_suffix),
                             new Placeholder("server", server));
                 }
             } else {
-                for (Player player : PLUGIN.getServer().getAllPlayers()) {
+                for (Player player : players) {
                     if (player.getCurrentServer().isEmpty()) continue;
                     if (!player.getCurrentServer().get().getServerInfo().getName().equals(server)) continue;
-                    VelocityMessages.MUTECHAT_ENABLED_BC.send(commandSource,
+                    VelocityMessages.MUTECHAT_ENABLED_BC.send(player,
                             new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()),
                             new Placeholder("userprefix", user_prefix),
-                            new Placeholder("user", player.getUsername()),
+                            new Placeholder("user", playerName),
                             new Placeholder("usersuffix", user_suffix),
                             new Placeholder("server", server));
                 }
@@ -217,22 +228,22 @@ public class MuteChatCommand implements SimpleCommand {
         }
 
         if (server.equals("all")) {
-            for (Player player : PLUGIN.getServer().getAllPlayers()) {
-                VelocityMessages.MUTECHAT_DISABLED_BC.send(commandSource,
+            for (Player player : players) {
+                VelocityMessages.MUTECHAT_DISABLED_BC.send(player,
                         new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()),
                         new Placeholder("userprefix", user_prefix),
-                        new Placeholder("user", player.getUsername()),
+                        new Placeholder("user", playerName),
                         new Placeholder("usersuffix", user_suffix),
                         new Placeholder("server", server));
             }
         } else {
-            for (Player player : PLUGIN.getServer().getAllPlayers()) {
+            for (Player player : players) {
                 if (player.getCurrentServer().isEmpty()) continue;
                 if (!player.getCurrentServer().get().getServerInfo().getName().equals(server)) continue;
-                VelocityMessages.MUTECHAT_DISABLED_BC.send(commandSource,
+                VelocityMessages.MUTECHAT_DISABLED_BC.send(player,
                         new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()),
                         new Placeholder("userprefix", user_prefix),
-                        new Placeholder("user", player.getUsername()),
+                        new Placeholder("user", playerName),
                         new Placeholder("usersuffix", user_suffix),
                         new Placeholder("server", server));
             }

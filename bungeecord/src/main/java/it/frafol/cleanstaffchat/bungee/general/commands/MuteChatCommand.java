@@ -19,10 +19,7 @@ import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class MuteChatCommand extends Command implements TabExecutor {
 
@@ -55,7 +52,7 @@ public class MuteChatCommand extends Command implements TabExecutor {
             } else if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null && commandSource instanceof ProxiedPlayer) {
                 final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissionsBungee.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();
-                if (!userList.uuid(((ProxiedPlayer) commandSource).getUniqueId()).isPresent()) return;
+                if (userList.uuid(((ProxiedPlayer) commandSource).getUniqueId()).isEmpty()) return;
                 final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(((ProxiedPlayer) commandSource).getUniqueId()).get();
                 final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
                 final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
@@ -105,7 +102,7 @@ public class MuteChatCommand extends Command implements TabExecutor {
             } else if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {
                 final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissionsBungee.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();
-                if (!userList.uuid(((ProxiedPlayer) commandSource).getUniqueId()).isPresent()) return;
+                if (userList.uuid(((ProxiedPlayer) commandSource).getUniqueId()).isEmpty()) return;
                 final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(((ProxiedPlayer) commandSource).getUniqueId()).get();
                 final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
                 final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
@@ -200,7 +197,7 @@ public class MuteChatCommand extends Command implements TabExecutor {
         } else if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {
             final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissionsBungee.getAPI();
             final UserList userList = ultraPermissionsAPI.getUsers();
-            if (!userList.uuid(((ProxiedPlayer) commandSource).getUniqueId()).isPresent()) return;
+            if (userList.uuid(((ProxiedPlayer) commandSource).getUniqueId()).isEmpty()) return;
             final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(((ProxiedPlayer) commandSource).getUniqueId()).get();
             final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
             final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
@@ -208,9 +205,13 @@ public class MuteChatCommand extends Command implements TabExecutor {
             user_suffix = ultraPermissionsUserSuffix.orElse("");
         }
 
+        Collection<ProxiedPlayer> players;
+        if (BungeeConfig.MUTECHAT_BC_ALL.get(Boolean.class)) players = ProxyServer.getInstance().getPlayers();
+        else players = CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter(player -> player.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class)) && !(PlayerCache.getToggled().contains(player.getUniqueId())) && !CleanStaffChat.getInstance().isInBlockedStaffChatServer(player)).toList();
+
         if (activated) {
             if (server.equals("all")) {
-                for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+                for (ProxiedPlayer player : players) {
                     player.sendMessage(TextComponent.fromLegacy(BungeeMessages.MUTECHAT_ENABLED_BC.color()
                             .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())
                             .replace("%user%", commandSource.getName())
@@ -219,7 +220,7 @@ public class MuteChatCommand extends Command implements TabExecutor {
                             .replace("%server%", server)));
                 }
             } else {
-                for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+                for (ProxiedPlayer player : players) {
                     if (player.getServer() == null) continue;
                     if (!player.getServer().getInfo().getName().equals(server)) continue;
                     player.sendMessage(TextComponent.fromLegacy(BungeeMessages.MUTECHAT_ENABLED_BC.color()
@@ -234,7 +235,7 @@ public class MuteChatCommand extends Command implements TabExecutor {
         }
 
         if (server.equals("all")) {
-            for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+            for (ProxiedPlayer player : players) {
                 player.sendMessage(TextComponent.fromLegacy(BungeeMessages.MUTECHAT_DISABLED_BC.color()
                         .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())
                         .replace("%user%", commandSource.getName())
@@ -243,7 +244,7 @@ public class MuteChatCommand extends Command implements TabExecutor {
                         .replace("%server%", server)));
             }
         } else {
-            for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+            for (ProxiedPlayer player : players) {
                 if (player.getServer() == null) continue;
                 if (!player.getServer().getInfo().getName().equals(server)) continue;
                 player.sendMessage(TextComponent.fromLegacy(BungeeMessages.MUTECHAT_DISABLED_BC.color()

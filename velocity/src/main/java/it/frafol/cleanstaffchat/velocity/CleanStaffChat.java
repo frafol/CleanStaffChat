@@ -31,6 +31,7 @@ import lombok.SneakyThrows;
 import net.byteflux.libby.Library;
 import net.byteflux.libby.VelocityLibraryManager;
 import net.byteflux.libby.relocation.Relocation;
+import net.dv8tion.jda.internal.utils.JDALogger;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.slf4j.Logger;
 import ru.vyarus.yaml.updater.YamlUpdater;
@@ -267,6 +268,7 @@ public class CleanStaffChat {
 
     public void startJDA() {
         if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            JDALogger.setFallbackLoggerEnabled(false);
             jda = new JdaBuilder();
             jda.startJDA();
             updateJDATask();
@@ -276,7 +278,7 @@ public class CleanStaffChat {
 
     private void UpdateChecker() {
 
-        if (!container.getDescription().getVersion().isPresent()) {
+        if (container.getDescription().getVersion().isEmpty()) {
             return;
         }
 
@@ -389,6 +391,7 @@ public class CleanStaffChat {
         }
 
         final String[] aliases_stafflist = VelocityCommandsConfig.STAFFLIST.getStringList().toArray(new String[0]);
+        if (aliases_stafflist.length == 0) return;
 
         server.getCommandManager().register(server.getCommandManager()
                 .metaBuilder(VelocityCommandsConfig.STAFFLIST.getStringList().get(0))
@@ -565,17 +568,18 @@ public class CleanStaffChat {
             return;
         }
 
+        String activity = VelocityDiscordConfig.DISCORD_ACTIVITY.get(String.class);
+        if (activity.isEmpty()) activity = "null";
+
         if (isPremiumVanish()) {
             jda.getJda().getPresence().setActivity(net.dv8tion.jda.api.entities.Activity.of(net.dv8tion.jda.api.entities.Activity.ActivityType.valueOf
-                            (VelocityDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
-                    VelocityDiscordConfig.DISCORD_ACTIVITY.get(String.class)
+                            (VelocityDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()), activity
                             .replace("%players%", String.valueOf(server.getAllPlayers().size() - VanishUtil.getVanishedPlayers().size()))));
             return;
         }
 
         jda.getJda().getPresence().setActivity(net.dv8tion.jda.api.entities.Activity.of(net.dv8tion.jda.api.entities.Activity.ActivityType.valueOf
-                        (VelocityDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
-                VelocityDiscordConfig.DISCORD_ACTIVITY.get(String.class)
+                        (VelocityDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()), activity
                         .replace("%players%", String.valueOf(server.getAllPlayers().size()))));
     }
 

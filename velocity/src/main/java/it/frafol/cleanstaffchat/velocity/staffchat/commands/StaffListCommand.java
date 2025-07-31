@@ -126,17 +126,10 @@ public class StaffListCommand implements SimpleCommand {
         } else for (UUID uuids : list) {
 
             Player players = PLUGIN.getServer().getPlayer(uuids).orElse(null);
-
-            if (players == null) {
-                continue;
-            }
-
+            if (players == null) continue;
             User user = api.getUserManager().getUser(players.getUniqueId());
 
-            if (user == null) {
-                continue;
-            }
-
+            if (user == null) continue;
             final String prefix = user.getCachedData().getMetaData().getPrefix();
             final String suffix = user.getCachedData().getMetaData().getSuffix();
             Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
@@ -152,22 +145,13 @@ public class StaffListCommand implements SimpleCommand {
 
             if (group == null || group.getDisplayName() == null) {
 
-                if (prefix != null) {
-                    user_prefix = prefix;
-                } else {
-                    user_prefix = "";
-                }
+                if (prefix != null) user_prefix = prefix;
+                else user_prefix = "";
 
-                if (suffix != null) {
-                    user_suffix = suffix;
-                } else {
-                    user_suffix = "";
-                }
+                if (suffix != null) user_suffix = suffix;
+                else user_suffix = "";
 
-                if (!players.getCurrentServer().isPresent()) {
-                    continue;
-                }
-
+                if (players.getCurrentServer().isEmpty()) continue;
                 VelocityMessages.LIST_FORMAT.send(invocation.source(),
                         new Placeholder("prefix", VelocityMessages.PREFIX.color()),
                         new Placeholder("userprefix", ChatUtil.translateHex(user_prefix)),
@@ -182,10 +166,7 @@ public class StaffListCommand implements SimpleCommand {
             user_prefix = prefix == null ? group.getDisplayName() : prefix;
             user_suffix = suffix == null ? group.getDisplayName() : suffix;
 
-            if (!players.getCurrentServer().isPresent()) {
-                continue;
-            }
-
+            if (players.getCurrentServer().isEmpty()) continue;
             VelocityMessages.LIST_FORMAT.send(invocation.source(),
                     new Placeholder("prefix", VelocityMessages.PREFIX.color()),
                     new Placeholder("userprefix", ChatUtil.translateHex(user_prefix)),
@@ -193,7 +174,6 @@ public class StaffListCommand implements SimpleCommand {
                     new Placeholder("afk", isAFK),
                     new Placeholder("player", players.getUsername()),
                     new Placeholder("server", players.getCurrentServer().get().getServerInfo().getName()));
-
         }
 
         VelocityMessages.LIST_FOOTER.send(invocation.source(),
@@ -208,10 +188,7 @@ public class StaffListCommand implements SimpleCommand {
         for (UUID uuids : list) {
 
             User user = api.getUserManager().getUser(uuids);
-
-            if (user == null) {
-                continue;
-            }
+            if (user == null) continue;
 
             final String prefix = user.getCachedData().getMetaData().getPrefix();
             final String suffix = user.getCachedData().getMetaData().getSuffix();
@@ -228,22 +205,14 @@ public class StaffListCommand implements SimpleCommand {
 
             if (group == null || group.getDisplayName() == null) {
 
-                if (prefix != null) {
-                    user_prefix = prefix;
-                } else {
-                    user_prefix = "";
-                }
+                if (prefix != null) user_prefix = prefix;
+                else user_prefix = "";
 
-                if (suffix != null) {
-                    user_suffix = suffix;
-                } else {
-                    user_suffix = "";
-                }
 
-                if (redisApi.getServerFor(uuids) == null || redisApi.getNameFromUuid(uuids) == null || redisApi.getServerNameFor(uuids) == null) {
-                    continue;
-                }
+                if (suffix != null) user_suffix = suffix;
+                else user_suffix = "";
 
+                if (redisApi.getServerFor(uuids) == null || redisApi.getNameFromUuid(uuids) == null || redisApi.getServerNameFor(uuids) == null) continue;
                 VelocityMessages.LIST_FORMAT.send(invocation.source(),
                         new Placeholder("prefix", VelocityMessages.PREFIX.color()),
                         new Placeholder("userprefix", ChatUtil.translateHex(user_prefix)),
@@ -251,7 +220,6 @@ public class StaffListCommand implements SimpleCommand {
                         new Placeholder("afk", isAFK),
                         new Placeholder("player", redisApi.getNameFromUuid(uuids)),
                         new Placeholder("server", redisApi.getServerNameFor(uuids)));
-
                 continue;
             }
 
@@ -276,26 +244,14 @@ public class StaffListCommand implements SimpleCommand {
         List<UUID> list = Lists.newArrayList();
         final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
         for (UUID players : redisBungeeAPI.getPlayersOnline()) {
-
             LuckPerms api = LuckPermsProvider.get();
-            User user = api.getUserManager().getUser(players);
-
-            if (user == null) {
+            User user = api.getUserManager().loadUser(players).join();
+            if (user == null) continue;
+            if (!user.getCachedData().getPermissionData().checkPermission(VelocityConfig.STAFFLIST_SHOW_PERMISSION.get(String.class)).asBoolean())
                 continue;
-            }
-
-            if (!user.getCachedData().getPermissionData().checkPermission(VelocityConfig.STAFFLIST_SHOW_PERMISSION.get(String.class)).asBoolean()) {
+            if (VelocityConfig.STAFFLIST_BYPASS.get(Boolean.class) && user.getCachedData().getPermissionData().checkPermission(VelocityConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class)).asBoolean())
                 continue;
-            }
-
-            if (VelocityConfig.STAFFLIST_BYPASS.get(Boolean.class) && user.getCachedData().getPermissionData().checkPermission(VelocityConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class)).asBoolean()) {
-                continue;
-            }
-
-            if (PLUGIN.isPremiumVanish() && VelocityVanishAPI.getInvisiblePlayers().contains(players)) {
-                continue;
-            }
-
+            if (PLUGIN.isPremiumVanish() && VelocityVanishAPI.getInvisiblePlayers().contains(players)) continue;
             list.add(players);
         }
         return list;

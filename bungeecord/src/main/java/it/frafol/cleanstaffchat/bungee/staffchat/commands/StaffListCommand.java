@@ -428,33 +428,17 @@ public class StaffListCommand extends Command {
 
             if (plugin.getProxy().getPluginManager().getPlugin("LuckPerms") != null) {
                 LuckPerms api = LuckPermsProvider.get();
-                User user = api.getUserManager().getUser(players);
-
-                if (user == null) {
-                    continue;
-                }
-
-                if (!user.getCachedData().getPermissionData().checkPermission(BungeeConfig.STAFFLIST_SHOW_PERMISSION.get(String.class)).asBoolean()) {
-                    continue;
-                }
-
-                if (BungeeConfig.STAFFLIST_BYPASS.get(Boolean.class) && user.getCachedData().getPermissionData().checkPermission(BungeeConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class)).asBoolean()) {
-                    continue;
-                }
-
-                if (plugin.isPremiumVanish() && BungeeVanishAPI.getInvisiblePlayers().contains(players)) {
-                    continue;
-                }
-
+                User user = api.getUserManager().loadUser(players).join();
+                if (user == null) continue;
+                if (!user.getCachedData().getPermissionData().checkPermission(BungeeConfig.STAFFLIST_SHOW_PERMISSION.get(String.class)).asBoolean()) continue;
+                if (BungeeConfig.STAFFLIST_BYPASS.get(Boolean.class) && user.getCachedData().getPermissionData().checkPermission(BungeeConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class)).asBoolean()) continue;
+                if (plugin.isPremiumVanish() && BungeeVanishAPI.getInvisiblePlayers().contains(players)) continue;
                 list.add(players);
                 continue;
             }
 
             UltraPermissionsAPI api = UltraPermissionsBungee.getAPI();
-
-            if (!api.getUsers().uuid(players).isPresent()) {
-                continue;
-            }
+            if (api.getUsers().uuid(players).isEmpty()) continue;
 
             me.TechsCode.UltraPermissions.storage.objects.User user = api.getUsers().uuid(players).get();
             boolean hasShowPermission = false;

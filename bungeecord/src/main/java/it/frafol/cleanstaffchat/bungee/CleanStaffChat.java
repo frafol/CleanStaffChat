@@ -234,7 +234,7 @@ public class CleanStaffChat extends Plugin {
         if (BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
 
             try {
-                JDALogger.setFallbackLoggerEnabled(false);
+                disableFallbackLogger();
                 jda = JDABuilder.createDefault(BungeeDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
             } catch (ExceptionInInitializerError e) {
                 getLogger().severe("Invalid Discord configuration, please check your discord.yml file.");
@@ -244,6 +244,12 @@ public class CleanStaffChat extends Plugin {
             updateJDATask();
             getLogger().info("§7Hooked into Discord §dsuccessfully§7!");
         }
+    }
+
+    private void disableFallbackLogger() {
+        try {
+            JDALogger.setFallbackLoggerEnabled(false);
+        } catch (NoSuchMethodError ignored) {}
     }
 
     private void UpdateChecker() {

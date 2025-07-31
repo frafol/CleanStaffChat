@@ -240,7 +240,7 @@ public class CleanStaffChat extends JavaPlugin {
     public void startJDA() {
         if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
             try {
-                JDALogger.setFallbackLoggerEnabled(false);
+                disableFallbackLogger();
                 jda = JDABuilder.createDefault(SpigotDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
             } catch (ExceptionInInitializerError e) {
                 getLogger().severe("Invalid Discord configuration, please check your discord.yml file.");
@@ -248,6 +248,12 @@ public class CleanStaffChat extends JavaPlugin {
             updateJDATask();
             getLogger().info("Hooked into Discord successfully!");
         }
+    }
+
+    private void disableFallbackLogger() {
+        try {
+            JDALogger.setFallbackLoggerEnabled(false);
+        } catch (NoSuchMethodError ignored) {}
     }
 
     private void UpdateChecker() {

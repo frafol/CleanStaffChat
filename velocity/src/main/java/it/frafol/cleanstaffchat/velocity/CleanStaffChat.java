@@ -235,9 +235,9 @@ public class CleanStaffChat {
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("5.3.2")
+                .version("5.5.1")
                 .relocate(kotlin)
-                .url("https://github.com/discord-jda/JDA/releases/download/v5.3.2/JDA-5.3.2-withDependencies-min.jar")
+                .url("https://github.com/discord-jda/JDA/releases/download/v5.5.1/JDA-5.5.1-withDependencies-min.jar")
                 .build();
 
         velocityLibraryManager.addMavenCentral();
@@ -268,12 +268,18 @@ public class CleanStaffChat {
 
     public void startJDA() {
         if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-            JDALogger.setFallbackLoggerEnabled(false);
+            removeFallbackLogger();
             jda = new JdaBuilder();
             jda.startJDA();
             updateJDATask();
             getLogger().info("Hooked into Discord successfully!");
         }
+    }
+
+    private void removeFallbackLogger() {
+        try {
+            JDALogger.setFallbackLoggerEnabled(false);
+        } catch (NoSuchMethodError ignored) {}
     }
 
     private void UpdateChecker() {

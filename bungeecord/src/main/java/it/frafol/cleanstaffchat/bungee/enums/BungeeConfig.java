@@ -71,6 +71,14 @@ public enum BungeeConfig {
     ADMINCHAT_TOGGLE_MODULE("modules.adminchat_toggle_module"),
     DONORCHAT_TOGGLE_MODULE("modules.donorchat_toggle_module"),
 
+    STAFFCHAT_PREFIX_MODULE("modules.staffchat_toggle_module"),
+    ADMINCHAT_PREFIX_MODULE("modules.adminchat_toggle_module"),
+    DONORCHAT_PREFIX_MODULE("modules.donorchat_toggle_module"),
+
+    STAFFCHAT_PREFIX("settings.staffchat.staffchat_prefix"),
+    ADMINCHAT_PREFIX("settings.adminchat.adminchat_prefix"),
+    DONORCHAT_PREFIX("settings.donorchat.donorchat_prefix"),
+
     STAFFCHAT_RELOAD_PERMISSION("settings.reload_permission"),
 
     CONSOLE_CAN_TALK("settings.console_staffchat"),

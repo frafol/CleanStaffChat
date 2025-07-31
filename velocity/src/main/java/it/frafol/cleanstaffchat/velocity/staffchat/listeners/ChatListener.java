@@ -41,9 +41,151 @@ public class ChatListener extends ListenerAdapter {
     @Subscribe
     public void onChat(PlayerChatEvent event) {
 
-        final String message = event.getMessage();
-        final String sender = event.getPlayer().getUsername();
+        String sender = event.getPlayer().getUsername();
 
+        if (STAFFCHAT_PREFIX_MODULE.get(Boolean.class) && event.getMessage().startsWith(STAFFCHAT_PREFIX.get(String.class))) {
+            final String message = event.getMessage().substring(1);
+            if (!event.getPlayer().hasPermission(STAFFCHAT_USE_PERMISSION.get(String.class))) return;
+            if (!PlayerCache.getMuted().contains("true")) {
+                if (PREVENT_COLOR_CODES.get(Boolean.class)) {
+                    if (ChatUtil.hasColorCodes(message)) {
+                        VelocityMessages.COLOR_CODES.send(event.getPlayer(),
+                                new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+                        return;
+                    }
+                }
+
+                if (event.getPlayer().getCurrentServer().isEmpty()) return;
+                if (VelocityServers.STAFFCHAT_ENABLE.get(Boolean.class)) {
+                    for (String server : VelocityServers.SC_BLOCKED_SRV.getStringList()) {
+                        if (event.getPlayer().getCurrentServer().get().getServer().getServerInfo().getName().equalsIgnoreCase(server)) {
+                            event.setResult(PlayerChatEvent.ChatResult.denied());
+                            ChatUtil.sendChannelMessage(event.getPlayer(), false);
+                            VelocityMessages.STAFFCHAT_MUTED_ERROR.send(event.getPlayer(), new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+                            return;
+                        }
+                    }
+                }
+
+                if (!VelocityConfig.DOUBLE_MESSAGE.get(Boolean.class)) {
+                    event.setResult(PlayerChatEvent.ChatResult.denied());
+                }
+
+                if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
+
+                    LuckPerms api = LuckPermsProvider.get();
+                    User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
+                    if (user == null) {
+                        return;
+                    }
+
+                    final String prefix = user.getCachedData().getMetaData().getPrefix();
+                    final String suffix = user.getCachedData().getMetaData().getSuffix();
+                    final String user_prefix = prefix == null ? "" : prefix;
+                    final String user_suffix = suffix == null ? "" : suffix;
+
+                    if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class))  {
+                        final String final_message = VelocityMessages.STAFFCHAT_FORMAT.get(String.class)
+                                .replace("%user%", sender)
+                                .replace("%message%", message)
+                                .replace("%displayname%", ChatUtil.translateHex(user_prefix) + sender + ChatUtil.translateHex(user_suffix))
+                                .replace("%userprefix%", ChatUtil.translateHex(user_prefix))
+                                .replace("%usersuffix%", ChatUtil.translateHex(user_suffix))
+                                .replace("%server%", event.getPlayer().getCurrentServer().get().getServer().getServerInfo().getName())
+                                .replace("%prefix%", VelocityMessages.PREFIX.color())
+                                .replace("&", "§");
+                        final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+                        redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffMessage-RedisBungee", final_message);
+                        return;
+                    }
+
+                    CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+                                    (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                            && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                            && !instance.isInBlockedStaffChatServer(players))
+                            .forEach(players -> VelocityMessages.STAFFCHAT_FORMAT.send(players,
+                                    new Placeholder("user", sender),
+                                    new Placeholder("message", message),
+                                    new Placeholder("displayname", ChatUtil.translateHex(user_prefix) + sender + ChatUtil.translateHex(user_suffix)),
+                                    new Placeholder("userprefix", ChatUtil.translateHex(user_prefix)),
+                                    new Placeholder("usersuffix", ChatUtil.translateHex(user_suffix)),
+                                    new Placeholder("server", event.getPlayer().getCurrentServer().get().getServerInfo().getName()),
+                                    new Placeholder("prefix", VelocityMessages.PREFIX.color())));
+
+                } else {
+                    if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
+                        final String final_message = VelocityMessages.STAFFCHAT_FORMAT.get(String.class)
+                                .replace("%user%", sender)
+                                .replace("%message%", message)
+                                .replace("%displayname%", sender)
+                                .replace("%userprefix%", "")
+                                .replace("%usersuffix%", "")
+                                .replace("%server%", event.getPlayer().getCurrentServer().get().getServer().getServerInfo().getName())
+                                .replace("%prefix%", VelocityMessages.PREFIX.color())
+                                .replace("&", "§");
+                        final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+                        redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffMessage-RedisBungee", final_message);
+                        return;
+                    }
+
+                    CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+                                    (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                            && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                                            && !instance.isInBlockedStaffChatServer(players))
+                            .forEach(players -> VelocityMessages.STAFFCHAT_FORMAT.send(players,
+                                    new Placeholder("user", sender),
+                                    new Placeholder("message", message),
+                                    new Placeholder("displayname", sender),
+                                    new Placeholder("userprefix", ""),
+                                    new Placeholder("usersuffix", ""),
+                                    new Placeholder("server", event.getPlayer().getCurrentServer().get().getServerInfo().getName()),
+                                    new Placeholder("prefix", VelocityMessages.PREFIX.color())));
+
+                }
+
+                if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
+
+                    final TextChannel channel = PLUGIN.getJda().JdaWorker().getTextChannelById(VelocityDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
+
+                    if (channel == null) {
+                        return;
+                    }
+
+                    if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
+
+                        EmbedBuilder embed = new EmbedBuilder();
+
+                        embed.setTitle(VelocityDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
+
+                        embed.setDescription(VelocityMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                                .replace("%user%", sender)
+                                .replace("%message%", message)
+                                .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()));
+
+                        embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
+                        embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
+
+                        channel.sendMessageEmbeds(embed.build()).queue();
+
+                    } else {
+
+                        channel.sendMessageFormat(VelocityMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
+                                        .replace("%user%", sender)
+                                        .replace("%message%", message)
+                                        .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()))
+                                .queue();
+
+                    }
+                }
+
+            } else {
+                event.setResult(PlayerChatEvent.ChatResult.denied());
+                VelocityMessages.STAFFCHAT_MUTED_ERROR.send(event.getPlayer(),
+                        new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+            }
+        }
+
+        final String message = event.getMessage();
         if (PlayerCache.getToggled_2().contains(event.getPlayer().getUniqueId())) {
 
             if (event.getPlayer().hasPermission(STAFFCHAT_USE_PERMISSION.get(String.class))) {

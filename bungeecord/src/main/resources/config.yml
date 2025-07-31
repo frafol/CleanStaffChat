@@ -44,6 +44,8 @@ settings:
     staff_switch_all_players: false # By activating it, the staff will receive a message every time any player switch a server.
     staff_disable_afk_on_move: true # On Velocity and BungeeCord, this works when a player changes server.
 
+    staffchat_prefix: "#" # This is the symbol to be sent at the start of the message to send the message in staffchat, you can disable it by setting staffchat_prefix_module: false
+
     staff_join_silent: false # By activating it, the staff will not receive a message when another staff member with a permission enters the server.
     staff_quit_silent: false # By activating it, the staff will not receive a message when another staff member with a permission leaves the server.
     staff_switch_silent: false # By activating it, the staff will not receive a message when another staff member with a permission changes server. (Velocity and BungeeCord only)
@@ -59,6 +61,8 @@ settings:
 
   adminchat:
 
+    adminchat_prefix: "%" # This is the symbol to be sent at the start of the message to send the message in adminchat, you can disable it by setting adminchat_prefix_module: false
+
     # You can customise permissions.
     adminchat_use_permission: "adminchat.use"
     adminchat_mute_permission: "adminchat.mute"
@@ -66,6 +70,8 @@ settings:
     adminchat_afk_permission: "adminchat.afk"
 
   donorchat:
+
+    donorchat_prefix: "$" # This is the symbol to be sent at the start of the message to send the message in donorchat, you can disable it by setting donorchat_prefix_module: false
 
     # Cooldown in seconds, to disable set it to 0.
     cooldown: 30
@@ -131,6 +137,7 @@ modules:
   staffchat_talk_module: true
   staffchat_mute_module: true
   staffchat_toggle_module: true
+  staffchat_prefix_module: true
   staffchat_discord_module: true
   staffchat_discord_join_leave_module: true
   staffchat_discord_switch_module: true
@@ -141,6 +148,7 @@ modules:
   adminchat_talk_module: true
   adminchat_mute_module: true
   adminchat_toggle_module: true
+  adminchat_prefix_module: true
   adminchat_discord_module: true
 
   donorchat_switch_module: true
@@ -148,6 +156,7 @@ modules:
   donorchat_talk_module: true
   donorchat_mute_module: true
   donorchat_toggle_module: true
+  donorchat_prefix_module: true
   donorchat_discord_module: true
 
   stafflist_module: true

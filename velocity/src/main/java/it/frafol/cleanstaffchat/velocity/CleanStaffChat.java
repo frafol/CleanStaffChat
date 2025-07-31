@@ -631,7 +631,7 @@ public class CleanStaffChat {
     }
 
     private boolean getUnsignedVelocityAddon() {
-        return getServer().getPluginManager().isLoaded("unsignedvelocity");
+        return getServer().getPluginManager().isLoaded("unsignedvelocity") || getServer().getPluginManager().isLoaded("unsignedvelocity2");
     }
 
     private boolean getSignedVelocity() {

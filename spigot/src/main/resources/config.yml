@@ -161,4 +161,18 @@ modules:
 
   stafflist_module: true
 
+  # Are you getting kicked on BungeeCord when switching staffchat mode to globalchat mode?
+  # You have to activate this option to fix it, please follow these steps:
+  # 1. Add this plugin in Spigot and BungeeCord servers.
+  # 2. Activate this option in both servers (this option will disable all staffchat modules in Spigot also).
+  # 3. Your problem is now fixed.
+  kick_workaround: false
+
+  # Are you getting double messages on Velocity when talking in staffchat/adminchat/donorchat?
+  # You have to activate this option to fix it, please follow these steps:
+  # 1. Add this plugin in Spigot and Velocity servers.
+  # 2. Activate this option in both servers (this option will disable all staffchat modules in Spigot also).
+  # 3. Your problem is now fixed.
+  double_message_workaround: false
+
 # Enjoy.

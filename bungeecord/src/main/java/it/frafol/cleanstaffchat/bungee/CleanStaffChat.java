@@ -385,6 +385,10 @@ public class CleanStaffChat extends Plugin {
         }
 
         getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.staffchat.commands.StaffListCommand());
+
+        if (BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+            jda.addEventListener(new ChatListener(this));
+        }
     }
 
     private void registerStaffChat() {
@@ -400,7 +404,6 @@ public class CleanStaffChat extends Plugin {
         if (BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
             jda.addEventListener(new ChatListener(this));
         }
-
     }
 
     private void loadFiles() {

@@ -24,6 +24,7 @@ import it.frafol.cleanstaffchat.velocity.staffchat.commands.*;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.ChatListener;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.JoinListener;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.ServerListener;
+import it.frafol.cleanstaffchat.velocity.utils.BansUtil;
 import it.frafol.cleanstaffchat.velocity.utils.SwitchUtil;
 import it.frafol.cleanstaffchat.velocity.utils.VanishUtil;
 import lombok.Getter;
@@ -650,6 +651,19 @@ public class CleanStaffChat {
 
     public boolean getMiniPlaceholders() {
         return getServer().getPluginManager().isLoaded("miniplaceholders") && VelocityConfig.MINIPLACEHOLDERS.get(Boolean.class);
+    }
+    private boolean getLiteBans() {
+        return getServer().getPluginManager().isLoaded("litebans");
+    }
+
+    private boolean getLibertyBans() {
+        return getServer().getPluginManager().isLoaded("LibertyBans");
+    }
+
+    public boolean isMuted(Player player) {
+        if (getLiteBans()) return BansUtil.isLiteBansMuted(player.getUniqueId(), player.getRemoteAddress().toString());
+        if (getLibertyBans()) BansUtil.isLibertyBansMuted(player.getUniqueId());
+        return false;
     }
 
     private void loadChannelRegistrar() {

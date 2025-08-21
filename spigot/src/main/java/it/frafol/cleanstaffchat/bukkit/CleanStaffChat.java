@@ -4,6 +4,7 @@ import com.github.Anon8281.universalScheduler.UniversalScheduler;
 import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import it.frafol.cleanstaffchat.bukkit.enums.*;
+import it.frafol.cleanstaffchat.bukkit.objects.LibertyBansUtil;
 import it.frafol.cleanstaffchat.bukkit.objects.PluginMessageReceiver;
 import it.frafol.cleanstaffchat.bukkit.objects.TextFile;
 import it.frafol.cleanstaffchat.bukkit.staffchat.commands.CommandBase;
@@ -13,6 +14,7 @@ import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.ChatListener;
 import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.JoinListener;
 import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.ListChatListener;
 import it.frafol.cleanstaffchat.bukkit.staffchat.listeners.MoveListener;
+import litebans.api.Database;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.byteflux.libby.BukkitLibraryManager;
@@ -532,5 +534,19 @@ public class CleanStaffChat extends JavaPlugin {
 
     public boolean getMiniPlaceholders() {
         return getServer().getPluginManager().getPlugin("MiniPlaceholders") != null && SpigotConfig.MINIPLACEHOLDERS.get(Boolean.class);
+    }
+
+    private boolean getLiteBans() {
+        return getServer().getPluginManager().getPlugin("LiteBans") != null;
+    }
+
+    private boolean getLibertyBans() {
+        return getServer().getPluginManager().getPlugin("LibertyBans") != null;
+    }
+
+    public boolean isMuted(Player player) {
+        if (getLiteBans()) return Database.get().isPlayerMuted(player.getUniqueId(), player.getAddress().toString());
+        if (getLibertyBans()) LibertyBansUtil.isMuted(player.getUniqueId());
+        return false;
     }
 }

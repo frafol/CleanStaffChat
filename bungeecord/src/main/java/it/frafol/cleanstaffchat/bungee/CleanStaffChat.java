@@ -7,6 +7,7 @@ import it.frafol.cleanstaffchat.bungee.donorchat.commands.DonorChatCommand;
 import it.frafol.cleanstaffchat.bungee.enums.*;
 import it.frafol.cleanstaffchat.bungee.general.commands.MuteChatCommand;
 import it.frafol.cleanstaffchat.bungee.hooks.RedisListener;
+import it.frafol.cleanstaffchat.bungee.objects.LibertyBansUtil;
 import it.frafol.cleanstaffchat.bungee.objects.SwitchUtil;
 import it.frafol.cleanstaffchat.bungee.objects.TextFile;
 import it.frafol.cleanstaffchat.bungee.staffchat.commands.DebugCommand;
@@ -14,6 +15,7 @@ import it.frafol.cleanstaffchat.bungee.staffchat.commands.ReloadCommand;
 import it.frafol.cleanstaffchat.bungee.staffchat.listeners.ChatListener;
 import it.frafol.cleanstaffchat.bungee.staffchat.listeners.JoinListener;
 import it.frafol.cleanstaffchat.bungee.staffchat.listeners.ServerListener;
+import litebans.api.Database;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.byteflux.libby.BungeeLibraryManager;
@@ -213,6 +215,20 @@ public class CleanStaffChat extends Plugin {
         if (getSpicord) {
             getLogger().severe("Spicord found, this plugin is completely unsupported and you won't receive any support.");
         }
+    }
+
+    private boolean getLiteBans() {
+        return getProxy().getPluginManager().getPlugin("LiteBans") != null;
+    }
+
+    private boolean getLibertyBans() {
+        return getProxy().getPluginManager().getPlugin("LibertyBans") != null;
+    }
+
+    public boolean isMuted(ProxiedPlayer player) {
+        if (getLiteBans()) return Database.get().isPlayerMuted(player.getUniqueId(), player.getSocketAddress().toString());
+        if (getLibertyBans()) LibertyBansUtil.isMuted(player.getUniqueId());
+        return false;
     }
 
     @Override

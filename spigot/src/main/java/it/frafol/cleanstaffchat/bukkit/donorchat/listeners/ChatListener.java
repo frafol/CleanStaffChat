@@ -36,6 +36,10 @@ public class ChatListener extends ListenerAdapter implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
 
+        if (PLUGIN.isMuted(event.getPlayer())) {
+            return;
+        }
+
         if (SpigotConfig.DONORCHAT_PREFIX_MODULE.get(Boolean.class) && event.getMessage().startsWith(SpigotConfig.DONORCHAT_PREFIX.get(String.class))) {
             if (!event.getPlayer().hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))) return;
             final String message = event.getMessage().substring(1);

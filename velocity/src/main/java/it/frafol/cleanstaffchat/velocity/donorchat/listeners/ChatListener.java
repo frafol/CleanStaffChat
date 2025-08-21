@@ -35,6 +35,10 @@ public class ChatListener extends ListenerAdapter {
 
         final String sender = event.getPlayer().getUsername();
 
+        if (PLUGIN.isMuted(event.getPlayer())) {
+            return;
+        }
+
         if (DONORCHAT_PREFIX_MODULE.get(Boolean.class) && event.getMessage().startsWith(DONORCHAT_PREFIX.get(String.class))) {
             final String message = event.getMessage().substring(1);
             if (!event.getPlayer().hasPermission(DONORCHAT_USE_PERMISSION.get(String.class))) return;

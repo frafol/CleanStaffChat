@@ -37,6 +37,10 @@ public class ChatListener extends ListenerAdapter implements Listener {
     @EventHandler
     public void onChat(ChatEvent event) {
 
+        if (PLUGIN.isMuted((ProxiedPlayer) event.getSender())) {
+            return;
+        }
+
         if (BungeeConfig.DONORCHAT_PREFIX_MODULE.get(Boolean.class) && event.getMessage().startsWith(BungeeConfig.DONORCHAT_PREFIX.get(String.class))) {
             final String message = event.getMessage().substring(1);
             if (!((ProxiedPlayer) event.getSender()).hasPermission(BungeeConfig.DONORCHAT_USE_PERMISSION.get(String.class))) return;

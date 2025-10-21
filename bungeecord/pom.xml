@@ -90,13 +90,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>1.21-R0.1</version>
-            <type>javadoc</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.github.proxiodev.redisbungee</groupId>
             <artifactId>RedisBungee-Bungee</artifactId>
             <version>0.12.6</version>
@@ -118,7 +111,8 @@
             <groupId>me.TechsCode</groupId>
             <artifactId>UltraPermissionsAPI</artifactId>
             <version>5.5.2</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/UltraPermissionsAPI-5.5.2.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.gitlab.ruany</groupId>

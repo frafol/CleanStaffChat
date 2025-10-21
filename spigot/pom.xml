@@ -97,14 +97,15 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>5.3.2</version>
+            <version>6.0.0-rc.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>me.TechsCode</groupId>
             <artifactId>UltraPermissionsAPI</artifactId>
             <version>5.5.2</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/UltraPermissionsAPI-5.5.2.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.spicord</groupId>
@@ -134,7 +135,8 @@
             <groupId>com.tchristofferson</groupId>
             <artifactId>ConfigUpdater</artifactId>
             <version>2.1-SNAPSHOT</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/ConfigUpdater-2.1-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>

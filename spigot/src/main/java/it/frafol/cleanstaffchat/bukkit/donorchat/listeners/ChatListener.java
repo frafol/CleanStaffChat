@@ -326,6 +326,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 .forEach(players -> players.sendMessage((SpigotMessages.DISCORD_DONOR_FORMAT.color()
                         .replace("%prefix%", SpigotMessages.DONORPREFIX.color())
                         .replace("%user%", event.getAuthor().getName())
+                        .replace("%username%", event.getAuthor().getEffectiveName())
                         .replace("%message%", event.getMessage().getContentDisplay())
                         .replace("&", "§"))));
 

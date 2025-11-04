@@ -62,7 +62,7 @@ messages:
 
     discord:
 
-      # Discord Chat Formats (You can use %user% and %message% only)
+      # Discord Chat Formats (You can use %user%, %username% (displays the name on the discord server) and %message% only)
       staffchat_discord_format: "%prefix% &7[&bDiscord&7] &7%user% &8» &7%message%"
       staffchat_to_discord_format: "%user% » %message%"
 
@@ -100,7 +100,7 @@ messages:
 
     discord:
 
-      # Discord Chat Format (You can use %user% and %message% only)
+      # Discord Chat Formats (You can use %user%, %username% (displays the name on the discord server) and %message% only)
       adminchat_discord_format: "%prefix% &7[&bDiscord&7] &7%user% &8» &7%message%"
       adminchat_to_discord_format: "%user% » %message%"
 
@@ -130,7 +130,7 @@ messages:
 
     discord:
 
-      # Discord Chat Format (You can use %user% and %message% only)
+      # Discord Chat Formats (You can use %user%, %username% (displays the name on the discord server) and %message% only)
       donorchat_discord_format: "%prefix% &7[&bDiscord&7] &7%user% &8» &7%message%"
       donorchat_to_discord_format: "%user% » %message%"
 

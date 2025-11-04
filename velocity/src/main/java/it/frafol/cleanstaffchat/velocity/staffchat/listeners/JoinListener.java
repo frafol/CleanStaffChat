@@ -33,7 +33,6 @@ public class JoinListener {
     }
 
     @Subscribe
-    @SuppressWarnings("UnstableApiUsage")
     public void handle(@NotNull ServerPostConnectEvent event) {
 
         if (event.getPreviousServer() != null) {
@@ -55,7 +54,7 @@ public class JoinListener {
             if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                     || STAFFCHAT_JOIN_LEAVE_ALL.get(Boolean.class)) {
 
-                if (!player.getCurrentServer().isPresent()) {
+                if (player.getCurrentServer().isEmpty()) {
                     return;
                 }
 
@@ -189,7 +188,7 @@ public class JoinListener {
         PlayerCache.getAfk().remove(player.getUniqueId());
         PlayerCache.getStaffers().remove(player.getUniqueId());
 
-        if (!player.getCurrentServer().isPresent()) {
+        if (player.getCurrentServer().isEmpty()) {
             return;
         }
 

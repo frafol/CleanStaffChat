@@ -399,6 +399,7 @@ public class ChatListener extends ListenerAdapter {
 
             final String final_message = VelocityMessages.DISCORD_ADMIN_FORMAT.get(String.class)
                     .replace("%user%", event.getAuthor().getName())
+                    .replace("%username%", event.getAuthor().getEffectiveName())
                     .replace("%message%", event.getMessage().getContentDisplay())
                     .replace("%prefix%", VelocityMessages.ADMINPREFIX.color())
                     .replace("&", "§");
@@ -413,6 +414,7 @@ public class ChatListener extends ListenerAdapter {
                                     && !instance.isInBlockedAdminChatServer(players))
                     .forEach(players -> VelocityMessages.DISCORD_ADMIN_FORMAT.send(players,
                             new Placeholder("user", event.getAuthor().getName()),
+                            new Placeholder("username", event.getAuthor().getEffectiveName()),
                             new Placeholder("message", event.getMessage().getContentDisplay()),
                             new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color())));
         }

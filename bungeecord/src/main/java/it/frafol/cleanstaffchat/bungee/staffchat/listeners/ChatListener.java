@@ -494,6 +494,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
             final String final_message = BungeeMessages.DISCORD_STAFF_FORMAT.get(String.class)
                     .replace("%user%", event.getAuthor().getName())
+                    .replace("%username%", event.getAuthor().getEffectiveName())
                     .replace("%message%", event.getMessage().getContentDisplay())
                     .replace("%prefix%", BungeeMessages.PREFIX.color())
                     .replace("&", "§");
@@ -508,6 +509,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                     .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.DISCORD_STAFF_FORMAT.color()
                             .replace("%prefix%", BungeeMessages.PREFIX.color())
                             .replace("%user%", event.getAuthor().getName())
+                            .replace("%username%", event.getAuthor().getEffectiveName())
                             .replace("%message%", event.getMessage().getContentDisplay()))));
         }
     }

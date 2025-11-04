@@ -466,6 +466,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
             final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
             final String final_message = BungeeMessages.DISCORD_ADMIN_FORMAT.get(String.class)
                     .replace("%user%", event.getAuthor().getName())
+                    .replace("%username%", event.getAuthor().getEffectiveName())
                     .replace("%message%", event.getMessage().getContentDisplay())
                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                     .replace("&", "§");
@@ -481,6 +482,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                     .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.DISCORD_ADMIN_FORMAT.color()
                             .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                             .replace("%user%", event.getAuthor().getName())
+                            .replace("%username%", event.getAuthor().getEffectiveName())
                             .replace("%message%", event.getMessage().getContentDisplay()))));
         }
     }

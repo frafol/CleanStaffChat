@@ -50,12 +50,10 @@ public class ChatUtil {
 
     public String color(@NotNull Player p, @NotNull String s) {
         if (instance.getMiniPlaceholders()) {
-            TagResolver resolver = MiniPlaceholders.getAudiencePlaceholders(p);
-            Component parsedMessage = MiniMessage.miniMessage().deserialize(s, resolver);
-            s = LegacyComponentSerializer.legacyAmpersand().serialize(parsedMessage);
-            TagResolver globalResolver = MiniPlaceholders.getGlobalPlaceholders();
-            Component parsedGlobalMessage = MiniMessage.miniMessage().deserialize(s, globalResolver);
-            s = LegacyComponentSerializer.legacyAmpersand().serialize(parsedGlobalMessage);
+            MiniMessage miniMessage = MiniMessage.miniMessage();
+            TagResolver resolver = MiniPlaceholders.audiencePlaceholders();
+            Component component = miniMessage.deserialize(s, p, resolver);
+            s = component.toString();
         }
         return convertHexColors(s).replace("&", "§");
     }

@@ -90,6 +90,7 @@ public enum SpigotConfig {
     WORKAROUND_KICK("modules.kick_workaround"),
     DOUBLE_MESSAGE("modules.double_message_workaround"),
 
+    MINIMESSAGE("modules.minimessage_support"),
     MINIPLACEHOLDERS("modules.miniplaceholders_support"),
 
     UPDATE_CHECK("modules.update_check"),

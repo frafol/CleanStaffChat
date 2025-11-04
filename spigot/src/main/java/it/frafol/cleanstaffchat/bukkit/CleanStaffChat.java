@@ -25,6 +25,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.internal.utils.JDALogger;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.entity.Player;
@@ -548,5 +549,15 @@ public class CleanStaffChat extends JavaPlugin {
         if (getLiteBans()) return Database.get().isPlayerMuted(player.getUniqueId(), player.getAddress().toString());
         if (getLibertyBans()) LibertyBansUtil.isMuted(player.getUniqueId());
         return false;
+    }
+
+    public boolean supportsMiniMessage() {
+        try {
+            MiniMessage mm = MiniMessage.miniMessage();
+            mm.deserialize("supports");
+            return true;
+        } catch (Throwable e) {
+            return false;
+        }
     }
 }

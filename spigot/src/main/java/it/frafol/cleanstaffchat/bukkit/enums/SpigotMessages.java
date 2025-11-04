@@ -133,9 +133,7 @@ public enum SpigotMessages {
 
     public String color(Player player) {
         String hex = convertHexColors(get(String.class));
-        if (instance.getPAPI()) {
-            hex = PlaceholderAPI.setPlaceholders(player, hex);
-        }
+        if (instance.getPAPI()) hex = PlaceholderAPI.setPlaceholders(player, hex);
         if (instance.getMiniPlaceholders()) {
             TagResolver resolver = MiniPlaceholders.getAudiencePlaceholders((Audience) player);
             Component parsedMessage = MiniMessage.miniMessage().deserialize(hex, resolver);
@@ -148,6 +146,12 @@ public enum SpigotMessages {
     }
 
     private String convertHexColors(String message) {
+
+        if (instance.supportsMiniMessage() && SpigotConfig.MINIMESSAGE.get(Boolean.class)) {
+            MiniMessage miniMessage = MiniMessage.miniMessage();
+            Component component = miniMessage.deserialize(get(String.class));
+            return LegacyComponentSerializer.legacySection().serialize(component);
+        }
 
         if (!containsHexColor(message)) {
             return message;

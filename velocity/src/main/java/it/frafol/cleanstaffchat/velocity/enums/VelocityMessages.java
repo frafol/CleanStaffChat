@@ -4,6 +4,7 @@ import com.velocitypowered.api.command.CommandSource;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
@@ -137,6 +138,12 @@ public enum VelocityMessages {
     }
 
     private String convertHexColors(String message) {
+
+        if (VelocityConfig.MINIMESSAGE.get(Boolean.class)) {
+            MiniMessage miniMessage = MiniMessage.miniMessage();
+            Component component = miniMessage.deserialize(message);
+            return LegacyComponentSerializer.legacySection().serialize(component);
+        }
 
         if (!containsHexColor(message)) {
             return message;

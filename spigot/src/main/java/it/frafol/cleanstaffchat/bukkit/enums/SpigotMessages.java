@@ -9,6 +9,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -132,15 +133,15 @@ public enum SpigotMessages {
     }
 
     public String color(Player player) {
-        String hex = convertHexColors(get(String.class));
+        String hex = get(String.class);
         if (instance.getPAPI()) hex = PlaceholderAPI.setPlaceholders(player, hex);
         if (instance.getMiniPlaceholders()) {
             MiniMessage miniMessage = MiniMessage.miniMessage();
             TagResolver resolver = MiniPlaceholders.audiencePlaceholders();
             Component component = miniMessage.deserialize(hex, (Pointered) player, resolver);
-            hex = component.toString();
+            hex = LegacyComponentSerializer.legacySection().serialize(component);
         }
-        return hex.replace("&", "§");
+        return convertHexColors(hex);
     }
 
     private String convertHexColors(String message) {
@@ -148,7 +149,7 @@ public enum SpigotMessages {
         if (instance.supportsMiniMessage() && SpigotConfig.MINIMESSAGE.get(Boolean.class)) {
             MiniMessage miniMessage = MiniMessage.miniMessage();
             Component component = miniMessage.deserialize(get(String.class));
-            return LegacyComponentSerializer.legacySection().serialize(component);
+            message = LegacyComponentSerializer.legacySection().serialize(component);
         }
 
         if (!containsHexColor(message)) {
@@ -156,6 +157,11 @@ public enum SpigotMessages {
         }
 
         Pattern hexPattern = Pattern.compile("(#[A-Fa-f0-9]{6}|<#[A-Fa-f0-9]{6}>|&#[A-Fa-f0-9]{6})");
+        StringBuffer buffer = getStringBuffer(message, hexPattern);
+        return buffer.toString();
+    }
+
+    private @NotNull StringBuffer getStringBuffer(String message, Pattern hexPattern) {
         Matcher matcher = hexPattern.matcher(message);
         StringBuffer buffer = new StringBuffer();
         while (matcher.find()) {
@@ -170,7 +176,7 @@ public enum SpigotMessages {
             matcher.appendReplacement(buffer, minecraftColorCode);
         }
         matcher.appendTail(buffer);
-        return buffer.toString();
+        return buffer;
     }
 
     private String translateHexToMinecraftColorCode(String hex) {

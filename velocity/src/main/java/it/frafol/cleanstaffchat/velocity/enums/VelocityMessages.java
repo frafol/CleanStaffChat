@@ -142,7 +142,7 @@ public enum VelocityMessages {
         if (VelocityConfig.MINIMESSAGE.get(Boolean.class)) {
             MiniMessage miniMessage = MiniMessage.miniMessage();
             Component component = miniMessage.deserialize(message);
-            return LegacyComponentSerializer.legacySection().serialize(component);
+            message = LegacyComponentSerializer.legacySection().serialize(component);
         }
 
         if (!containsHexColor(message)) {

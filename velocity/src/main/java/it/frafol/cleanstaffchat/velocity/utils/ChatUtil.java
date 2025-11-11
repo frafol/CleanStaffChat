@@ -53,7 +53,7 @@ public class ChatUtil {
             MiniMessage miniMessage = MiniMessage.miniMessage();
             TagResolver resolver = MiniPlaceholders.audiencePlaceholders();
             Component component = miniMessage.deserialize(s, p, resolver);
-            s = component.toString();
+            s = LegacyComponentSerializer.legacySection().serialize(component);
         }
         return convertHexColors(s).replace("&", "§");
     }

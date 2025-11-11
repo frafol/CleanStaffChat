@@ -12,6 +12,7 @@ import it.frafol.cleanstaffchat.velocity.enums.VelocityRedis;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
+import it.frafol.cleanstaffchat.velocity.utils.VanishUtil;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.luckperms.api.LuckPerms;
@@ -34,7 +35,7 @@ public class ServerListener {
     @Subscribe
     public void Switch(@NotNull ServerConnectedEvent event) {
 
-        if (!event.getPreviousServer().isPresent()) {
+        if (event.getPreviousServer().isEmpty()) {
 
             if (event.getPlayer().hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                     && (VelocityConfig.UPDATE_CHECK.get(Boolean.class))) {
@@ -47,6 +48,11 @@ public class ServerListener {
                 && PlayerCache.getAfk().contains(event.getPlayer().getUniqueId())) {
 
             if (event.getPlayer().hasPermission(VelocityConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))) {
+
+                PlayerCache.getAfk().remove(event.getPlayer().getUniqueId());
+                if (VanishUtil.isVanished(event.getPlayer())) {
+                    return;
+                }
 
                 if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
@@ -123,7 +129,6 @@ public class ServerListener {
                                     new Placeholder("prefix", VelocityMessages.PREFIX.color())));
                 }
 
-                PlayerCache.getAfk().remove(event.getPlayer().getUniqueId());
                 if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
                         && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
                         && VelocityConfig.STAFFCHAT_DISCORD_AFK_MODULE.get(Boolean.class)) {
@@ -169,6 +174,10 @@ public class ServerListener {
                         || VelocityConfig.STAFFCHAT_SWITCH_ALL.get(Boolean.class)) {
 
                     if (VelocityConfig.STAFFCHAT_SWITCH_SILENT_MODULE.get(Boolean.class) && player.hasPermission(VelocityConfig.STAFFCHAT_SWITCH_SILENT_PERMISSION.get(String.class))) {
+                        return;
+                    }
+
+                    if (VanishUtil.isVanished(player)) {
                         return;
                     }
 

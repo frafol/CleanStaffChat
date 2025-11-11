@@ -10,6 +10,7 @@ import it.frafol.cleanstaffchat.velocity.enums.*;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
+import it.frafol.cleanstaffchat.velocity.utils.VanishUtil;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -401,6 +402,7 @@ public class ChatListener extends ListenerAdapter {
                     for (UUID uuid : list) {
                         User user = api.getUserManager().getUser(uuid);
                         if (user == null) continue;
+                        if (PLUGIN.isPremiumVanish() && VanishUtil.isVanished(uuid)) continue;
                         Group group = api.getGroupManager().getGroup(groups);
                         if (user.getInheritedGroups(QueryOptions.builder(QueryMode.CONTEXTUAL).build()).contains(group)) {
                             if (!sortedList.contains(user.getUniqueId()) && list.contains(user.getUniqueId())) {
@@ -471,7 +473,7 @@ public class ChatListener extends ListenerAdapter {
                         user_prefix = "";
                     }
 
-                    if (!players.getCurrentServer().isPresent()) {
+                    if (players.getCurrentServer().isEmpty()) {
                         continue;
                     }
 
@@ -487,7 +489,7 @@ public class ChatListener extends ListenerAdapter {
                 final String prefix = group.getDisplayName();
                 user_prefix = prefix == null ? group.getDisplayName() : prefix;
 
-                if (!players.getCurrentServer().isPresent()) {
+                if (players.getCurrentServer().isEmpty()) {
                     continue;
                 }
 

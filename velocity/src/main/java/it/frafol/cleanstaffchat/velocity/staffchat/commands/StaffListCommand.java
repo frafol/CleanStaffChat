@@ -5,7 +5,6 @@ import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
-import de.myzelyam.api.vanish.VelocityVanishAPI;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
@@ -251,7 +250,7 @@ public class StaffListCommand implements SimpleCommand {
                 continue;
             if (VelocityConfig.STAFFLIST_BYPASS.get(Boolean.class) && user.getCachedData().getPermissionData().checkPermission(VelocityConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class)).asBoolean())
                 continue;
-            if (PLUGIN.isPremiumVanish() && VelocityVanishAPI.getInvisiblePlayers().contains(players)) continue;
+            if (PLUGIN.isPremiumVanish() && VanishUtil.isVanished(players)) continue;
             list.add(players);
         }
         return list;

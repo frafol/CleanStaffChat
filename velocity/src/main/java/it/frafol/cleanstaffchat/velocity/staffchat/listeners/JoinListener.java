@@ -13,6 +13,7 @@ import it.frafol.cleanstaffchat.velocity.enums.VelocityRedis;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
+import it.frafol.cleanstaffchat.velocity.utils.VanishUtil;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.luckperms.api.LuckPerms;
@@ -55,6 +56,10 @@ public class JoinListener {
                     || STAFFCHAT_JOIN_LEAVE_ALL.get(Boolean.class)) {
 
                 if (player.getCurrentServer().isEmpty()) {
+                    return;
+                }
+
+                if (VanishUtil.isVanished(player)) {
                     return;
                 }
 
@@ -200,6 +205,10 @@ public class JoinListener {
                 || STAFFCHAT_QUIT_ALL.get(Boolean.class)) {
 
             if (player.hasPermission(STAFFCHAT_QUIT_SILENT_PERMISSION.get(String.class)) && STAFFCHAT_QUIT_SILENT_MODULE.get(Boolean.class)) {
+                return;
+            }
+
+            if (VanishUtil.isVanished(player)) {
                 return;
             }
 

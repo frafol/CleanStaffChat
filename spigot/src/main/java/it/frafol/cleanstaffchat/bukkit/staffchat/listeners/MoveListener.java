@@ -1,5 +1,6 @@
 package it.frafol.cleanstaffchat.bukkit.staffchat.listeners;
 
+import de.myzelyam.api.vanish.VanishAPI;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
@@ -48,6 +49,11 @@ public class MoveListener implements Listener {
         }
 
         if (PlayerCache.getAfk().contains(player.getUniqueId())) {
+
+            PlayerCache.getAfk().remove(player.getUniqueId());
+            if (PLUGIN.isPremiumVanish() && VanishAPI.getInvisiblePlayers().contains(player.getUniqueId())) {
+                return;
+            }
 
             if (PLUGIN.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
 
@@ -113,7 +119,6 @@ public class MoveListener implements Listener {
 
             }
 
-            PlayerCache.getAfk().remove(player.getUniqueId());
             if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
                     && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
                     && SpigotConfig.STAFFCHAT_DISCORD_AFK_MODULE.get(Boolean.class)) {

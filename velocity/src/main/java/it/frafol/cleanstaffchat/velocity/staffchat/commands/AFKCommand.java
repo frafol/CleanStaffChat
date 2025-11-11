@@ -12,6 +12,7 @@ import it.frafol.cleanstaffchat.velocity.enums.VelocityRedis;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.objects.PlayerCache;
 import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
+import it.frafol.cleanstaffchat.velocity.utils.VanishUtil;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.luckperms.api.LuckPerms;
@@ -55,6 +56,8 @@ public class AFKCommand implements SimpleCommand {
         }
 
         if (!PlayerCache.getAfk().contains(((Player) commandSource).getUniqueId())) {
+
+            PlayerCache.getAfk().add(((Player) commandSource).getUniqueId());
             if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
                 final LuckPerms api = LuckPermsProvider.get();
@@ -134,7 +137,6 @@ public class AFKCommand implements SimpleCommand {
 
             }
 
-            PlayerCache.getAfk().add(((Player) commandSource).getUniqueId());
             if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
                     && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
                     && VelocityConfig.STAFFCHAT_DISCORD_AFK_MODULE.get(Boolean.class)) {
@@ -170,6 +172,11 @@ public class AFKCommand implements SimpleCommand {
 
         } else {
 
+            PlayerCache.getAfk().remove(((Player) commandSource).getUniqueId());
+            if (VanishUtil.isVanished(((Player) commandSource))) {
+                return;
+            }
+
             if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
                 final LuckPerms api = LuckPermsProvider.get();
@@ -246,7 +253,6 @@ public class AFKCommand implements SimpleCommand {
                                 new Placeholder("prefix", VelocityMessages.PREFIX.color())));
             }
 
-            PlayerCache.getAfk().remove(((Player) commandSource).getUniqueId());
             if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
                     && VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
                     && VelocityConfig.STAFFCHAT_DISCORD_AFK_MODULE.get(Boolean.class)) {

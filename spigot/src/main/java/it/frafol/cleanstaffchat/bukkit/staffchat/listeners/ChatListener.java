@@ -224,7 +224,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();
 
-                if (!userList.uuid(event.getPlayer().getUniqueId()).isPresent()) {
+                if (userList.uuid(event.getPlayer().getUniqueId()).isEmpty()) {
                     return;
                 }
 

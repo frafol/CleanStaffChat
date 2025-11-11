@@ -1,6 +1,7 @@
 package it.frafol.cleanstaffchat.bungee.staffchat.listeners;
 
 import com.google.common.collect.Lists;
+import de.myzelyam.api.vanish.BungeeVanishAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
@@ -77,6 +78,7 @@ public class ListChatListener extends ListenerAdapter {
                     for (UUID uuid : list) {
                         User user = api.getUserManager().getUser(uuid);
                         if (user == null) continue;
+                        if (PLUGIN.isPremiumVanish() && BungeeVanishAPI.getInvisiblePlayers().contains(uuid)) continue;
                         Group group = api.getGroupManager().getGroup(groups);
                         if (user.getInheritedGroups(QueryOptions.builder(QueryMode.CONTEXTUAL).build()).contains(group)) {
                             sortedList.add(user.getUniqueId());

@@ -1,6 +1,7 @@
 package it.frafol.cleanstaffchat.bungee.staffchat.listeners;
 
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
+import de.myzelyam.api.vanish.BungeeVanishAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
@@ -60,10 +61,13 @@ public class JoinListener implements Listener {
                         return;
                     }
 
+                    if (PLUGIN.isPremiumVanish() && BungeeVanishAPI.getInvisiblePlayers().contains(event.getPlayer().getUniqueId())) {
+                        return;
+                    }
+
                     if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
 
                         LuckPerms api = LuckPermsProvider.get();
-
                         User user = api.getUserManager().getUser(player.getUniqueId());
 
                         if (user == null) {
@@ -135,13 +139,9 @@ public class JoinListener implements Listener {
                                     .replace("%server%", player.getServer().getInfo().getName())
                                     .replace("&", "§");
 
-
                             final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
                             redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffOtherMessage-RedisBungee", final_message);
-
                             return;
-
                         }
 
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
@@ -171,11 +171,8 @@ public class JoinListener implements Listener {
 
 
                             final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
                             redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffOtherMessage-RedisBungee", final_message);
-
                             return;
-
                         }
 
                         CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
@@ -252,14 +249,19 @@ public class JoinListener implements Listener {
                 return;
             }
 
+            if (PLUGIN.isPremiumVanish() && BungeeVanishAPI.getInvisiblePlayers().contains(event.getPlayer().getUniqueId())) {
+                return;
+            }
+
             if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
 
                 LuckPerms api = LuckPermsProvider.get();
-
                 User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
+
                 if (user == null) {
                     return;
                 }
+
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
                 final String user_prefix = prefix == null ? "" : prefix;
@@ -276,13 +278,9 @@ public class JoinListener implements Listener {
                             .replace("%server%", player.getServer().getInfo().getName())
                             .replace("&", "§");
 
-
                     final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
                     redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffOtherMessage-RedisBungee", final_message);
-
                     return;
-
                 }
 
                 if (!CleanStaffChat.getInstance().getProxy().getPlayers().isEmpty()) {
@@ -306,7 +304,7 @@ public class JoinListener implements Listener {
                 final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissionsBungee.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();
 
-                if (!userList.uuid(player.getUniqueId()).isPresent()) {
+                if (userList.uuid(player.getUniqueId()).isEmpty()) {
                     return;
                 }
 
@@ -328,13 +326,9 @@ public class JoinListener implements Listener {
                             .replace("%server%", player.getServer().getInfo().getName())
                             .replace("&", "§");
 
-
                     final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
                     redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffOtherMessage-RedisBungee", final_message);
-
                     return;
-
                 }
 
                 if (!CleanStaffChat.getInstance().getProxy().getPlayers().isEmpty()) {
@@ -350,7 +344,6 @@ public class JoinListener implements Listener {
                                     .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
                                     .replace("%server%", player.getServer().getInfo().getName())
                                     .replace("%user%", player.getName()))));
-
                 }
 
             } else {

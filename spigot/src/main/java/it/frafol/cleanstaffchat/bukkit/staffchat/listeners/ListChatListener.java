@@ -1,6 +1,7 @@
 package it.frafol.cleanstaffchat.bukkit.staffchat.listeners;
 
 import com.google.common.collect.Lists;
+import de.myzelyam.api.vanish.VanishAPI;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
@@ -75,6 +76,7 @@ public class ListChatListener extends ListenerAdapter {
                     for (UUID uuid : list) {
                         User user = api.getUserManager().getUser(uuid);
                         if (user == null) continue;
+                        if (PLUGIN.isPremiumVanish() && VanishAPI.getInvisiblePlayers().contains(uuid)) continue;
                         Group group = api.getGroupManager().getGroup(groups);
                         if (user.getInheritedGroups(QueryOptions.builder(QueryMode.CONTEXTUAL).build()).contains(group)) {
                             if (!sortedList.contains(user.getUniqueId())) sortedList.add(user.getUniqueId());

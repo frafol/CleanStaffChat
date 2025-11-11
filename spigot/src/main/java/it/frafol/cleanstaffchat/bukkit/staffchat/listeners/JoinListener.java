@@ -1,5 +1,6 @@
 package it.frafol.cleanstaffchat.bukkit.staffchat.listeners;
 
+import de.myzelyam.api.vanish.VanishAPI;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
@@ -53,6 +54,10 @@ public class JoinListener implements Listener {
                 || SpigotConfig.STAFFCHAT_JOIN_LEAVE_ALL.get(Boolean.class)) {
 
             if (player.hasPermission(SpigotConfig.STAFFCHAT_JOIN_SILENT_PERMISSION.get(String.class)) && SpigotConfig.STAFFCHAT_JOIN_SILENT_MODULE.get(Boolean.class)) {
+                return;
+            }
+
+            if (PLUGIN.isPremiumVanish() && VanishAPI.getInvisiblePlayers().contains(player.getUniqueId())) {
                 return;
             }
 
@@ -165,6 +170,10 @@ public class JoinListener implements Listener {
                 || SpigotConfig.STAFFCHAT_QUIT_ALL.get(Boolean.class)) {
 
             if (player.hasPermission(SpigotConfig.STAFFCHAT_QUIT_SILENT_PERMISSION.get(String.class)) && SpigotConfig.STAFFCHAT_QUIT_SILENT_MODULE.get(Boolean.class)) {
+                return;
+            }
+
+            if (PLUGIN.isPremiumVanish() && VanishAPI.getInvisiblePlayers().contains(player.getUniqueId())) {
                 return;
             }
 

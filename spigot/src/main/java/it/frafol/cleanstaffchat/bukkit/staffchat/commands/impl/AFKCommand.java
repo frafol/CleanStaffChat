@@ -1,5 +1,6 @@
 package it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl;
 
+import de.myzelyam.api.vanish.VanishAPI;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
@@ -57,8 +58,9 @@ public class AFKCommand extends CommandBase {
                 final User user = api.getUserManager().getUser(player.getUniqueId());
 
                 if (user == null) {
-                            return false;
-                        }
+                    return false;
+                }
+
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
                 final String user_prefix = prefix == null ? "" : prefix;
@@ -152,6 +154,11 @@ public class AFKCommand extends CommandBase {
 
         } else {
 
+            PlayerCache.getAfk().remove(player.getUniqueId());
+            if (plugin.isPremiumVanish() && VanishAPI.getInvisiblePlayers().contains(player.getUniqueId())) {
+                return false;
+            }
+
             if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
 
                 final LuckPerms api = LuckPermsProvider.get();
@@ -221,7 +228,6 @@ public class AFKCommand extends CommandBase {
 
             }
 
-            PlayerCache.getAfk().remove(player.getUniqueId());
             if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
                     && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
                     && SpigotConfig.STAFFCHAT_DISCORD_AFK_MODULE.get(Boolean.class)) {

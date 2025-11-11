@@ -1,6 +1,7 @@
 package it.frafol.cleanstaffchat.bungee.staffchat.listeners;
 
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
+import de.myzelyam.api.vanish.BungeeVanishAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
@@ -51,10 +52,14 @@ public class ServerListener implements Listener {
 
             if (event.getPlayer().hasPermission(BungeeConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))) {
 
+                PlayerCache.getAfk().remove(event.getPlayer().getUniqueId());
+                if (PLUGIN.isPremiumVanish() && BungeeVanishAPI.getInvisiblePlayers().contains(event.getPlayer().getUniqueId())) {
+                    return;
+                }
+
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
 
                     final LuckPerms api = LuckPermsProvider.get();
-
                     final User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
 
                     if (user == null) {
@@ -81,7 +86,7 @@ public class ServerListener implements Listener {
                     final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissionsBungee.getAPI();
                     final UserList userList = ultraPermissionsAPI.getUsers();
 
-                    if (!userList.uuid(event.getPlayer().getUniqueId()).isPresent()) {
+                    if (userList.uuid(event.getPlayer().getUniqueId()).isEmpty()) {
                         return;
                     }
 
@@ -138,11 +143,8 @@ public class ServerListener implements Listener {
 
 
                         final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
                         redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffAFKMessage-RedisBungee", final_message);
-
                         return;
-
                     }
 
                     CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
@@ -158,7 +160,6 @@ public class ServerListener implements Listener {
 
                 }
 
-                PlayerCache.getAfk().remove(event.getPlayer().getUniqueId());
                 if (BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
                         && BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
                         && BungeeConfig.STAFFCHAT_DISCORD_AFK_MODULE.get(Boolean.class)) {
@@ -260,7 +261,7 @@ public class ServerListener implements Listener {
                 final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissionsBungee.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();
 
-                if (!userList.uuid(event.getPlayer().getUniqueId()).isPresent()) {
+                if (userList.uuid(event.getPlayer().getUniqueId()).isEmpty()) {
                     return;
                 }
 

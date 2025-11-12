@@ -71,7 +71,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color(event.getPlayer())
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", event.getPlayer().getName())
-                                .replace("%message%", event.getMessage())
+                                .replace("%message%", message)
                                 .replace("%displayname%", PlayerCache.color(user_prefix) + event.getPlayer().getName() + PlayerCache.color(user_suffix))
                                 .replace("%userprefix%", PlayerCache.color(user_prefix))
                                 .replace("%server%", "")
@@ -112,7 +112,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color(event.getPlayer())
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", event.getPlayer().getName())
-                                .replace("%message%", event.getMessage())
+                                .replace("%message%", message)
                                 .replace("%server%", "")
                                 .replace("&", "§")));
             }
@@ -212,7 +212,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color(event.getPlayer())
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", event.getPlayer().getName())
-                                .replace("%message%", event.getMessage())
+                                .replace("%message%", message)
                                 .replace("%displayname%", PlayerCache.color(user_prefix) + event.getPlayer().getName() + PlayerCache.color(user_suffix))
                                 .replace("%userprefix%", PlayerCache.color(user_prefix))
                                 .replace("%server%", "")
@@ -256,7 +256,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         .forEach(players -> players.sendMessage(SpigotMessages.STAFFCHAT_FORMAT.color(event.getPlayer())
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%user%", event.getPlayer().getName())
-                                .replace("%message%", event.getMessage())
+                                .replace("%message%", message)
                                 .replace("%server%", "")
                                 .replace("&", "§")));
             }

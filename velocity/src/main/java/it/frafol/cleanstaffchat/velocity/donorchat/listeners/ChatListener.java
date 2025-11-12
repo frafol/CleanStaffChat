@@ -443,7 +443,7 @@ public class ChatListener extends ListenerAdapter {
 
             final String final_message = VelocityMessages.DISCORD_DONOR_FORMAT.get(String.class)
                     .replace("%user%", event.getAuthor().getName())
-                    .replace("%username%", event.getAuthor().getEffectiveName())
+                    .replace("%username%", event.getMember() != null && event.getMember().getNickname() != null ? event.getMember().getNickname() : event.getAuthor().getName())
                     .replace("%message%", event.getMessage().getContentDisplay())
                     .replace("%prefix%", VelocityMessages.DONORPREFIX.color())
                     .replace("&", "§");
@@ -458,7 +458,7 @@ public class ChatListener extends ListenerAdapter {
                                     && !instance.isInBlockedDonorChatServer(players))
                     .forEach(players -> VelocityMessages.DISCORD_DONOR_FORMAT.send(players,
                             new Placeholder("user", event.getAuthor().getName()),
-                            new Placeholder("username", event.getAuthor().getEffectiveName()),
+                            new Placeholder("username", event.getMember() != null && event.getMember().getNickname() != null ? event.getMember().getNickname() : event.getAuthor().getName()),
                             new Placeholder("message", event.getMessage().getContentDisplay()),
                             new Placeholder("prefix", VelocityMessages.DONORPREFIX.color())));
 

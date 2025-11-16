@@ -72,7 +72,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         .forEach(players -> players.sendMessage(SpigotMessages.ADMINCHAT_FORMAT.color(event.getPlayer())
                                 .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
                                 .replace("%user%", event.getPlayer().getName())
-                                .replace("%message%", event.getMessage())
+                                .replace("%message%", message)
                                 .replace("%displayname%", PlayerCache.color(user_prefix) + event.getPlayer().getName() + PlayerCache.color(user_suffix))
                                 .replace("%userprefix%", PlayerCache.color(user_prefix))
                                 .replace("%server%", "")
@@ -84,7 +84,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();
 
-                if (!userList.uuid(event.getPlayer().getUniqueId()).isPresent()) {
+                if (userList.uuid(event.getPlayer().getUniqueId()).isEmpty()) {
                     return;
                 }
 
@@ -101,7 +101,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         .forEach(players -> players.sendMessage(SpigotMessages.ADMINCHAT_FORMAT.color(event.getPlayer())
                                 .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
                                 .replace("%user%", event.getPlayer().getName())
-                                .replace("%message%", event.getMessage())
+                                .replace("%message%", message)
                                 .replace("%displayname%", ultraPermissionsUserPrefixFinal + event.getPlayer().getName() + ultraPermissionsUserSuffixFinal)
                                 .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
                                 .replace("%server%", "")
@@ -116,7 +116,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         .forEach(players -> players.sendMessage(SpigotMessages.ADMINCHAT_FORMAT.color(event.getPlayer())
                                 .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())
                                 .replace("%user%", event.getPlayer().getName())
-                                .replace("%message%", event.getMessage())
+                                .replace("%message%", message)
                                 .replace("%server%", "")
                                 .replace("&", "§")));
 
@@ -230,7 +230,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();
 
-                if (!userList.uuid(event.getPlayer().getUniqueId()).isPresent()) {
+                if (userList.uuid(event.getPlayer().getUniqueId()).isEmpty()) {
                     return;
                 }
 

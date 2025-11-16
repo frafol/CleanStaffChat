@@ -91,7 +91,7 @@ public class JoinListener implements Listener {
                 final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();
 
-                if (!userList.uuid(player.getUniqueId()).isPresent()) {
+                if (userList.uuid(player.getUniqueId()).isEmpty()) {
                     return;
                 }
 
@@ -196,7 +196,7 @@ public class JoinListener implements Listener {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission
                                         (SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)))
-                        .forEach(players -> players.sendMessage(SpigotMessages.STAFF_QUIT_MESSAGE_FORMAT.color()
+                        .forEach(players -> players.sendMessage(SpigotMessages.STAFF_QUIT_MESSAGE_FORMAT.color(player)
                                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                                 .replace("%displayname%", PlayerCache.color(user_prefix) + player.getName() + PlayerCache.color(user_suffix))
                                 .replace("%userprefix%", PlayerCache.color(user_prefix))
@@ -208,7 +208,7 @@ public class JoinListener implements Listener {
                 final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();
 
-                if (!userList.uuid(player.getUniqueId()).isPresent()) {
+                if (userList.uuid(player.getUniqueId()).isEmpty()) {
                     return;
                 }
 

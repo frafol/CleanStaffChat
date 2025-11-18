@@ -55,6 +55,10 @@ public class StaffListCommand extends CommandBase {
                     continue;
                 }
 
+                if (list.contains(players.getUniqueId())) {
+                    continue;
+                }
+
                 if (SpigotConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(SpigotConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
                     continue;
                 }
@@ -85,6 +89,7 @@ public class StaffListCommand extends CommandBase {
                     for (UUID uuid : list) {
                         User user = api.getUserManager().getUser(uuid);
                         if (user == null) continue;
+                        if (sortedList.contains(user.getUniqueId())) continue;
                         Group group = api.getGroupManager().getGroup(groups);
                         if (user.getInheritedGroups(QueryOptions.builder(QueryMode.CONTEXTUAL).build()).contains(group)) {
                             sortedList.add(user.getUniqueId());
@@ -114,7 +119,7 @@ public class StaffListCommand extends CommandBase {
                         return 0;
                     }
 
-                    if (!group1.getWeight().isPresent() || !group2.getWeight().isPresent()) {
+                    if (group1.getWeight().isEmpty() || group2.getWeight().isEmpty()) {
                         return 0;
                     }
 
@@ -127,9 +132,7 @@ public class StaffListCommand extends CommandBase {
                 Player players = plugin.getServer().getPlayer(uuids);
                 User user = api.getUserManager().getUser(players.getUniqueId());
 
-                if (user == null) {
-                    continue;
-                }
+                if (user == null) continue;
 
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
@@ -142,22 +145,8 @@ public class StaffListCommand extends CommandBase {
 
                 if (group == null || group.getDisplayName() == null) {
 
-                    if (prefix != null) {
-                        user_prefix = prefix;
-                    } else {
-                        user_prefix = "";
-                    }
-
-                    if (suffix != null) {
-                        user_suffix = suffix;
-                    } else {
-                        user_suffix = "";
-                    }
-
-                    if (players.getServer() == null) {
-                        continue;
-                    }
-
+                    user_prefix = Objects.requireNonNullElse(prefix, "");
+                    user_suffix = Objects.requireNonNullElse(suffix, "");
                     sender.sendMessage(SpigotMessages.LIST_FORMAT.color(players)
                             .replace("%userprefix%", PlayerCache.color(user_prefix))
                             .replace("%usersuffix%", PlayerCache.color(user_suffix))
@@ -165,17 +154,11 @@ public class StaffListCommand extends CommandBase {
                             .replace("%server%", "")
                             .replace("%afk%", isAFK)
                             .replace("%prefix%", SpigotMessages.PREFIX.color()));
-
                     continue;
                 }
 
                 user_prefix = prefix == null ? group.getDisplayName() : prefix;
                 user_suffix = suffix == null ? group.getDisplayName() : suffix;
-
-                if (players.getServer() == null) {
-                    continue;
-                }
-
                 sender.sendMessage(SpigotMessages.LIST_FORMAT.color(players)
                         .replace("%userprefix%", PlayerCache.color(user_prefix))
                         .replace("%usersuffix%", PlayerCache.color(user_suffix))

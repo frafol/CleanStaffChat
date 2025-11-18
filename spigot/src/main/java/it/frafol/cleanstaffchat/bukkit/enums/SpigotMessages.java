@@ -135,13 +135,13 @@ public enum SpigotMessages {
     public String color(Player player) {
         String hex = get(String.class);
         if (instance.getPAPI()) hex = PlaceholderAPI.setPlaceholders(player, hex);
-        if (instance.getMiniPlaceholders()) {
+        if (instance.supportsMiniMessage() && instance.getMiniPlaceholders()) {
             MiniMessage miniMessage = MiniMessage.miniMessage();
             TagResolver resolver = MiniPlaceholders.audiencePlaceholders();
             Component component = miniMessage.deserialize(hex, (Pointered) player, resolver);
             hex = LegacyComponentSerializer.legacySection().serialize(component);
         }
-        return convertHexColors(hex);
+        return convertHexColors(hex).replace("&", "§");
     }
 
     private String convertHexColors(String message) {

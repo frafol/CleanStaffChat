@@ -120,15 +120,7 @@ modules:
   auto_update: false
   stats: true
 
-  # WARNING: This option is only for the Velocity version.
-  minimessage_support: false
-
-  # EXPERIMENTAL: This option is only for the Paper/Velocity version.
-  miniplaceholders_support: false
-
-  # SuperVanish support is only for the Bukkit version.
   premiumvanish_hook: true
-  supervanish_hook: true
 
   globalchat_mute_command_module: true
 

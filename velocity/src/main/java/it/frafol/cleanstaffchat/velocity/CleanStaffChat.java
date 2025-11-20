@@ -24,7 +24,8 @@ import it.frafol.cleanstaffchat.velocity.staffchat.commands.*;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.ChatListener;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.JoinListener;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.ServerListener;
-import it.frafol.cleanstaffchat.velocity.utils.BansUtil;
+import it.frafol.cleanstaffchat.velocity.utils.LibertyBansUtil;
+import it.frafol.cleanstaffchat.velocity.utils.LiteBansUtil;
 import it.frafol.cleanstaffchat.velocity.utils.SwitchUtil;
 import it.frafol.cleanstaffchat.velocity.utils.VanishUtil;
 import lombok.Getter;
@@ -657,12 +658,12 @@ public class CleanStaffChat {
     }
 
     private boolean getLibertyBans() {
-        return getServer().getPluginManager().isLoaded("LibertyBans");
+        return getServer().getPluginManager().isLoaded("libertybans");
     }
 
     public boolean isMuted(Player player) {
-        if (getLiteBans()) return BansUtil.isLiteBansMuted(player.getUniqueId(), player.getRemoteAddress().toString());
-        if (getLibertyBans()) BansUtil.isLibertyBansMuted(player.getUniqueId());
+        if (getLiteBans()) return LiteBansUtil.isMuted(player.getUniqueId(), player.getRemoteAddress().toString());
+        if (getLibertyBans()) return LibertyBansUtil.isMuted(player.getUniqueId());
         return false;
     }
 

@@ -547,7 +547,7 @@ public class CleanStaffChat extends JavaPlugin {
 
     public boolean isMuted(Player player) {
         if (getLiteBans()) return Database.get().isPlayerMuted(player.getUniqueId(), player.getAddress().toString());
-        if (getLibertyBans()) LibertyBansUtil.isMuted(player.getUniqueId());
+        if (getLibertyBans()) return LibertyBansUtil.isMuted(player.getUniqueId());
         return false;
     }
 

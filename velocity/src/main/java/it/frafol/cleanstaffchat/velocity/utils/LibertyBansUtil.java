@@ -1,6 +1,5 @@
 package it.frafol.cleanstaffchat.velocity.utils;
 
-import litebans.api.Database;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import space.arim.libertybans.api.LibertyBans;
@@ -14,10 +13,10 @@ import java.util.List;
 import java.util.UUID;
 
 @UtilityClass
-public class BansUtil {
+public class LibertyBansUtil {
 
     @SneakyThrows
-    public boolean isLibertyBansMuted(UUID uuid) {
+    public boolean isMuted(UUID uuid) {
         Omnibus omnibus = OmnibusProvider.getOmnibus();
         LibertyBans libertyBans = omnibus.getRegistry().getProvider(LibertyBans.class).orElseThrow();;
         List<Punishment> punishments = libertyBans.getSelector()
@@ -30,9 +29,5 @@ public class BansUtil {
             }
         }
         return false;
-    }
-
-    public boolean isLiteBansMuted(UUID uuid, String address) {
-        return Database.get().isPlayerMuted(uuid, address);
     }
 }

@@ -227,7 +227,7 @@ public class CleanStaffChat extends Plugin {
 
     public boolean isMuted(ProxiedPlayer player) {
         if (getLiteBans()) return Database.get().isPlayerMuted(player.getUniqueId(), player.getSocketAddress().toString());
-        if (getLibertyBans()) LibertyBansUtil.isMuted(player.getUniqueId());
+        if (getLibertyBans()) return LibertyBansUtil.isMuted(player.getUniqueId());
         return false;
     }
 

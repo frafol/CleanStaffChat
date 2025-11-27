@@ -34,7 +34,6 @@ import net.byteflux.libby.Library;
 import net.byteflux.libby.VelocityLibraryManager;
 import net.byteflux.libby.relocation.Relocation;
 import net.dv8tion.jda.internal.utils.JDALogger;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.slf4j.Logger;
 import ru.vyarus.yaml.updater.YamlUpdater;
 import ru.vyarus.yaml.updater.util.FileUtils;
@@ -80,6 +79,12 @@ public class CleanStaffChat {
     @Getter
     private static CleanStaffChat instance;
 
+    @Getter
+    private boolean update = false;
+
+    @Getter
+    private String updatedVersion = "";
+
     public boolean updated = false;
 
     @Inject
@@ -112,7 +117,7 @@ public class CleanStaffChat {
         getLogger().info("Configurations loaded successfully!");
 
         if (VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {
-            UpdateChecker();
+            getServer().getScheduler().buildTask(this, this::UpdateChecker).repeat(1, TimeUnit.HOURS).schedule();
         }
 
         startJDA();
@@ -285,29 +290,22 @@ public class CleanStaffChat {
     }
 
     private void UpdateChecker() {
-
-        if (container.getDescription().getVersion().isEmpty()) {
-            return;
-        }
-
+        if (container.getDescription().getVersion().isEmpty()) return;
         new UpdateCheck(this).getVersion(version -> {
-
             if (Integer.parseInt(container.getDescription().getVersion().get().replace(".", "")) < Integer.parseInt(version.replace(".", ""))) {
-
                 if (VelocityConfig.AUTO_UPDATE.get(Boolean.class) && !updated) {
                     autoUpdate();
                     return;
                 }
-
                 if (!updated) {
+                    update = true;
+                    updatedVersion = version;
                     logger.warn("There is a new update available, download it on SpigotMC!");
                 }
             }
-
             if (Integer.parseInt(container.getDescription().getVersion().get().replace(".", "")) > Integer.parseInt(version.replace(".", ""))) {
                 logger.warn("You are using a development version, please report any bugs!");
             }
-
         });
     }
 
@@ -338,37 +336,6 @@ public class CleanStaffChat {
             versionTextFile.getConfig().save();
             loadFiles();
         }
-    }
-
-    public void UpdateCheck(Player player) {
-        if (!VelocityConfig.UPDATE_CHECK.get(Boolean.class)) {
-            return;
-        }
-
-        if (!container.getDescription().getVersion().isPresent()) {
-            return;
-        }
-
-        new UpdateCheck(this).getVersion(version -> {
-
-            if (!(Integer.parseInt(container.getDescription().getVersion().get().replace(".", ""))
-                    < Integer.parseInt(version.replace(".", "")))) {
-                return;
-            }
-
-            if (VelocityConfig.AUTO_UPDATE.get(Boolean.class) && !updated) {
-                autoUpdate();
-                return;
-            }
-
-            if (!updated) {
-                player.sendMessage(LegacyComponentSerializer.legacy('§')
-                        .deserialize(VelocityMessages.UPDATE.color()
-                                .replace("%version%", version)
-                                .replace("%prefix%", VelocityMessages.PREFIX.color())));
-            }
-
-        });
     }
 
     @SuppressWarnings("removal")

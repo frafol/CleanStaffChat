@@ -35,16 +35,16 @@ public class JoinListener implements Listener {
     @EventHandler
     public void handle(@NotNull PlayerJoinEvent event) {
 
-        if (event.getPlayer().hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                && (SpigotConfig.UPDATE_CHECK.get(Boolean.class)) && !PLUGIN.getDescription().getVersion().contains("alpha")) {
-            PLUGIN.UpdateCheck(event.getPlayer());
+        final Player player = event.getPlayer();
+        if (player.hasPermission(SpigotConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class)) && !PLUGIN.isUpdate()) {
+            player.sendMessage(SpigotMessages.UPDATE.color()
+                    .replace("%version%", PLUGIN.getUpdatedVersion())
+                    .replace("%prefix%", SpigotMessages.PREFIX.color()));
         }
 
-        if (CleanStaffChat.getInstance().getServer().getOnlinePlayers().isEmpty()) {
+        if (PLUGIN.getServer().getOnlinePlayers().isEmpty()) {
             return;
         }
-
-        final Player player = event.getPlayer();
 
         if (!SpigotConfig.STAFF_JOIN_MESSAGE.get(Boolean.class)) {
             return;

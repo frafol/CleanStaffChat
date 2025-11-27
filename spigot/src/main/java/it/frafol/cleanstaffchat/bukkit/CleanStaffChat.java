@@ -57,6 +57,12 @@ public class CleanStaffChat extends JavaPlugin {
     @Getter
     private static CleanStaffChat instance;
 
+    @Getter
+    private boolean update = false;
+
+    @Getter
+    private String updatedVersion = "";
+
     public boolean updated = false;
 
     @SneakyThrows
@@ -173,7 +179,7 @@ public class CleanStaffChat extends JavaPlugin {
             return;
         }
 
-        UpdateChecker();
+        if (SpigotConfig.UPDATE_CHECK.get(Boolean.class)) UniversalScheduler.getScheduler(this).runTaskTimer(this::UpdateChecker, 20L, 10 * 3600 * 20L);
         startJDA();
 
         if (isPremiumVanish()) {
@@ -260,29 +266,21 @@ public class CleanStaffChat extends JavaPlugin {
     }
 
     private void UpdateChecker() {
-
-        if (!SpigotConfig.UPDATE_CHECK.get(Boolean.class)) {
-            return;
-        }
-
         new UpdateCheck(this).getVersion(version -> {
-
             if (Integer.parseInt(getDescription().getVersion().replace(".", "")) < Integer.parseInt(version.replace(".", ""))) {
-
                 if (SpigotConfig.AUTO_UPDATE.get(Boolean.class) && !updated) {
                     autoUpdate();
                     return;
                 }
-
                 if (!updated) {
+                    update = true;
+                    updatedVersion = version;
                     getLogger().warning("There is a new update available, download it on SpigotMC!");
                 }
             }
-
             if (Integer.parseInt(getDescription().getVersion().replace(".", "")) > Integer.parseInt(version.replace(".", ""))) {
                 getLogger().warning("You are using a development version, please report any bugs!");
             }
-
         });
     }
 
@@ -471,25 +469,6 @@ public class CleanStaffChat extends JavaPlugin {
         configTextFile = null;
 
         getLogger().info("Successfully disabled.");
-    }
-
-    public void UpdateCheck(Player player) {
-
-        new UpdateCheck(this).getVersion(version -> {
-            if (Integer.parseInt(getDescription().getVersion().replace(".", "")) < Integer.parseInt(version.replace(".", ""))) {
-
-                if (SpigotConfig.AUTO_UPDATE.get(Boolean.class) && !updated) {
-                    autoUpdate();
-                    return;
-                }
-
-                if (!updated) {
-                    player.sendMessage(SpigotMessages.UPDATE.color()
-                            .replace("%version%", version)
-                            .replace("%prefix%", SpigotMessages.PREFIX.color()));
-                }
-            }
-        });
     }
 
     private void updateJDATask() {

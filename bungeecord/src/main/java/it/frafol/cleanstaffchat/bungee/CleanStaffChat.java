@@ -26,7 +26,6 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.internal.utils.JDALogger;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.simpleyaml.configuration.file.YamlFile;
@@ -53,6 +52,12 @@ public class CleanStaffChat extends Plugin {
     private TextFile redisTextFile;
     private TextFile serversTextFile;
     private TextFile versionTextFile;
+
+    @Getter
+    private boolean update = false;
+
+    @Getter
+    private String updatedVersion = "";
 
     public boolean updated = false;
 
@@ -128,7 +133,7 @@ public class CleanStaffChat extends Plugin {
         getLogger().info("§7Configurations loaded §dsuccessfully§7!");
 
         if (BungeeConfig.UPDATE_CHECK.get(Boolean.class)) {
-            UpdateChecker();
+            getProxy().getScheduler().schedule(this, this::UpdateChecker, 0, 1, TimeUnit.HOURS);
         }
 
         startJDA();
@@ -269,51 +274,20 @@ public class CleanStaffChat extends Plugin {
     }
 
     private void UpdateChecker() {
-        if (!BungeeConfig.UPDATE_CHECK.get(Boolean.class)) {
-            return;
-        }
-
         new UpdateCheck(this).getVersion(version -> {
-
             if (Integer.parseInt(getDescription().getVersion().replace(".", "")) < Integer.parseInt(version.replace(".", ""))) {
-
                 if (BungeeConfig.AUTO_UPDATE.get(Boolean.class) && !updated) {
                     autoUpdate();
                     return;
                 }
-
                 if (!updated) {
+                    update = true;
+                    updatedVersion = version;
                     getLogger().warning("§eThere is a new update available, download it on SpigotMC!");
                 }
             }
-
             if (Integer.parseInt(getDescription().getVersion().replace(".", "")) > Integer.parseInt(version.replace(".", ""))) {
                 getLogger().warning("§eYou are using a development version, please report any bugs!");
-            }
-
-        });
-    }
-
-    public void UpdateCheck(ProxiedPlayer player) {
-
-        if (!BungeeConfig.UPDATE_CHECK.get(Boolean.class)) {
-            return;
-        }
-
-        new UpdateCheck(this).getVersion(version -> {
-
-            if (Integer.parseInt(getDescription().getVersion().replace(".", "")) < Integer.parseInt(version.replace(".", ""))) {
-
-                if (BungeeConfig.AUTO_UPDATE.get(Boolean.class) && !updated) {
-                    autoUpdate();
-                    return;
-                }
-
-                if (!updated) {
-                    player.sendMessage(TextComponent.fromLegacy(BungeeMessages.UPDATE.color()
-                            .replace("%version%", version)
-                            .replace("%prefix%", BungeeMessages.PREFIX.color())));
-                }
             }
         });
     }

@@ -45,9 +45,10 @@ public class JoinListener implements Listener {
             return;
         }
 
-        if (player.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                && (BungeeConfig.UPDATE_CHECK.get(Boolean.class)) && !PLUGIN.getDescription().getVersion().contains("alpha")) {
-            PLUGIN.UpdateCheck(player);
+        if (player.hasPermission(BungeeConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class)) && !PLUGIN.isUpdate()) {
+            player.sendMessage(TextComponent.fromLegacy(BungeeMessages.UPDATE.color()
+                    .replace("%version%", PLUGIN.getUpdatedVersion())
+                    .replace("%prefix%", BungeeMessages.PREFIX.color())));
         }
 
         if (!(CleanStaffChat.getInstance().getProxy().getPlayers().isEmpty())) {

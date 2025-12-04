@@ -91,9 +91,7 @@ public class ChatUtil {
     private String convertHexColors(String message) {
 
         if (VelocityConfig.MINIMESSAGE.get(Boolean.class)) {
-            MiniMessage miniMessage = MiniMessage.miniMessage();
-            Component component = miniMessage.deserialize(message);
-            return LegacyComponentSerializer.legacySection().serialize(component);
+            return LegacyComponentSerializer.legacySection().serialize(deserializeMiniMessage(message));
         }
 
         if (!containsHexColor(message)) {
@@ -102,7 +100,7 @@ public class ChatUtil {
 
         Pattern hexPattern = Pattern.compile("(#[A-Fa-f0-9]{6}|<#[A-Fa-f0-9]{6}>|&#[A-Fa-f0-9]{6})");
         Matcher matcher = hexPattern.matcher(message);
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         while (matcher.find()) {
             String hexCode = matcher.group();
             String colorCode = hexCode.substring(1, 7);
@@ -127,6 +125,12 @@ public class ChatUtil {
                 '§' + chars[3] +
                 '§' + chars[4] +
                 '§' + chars[5];
+    }
+
+    private Component deserializeMiniMessage(String message) {
+        Component legacy = LegacyComponentSerializer.legacySection().deserialize(message);
+        String mmString = MiniMessage.miniMessage().serialize(legacy);
+        return MiniMessage.miniMessage().deserialize(mmString);
     }
 
     private boolean containsHexColor(String message) {

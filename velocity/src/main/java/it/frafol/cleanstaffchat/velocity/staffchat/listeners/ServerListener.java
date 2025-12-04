@@ -34,16 +34,6 @@ public class ServerListener {
 
     @Subscribe
     public void Switch(@NotNull ServerConnectedEvent event) {
-
-        if (event.getPreviousServer().isEmpty()) {
-
-            if (event.getPlayer().hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                    && (VelocityConfig.UPDATE_CHECK.get(Boolean.class))) {
-                PLUGIN.UpdateCheck(event.getPlayer());
-            }
-            return;
-        }
-
         if (VelocityConfig.STAFFCHAT_NO_AFK_ONCHANGE_SERVER.get(Boolean.class)
                 && PlayerCache.getAfk().contains(event.getPlayer().getUniqueId())) {
 

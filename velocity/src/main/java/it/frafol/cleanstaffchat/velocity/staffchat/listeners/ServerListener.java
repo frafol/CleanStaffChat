@@ -123,6 +123,7 @@ public class ServerListener {
         if (!(PLUGIN.getServer().getAllPlayers().isEmpty())) {
             final Player player = event.getPlayer();
             if (VelocityConfig.STAFFCHAT_SWITCH_MODULE.get(Boolean.class)) {
+                if (event.getPreviousServer().isEmpty()) return;
                 if (player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                         || VelocityConfig.STAFFCHAT_SWITCH_ALL.get(Boolean.class)) {
                     if (VelocityConfig.STAFFCHAT_SWITCH_SILENT_MODULE.get(Boolean.class) && player.hasPermission(VelocityConfig.STAFFCHAT_SWITCH_SILENT_PERMISSION.get(String.class))) {
@@ -159,7 +160,7 @@ public class ServerListener {
                         String server;
                         if (event.getServer().getServerInfo() != null) server = event.getServer().getServerInfo().getName();
                         else server = "";
-                        CleanStaffChat.getInstance().getServer().getAllPlayers().stream().filter
+                        PLUGIN.getServer().getAllPlayers().stream().filter
                                         (players -> players.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                                 && !(PlayerCache.getToggled().contains(players.getUniqueId()))
                                                 && !PLUGIN.isInBlockedStaffChatServer(players))

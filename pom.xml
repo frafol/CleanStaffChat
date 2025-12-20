@@ -6,7 +6,7 @@
 
     <groupId>it.frafol</groupId>
     <artifactId>cleanstaffchat</artifactId>
-    <version>1.17.3</version>
+    <version>1.17.4</version>
     <packaging>pom</packaging>
 
     <modules>

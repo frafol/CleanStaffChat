@@ -45,7 +45,7 @@ public class JoinListener implements Listener {
             return;
         }
 
-        if (player.hasPermission(BungeeConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class)) && !PLUGIN.isUpdate()) {
+        if (player.hasPermission(BungeeConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class)) && PLUGIN.isUpdate()) {
             player.sendMessage(TextComponent.fromLegacy(BungeeMessages.UPDATE.color()
                     .replace("%version%", PLUGIN.getUpdatedVersion())
                     .replace("%prefix%", BungeeMessages.PREFIX.color())));

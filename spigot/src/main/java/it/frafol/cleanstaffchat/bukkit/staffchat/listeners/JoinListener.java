@@ -36,7 +36,7 @@ public class JoinListener implements Listener {
     public void handle(@NotNull PlayerJoinEvent event) {
 
         final Player player = event.getPlayer();
-        if (player.hasPermission(SpigotConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class)) && !PLUGIN.isUpdate()) {
+        if (player.hasPermission(SpigotConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class)) && PLUGIN.isUpdate()) {
             player.sendMessage(SpigotMessages.UPDATE.color()
                     .replace("%version%", PLUGIN.getUpdatedVersion())
                     .replace("%prefix%", SpigotMessages.PREFIX.color()));

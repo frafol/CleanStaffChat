@@ -41,7 +41,7 @@ public class JoinListener {
         }
 
         final Player player = event.getPlayer();
-        if (player.hasPermission(STAFFCHAT_RELOAD_PERMISSION.get(String.class)) && !PLUGIN.isUpdate()) {
+        if (player.hasPermission(STAFFCHAT_RELOAD_PERMISSION.get(String.class)) && PLUGIN.isUpdate()) {
             VelocityMessages.UPDATE.send(player,
                     new Placeholder("version", PLUGIN.getUpdatedVersion()),
                     new Placeholder("prefix", VelocityMessages.PREFIX.color()));

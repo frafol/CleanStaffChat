@@ -85,7 +85,7 @@ public class ChatUtil {
     }
 
     public String translateHex(String string) {
-        return convertHexColors(string);
+        return convertHexColors(string).replace("&", "§");
     }
 
     private String convertHexColors(String message) {

@@ -130,7 +130,7 @@ public class CleanStaffChat extends JavaPlugin {
     @Override
     protected void shutdown() {
         getLogger().at(Level.INFO).log("Deleting instances...");
-        if (HytaleDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && Boolean.FALSE.equals(HytaleConfig.WORKAROUND_KICK.get(Boolean.class))) {
+        if (HytaleDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
             jda.shutdownNow();
         }
         instance = null;
@@ -279,7 +279,7 @@ public class CleanStaffChat extends JavaPlugin {
             try {
                 updateJDA();
             } catch (Exception e) {
-                getLogger().at(Level.SEVERE).log("[CleanStaffChat] Errore durante l'update del JDA: " + e.getMessage());
+                getLogger().at(Level.SEVERE).log("Error during JDA update: " + e.getMessage());
             }
         }, 1, 30, TimeUnit.SECONDS);
     }

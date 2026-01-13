@@ -48,7 +48,6 @@ settings:
 
     staff_join_silent: false # By activating it, the staff will not receive a message when another staff member with a permission enters the server.
     staff_quit_silent: false # By activating it, the staff will not receive a message when another staff member with a permission leaves the server.
-    staff_switch_silent: false # By activating it, the staff will not receive a message when another staff member with a permission changes server. (Velocity and BungeeCord only)
 
     # You can customise permissions.
     staffchat_use_permission: "staffchat.use"
@@ -94,37 +93,9 @@ settings:
     # You can enable or disable the bypass permission.
     bypass_enabled: false
 
-    # Select if you want to sort the staff list by group weight.
-    # Set a weight in LP using: /lp group <group> setweight <weight>.
-    # Groups with major weight will be at the top of the list.
-    sorting: true
-
-    # Enabling this option will sort the staff list by the list below.
-    # This option will override the °weight° sorting method.
-    sorting-by-list:
-      enabled: false
-      list:
-        - "owner"
-        - "admin"
-        - "moderator"
-        - "helper"
-        - "default"
-
-  # By activating this option, you will not be able to send messages with formatting codes (&c, &f etc.).
-  # Can also fix blank messages.
-  prevent_color_codes: false
-
 modules:
 
   update_check: true
-  auto_update: false
-  stats: true
-
-  minimessage_support: false
-  miniplaceholders_support: false
-
-  premiumvanish_hook: true
-  supervanish_hook: true
 
   globalchat_mute_command_module: true
 
@@ -156,19 +127,5 @@ modules:
   donorchat_discord_module: true
 
   stafflist_module: true
-
-  # Are you getting kicked on BungeeCord when switching staffchat mode to globalchat mode?
-  # You have to activate this option to fix it, please follow these steps:
-  # 1. Add this plugin in Spigot and BungeeCord servers.
-  # 2. Activate this option in both servers (this option will disable all staffchat modules in Spigot also).
-  # 3. Your problem is now fixed.
-  kick_workaround: false
-
-  # Are you getting double messages on Velocity when talking in staffchat/adminchat/donorchat?
-  # You have to activate this option to fix it, please follow these steps:
-  # 1. Add this plugin in Spigot and Velocity servers.
-  # 2. Activate this option in both servers (this option will disable all staffchat modules in Spigot also).
-  # 3. Your problem is now fixed.
-  double_message_workaround: false
 
 # Enjoy.

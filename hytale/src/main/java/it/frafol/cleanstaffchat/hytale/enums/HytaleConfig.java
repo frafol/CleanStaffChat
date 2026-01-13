@@ -18,9 +18,6 @@ public enum HytaleConfig {
     SORTING_LIST_ENABLE("settings.stafflist.sorting-by-list.enabled"),
     SORTING_LIST("settings.stafflist.sorting-by-list.list"),
 
-    PREMIUMVANISH("modules.premiumvanish_hook"),
-    SUPERVANISH("modules.supervanish_hook"),
-
     MUTECHAT_MODULE("modules.globalchat_mute_command_module"),
     MUTECHAT_BC_ALL("settings.globalchat.send_broadcast_to_all"),
     MUTECHAT_PERMISSION("settings.globalchat.global_mutechat_permission"),
@@ -38,8 +35,6 @@ public enum HytaleConfig {
     STAFFCHAT_AFK_MODULE("modules.staffchat_afk_module"),
     STAFFCHAT_NO_AFK_ONCHANGE_SERVER("settings.staffchat.staff_disable_afk_on_move"),
     STAFFCHAT_AFK_PERMISSION("settings.staffchat.staffchat_afk_permission"),
-
-    AUTO_UPDATE("modules.auto_update"),
 
     STAFF_JOIN_MESSAGE("settings.staffchat.staff_join_message"),
     STAFF_QUIT_MESSAGE("settings.staffchat.staff_quit_message"),
@@ -84,14 +79,6 @@ public enum HytaleConfig {
     STAFFCHAT_TOGGLE_PERMISSION("settings.staffchat.staffchat_toggle_permission"),
     ADMINCHAT_TOGGLE_PERMISSION("settings.adminchat.adminchat_toggle_permission"),
     DONORCHAT_TOGGLE_PERMISSION("settings.donorchat.donorchat_toggle_permission"),
-
-    STATS("modules.stats"),
-
-    WORKAROUND_KICK("modules.kick_workaround"),
-    DOUBLE_MESSAGE("modules.double_message_workaround"),
-
-    MINIMESSAGE("modules.minimessage_support"),
-    MINIPLACEHOLDERS("modules.miniplaceholders_support"),
 
     UPDATE_CHECK("modules.update_check"),
 

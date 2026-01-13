@@ -15,13 +15,6 @@ Clean StaffChat is a basic StaffChat plugin, compatible with BungeeCord, Spigot 
 You can active/deactive all features as you want.
 ```
 
-## Velocity, BungeeCord and Spigot compatibility is here.
-```
-» BungeeCord 1.7 - 1.21 & forks (like Flamecord)
-» Velocity 3.1.2 to 3.4.0 & forks (like Velocity-CTG)
-» Spigot 1.7 - 1.21 & forks (Paper and also Folia)
-```
-
 ## Commands
 ```
 » /sc • Start to talk in staffchat, every sent message'll be written in it.
@@ -50,12 +43,6 @@ All commands are configurable in the aliases.yml file!
 ## Permissions
 ```
 You can manually configure all the permissions for each command in the config.yml
-```
-
-## The message is sent two times or you're getting kicked when switching/writing in staffchat?
-```
-If you're on Velocity, you should add SignedVelocity (https://modrinth.com/plugin/signedvelocity) to your velocity & 1.19+ paper servers.
-If you're on BungeeCord or your issue is not fixed with the first method, you should look at the end of the config.yml.
 ```
 
 Thanks for reading.

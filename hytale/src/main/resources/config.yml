@@ -1,0 +1,174 @@
+#   ___  __    ____    __    _  _    ___   ___
+#  / __)(  )  ( ___)  /__\  ( \( )  / __) / __)
+# ( (__  )(__  )__)  /(__)\  )  (   \__ \( (__
+#  \___)(____)(____)(__)(__)(_)\_)  (___/ \___)
+#
+# Configuration file. Made with ❤ by frafol.
+# For support: https://dsc.gg/futuredevelopment
+
+settings:
+
+  # By activating this option, the console will be able to send messages (not receive them) in staffchat.
+  console_staffchat: true
+  console_name: "Console"
+
+  reload_permission: "staffchat.reload"
+
+  use_staffchat: true
+  use_adminchat: true
+  use_donorchat: true
+
+  # Hides the (This server is using CleanStaffChat by frafol) message.
+  hide_advertisements: false
+
+  globalchat:
+
+    # When this is enabled, the alert on globalchat mute/unmute is sent to all players.
+    # When this is disabled, the alert will be sent only to staff members.
+    send_broadcast_to_all: true
+
+    # You can customise permissions.
+    global_mutechat_permission: "globalchat.mute"
+    global_mutechat_all_permission: "globalchat.mute.all"
+    global_mutechat_bypass_permission: "globalchat.mute.bypass"
+
+  staffchat:
+
+    # Activating these options, staff members will receive a message when another staff member enters/leaves the server.
+    staff_join_message: true
+    staff_quit_message: true
+
+    staff_join_all_players: false # By activating it, the staff will receive a message every time any player enters the server.
+    staff_quit_all_players: false # By activating it, the staff will receive a message every time any player leaves the server.
+
+    staff_switch_all_players: false # By activating it, the staff will receive a message every time any player switch a server.
+    staff_disable_afk_on_move: true
+
+    staffchat_prefix: "#" # This is the symbol to be sent at the start of the message to send the message in staffchat, you can disable it by setting staffchat_prefix_module: false
+
+    staff_join_silent: false # By activating it, the staff will not receive a message when another staff member with a permission enters the server.
+    staff_quit_silent: false # By activating it, the staff will not receive a message when another staff member with a permission leaves the server.
+    staff_switch_silent: false # By activating it, the staff will not receive a message when another staff member with a permission changes server. (Velocity and BungeeCord only)
+
+    # You can customise permissions.
+    staffchat_use_permission: "staffchat.use"
+    staffchat_mute_permission: "staffchat.mute"
+    staffchat_toggle_permission: "staffchat.toggle"
+    staffchat_afk_permission: "staffchat.afk"
+    staffchat_join_silent_permission: "staffchat.join.silent"
+    staffchat_quit_silent_permission: "staffchat.quit.silent"
+    staffchat_switch_silent_permission: "staffchat.switch.silent"
+
+  adminchat:
+
+    adminchat_prefix: "%" # This is the symbol to be sent at the start of the message to send the message in adminchat, you can disable it by setting adminchat_prefix_module: false
+
+    # You can customise permissions.
+    adminchat_use_permission: "adminchat.use"
+    adminchat_mute_permission: "adminchat.mute"
+    adminchat_toggle_permission: "adminchat.toggle"
+    adminchat_afk_permission: "adminchat.afk"
+
+  donorchat:
+
+    donorchat_prefix: "$" # This is the symbol to be sent at the start of the message to send the message in donorchat, you can disable it by setting donorchat_prefix_module: false
+
+    # Cooldown in seconds, to disable set it to 0.
+    cooldown: 30
+    donorchat_discord_cooldown_bypass: false
+
+    # You can customise permissions.
+    donorchat_use_permission: "donorchat.use"
+    donorchat_mute_permission: "donorchat.mute"
+    donorchat_toggle_permission: "donorchat.toggle"
+    donorchat_afk_permission: "donorchat.afk"
+    donorchat_cooldown_bypass_permission: "donorchat.bypass"
+
+  stafflist:
+
+    # You can customise permissions.
+    stafflist_permission: "stafflist.use"
+    stafflist_show_permission: "stafflist.show"
+    stafflist_bypass_permission: "stafflist.bypass"
+
+    # You can enable or disable the bypass permission.
+    bypass_enabled: false
+
+    # Select if you want to sort the staff list by group weight.
+    # Set a weight in LP using: /lp group <group> setweight <weight>.
+    # Groups with major weight will be at the top of the list.
+    sorting: true
+
+    # Enabling this option will sort the staff list by the list below.
+    # This option will override the °weight° sorting method.
+    sorting-by-list:
+      enabled: false
+      list:
+        - "owner"
+        - "admin"
+        - "moderator"
+        - "helper"
+        - "default"
+
+  # By activating this option, you will not be able to send messages with formatting codes (&c, &f etc.).
+  # Can also fix blank messages.
+  prevent_color_codes: false
+
+modules:
+
+  update_check: true
+  auto_update: false
+  stats: true
+
+  minimessage_support: false
+  miniplaceholders_support: false
+
+  premiumvanish_hook: true
+  supervanish_hook: true
+
+  globalchat_mute_command_module: true
+
+  staffchat_switch_module: true
+  staffchat_afk_module: true
+  staffchat_talk_module: true
+  staffchat_mute_module: true
+  staffchat_toggle_module: true
+  staffchat_prefix_module: true
+  staffchat_discord_module: true
+  staffchat_discord_join_leave_module: true
+  staffchat_discord_switch_module: true
+  staffchat_discord_afk_module: true
+
+  adminchat_switch_module: true
+  adminchat_afk_module: true
+  adminchat_talk_module: true
+  adminchat_mute_module: true
+  adminchat_toggle_module: true
+  adminchat_prefix_module: true
+  adminchat_discord_module: true
+
+  donorchat_switch_module: true
+  donorchat_afk_module: true
+  donorchat_talk_module: true
+  donorchat_mute_module: true
+  donorchat_toggle_module: true
+  donorchat_prefix_module: true
+  donorchat_discord_module: true
+
+  stafflist_module: true
+
+  # Are you getting kicked on BungeeCord when switching staffchat mode to globalchat mode?
+  # You have to activate this option to fix it, please follow these steps:
+  # 1. Add this plugin in Spigot and BungeeCord servers.
+  # 2. Activate this option in both servers (this option will disable all staffchat modules in Spigot also).
+  # 3. Your problem is now fixed.
+  kick_workaround: false
+
+  # Are you getting double messages on Velocity when talking in staffchat/adminchat/donorchat?
+  # You have to activate this option to fix it, please follow these steps:
+  # 1. Add this plugin in Spigot and Velocity servers.
+  # 2. Activate this option in both servers (this option will disable all staffchat modules in Spigot also).
+  # 3. Your problem is now fixed.
+  double_message_workaround: false
+
+# Enjoy.

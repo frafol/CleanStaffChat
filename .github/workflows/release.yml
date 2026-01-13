@@ -1,0 +1,105 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - hytale
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      jar_path: ${{ steps.find_jar.outputs.JAR_FILE }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '25'
+
+      - name: Build with Maven
+        run: mvn clean install -B -U
+
+      - name: Find JAR file
+        id: find_jar
+        run: |
+          # Trova il JAR e salva il percorso
+          JAR_PATH=$(find universal/target -maxdepth 1 -name "*.jar" ! -name "original*.jar" | head -n 1)
+          echo "JAR_FILE=$JAR_PATH" >> $GITHUB_ENV
+          echo "path=$JAR_PATH" >> $GITHUB_OUTPUT
+
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-plugin-jar
+          path: ${{ env.JAR_FILE }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download JAR artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: my-plugin-jar
+          path: ./artifacts
+
+      - name: Find JAR file
+        id: find_downloaded_jar
+        run: |
+          JAR_PATH=$(find ./artifacts -name "*.jar" | head -n 1)
+          echo "JAR_FILE=$JAR_PATH" >> $GITHUB_ENV
+
+      - name: Get Short SHA
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Delete Old Release
+        uses: dev-drprasad/delete-tag-and-release@v0.2.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          delete_release: true
+          tag_name: dev-build
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: dev-build
+          release_name: Release ${{ steps.vars.outputs.sha_short }}
+          prerelease: true
+
+      - name: Upload JAR to GitHub
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.JAR_FILE }}
+          asset_name: CleanStaffChat.jar
+          asset_content_type: application/java-archive
+
+      - name: Upload to Orbis.place
+        env:
+          ORBIS_KEY: ${{ secrets.ORBIS_API_KEY }}
+          RESOURCE_ID: "cmkcxg67b000g01s6ewk287pn"
+          HYTALE_VERSION_ID: "cmj1x42ef001k4qz9r03ojrpe"
+        run: |
+          curl -X POST "https://api.orbis.place/resources/$RESOURCE_ID/versions" \
+            -H "x-api-key: $ORBIS_KEY" \
+            -F "file=@${{ env.JAR_FILE }}" \
+            -F "versionNumber=${{ steps.vars.outputs.sha_short }}" \
+            -F "channel=RELEASE" \
+            -F "name=Build ${{ steps.vars.outputs.sha_short }}" \
+            -F "hytaleVersionIds[]=$HYTALE_VERSION_ID" \
+            -F "changelog=Auto-generated build from GitHub Actions" \
+            -v

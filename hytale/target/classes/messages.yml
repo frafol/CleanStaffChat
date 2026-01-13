@@ -1,0 +1,132 @@
+#   ___  __    ____    __    _  _    ___   ___
+#  / __)(  )  ( ___)  /__\  ( \( )  / __) / __)
+# ( (__  )(__  )__)  /(__)\  )  (   \__ \( (__
+#  \___)(____)(____)(__)(__)(_)\_)  (___/ \___)
+#
+# Messages. Made with ❤ by frafol.
+# For support: https://dsc.gg/futuredevelopment
+
+messages:
+
+  globalchat:
+
+    prefix: "GLOBAL CHAT •"
+    usage: "{prefix} Use /mutechat (or /mutechat <server>)."
+
+    mutechat_enabled: "{prefix} The globalchat has been muted."
+    mutechat_disabled: "{prefix} The globalchat has been unmuted."
+
+    mutechat_enabled_broadcast: "{prefix} The globalchat has been muted by {user}."
+    mutechat_disabled_broadcast: "{prefix} The globalchat has been unmuted by {user}."
+
+    server_not_found: "{prefix} The server you entered was not found."
+
+  staffchat:
+
+    prefix: "STAFF CHAT •"
+    arguments: "{prefix} Use /sc <message>."
+
+    staffchat_talk_enabled: "{prefix} Now your messages will be sent in the StaffChat."
+    staffchat_talk_disabled: "{prefix} Now your messages will be sent in the chat."
+
+    staffchat_muted: "{prefix} StaffChat has been muted."
+    staffchat_unmuted: "{prefix} StaffChat has been unmuted."
+
+    staffchat_toggled_on: "{prefix} The StaffChat is now visible."
+    staffchat_toggled_off: "{prefix} The StaffChat is now invisible."
+
+    staffchat_format: "{prefix} {userprefix} {user} » {message}"
+    staffchat_console_format: "{prefix} {user} » {message}"
+
+    staff_join_message_format: "{prefix} [+] {user}"
+    staff_quit_message_format: "{prefix} [-] {user}"
+
+    staff_afk_on_message_format: "{prefix} {user} is now AFK."
+    staff_afk_off_message_format: "{prefix} {user} is no longer AFK."
+
+    discord:
+
+      staffchat_discord_format: "{prefix} [Discord] {user} » {message}"
+      staffchat_to_discord_format: "{user} » {message}"
+
+      discord_join_message_format: "{user} joined the server."
+      discord_quit_message_format: "{user} left the server."
+
+      discord_afk_on_message_format: "{user} is now AFK."
+      discord_afk_off_message_format: "{user} is no longer AFK."
+
+  adminchat:
+
+    prefix: "ADMIN CHAT •"
+    arguments: "{prefix} Use /ac <message>."
+
+    adminchat_talk_enabled: "{prefix} Now your messages will be sent in the AdminChat."
+    adminchat_talk_disabled: "{prefix} Now your messages will be sent in the chat."
+
+    adminchat_muted: "{prefix} AdminChat has been muted."
+    adminchat_unmuted: "{prefix} AdminChat has been unmuted."
+
+    adminchat_toggled_on: "{prefix} The AdminChat is now visible."
+    adminchat_toggled_off: "{prefix} The AdminChat is now invisible."
+
+    adminchat_format: "{prefix} {userprefix} {user} » {message}"
+    adminchat_console_format: "{prefix} {user} » {message}"
+
+    discord:
+
+      adminchat_discord_format: "{prefix} [Discord] {user} » {message}"
+      adminchat_to_discord_format: "{user} » {message}"
+
+  donorchat:
+
+    prefix: "DONOR CHAT •"
+    arguments: "{prefix} Use /dc <message>."
+    cooldown: "{prefix} Please wait to be able to reuse this chat."
+
+    donorchat_talk_enabled: "{prefix} Now your messages will be sent in the DonorChat."
+    donorchat_talk_disabled: "{prefix} Now your messages will be sent in the chat."
+
+    donorchat_muted: "{prefix} DonorChat has been muted."
+    donorchat_unmuted: "{prefix} DonorChat has been unmuted."
+
+    donorchat_toggled_on: "{prefix} The DonorChat is now visible."
+    donorchat_toggled_off: "{prefix} The DonorChat is now invisible."
+
+    donorchat_format: "{prefix} {userprefix} {user} » {message}"
+    donorchat_console_format: "{prefix} {user} » {message}"
+
+    discord:
+
+      donorchat_discord_format: "{prefix} [Discord] {user} » {message}"
+      donorchat_to_discord_format: "{user} » {message}"
+
+      discord_cooldown_message: "You have to wait some seconds to send another message."
+
+  stafflist:
+
+    usage: "{prefix} Use /stafflist."
+
+    header: "--------------------------"
+    format: "{userprefix}{player} ({server}) {afk}"
+    footer: "--------------------------"
+
+    nobody: "{prefix} There is no staff online."
+    afk: "[AFK]"
+
+    discord:
+
+      header: "Staff List"
+      format: "{usergroup}{player} ({server}) {afk}"
+      footer: "Staff List"
+
+      nobody: "There is no staff online."
+      afk: "[AFK]"
+
+  deny_color_codes: "{prefix} Color codes are not permitted."
+  no_permission: "{prefix} You don't have the permission to do this."
+  console: "{prefix} You must be a player to use that command."
+  chat_muted_error: "{prefix} Chat is actually muted by an operator!"
+  chat_muted_error_discord: "Chat is actually muted by an operator!"
+  reloaded: "{prefix} The plugin has been reloaded!"
+  module_disabled: "{prefix} This function is actually disabled!"
+  new_version: "{prefix} A new version of the plugin is available! ({version})"

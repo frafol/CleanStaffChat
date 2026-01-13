@@ -1,0 +1,10 @@
+{
+  "Group": "FutureDevelopment",
+  "Name": "CleanStaffChat",
+  "Version": "1.0.0",
+  "Main": "it.frafol.cleanstaffchat.hytale.CleanStaffChat",
+  "ServerVersion": "*",
+  "Dependencies": {
+    "Hytale:I18nModule": "*"
+  }
+}

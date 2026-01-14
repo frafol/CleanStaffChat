@@ -41,7 +41,8 @@ public class UpdateCheck {
 
                     if (updateFound) {
                         plugin.getLogger().at(Level.WARNING).log(HytaleMessages.UPDATE.get(String.class)
-                                .replace("{new_version}", latestVersion));
+                                .replace("{new_version}", latestVersion)
+                                .replace("{prefix}", ""));
                     }
                 }
             } catch (Exception ignored) {}

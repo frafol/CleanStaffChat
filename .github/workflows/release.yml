@@ -98,11 +98,13 @@ jobs:
           HYTALE_VERSION_ID: "cmj1x42ef001k4qz9r03ojrpe"
           LOCAL_VERSION: ${{ needs.build.outputs.version }}
         run: |
-          curl -v -X POST "https://api.orbis.place/resources/$RESOURCE_ID/versions" \
-            -H "x-api-key: $ORBIS_KEY" \
-            -F "file=@${{ env.JAR_FILE }}" \
+          FILE_PATH="${{ env.JAR_FILE }}"
+        
+          curl -v "https://api.orbis.place/resources/${RESOURCE_ID}/versions" \
+            -H "x-api-key: ${ORBIS_KEY}" \
+            -F "file=@${FILE_PATH}" \
             -F "versionNumber=${LOCAL_VERSION}" \
             -F "name=${LOCAL_VERSION} - Auto Release" \
             -F "channel=ALPHA" \
-            -F "changelog=Built from branch hytale" \
+            -F "changelog=<p>Built automatically from GitHub Actions. Branch: hytale</p>" \
             -F "compatibleHytaleVersionIds[]=${HYTALE_VERSION_ID}"

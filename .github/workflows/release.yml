@@ -111,7 +111,7 @@ jobs:
               "compatibleHytaleVersionIds": ["'"${HYTALE_VERSION_ID}"'"]
             }')
           echo "$RESPONSE" > orbis_response.json
-          VERSION_ID=$(echo "$RESPONSE" | jq -r '.id')
+          VERSION_ID=$(echo "$RESPONSE" | jq -r '.version.id')
           echo "VERSION_ID=$VERSION_ID" >> $GITHUB_OUTPUT
 
       - name: Upload file to Orbis.place version
@@ -124,7 +124,7 @@ jobs:
             -H "x-api-key: $ORBIS_KEY" \
             -F "file=@${JAR_FILE}"
 
-      - name: Output Orbis response
+      - name: Show Orbis response
         if: steps.orbis_check.outputs.exists == 'false'
         run: |
           cat orbis_response.json

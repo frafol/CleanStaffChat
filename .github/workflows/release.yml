@@ -15,18 +15,21 @@ jobs:
         uses: actions/checkout@v4
         with:
           lfs: true
+          fetch-depth: 0
 
-      - name: Set up JDK 21
+      - name: Set up JDK 25
         uses: actions/setup-java@v4
         with:
           distribution: 'corretto'
           java-version: '25'
 
-      - name: Get version from POM
+      - name: Get version from POM and Git
         id: get_version
         run: |
-          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          FULL_VERSION="${POM_VERSION}-${COMMIT_HASH}"
+          echo "VERSION=$FULL_VERSION" >> $GITHUB_OUTPUT
 
       - name: Build with Maven
         run: mvn clean install -B -U
@@ -81,25 +84,25 @@ jobs:
         with:
           tag: v${{ needs.build.outputs.version }}
           name: Release Hytale ${{ needs.build.outputs.version }}
-          body: "Automatic build for Hytale branch."
+          body: "Automatic build from commit."
           artifacts: "${{ env.JAR_FILE }}"
           allowUpdates: true
           commit: hytale
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload to Orbis.place
-        if: steps.orbis_check.outputs.exists == 'false'
+        if: steps.orbis_check.outputs.outputs.exists == 'false'
         env:
           ORBIS_KEY: ${{ secrets.ORBIS_API_KEY }}
           RESOURCE_ID: "cmkcxg67b000g01s6ewk287pn"
           HYTALE_VERSION_ID: "cmj1x42ef001k4qz9r03ojrpe"
           LOCAL_VERSION: ${{ needs.build.outputs.version }}
         run: |
-          curl -v -X POST "https://api.orbis.place/resources/$RESOURCE_ID/versions" \
+          curl -v "https://api.orbis.place/resources/$RESOURCE_ID/versions" \
             -H "x-api-key: $ORBIS_KEY" \
             -F "file=@${{ env.JAR_FILE }}" \
             -F "versionNumber=$LOCAL_VERSION" \
             -F "name=$LOCAL_VERSION - Auto Release" \
             -F "channel=RELEASE" \
-            -F "changelog=Built from branch hytale" \
+            -F "changelog=Built from branch hytale with commit $LOCAL_VERSION" \
             -F "compatibleHytaleVersionIds[]=$HYTALE_VERSION_ID"

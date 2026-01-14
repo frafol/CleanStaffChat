@@ -90,6 +90,12 @@ jobs:
           commit: hytale
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set Jar Path
+        id: set_path
+        run: |
+          ACTUAL_PATH=$(find ./downloaded_artifact -name "*.jar" | head -n 1)
+          echo "RESOLVED_JAR_PATH=$ACTUAL_PATH" >> $GITHUB_ENV
+
       - name: Upload to Orbis.place
         if: steps.orbis_check.outputs.exists == 'false'
         env:
@@ -98,11 +104,9 @@ jobs:
           HYTALE_VERSION_ID: "cmj1x42ef001k4qz9r03ojrpe"
           LOCAL_VERSION: ${{ needs.build.outputs.version }}
         run: |
-          FILE_PATH="${{ env.JAR_FILE }}"
-        
           curl -v "https://api.orbis.place/resources/${RESOURCE_ID}/versions" \
             -H "x-api-key: ${ORBIS_KEY}" \
-            -F "file=@${FILE_PATH}" \
+            -F "file=@${{ env.RESOLVED_JAR_PATH }}" \
             -F "versionNumber=${LOCAL_VERSION}" \
             -F "name=${LOCAL_VERSION} - Auto Release" \
             -F "channel=ALPHA" \

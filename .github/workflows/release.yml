@@ -94,13 +94,13 @@ jobs:
           ORBIS_KEY: ${{ secrets.ORBIS_API_KEY }}
           RESOURCE_ID: "cmkcxg67b000g01s6ewk287pn"
           HYTALE_VERSION_ID: "cmj1x42ef001k4qz9r03ojrpe"
+          LOCAL_VERSION: ${{ needs.build.outputs.version }}
         run: |
-          curl -X POST "https://api.orbis.place/resources/$RESOURCE_ID/versions" \
+          curl -v -X POST "https://api.orbis.place/resources/$RESOURCE_ID/versions" \
             -H "x-api-key: $ORBIS_KEY" \
             -F "file=@${{ env.JAR_FILE }}" \
-            -F "versionNumber=${{ needs.build.outputs.version }}" \
-            -F "name=${{ needs.build.outputs.version }} - GitHub Auto Release" \
+            -F "versionNumber=$LOCAL_VERSION" \
+            -F "name=$LOCAL_VERSION - Auto Release" \
             -F "channel=RELEASE" \
-            -F "hytaleVersionIds[]=$HYTALE_VERSION_ID" \
-            -F "changelog=Automatic release from GitHub Actions" \
-            -v
+            -F "changelog=Built from branch hytale" \
+            -F "compatibleHytaleVersionIds[]=$HYTALE_VERSION_ID"

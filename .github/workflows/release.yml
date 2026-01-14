@@ -57,7 +57,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: my-plugin-jar
-          path: ./artifacts
+          path: ./all_artifacts
 
       - name: Find JAR file
         id: find_downloaded_jar
@@ -90,11 +90,11 @@ jobs:
           commit: hytale
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set Jar Path
-        id: set_path
+      - name: Debug and Set Path
         run: |
-          ACTUAL_PATH=$(find ./downloaded_artifact -name "*.jar" | head -n 1)
-          echo "RESOLVED_JAR_PATH=$ACTUAL_PATH" >> $GITHUB_ENV
+          ls -R ./all_artifacts
+          FOUND_JAR=$(find ./all_artifacts -name "*.jar" | head -n 1)
+          echo "FINAL_JAR_PATH=$FOUND_JAR" >> $GITHUB_ENV
 
       - name: Upload to Orbis.place
         if: steps.orbis_check.outputs.exists == 'false'

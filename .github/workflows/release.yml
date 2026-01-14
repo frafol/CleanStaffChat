@@ -82,7 +82,7 @@ jobs:
         if: steps.orbis_check.outputs.exists == 'false'
         uses: ncipollo/release-action@v1
         with:
-          tag: v${{ needs.build.outputs.version }}
+          tag: dev-build-hytale
           name: Release Hytale ${{ needs.build.outputs.version }}
           body: "Automatic build from commit."
           artifacts: "${{ env.JAR_FILE }}"
@@ -98,11 +98,11 @@ jobs:
           HYTALE_VERSION_ID: "cmj1x42ef001k4qz9r03ojrpe"
           LOCAL_VERSION: ${{ needs.build.outputs.version }}
         run: |
-          curl -v "https://api.orbis.place/resources/$RESOURCE_ID/versions" \
+          curl -v -X POST "https://api.orbis.place/resources/$RESOURCE_ID/versions" \
             -H "x-api-key: $ORBIS_KEY" \
             -F "file=@${{ env.JAR_FILE }}" \
-            -F "versionNumber=$LOCAL_VERSION" \
-            -F "name=$LOCAL_VERSION - Auto Release" \
-            -F "channel=RELEASE" \
-            -F "changelog=Built from branch hytale with commit $LOCAL_VERSION" \
-            -F "compatibleHytaleVersionIds[]=$HYTALE_VERSION_ID"
+            -F "versionNumber=${LOCAL_VERSION}" \
+            -F "name=${LOCAL_VERSION} - Auto Release" \
+            -F "channel=ALPHA" \
+            -F "changelog=Built from branch hytale" \
+            -F "compatibleHytaleVersionIds[]=${HYTALE_VERSION_ID}"

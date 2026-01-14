@@ -30,7 +30,6 @@ jobs:
           COMMIT_HASH=$(git rev-parse --short HEAD)
           FULL_VERSION="${POM_VERSION}-${COMMIT_HASH}"
           echo "VERSION=$FULL_VERSION" >> $GITHUB_OUTPUT
-
       - name: Build with Maven
         run: mvn clean install -B -U
 
@@ -39,7 +38,6 @@ jobs:
         run: |
           JAR_PATH=$(find universal/target -maxdepth 1 -name "*.jar" ! -name "original*.jar" | head -n 1)
           echo "JAR_FILE=$JAR_PATH" >> $GITHUB_ENV
-
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
@@ -57,14 +55,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: my-plugin-jar
-          path: ./all_artifacts
+          path: ./artifacts
 
       - name: Find JAR file
         id: find_downloaded_jar
         run: |
           JAR_PATH=$(find ./artifacts -name "*.jar" | head -n 1)
           echo "JAR_FILE=$JAR_PATH" >> $GITHUB_ENV
-
       - name: Check if version exists on Orbis
         id: orbis_check
         env:
@@ -77,7 +74,6 @@ jobs:
           else
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
-
       - name: Create or Update GitHub Release
         if: steps.orbis_check.outputs.exists == 'false'
         uses: ncipollo/release-action@v1
@@ -98,12 +94,11 @@ jobs:
           HYTALE_VERSION_ID: "cmj1x42ef001k4qz9r03ojrpe"
           LOCAL_VERSION: ${{ needs.build.outputs.version }}
         run: |
-          JAR_PATH="./all_artifacts/CleanStaffChat.jar"
-          curl -v "https://api.orbis.place/resources/${RESOURCE_ID}/versions" \
-            -H "x-api-key: ${ORBIS_KEY}" \
-            -F "file=@${JAR_PATH}" \
+          curl -v -X POST "https://api.orbis.place/resources/$RESOURCE_ID/versions" \
+            -H "x-api-key: $ORBIS_KEY" \
+            -F "file=@${JAR_FILE}" \
             -F "versionNumber=${LOCAL_VERSION}" \
             -F "name=${LOCAL_VERSION} - Auto Release" \
             -F "channel=ALPHA" \
-            -F "changelog=<p>Built automatically from GitHub Actions. Branch: hytale</p>" \
-            -F "compatibleHytaleVersionIds[]=${HYTALE_VERSION_ID}"
+            -F "changelog=Built from branch hytale" \
+            -F "compatibleHytaleVersionIds=${HYTALE_VERSION_ID}"

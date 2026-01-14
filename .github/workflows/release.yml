@@ -70,23 +70,22 @@ jobs:
           RESPONSE=$(curl -s "https://api.orbis.place/resources/${RESOURCE_ID}/versions")
           LATEST=$(echo $RESPONSE | jq -r '.versions[0].versionNumber // "0.0.0"')
           if [ "$LATEST" == "${{ needs.build.outputs.version }}" ]; then
-            echo "Version ${{ needs.build.outputs.version }} already exists. Skipping upload."
             echo "exists=true" >> $GITHUB_OUTPUT
           else
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Create GitHub Release
+      - name: Create or Update GitHub Release
         if: steps.orbis_check.outputs.exists == 'false'
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: ncipollo/release-action@v1
         with:
-          tag_name: v${{ needs.build.outputs.version }}
-          release_name: Build ${{ needs.build.outputs.version }}
-          draft: false
-          prerelease: true
-          commitish: hytale
+          tag: v${{ needs.build.outputs.version }}
+          name: Release Hytale ${{ needs.build.outputs.version }}
+          body: "Automatic build for Hytale branch."
+          artifacts: "${{ env.JAR_FILE }}"
+          allowUpdates: true
+          commit: hytale
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload to Orbis.place
         if: steps.orbis_check.outputs.exists == 'false'

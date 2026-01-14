@@ -129,4 +129,4 @@ messages:
   chat_muted_error_discord: "Chat is actually muted by an operator!"
   reloaded: "{prefix} The plugin has been reloaded!"
   module_disabled: "{prefix} This function is actually disabled!"
-  new_version: "{prefix} A new version of the plugin is available! ({version})"
+  new_version: "{prefix} A new version of the plugin is available! ({new_version})"

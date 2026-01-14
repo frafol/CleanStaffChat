@@ -4,6 +4,7 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.AbstractCommand;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.CommandSender;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
@@ -18,151 +19,123 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Level;
 
 public class AdminChatCommand extends AbstractCommand {
 
     private final CleanStaffChat plugin;
 
-    public AdminChatCommand(CleanStaffChat plugin, String name, String description, List<String> aliases) {
+    public AdminChatCommand(CleanStaffChat plugin, String name, String description, java.util.List<String> aliases) {
         super(name, description);
         this.plugin = plugin;
         this.setAllowsExtraArguments(true);
         if (aliases != null) {
-            this.addAliases(aliases.toArray(String[]::new));
+            this.addAliases(aliases.toArray(new String[0]));
         }
     }
 
     @Override
     protected CompletableFuture<Void> execute(@Nonnull CommandContext context) {
         CommandSender sender = context.sender();
-        String input = context.getInputString();
-        String[] allArgs = input.trim().isEmpty() ? new String[0] : input.split("\\s+");
-        String[] args = allArgs.length > 0 && allArgs[0].equalsIgnoreCase(getName()) ?
-                java.util.Arrays.copyOfRange(allArgs, 1, allArgs.length) : allArgs;
+        String permission = HytaleConfig.ADMINCHAT_USE_PERMISSION.get(String.class);
+        boolean senderHasPerm = PermissionsModule.get().hasPermission(sender.getUuid(), permission);
 
-        String prefix = HytaleMessages.ADMINPREFIX.get(String.class);
+        String input = context.getInputString().trim();
+        String[] split = input.split("\\s+", 2);
+        String messageArg = split.length > 1 ? split[1] : "";
 
-        if (!PermissionsModule.get().hasPermission(sender.getUuid(), HytaleConfig.ADMINCHAT_USE_PERMISSION.get(String.class))) {
-            if (!Boolean.TRUE.equals(HytaleConfig.HIDE_ADVERTS.get(Boolean.class))) {
-                sender.sendMessage(ChatColor.color(("This server is using CleanStaffChat by frafol.")));
-            } else {
-                String noPerm = HytaleMessages.NO_PERMISSION.get(String.class)
-                        .replace("{prefix}", prefix != null ? prefix : "");
-                sender.sendMessage(ChatColor.color((noPerm)));
-            }
-            return CompletableFuture.completedFuture(null);
-        }
-
-        if (args.length == 0) {
-            if (sender.getUuid() == null) {
-                String playerOnly = HytaleMessages.PLAYER_ONLY.get(String.class)
-                        .replace("{prefix}", prefix != null ? prefix : "");
-                sender.sendMessage(ChatColor.color((playerOnly)));
+        if (messageArg.isEmpty()) {
+            if (!(sender instanceof Player)) {
+                sender.sendMessage(HytaleMessages.PLAYER_ONLY.color());
                 return CompletableFuture.completedFuture(null);
             }
 
-            if (!Boolean.TRUE.equals(HytaleConfig.ADMINCHAT_TALK_MODULE.get(Boolean.class))) {
-                String adminArgs = HytaleMessages.ADMINARGUMENTS.get(String.class)
-                        .replace("{prefix}", prefix != null ? prefix : "");
-                sender.sendMessage(ChatColor.color((adminArgs)));
-                return CompletableFuture.completedFuture(null);
-            }
+            if (senderHasPerm) {
+                if (!PlayerCache.getToggled_2_admin().contains(sender.getUuid())) {
+                    if (!Boolean.TRUE.equals(HytaleConfig.ADMINCHAT_TALK_MODULE.get(Boolean.class))) {
+                        sender.sendMessage(HytaleMessages.ADMINARGUMENTS.color());
+                        return CompletableFuture.completedFuture(null);
+                    }
 
-            if (PlayerCache.getToggled_2_admin().contains(sender.getUuid())) {
-                PlayerCache.getToggled_2_admin().remove(sender.getUuid());
-                String disabled = HytaleMessages.ADMINCHAT_TALK_DISABLED.get(String.class)
-                        .replace("{prefix}", prefix != null ? prefix : "");
-                sender.sendMessage(ChatColor.color((disabled)));
-            } else {
-                if (!PlayerCache.getMuted().contains("true")) {
-                    PlayerCache.getToggled_2_admin().add(sender.getUuid());
-                    PlayerCache.getToggled_2_donor().remove(sender.getUuid());
-                    PlayerCache.getToggled_2().remove(sender.getUuid());
-                    String enabled = HytaleMessages.ADMINCHAT_TALK_ENABLED.get(String.class)
-                            .replace("{prefix}", prefix != null ? prefix : "");
-                    sender.sendMessage(ChatColor.color((enabled)));
+                    if (!PlayerCache.getMuted().contains("true")) {
+                        PlayerCache.getToggled_2_admin().add(sender.getUuid());
+                        PlayerCache.getToggled_2().remove(sender.getUuid());
+                        PlayerCache.getToggled_2_donor().remove(sender.getUuid());
+                        sender.sendMessage(HytaleMessages.ADMINCHAT_TALK_ENABLED.color());
+                    }
                 } else {
-                    String muted = HytaleMessages.ADMINCHAT_MUTED_ERROR.get(String.class)
-                            .replace("{prefix}", prefix != null ? prefix : "");
-                    sender.sendMessage(ChatColor.color((muted)));
+                    PlayerCache.getToggled_2_admin().remove(sender.getUuid());
+                    sender.sendMessage(HytaleMessages.ADMINCHAT_TALK_DISABLED.color());
+                }
+            } else {
+                if (Boolean.FALSE.equals(HytaleConfig.HIDE_ADVERTS.get(Boolean.class))) {
+                    sender.sendMessage(ChatColor.color(("This server is using CleanStaffChat by frafol")));
                 }
             }
             return CompletableFuture.completedFuture(null);
         }
 
-        if (PlayerCache.getMuted().contains("true")) {
-            String muted = HytaleMessages.ADMINCHAT_MUTED_ERROR.get(String.class)
-                    .replace("{prefix}", prefix != null ? prefix : "");
-            sender.sendMessage(ChatColor.color((muted)));
+        if (!senderHasPerm) {
+            sender.sendMessage(HytaleMessages.NO_PERMISSION.color());
             return CompletableFuture.completedFuture(null);
         }
 
-        String message = String.join(" ", args);
-        broadcastAdminMessage(sender, message);
-        sendDiscordMessage(sender, message);
-        return CompletableFuture.completedFuture(null);
-    }
+        if (PlayerCache.getMuted().contains("true")) {
+            sender.sendMessage(HytaleMessages.ADMINCHAT_MUTED_ERROR.color());
+            return CompletableFuture.completedFuture(null);
+        }
 
-    private void broadcastAdminMessage(CommandSender sender, String message) {
-        String adminPrefix = HytaleMessages.ADMINPREFIX.get(String.class);
-        String usePerm = HytaleConfig.ADMINCHAT_USE_PERMISSION.get(String.class);
-        boolean isConsole = sender.getUuid() == null;
+        String senderName = (sender instanceof Player) ? sender.getDisplayName() : HytaleConfig.CONSOLE_PREFIX.get(String.class);
+        String rawFormat = HytaleMessages.ADMINCHAT_FORMAT.get(String.class);
+        String prefix = HytaleMessages.ADMINPREFIX.get(String.class);
 
-        HytaleMessages formatEnum = isConsole ? HytaleMessages.ADMINCHAT_CONSOLE_FORMAT : HytaleMessages.ADMINCHAT_FORMAT;
-        String rawFormat = formatEnum.get(String.class);
-
-        String finalMessage = rawFormat
-                .replace("{prefix}", adminPrefix != null ? adminPrefix : "")
-                .replace("{user}", sender.getDisplayName())
-                .replace("{displayname}", sender.getDisplayName())
-                .replace("{message}", message)
+        String formatted = rawFormat
+                .replace("{prefix}", prefix != null ? prefix : "")
+                .replace("{user}", senderName)
+                .replace("{displayname}", senderName)
+                .replace("{message}", messageArg)
                 .replace("{userprefix}", "")
                 .replace("{usersuffix}", "")
                 .replace("{server}", "");
 
-        Message hytaleMsg = ChatColor.color((finalMessage));
-
+        Message hytaleMsg = ChatColor.color((formatted));
         Universe.get().getWorlds().values().forEach(world -> {
             for (PlayerRef ref : world.getPlayerRefs()) {
-                if (PermissionsModule.get().hasPermission(ref.getUuid(), usePerm)
+                if (PermissionsModule.get().hasPermission(ref.getUuid(), permission)
                         && !PlayerCache.getToggled_admin().contains(ref.getUuid())) {
                     ref.sendMessage(hytaleMsg);
                 }
             }
         });
 
-        if (!isConsole) {
-            plugin.getLogger().at(Level.INFO).log("[" + adminPrefix + "] " + sender.getDisplayName() + ": " + message);
-        }
+        if (!(sender instanceof Player)) sender.sendMessage(hytaleMsg);
+        sendToDiscord(senderName, messageArg);
+        return CompletableFuture.completedFuture(null);
     }
 
-    private void sendDiscordMessage(CommandSender sender, String message) {
-        if (!Boolean.TRUE.equals(HytaleDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) ||
-                !Boolean.TRUE.equals(HytaleConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class))) return;
+    private void sendToDiscord(String user, String message) {
+        if (Boolean.TRUE.equals(HytaleDiscordConfig.DISCORD_ENABLED.get(Boolean.class))
+                && Boolean.TRUE.equals(HytaleConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class))) {
 
-        if (plugin.getJda() == null) return;
-        TextChannel channel = plugin.getJda().getTextChannelById(HytaleDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
-        if (channel == null) return;
+            if (plugin.getJda() == null) return;
+            TextChannel channel = plugin.getJda().getTextChannelById(HytaleDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
+            if (channel == null) return;
 
-        String formatted = HytaleMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
-                .replace("{user}", sender.getDisplayName())
-                .replace("{message}", message)
-                .replace("{server}", "");
+            String discordFormat = HytaleMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                    .replace("{user}", user)
+                    .replace("{message}", message);
 
-        if (Boolean.TRUE.equals(HytaleDiscordConfig.USE_EMBED.get(Boolean.class))) {
-            EmbedBuilder embed = new EmbedBuilder();
-            embed.setTitle(HytaleDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class));
-            embed.setDescription(formatted);
-            try {
-                embed.setColor(Color.decode(HytaleDiscordConfig.EMBEDS_ADMINCHATCOLOR.get(String.class)));
-            } catch (Exception ignored) {}
-            embed.setFooter(HytaleDiscordConfig.EMBEDS_FOOTER.get(String.class));
-            channel.sendMessageEmbeds(embed.build()).queue();
-        } else {
-            channel.sendMessage(formatted).queue();
+            if (Boolean.TRUE.equals(HytaleDiscordConfig.USE_EMBED.get(Boolean.class))) {
+                EmbedBuilder embed = new EmbedBuilder();
+                embed.setTitle(HytaleDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class));
+                embed.setDescription(discordFormat);
+                try {
+                    embed.setColor(Color.decode(HytaleDiscordConfig.EMBEDS_ADMINCHATCOLOR.get(String.class)));
+                } catch (Exception ignored) {}
+                channel.sendMessageEmbeds(embed.build()).queue();
+            } else {
+                channel.sendMessage(discordFormat).queue();
+            }
         }
     }
 }

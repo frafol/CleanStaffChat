@@ -1,5 +1,7 @@
 package it.frafol.cleanstaffchat.hytale;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.command.system.AbstractCommand;
 import com.hypixel.hytale.server.core.event.events.player.PlayerChatEvent;
@@ -11,6 +13,7 @@ import com.hypixel.hytale.server.core.universe.Universe;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleCommandsConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleDiscordConfig;
+import it.frafol.cleanstaffchat.hytale.enums.HytaleVersion;
 import it.frafol.cleanstaffchat.hytale.objects.TextFile;
 import it.frafol.cleanstaffchat.hytale.staffchat.commands.ReloadCommand;
 import it.frafol.cleanstaffchat.hytale.staffchat.listeners.ChatListener;
@@ -23,8 +26,14 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.jetbrains.annotations.NotNull;
 import org.simpleyaml.configuration.file.YamlFile;
+import ru.vyarus.yaml.updater.YamlUpdater;
+import ru.vyarus.yaml.updater.util.FileUtils;
 
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -56,16 +65,8 @@ public class CleanStaffChat extends JavaPlugin {
                 " \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)\n");
         //  getLogger().at(Level.INFO).log("Hytale Server Version: " + HytaleServer.get().getVersion());
 
-        try {
-            this.configTextFile = new TextFile(getDataDirectory(), "config.yml");
-            this.messagesTextFile = new TextFile(getDataDirectory(), "messages.yml");
-            this.discordTextFile = new TextFile(getDataDirectory(), "discord.yml");
-            this.aliasesTextFile = new TextFile(getDataDirectory(), "aliases.yml");
-            this.versionTextFile = new TextFile(getDataDirectory(), "version.yml");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
+        loadFiles();
+        updateConfig();
         getLogger().at(Level.INFO).log("Configurations loaded successfully!");
     }
 
@@ -124,6 +125,7 @@ public class CleanStaffChat extends JavaPlugin {
             registerStaffListCommands();
         }
 
+        UpdateCheck.checkForUpdates(this, getVersionFromJson(), "cmkcxg67b000g01s6ewk287pn");
         getLogger().at(Level.INFO).log("Plugin successfully enabled on Hytale!");
     }
 
@@ -144,6 +146,7 @@ public class CleanStaffChat extends JavaPlugin {
                 jda = JDABuilder.createDefault(HytaleDiscordConfig.DISCORD_TOKEN.get(String.class))
                         .enableIntents(GatewayIntent.MESSAGE_CONTENT)
                         .build();
+                updateJDATask();
                 getLogger().at(Level.INFO).log("Hooked into Discord successfully!");
             } catch (Exception e) {
                 getLogger().at(Level.SEVERE).withCause(e).log("Invalid Discord configuration.");
@@ -281,7 +284,7 @@ public class CleanStaffChat extends JavaPlugin {
             } catch (Exception e) {
                 getLogger().at(Level.SEVERE).log("Error during JDA update: " + e.getMessage());
             }
-        }, 1, 30, TimeUnit.SECONDS);
+        }, 20, 30, TimeUnit.SECONDS);
     }
 
     public void updateJDA() {
@@ -300,6 +303,58 @@ public class CleanStaffChat extends JavaPlugin {
                 HytaleDiscordConfig.DISCORD_ACTIVITY.get(String.class)
                         .replace("%players%", String.valueOf(Universe.get().getPlayers().size()))
         ));
+    }
+
+    private void updateConfig() {
+        if (!getVersionFromJson().equals(HytaleVersion.VERSION.get(String.class))) {
+            getLogger().at(Level.INFO).log("Creating new configurations...");
+            YamlUpdater.create(new File(getDataDirectory() + "/config.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/hytale/hytale/src/main/resources/config.yml"))
+                    .backup(true)
+                    .update();
+            YamlUpdater.create(new File(getDataDirectory() + "/messages.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/hytale/hytale/src/main/resources/messages.yml"))
+                    .backup(true)
+                    .update();
+            YamlUpdater.create(new File(getDataDirectory() + "/discord.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/hytale/hytale/src/main/resources/discord.yml"))
+                    .backup(true)
+                    .update();
+            YamlUpdater.create(new File(getDataDirectory() + "/aliases.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/hytale/hytale/src/main/resources/aliases.yml"))
+                    .backup(true)
+                    .update();
+            versionTextFile.getConfig().set("version", getVersionFromJson());
+            try {
+                versionTextFile.getConfig().save();
+            } catch (Exception ignored) {}
+            loadFiles();
+        }
+    }
+
+    public String getVersionFromJson() {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream("manifest.json")) {
+            if (is == null) {
+                return HytaleVersion.VERSION.get(String.class);
+            }
+            try (InputStreamReader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+                JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
+                if (jsonObject.has("Version")) {
+                    return jsonObject.get("Version").getAsString();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return HytaleVersion.VERSION.get(String.class);
+    }
+
+    private void loadFiles() {
+        try {
+            this.configTextFile = new TextFile(getDataDirectory(), "config.yml");
+            this.messagesTextFile = new TextFile(getDataDirectory(), "messages.yml");
+            this.discordTextFile = new TextFile(getDataDirectory(), "discord.yml");
+            this.aliasesTextFile = new TextFile(getDataDirectory(), "aliases.yml");
+            this.versionTextFile = new TextFile(getDataDirectory(), "version.yml");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static CleanStaffChat getInstance() {

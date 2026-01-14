@@ -105,7 +105,7 @@ jobs:
             -H "Content-Type: application/json" \
             -d '{
               "versionNumber": "'"${LOCAL_VERSION}"'",
-              "name": "'"${LOCAL_VERSION} - Auto Release"'",
+              "name": "'"GitHub - Development Build Release"'",
               "channel": "ALPHA",
               "changelog": "Built from branch hytale",
               "compatibleHytaleVersionIds": ["'"${HYTALE_VERSION_ID}"'"]
@@ -119,10 +119,20 @@ jobs:
         env:
           ORBIS_KEY: ${{ secrets.ORBIS_API_KEY }}
           RESOURCE_ID: "cmkcxg67b000g01s6ewk287pn"
+          JAR_FILE: ${{ env.JAR_FILE }}
         run: |
           curl -v -X POST "https://api.orbis.place/resources/${RESOURCE_ID}/versions/${{ steps.orbis_create.outputs.VERSION_ID }}/files" \
             -H "x-api-key: $ORBIS_KEY" \
             -F "file=@${JAR_FILE}"
+
+      - name: Submit version to Orbis.place for review
+        if: steps.orbis_check.outputs.exists == 'false'
+        env:
+          ORBIS_KEY: ${{ secrets.ORBIS_API_KEY }}
+          RESOURCE_ID: "cmkcxg67b000g01s6ewk287pn"
+        run: |
+          curl -v -X POST "https://api.orbis.place/resources/${RESOURCE_ID}/versions/${{ steps.orbis_create.outputs.VERSION_ID }}/submit" \
+            -H "x-api-key: $ORBIS_KEY"
 
       - name: Show Orbis response
         if: steps.orbis_check.outputs.exists == 'false'

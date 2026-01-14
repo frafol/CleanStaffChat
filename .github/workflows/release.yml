@@ -90,12 +90,6 @@ jobs:
           commit: hytale
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Debug and Set Path
-        run: |
-          ls -R ./all_artifacts
-          FOUND_JAR=$(find ./all_artifacts -name "*.jar" | head -n 1)
-          echo "FINAL_JAR_PATH=$FOUND_JAR" >> $GITHUB_ENV
-
       - name: Upload to Orbis.place
         if: steps.orbis_check.outputs.exists == 'false'
         env:
@@ -104,9 +98,10 @@ jobs:
           HYTALE_VERSION_ID: "cmj1x42ef001k4qz9r03ojrpe"
           LOCAL_VERSION: ${{ needs.build.outputs.version }}
         run: |
+          JAR_PATH="./all_artifacts/CleanStaffChat.jar"
           curl -v "https://api.orbis.place/resources/${RESOURCE_ID}/versions" \
             -H "x-api-key: ${ORBIS_KEY}" \
-            -F "file=@${{ env.RESOLVED_JAR_PATH }}" \
+            -F "file=@${JAR_PATH}" \
             -F "versionNumber=${LOCAL_VERSION}" \
             -F "name=${LOCAL_VERSION} - Auto Release" \
             -F "channel=ALPHA" \

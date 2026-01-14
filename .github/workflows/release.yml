@@ -91,7 +91,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload to Orbis.place
-        if: steps.orbis_check.outputs.outputs.exists == 'false'
+        if: steps.orbis_check.outputs.exists == 'false'
         env:
           ORBIS_KEY: ${{ secrets.ORBIS_API_KEY }}
           RESOURCE_ID: "cmkcxg67b000g01s6ewk287pn"

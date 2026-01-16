@@ -89,6 +89,10 @@
 
     <repositories>
         <repository>
+            <id>local-repo</id>
+            <url>file://${project.basedir}/libs</url>
+        </repository>
+        <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>

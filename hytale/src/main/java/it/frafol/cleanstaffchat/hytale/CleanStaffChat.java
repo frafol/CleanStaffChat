@@ -20,6 +20,8 @@ import it.frafol.cleanstaffchat.hytale.staffchat.listeners.ChatListener;
 import it.frafol.cleanstaffchat.hytale.staffchat.listeners.JoinListener;
 import it.frafol.cleanstaffchat.hytale.staffchat.listeners.ListChatListener;
 import it.frafol.cleanstaffchat.hytale.staffchat.listeners.MoveListener;
+import net.byteflux.libby.HytaleLibraryManager;
+import net.byteflux.libby.Library;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -49,8 +51,6 @@ public class CleanStaffChat extends JavaPlugin {
     private TextFile aliasesTextFile;
     private TextFile versionTextFile;
 
-    public boolean updated = false;
-
     public CleanStaffChat(@NotNull JavaPluginInit init) {
         super(init);
         instance = this;
@@ -65,6 +65,7 @@ public class CleanStaffChat extends JavaPlugin {
                 " \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)\n");
         //  getLogger().at(Level.INFO).log("Hytale Server Version: " + HytaleServer.get().getVersion());
 
+        loadLibraries();
         loadFiles();
         updateConfig();
         getLogger().at(Level.INFO).log("Configurations loaded successfully!");
@@ -162,7 +163,7 @@ public class CleanStaffChat extends JavaPlugin {
                 AbstractCommand command = (AbstractCommand) commandConfig.getCommandClass()
                         .getDeclaredConstructors()[0].newInstance(
                         this,
-                        commandLabels.get(0),
+                        commandLabels.getFirst(),
                         "Staff Chat Command",
                         commandLabels.subList(1, commandLabels.size())
                 );
@@ -183,7 +184,7 @@ public class CleanStaffChat extends JavaPlugin {
                 AbstractCommand command = (AbstractCommand) commandsList.getCommandClass()
                         .getDeclaredConstructors()[0].newInstance(
                         this,
-                        commandLabels.get(0),
+                        commandLabels.getFirst(),
                         "Staff List Command",
                         commandLabels.subList(1, commandLabels.size())
                 );
@@ -210,7 +211,7 @@ public class CleanStaffChat extends JavaPlugin {
                 AbstractCommand command = (AbstractCommand) commandConfig.getCommandClass()
                         .getDeclaredConstructors()[0].newInstance(
                         this,
-                        commandLabels.get(0),
+                        commandLabels.getFirst(),
                         "Admin Chat Command",
                         commandLabels.subList(1, commandLabels.size())
                 );
@@ -230,7 +231,7 @@ public class CleanStaffChat extends JavaPlugin {
             AbstractCommand command = (AbstractCommand) commandConfig.getCommandClass()
                     .getDeclaredConstructors()[0].newInstance(
                     this,
-                    commandLabels.get(0),
+                    commandLabels.getFirst(),
                     "Mute Chat Command",
                     commandLabels.subList(1, commandLabels.size())
             );
@@ -247,7 +248,7 @@ public class CleanStaffChat extends JavaPlugin {
             AbstractCommand command = (AbstractCommand) commandConfig.getCommandClass()
                     .getDeclaredConstructors()[0].newInstance(
                     this,
-                    commandLabels.get(0),
+                    commandLabels.getFirst(),
                     "Donor Chat Command",
                     commandLabels.subList(1, commandLabels.size())
             );
@@ -274,6 +275,16 @@ public class CleanStaffChat extends JavaPlugin {
 
     public YamlFile getVersionTextFile() {
         return getInstance().versionTextFile.getConfig();
+    }
+
+    private void loadLibraries() {
+        HytaleLibraryManager hytaleLibraryManager = new HytaleLibraryManager(this);
+        Library yaml = Library.builder().groupId("me{}carleslc{}Simple-YAML").artifactId("Simple-Yaml").version("1.8.4").build();
+        Library discord = Library.builder().groupId("net{}dv8tion").artifactId("JDA").version("6.3.0").build();
+        hytaleLibraryManager.addMavenCentral();
+        hytaleLibraryManager.addJitPack();
+        hytaleLibraryManager.loadLibrary(discord);
+        hytaleLibraryManager.loadLibrary(yaml);
     }
 
     private void updateJDATask() {
@@ -330,18 +341,12 @@ public class CleanStaffChat extends JavaPlugin {
 
     public String getVersionFromJson() {
         try (InputStream is = getClass().getClassLoader().getResourceAsStream("manifest.json")) {
-            if (is == null) {
-                return HytaleVersion.VERSION.get(String.class);
-            }
+            if (is == null) return HytaleVersion.VERSION.get(String.class);
             try (InputStreamReader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
                 JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
-                if (jsonObject.has("Version")) {
-                    return jsonObject.get("Version").getAsString();
-                }
+                if (jsonObject.has("Version")) return jsonObject.get("Version").getAsString();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ignored) {}
         return HytaleVersion.VERSION.get(String.class);
     }
 

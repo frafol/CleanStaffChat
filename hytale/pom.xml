@@ -16,7 +16,7 @@
     <name>hytale</name>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>25</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -49,44 +49,12 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <minimizeJar>true</minimizeJar>
+                            <minimizeJar>false</minimizeJar>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <relocations>
                                 <relocation>
-                                    <pattern>net.dv8tion.jda</pattern>
-                                    <shadedPattern>it.frafol.cleanstaffchat.hytale.libs.jda</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>org.simpleyaml</pattern>
-                                    <shadedPattern>it.frafol.cleanstaffchat.hytale.libs.simpleyaml</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>ru.vyarus.yaml.updater</pattern>
-                                    <shadedPattern>it.frafol.cleanstaffchat.hytale.libs.yamlupdater</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>com.neovisionaries.ws.client</pattern>
-                                    <shadedPattern>it.frafol.cleanstaffchat.hytale.libs.websocket</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>com.fasterxml.jackson</pattern>
-                                    <shadedPattern>it.frafol.cleanstaffchat.hytale.libs.jackson</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>gnu.trove</pattern>
-                                    <shadedPattern>it.frafol.cleanstaffchat.hytale.libs.trove</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>org.slf4j</pattern>
-                                    <shadedPattern>it.frafol.cleanstaffchat.hytale.libs.slf4j</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>okhttp3</pattern>
-                                    <shadedPattern>it.frafol.cleanstaffchat.hytale.libs.okhttp</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>okio</pattern>
-                                    <shadedPattern>it.frafol.cleanstaffchat.hytale.libs.okio</shadedPattern>
+                                    <pattern>net.byteflux.libby</pattern>
+                                    <shadedPattern>it.frafol.cleanstaffchat.hytale.libs.libby</shadedPattern>
                                 </relocation>
                             </relocations>
                             <filters>
@@ -133,6 +101,16 @@
 
     <dependencies>
         <dependency>
+            <groupId>net.byteflux</groupId>
+            <artifactId>libby-core</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>net.byteflux</groupId>
+            <artifactId>libby-hytale</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+        <dependency>
             <groupId>com.hypixel.hytale</groupId>
             <artifactId>Server</artifactId>
             <version>1.0.0-EA</version>
@@ -143,28 +121,7 @@
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
             <version>6.3.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>club.minnced</groupId>
-                    <artifactId>opus-java</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.crypto.tink</groupId>
-                    <artifactId>tink</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>net.java.dev.jna</groupId>
-                    <artifactId>jna</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>club.minnced</groupId>
-                    <artifactId>jetbrains-annotations</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.commons</groupId>
-                    <artifactId>commons-collections4</artifactId>
-                </exclusion>
-            </exclusions>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>ru.vyarus</groupId>
@@ -175,6 +132,7 @@
             <groupId>me.carleslc.Simple-YAML</groupId>
             <artifactId>Simple-Yaml</artifactId>
             <version>1.8.4</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

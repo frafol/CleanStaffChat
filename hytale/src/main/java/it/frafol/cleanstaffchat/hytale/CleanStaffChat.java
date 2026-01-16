@@ -69,14 +69,9 @@ public class CleanStaffChat extends JavaPlugin {
         loadFiles();
         updateConfig();
         getLogger().at(Level.INFO).log("Configurations loaded successfully!");
-    }
-
-    @Override
-    protected void start() {
 
         getCommandRegistry().registerCommand(new ReloadCommand(this));
         startJDA();
-
         if (Boolean.TRUE.equals(HytaleConfig.STAFFCHAT.get(Boolean.class))) {
             registerStaffChatCommands();
             JoinListener joinListener = new JoinListener(this);
@@ -295,7 +290,7 @@ public class CleanStaffChat extends JavaPlugin {
             } catch (Exception e) {
                 getLogger().at(Level.SEVERE).log("Error during JDA update: " + e.getMessage());
             }
-        }, 20, 30, TimeUnit.SECONDS);
+        }, 1, 30, TimeUnit.SECONDS);
     }
 
     public void updateJDA() {

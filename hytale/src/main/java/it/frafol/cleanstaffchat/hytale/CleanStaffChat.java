@@ -26,6 +26,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.internal.utils.JDALogger;
 import org.jetbrains.annotations.NotNull;
 import org.simpleyaml.configuration.file.YamlFile;
 import ru.vyarus.yaml.updater.YamlUpdater;
@@ -139,6 +140,7 @@ public class CleanStaffChat extends JavaPlugin {
     public void startJDA() {
         if (HytaleDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
             try {
+                JDALogger.setFallbackLoggerEnabled(false);
                 jda = JDABuilder.createDefault(HytaleDiscordConfig.DISCORD_TOKEN.get(String.class))
                         .enableIntents(GatewayIntent.MESSAGE_CONTENT)
                         .build();

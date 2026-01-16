@@ -157,10 +157,6 @@
                     <artifactId>jna</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>com.neovisionaries</groupId>
-                    <artifactId>nv-websocket-client</artifactId>
-                </exclusion>
-                <exclusion>
                     <groupId>club.minnced</groupId>
                     <artifactId>jetbrains-annotations</artifactId>
                 </exclusion>

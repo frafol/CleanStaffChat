@@ -10,6 +10,7 @@ import it.frafol.cleanstaffchat.hytale.CleanStaffChat;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleMessages;
 import it.frafol.cleanstaffchat.hytale.objects.ChatColor;
+import it.frafol.cleanstaffchat.hytale.objects.LuckPermsUtil;
 import it.frafol.cleanstaffchat.hytale.objects.PlayerCache;
 
 import javax.annotation.Nonnull;
@@ -84,8 +85,8 @@ public class StaffListCommand extends AbstractCommand {
 
                 String format = HytaleMessages.LIST_FORMAT.get(String.class)
                         .replace("{prefix}", prefix != null ? prefix : "")
-                        .replace("{userprefix}", "")
-                        .replace("{usersuffix}", "")
+                        .replace("{userprefix}", LuckPermsUtil.getPrefix(sender.getUuid()))
+                        .replace("{usersuffix}", LuckPermsUtil.getSuffix(sender.getUuid()))
                         .replace("{player}", staff.getUsername())
                         .replace("{afk}", isAFK)
                         .replace("{server}", "");

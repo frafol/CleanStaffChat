@@ -11,6 +11,7 @@ import it.frafol.cleanstaffchat.hytale.enums.HytaleConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleDiscordConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleMessages;
 import it.frafol.cleanstaffchat.hytale.objects.ChatColor;
+import it.frafol.cleanstaffchat.hytale.objects.LuckPermsUtil;
 import it.frafol.cleanstaffchat.hytale.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -88,8 +89,8 @@ public class ChatListener extends ListenerAdapter {
                 .replace("{user}", sender.getUsername())
                 .replace("{displayname}", sender.getUsername())
                 .replace("{message}", message)
-                .replace("{userprefix}", "")
-                .replace("{usersuffix}", "")
+                .replace("{userprefix}", LuckPermsUtil.getPrefix(sender.getUuid()))
+                .replace("{usersuffix}", LuckPermsUtil.getSuffix(sender.getUuid()))
                 .replace("{server}", "");
 
         Message hytaleMsg = ChatColor.color((finalMessage));

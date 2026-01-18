@@ -11,6 +11,7 @@ import it.frafol.cleanstaffchat.hytale.enums.HytaleConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleDiscordConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleMessages;
 import it.frafol.cleanstaffchat.hytale.objects.ChatColor;
+import it.frafol.cleanstaffchat.hytale.objects.LuckPermsUtil;
 import it.frafol.cleanstaffchat.hytale.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -51,8 +52,8 @@ public class JoinListener {
                     .replace("{prefix}", prefix != null ? prefix : "")
                     .replace("{user}", player.getUsername())
                     .replace("{displayname}", player.getUsername())
-                    .replace("{userprefix}", "")
-                    .replace("{usersuffix}", "");
+                    .replace("{userprefix}", LuckPermsUtil.getPrefix(player.getUuid()))
+                    .replace("{usersuffix}", LuckPermsUtil.getSuffix(player.getUuid()));
 
             Message hytaleMsg = ChatColor.color((finalMessage));
 
@@ -91,8 +92,8 @@ public class JoinListener {
                     .replace("{prefix}", prefix != null ? prefix : "")
                     .replace("{user}", player.getUsername())
                     .replace("{displayname}", player.getUsername())
-                    .replace("{userprefix}", "")
-                    .replace("{usersuffix}", "");
+                    .replace("{userprefix}", LuckPermsUtil.getPrefix(player.getUuid()))
+                    .replace("{usersuffix}", LuckPermsUtil.getSuffix(player.getUuid()));
 
             Message hytaleMsg = ChatColor.color((finalMessage));
 

@@ -19,8 +19,8 @@ messages:
 
     # This message will be sent to all players connected to the server where globalchat is muted/unmuted.
     # You can use {userprefix}, {usersuffix}, {user}.
-    mutechat_enabled_broadcast: "{prefix} &7The globalchat has been &cmuted &7by {user}."
-    mutechat_disabled_broadcast: "{prefix} &7The globalchat has been &cunmuted &7by {user}."
+    mutechat_enabled_broadcast: "{prefix} &7The globalchat has been &cmuted &7by {userprefix}{user}{usersuffix}."
+    mutechat_disabled_broadcast: "{prefix} &7The globalchat has been &cunmuted &7by {userprefix}{user}{usersuffix}."
 
   staffchat:
 
@@ -41,14 +41,14 @@ messages:
     staffchat_toggled_off: "{prefix} &7The StaffChat is now &ainvisible&7."
 
     # Chat Formats.
-    staffchat_format: "{prefix} &7{user} &8» &7{message}" # You can use {server} on BungeeCord or Velocity.
-    staffchat_console_format: "{prefix} &7{user} &8» &7{message}" # You can use {server} on BungeeCord or Velocity.
+    staffchat_format: "{prefix} &7{userprefix}{user}{usersuffix} &8» &7{message}"
+    staffchat_console_format: "{prefix} &7{user} &8» &7{message}"
 
-    staff_join_message_format: "{prefix} &7[&a+&7] &f&d{user}"
-    staff_quit_message_format: "{prefix} &7[&c-&7] &f&d{user}"
+    staff_join_message_format: "{prefix} &7[&a+&7] &f&d{userprefix}{user}{usersuffix}"
+    staff_quit_message_format: "{prefix} &7[&c-&7] &f&d{userprefix}{user}{usersuffix}"
 
-    staff_afk_on_message_format: "{prefix} &7{user} is now &aAFK&7."
-    staff_afk_off_message_format: "{prefix} &7{user} is no longer &aAFK&7."
+    staff_afk_on_message_format: "{prefix} &7{userprefix}{user}{usersuffix} is now &aAFK&7."
+    staff_afk_off_message_format: "{prefix} &7{userprefix}{user}{usersuffix} is no longer &aAFK&7."
 
     discord:
 
@@ -81,8 +81,8 @@ messages:
     adminchat_toggled_off: "{prefix} &7The AdminChat is now &ainvisible&7."
 
     # Chat Formats
-    adminchat_format: "{prefix} &7{user} &8» &7{message}" # You can use {server} on BungeeCord or Velocity.
-    adminchat_console_format: "{prefix} &7{user} &8» &7{message}" # You can use {server} on BungeeCord or Velocity.
+    adminchat_format: "{prefix} &7{userprefix}{user}{usersuffix} &8» &7{message}"
+    adminchat_console_format: "{prefix} &7{user} &8» &7{message}"
 
     discord:
 
@@ -110,8 +110,8 @@ messages:
     donorchat_toggled_off: "{prefix} &7The DonorChat is now &ainvisible&7."
 
     # Chat Formats
-    donorchat_format: "{prefix} &7{user} &8» &7{message}" # You can use {server} on BungeeCord or Velocity.
-    donorchat_console_format: "{prefix} &7{user} &8» &7{message}" # You can use {server} on BungeeCord or Velocity.
+    donorchat_format: "{prefix} &7{userprefix}{user}{usersuffix} &8» &7{message}"
+    donorchat_console_format: "{prefix} &7{user} &8» &7{message}"
 
     discord:
 
@@ -127,7 +127,7 @@ messages:
 
     # Server StaffList Format, you can use {player}.
     header: "&8&m------&5&m------&d&m------&5&m------&8&m------&f"
-    format: "{player} {afk}"
+    format: "{userprefix}{player}{usersuffix} {afk}"
     footer: "&8&m------&5&m------&d&m------&5&m------&8&m------&f"
 
     nobody: "{prefix} &7There is no staff &donline&7."

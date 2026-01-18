@@ -65,7 +65,9 @@ public class UpdateCheck {
     }
 
     private static boolean isNewer(String current, String remote) {
-        if (current == null || remote == null) return false;
+        current = extractCleanVersion(current);
+        remote = extractCleanVersion(remote);
+        if (current.isEmpty() || remote.isEmpty()) return false;
         String[] currentParts = current.split("\\.");
         String[] remoteParts = remote.split("\\.");
         int length = Math.max(currentParts.length, remoteParts.length);
@@ -77,6 +79,20 @@ public class UpdateCheck {
         }
         return false;
     }
+
+    private static String extractCleanVersion(String version) {
+        if (version == null) return "";
+        StringBuilder cleanVersion = new StringBuilder();
+        for (char c : version.toCharArray()) {
+            if ((c >= '0' && c <= '9') || c == '.') {
+                cleanVersion.append(c);
+            } else {
+                break;
+            }
+        }
+        return cleanVersion.toString();
+    }
+
 
     private static int parseIntSafe(String s) {
         try {

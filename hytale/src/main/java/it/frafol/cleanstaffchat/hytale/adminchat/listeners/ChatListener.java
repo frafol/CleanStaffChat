@@ -43,7 +43,7 @@ public class ChatListener extends ListenerAdapter {
             return;
         }
 
-        if (!PermissionsModule.get().hasPermission(sender.getUuid(), usePerm)) {
+        if (!PermissionsUtil.hasPermission(sender.getUuid(), usePerm)) {
             if (isToggled) PlayerCache.getToggled_2_admin().remove(sender.getUuid());
             return;
         }
@@ -74,7 +74,7 @@ public class ChatListener extends ListenerAdapter {
 
         Universe.get().getWorlds().values().forEach(world -> {
             for (PlayerRef ref : world.getPlayerRefs()) {
-                if (PermissionsModule.get().hasPermission(ref.getUuid(), usePerm)
+                if (PermissionsUtil.hasPermission(ref.getUuid(), usePerm)
                         && !PlayerCache.getToggled_admin().contains(ref.getUuid())) {
                     ref.sendMessage(hytaleMsg);
                 }
@@ -131,7 +131,7 @@ public class ChatListener extends ListenerAdapter {
 
         Universe.get().getWorlds().values().forEach(world -> {
             for (PlayerRef ref : world.getPlayerRefs()) {
-                if (PermissionsModule.get().hasPermission(ref.getUuid(), HytaleConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
+                if (PermissionsUtil.hasPermission(ref.getUuid(), HytaleConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                         && !PlayerCache.getToggled_admin().contains(ref.getUuid())) {
                     ref.sendMessage(hytaleMsg);
                 }

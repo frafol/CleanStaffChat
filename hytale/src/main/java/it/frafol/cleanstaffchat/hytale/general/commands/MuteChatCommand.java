@@ -9,6 +9,7 @@ import com.hypixel.hytale.server.core.universe.Universe;
 import it.frafol.cleanstaffchat.hytale.CleanStaffChat;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleMessages;
+import it.frafol.cleanstaffchat.hytale.objects.PermissionsUtil;
 import it.frafol.cleanstaffchat.hytale.objects.PlayerCache;
 
 import javax.annotation.Nonnull;
@@ -36,8 +37,8 @@ public class MuteChatCommand extends AbstractCommand {
         String[] split = input.split("\\s+");
 
         if (split.length == 1) {
-            if (!PermissionsModule.get().hasPermission(sender.getUuid(), HytaleConfig.MUTECHAT_ALL_PERMISSION.get(String.class)) &&
-                    !PermissionsModule.get().hasPermission(sender.getUuid(), HytaleConfig.MUTECHAT_PERMISSION.get(String.class))) {
+            if (!PermissionsUtil.hasPermission(sender.getUuid(), HytaleConfig.MUTECHAT_ALL_PERMISSION.get(String.class)) &&
+                    !PermissionsUtil.hasPermission(sender.getUuid(), HytaleConfig.MUTECHAT_PERMISSION.get(String.class))) {
                 sender.sendMessage(HytaleMessages.NO_PERMISSION.color()
                         .param("prefix", HytaleMessages.GLOBALPREFIX.color().getRawText()));
                 return CompletableFuture.completedFuture(null);
@@ -77,7 +78,7 @@ public class MuteChatCommand extends AbstractCommand {
         } else {
             String staffPerm = HytaleConfig.STAFFCHAT_USE_PERMISSION.get(String.class);
             targetPlayers = Universe.get().getPlayers().stream()
-                    .filter(player -> PermissionsModule.get().hasPermission(player.getUuid(), staffPerm)
+                    .filter(player -> PermissionsUtil.hasPermission(player.getUuid(), staffPerm)
                             && !(PlayerCache.getToggled().contains(player.getUuid())));
         }
 

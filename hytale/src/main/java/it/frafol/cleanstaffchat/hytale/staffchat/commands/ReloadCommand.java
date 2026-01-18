@@ -8,6 +8,7 @@ import it.frafol.cleanstaffchat.hytale.enums.HytaleConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleDiscordConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleMessages;
 import it.frafol.cleanstaffchat.hytale.objects.ChatColor;
+import it.frafol.cleanstaffchat.hytale.objects.PermissionsUtil;
 import it.frafol.cleanstaffchat.hytale.objects.TextFile;
 
 import javax.annotation.Nonnull;
@@ -27,7 +28,7 @@ public class ReloadCommand extends AbstractCommand {
     protected CompletableFuture<Void> execute(@Nonnull CommandContext context) {
         String permission = HytaleConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class);
 
-        if (!PermissionsModule.get().hasPermission(context.sender().getUuid(), permission)) {
+        if (!PermissionsUtil.hasPermission(context.sender().getUuid(), permission)) {
             String noPerm = HytaleMessages.NO_PERMISSION.get(String.class)
                     .replace("{prefix}", HytaleMessages.PREFIX.get(String.class));
             context.sender().sendMessage(ChatColor.color((noPerm)));

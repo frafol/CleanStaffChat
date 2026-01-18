@@ -56,7 +56,7 @@ public class MoveListener {
     }
 
     private void handleAfkOff(PlayerRef player) {
-        if (!PermissionsModule.get().hasPermission(player.getUuid(), HytaleConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))) {
+        if (!PermissionsUtil.hasPermission(player.getUuid(), HytaleConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))) {
             return;
         }
 
@@ -80,7 +80,7 @@ public class MoveListener {
         Message hytaleMsg = ChatColor.color((finalMessage));
 
         Universe.get().getPlayers().stream()
-                .filter(p -> PermissionsModule.get().hasPermission(p.getUuid(), staffChatUsePerm)
+                .filter(p -> PermissionsUtil.hasPermission(p.getUuid(), staffChatUsePerm)
                         && !PlayerCache.getToggled().contains(p.getUuid()))
                 .forEach(p -> p.sendMessage(hytaleMsg));
 

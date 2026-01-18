@@ -43,7 +43,7 @@ public class StaffListCommand extends AbstractCommand {
         String showPermission = HytaleConfig.STAFFLIST_SHOW_PERMISSION.get(String.class);
         String prefix = HytaleMessages.PREFIX.get(String.class);
 
-        if (!PermissionsModule.get().hasPermission(sender.getUuid(), listPermission)) {
+        if (!PermissionsUtil.hasPermission(sender.getUuid(), listPermission)) {
             String noPerm = HytaleMessages.NO_PERMISSION.get(String.class)
                     .replace("{prefix}", prefix != null ? prefix : "");
             sender.sendMessage(ChatColor.color((noPerm)));
@@ -60,7 +60,7 @@ public class StaffListCommand extends AbstractCommand {
         List<PlayerRef> staffOnline = new ArrayList<>();
         Universe.get().getWorlds().values().forEach(world -> {
             for (PlayerRef ref : world.getPlayerRefs()) {
-                if (PermissionsModule.get().hasPermission(ref.getUuid(), showPermission)) {
+                if (PermissionsUtil.hasPermission(ref.getUuid(), showPermission)) {
                     staffOnline.add(ref);
                 }
             }

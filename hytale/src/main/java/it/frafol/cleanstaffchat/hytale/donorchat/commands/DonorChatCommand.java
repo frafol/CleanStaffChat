@@ -41,7 +41,7 @@ public class DonorChatCommand extends AbstractCommand {
     protected CompletableFuture<Void> execute(@Nonnull CommandContext context) {
         CommandSender sender = context.sender();
         String permission = HytaleConfig.DONORCHAT_USE_PERMISSION.get(String.class);
-        boolean senderHasPerm = PermissionsModule.get().hasPermission(sender.getUuid(), permission);
+        boolean senderHasPerm = PermissionsUtil.hasPermission(sender.getUuid(), permission);
 
         String input = context.getInputString().trim();
         String[] split = input.split("\\s+", 2);
@@ -109,7 +109,7 @@ public class DonorChatCommand extends AbstractCommand {
         Message hytaleMsg = ChatColor.color((formatted));
         Universe.get().getWorlds().values().forEach(world -> {
             for (PlayerRef ref : world.getPlayerRefs()) {
-                if (PermissionsModule.get().hasPermission(ref.getUuid(), permission)
+                if (PermissionsUtil.hasPermission(ref.getUuid(), permission)
                         && !PlayerCache.getToggled_donor().contains(ref.getUuid())) {
                     ref.sendMessage(hytaleMsg);
                 }
@@ -119,7 +119,7 @@ public class DonorChatCommand extends AbstractCommand {
         if (!(sender instanceof Player)) sender.sendMessage(hytaleMsg);
         sendToDiscord(senderName, messageArg);
 
-        if (sender instanceof Player && !PermissionsModule.get().hasPermission(sender.getUuid(), HytaleConfig.COOLDOWN_BYPASS_PERMISSION.get(String.class))) {
+        if (sender instanceof Player && !PermissionsUtil.hasPermission(sender.getUuid(), HytaleConfig.COOLDOWN_BYPASS_PERMISSION.get(String.class))) {
             PlayerCache.getCooldown().add(sender.getUuid());
             HytaleServer.SCHEDULED_EXECUTOR.schedule(() ->
                             PlayerCache.getCooldown().remove(sender.getUuid()),

@@ -45,7 +45,7 @@ public class ChatListener extends ListenerAdapter {
             return;
         }
 
-        if (!PermissionsModule.get().hasPermission(sender.getUuid(), usePerm)) {
+        if (!PermissionsUtil.hasPermission(sender.getUuid(), usePerm)) {
             if (isToggled) PlayerCache.getToggled_2_donor().remove(sender.getUuid());
             return;
         }
@@ -69,7 +69,7 @@ public class ChatListener extends ListenerAdapter {
         String prefixStr = HytaleConfig.DONORCHAT_PREFIX.get(String.class);
         String finalMessage = isShortcut ? message.substring(prefixStr.length()) : message;
 
-        if (!PermissionsModule.get().hasPermission(sender.getUuid(), HytaleConfig.COOLDOWN_BYPASS_PERMISSION.get(String.class))) {
+        if (!PermissionsUtil.hasPermission(sender.getUuid(), HytaleConfig.COOLDOWN_BYPASS_PERMISSION.get(String.class))) {
             PlayerCache.getCooldown().add(sender.getUuid());
             HytaleServer.SCHEDULED_EXECUTOR.schedule(() ->
                     PlayerCache.getCooldown().remove(sender.getUuid()), HytaleConfig.DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS);
@@ -97,7 +97,7 @@ public class ChatListener extends ListenerAdapter {
 
         Universe.get().getWorlds().values().forEach(world -> {
             for (PlayerRef ref : world.getPlayerRefs()) {
-                if (PermissionsModule.get().hasPermission(ref.getUuid(), usePerm)
+                if (PermissionsUtil.hasPermission(ref.getUuid(), usePerm)
                         && !PlayerCache.getToggled_donor().contains(ref.getUuid())) {
                     ref.sendMessage(hytaleMsg);
                 }
@@ -159,7 +159,7 @@ public class ChatListener extends ListenerAdapter {
 
         Universe.get().getWorlds().values().forEach(world -> {
             for (PlayerRef ref : world.getPlayerRefs()) {
-                if (PermissionsModule.get().hasPermission(ref.getUuid(), HytaleConfig.DONORCHAT_USE_PERMISSION.get(String.class))
+                if (PermissionsUtil.hasPermission(ref.getUuid(), HytaleConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                         && !PlayerCache.getToggled_donor().contains(ref.getUuid())) {
                     ref.sendMessage(hytaleMsg);
                 }

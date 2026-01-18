@@ -54,7 +54,7 @@ public class AFKCommand extends AbstractCommand {
             return CompletableFuture.completedFuture(null);
         }
 
-        if (!PermissionsModule.get().hasPermission(sender.getUuid(), Objects.requireNonNull(HytaleConfig.STAFFCHAT_AFK_PERMISSION.get(String.class)))) {
+        if (!PermissionsUtil.hasPermission(sender.getUuid(), Objects.requireNonNull(HytaleConfig.STAFFCHAT_AFK_PERMISSION.get(String.class)))) {
             String noPerm = HytaleMessages.NO_PERMISSION.get(String.class)
                     .replace("{prefix}", HytaleMessages.PREFIX.get(String.class));
             sender.sendMessage(ChatColor.color((noPerm)));
@@ -94,7 +94,7 @@ public class AFKCommand extends AbstractCommand {
         Universe.get().getWorlds().values().forEach(world -> {
             for (PlayerRef ref : world.getPlayerRefs()) {
                 assert usePermission != null;
-                if (PermissionsModule.get().hasPermission(ref.getUuid(), usePermission)
+                if (PermissionsUtil.hasPermission(ref.getUuid(), usePermission)
                         && !PlayerCache.getToggled().contains(ref.getUuid())) {
                     ref.sendMessage(hytaleMsg);
                 }

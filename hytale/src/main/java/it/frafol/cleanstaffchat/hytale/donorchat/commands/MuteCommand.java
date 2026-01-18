@@ -8,6 +8,7 @@ import it.frafol.cleanstaffchat.hytale.CleanStaffChat;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleMessages;
 import it.frafol.cleanstaffchat.hytale.objects.ChatColor;
+import it.frafol.cleanstaffchat.hytale.objects.PermissionsUtil;
 import it.frafol.cleanstaffchat.hytale.objects.PlayerCache;
 
 import javax.annotation.Nonnull;
@@ -39,7 +40,7 @@ public class MuteCommand extends AbstractCommand {
             return CompletableFuture.completedFuture(null);
         }
 
-        if (!PermissionsModule.get().hasPermission(sender.getUuid(), HytaleConfig.DONORCHAT_MUTE_PERMISSION.get(String.class))) {
+        if (!PermissionsUtil.hasPermission(sender.getUuid(), HytaleConfig.DONORCHAT_MUTE_PERMISSION.get(String.class))) {
             String noPerm = HytaleMessages.NO_PERMISSION.get(String.class)
                     .replace("{prefix}", prefix != null ? prefix : "");
             sender.sendMessage(ChatColor.color((noPerm)));

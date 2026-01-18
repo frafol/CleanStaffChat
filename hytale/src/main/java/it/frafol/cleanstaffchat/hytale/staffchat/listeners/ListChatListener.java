@@ -7,6 +7,7 @@ import it.frafol.cleanstaffchat.hytale.CleanStaffChat;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleDiscordConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleMessages;
+import it.frafol.cleanstaffchat.hytale.objects.PermissionsUtil;
 import it.frafol.cleanstaffchat.hytale.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -41,11 +42,11 @@ public class ListChatListener extends ListenerAdapter {
         List<UUID> list = new ArrayList<>();
 
         for (PlayerRef player : Universe.get().getPlayers()) {
-            if (!PermissionsModule.get().hasPermission(player.getUuid(), HytaleConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
+            if (!PermissionsUtil.hasPermission(player.getUuid(), HytaleConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
                 continue;
             }
             if (Boolean.TRUE.equals(HytaleConfig.STAFFLIST_BYPASS.get(Boolean.class)) &&
-                    PermissionsModule.get().hasPermission(player.getUuid(), HytaleConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
+                    PermissionsUtil.hasPermission(player.getUuid(), HytaleConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
                 continue;
             }
             list.add(player.getUuid());

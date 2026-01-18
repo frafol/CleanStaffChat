@@ -34,12 +34,12 @@ public class JoinListener {
             return;
         }
 
-        boolean hasStaffPerm = PermissionsModule.get().hasPermission(player.getUuid(), HytaleConfig.STAFFCHAT_USE_PERMISSION.get(String.class));
+        boolean hasStaffPerm = PermissionsUtil.hasPermission(player.getUuid(), HytaleConfig.STAFFCHAT_USE_PERMISSION.get(String.class));
         boolean joinAll = Boolean.TRUE.equals(HytaleConfig.STAFFCHAT_JOIN_LEAVE_ALL.get(Boolean.class));
 
         if (hasStaffPerm || joinAll) {
 
-            if (PermissionsModule.get().hasPermission(player.getUuid(), HytaleConfig.STAFFCHAT_JOIN_SILENT_PERMISSION.get(String.class))
+            if (PermissionsUtil.hasPermission(player.getUuid(), HytaleConfig.STAFFCHAT_JOIN_SILENT_PERMISSION.get(String.class))
                     && Boolean.TRUE.equals(HytaleConfig.STAFFCHAT_JOIN_SILENT_MODULE.get(Boolean.class))) {
                 return;
             }
@@ -58,7 +58,7 @@ public class JoinListener {
             Message hytaleMsg = ChatColor.color((finalMessage));
 
             Universe.get().getPlayers().stream()
-                    .filter(p -> PermissionsModule.get().hasPermission(p.getUuid(), staffChatPerm))
+                    .filter(p -> PermissionsUtil.hasPermission(p.getUuid(), staffChatPerm))
                     .forEach(p -> p.sendMessage(hytaleMsg));
 
             sendDiscordJoinLeave(player.getUsername(), true);
@@ -74,12 +74,12 @@ public class JoinListener {
             return;
         }
 
-        boolean hasStaffPerm = PermissionsModule.get().hasPermission(player.getUuid(), HytaleConfig.STAFFCHAT_USE_PERMISSION.get(String.class));
+        boolean hasStaffPerm = PermissionsUtil.hasPermission(player.getUuid(), HytaleConfig.STAFFCHAT_USE_PERMISSION.get(String.class));
         boolean quitAll = Boolean.TRUE.equals(HytaleConfig.STAFFCHAT_QUIT_ALL.get(Boolean.class));
 
         if (hasStaffPerm || quitAll) {
 
-            if (PermissionsModule.get().hasPermission(player.getUuid(), HytaleConfig.STAFFCHAT_QUIT_SILENT_PERMISSION.get(String.class))
+            if (PermissionsUtil.hasPermission(player.getUuid(), HytaleConfig.STAFFCHAT_QUIT_SILENT_PERMISSION.get(String.class))
                     && Boolean.TRUE.equals(HytaleConfig.STAFFCHAT_QUIT_SILENT_MODULE.get(Boolean.class))) {
                 return;
             }
@@ -98,7 +98,7 @@ public class JoinListener {
             Message hytaleMsg = ChatColor.color((finalMessage));
 
             Universe.get().getPlayers().stream()
-                    .filter(p -> PermissionsModule.get().hasPermission(p.getUuid(), staffChatPerm))
+                    .filter(p -> PermissionsUtil.hasPermission(p.getUuid(), staffChatPerm))
                     .forEach(p -> p.sendMessage(hytaleMsg));
 
             sendDiscordJoinLeave(player.getUsername(), false);

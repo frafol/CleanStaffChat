@@ -6,7 +6,7 @@ import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.hypixel.hytale.common.plugin.PluginIdentifier;
 import com.hypixel.hytale.common.semver.SemverRange;
 import com.hypixel.hytale.server.core.HytaleServer;
-import it.frafol.cleanstaffchat.hytale.CleanStaffChat;
+import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -15,7 +15,26 @@ import java.util.UUID;
 
 public class PermissionsUtil {
 
-    private final CleanStaffChat plugin = CleanStaffChat.getInstance();
+    public static boolean hasPermission(UUID uuid, String permission) {
+        if (PermissionsUtil.hasPermission(uuid, permission)) return true;
+        if (isLuckPerms()) return hasLuckPermission(uuid, permission);
+        if (isFancyCore()) return hasFancyPermission(uuid, permission);
+        return PermissionsUtil.hasPermission(uuid, permission);
+    }
+
+    private static boolean hasLuckPermission(UUID uuid, String permission) {
+        LuckPerms luckPerms = LuckPermsProvider.get();
+        User user = luckPerms.getUserManager().getUser(uuid);
+        if (user == null) return false;
+        return user.getCachedData().getPermissionData().checkPermission(permission).asBoolean();
+    }
+
+    private static boolean hasFancyPermission(UUID uuid, String permission) {
+        FancyCore fancyCore = FancyCore.get();
+        FancyPlayer fancyPlayer = fancyCore.getPlayerService().getByUUID(uuid);
+        if (fancyPlayer == null) return false;
+        return fancyPlayer.checkPermission(permission);
+    }
 
     public static String getPrefix(UUID uuid) {
         if (isLuckPerms()) return handleLuckPrefix(uuid);

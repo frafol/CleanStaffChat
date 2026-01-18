@@ -36,7 +36,7 @@ public class ChatListener extends ListenerAdapter {
         String scPrefix = HytaleConfig.STAFFCHAT_PREFIX.get(String.class);
 
         if (Boolean.TRUE.equals(HytaleConfig.STAFFCHAT_PREFIX_MODULE.get(Boolean.class)) && rawMessage.startsWith(scPrefix)) {
-            if (!PermissionsModule.get().hasPermission(player.getUuid(), staffChatPerm)) return;
+            if (!PermissionsUtil.hasPermission(player.getUuid(), staffChatPerm)) return;
 
             event.setCancelled(true);
             String message = rawMessage.substring(scPrefix.length());
@@ -68,7 +68,7 @@ public class ChatListener extends ListenerAdapter {
                 return;
             }
 
-            if (PermissionsModule.get().hasPermission(player.getUuid(), staffChatPerm)) {
+            if (PermissionsUtil.hasPermission(player.getUuid(), staffChatPerm)) {
                 event.setCancelled(true);
                 broadcastToStaff(player, rawMessage);
                 sendToDiscord(player, rawMessage);
@@ -95,7 +95,7 @@ public class ChatListener extends ListenerAdapter {
         Message hytaleMsg = ChatColor.color((finalMessage));
 
         Universe.get().getPlayers().stream()
-                .filter(p -> PermissionsModule.get().hasPermission(p.getUuid(), staffChatPerm)
+                .filter(p -> PermissionsUtil.hasPermission(p.getUuid(), staffChatPerm)
                         && !PlayerCache.getToggled().contains(p.getUuid()))
                 .forEach(p -> p.sendMessage(hytaleMsg));
     }
@@ -159,7 +159,7 @@ public class ChatListener extends ListenerAdapter {
         Message hytaleMsg = ChatColor.color((finalMessage));
 
         Universe.get().getPlayers().stream()
-                .filter(p -> PermissionsModule.get().hasPermission(p.getUuid(), staffChatPerm)
+                .filter(p -> PermissionsUtil.hasPermission(p.getUuid(), staffChatPerm)
                         && !PlayerCache.getToggled().contains(p.getUuid()))
                 .forEach(p -> p.sendMessage(hytaleMsg));
     }

@@ -6,7 +6,7 @@
     <parent>
         <groupId>it.frafol</groupId>
         <artifactId>cleanstaffchat</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
     </parent>
 
     <artifactId>universal</artifactId>
@@ -15,7 +15,7 @@
         <dependency>
             <groupId>it.frafol</groupId>
             <artifactId>hytale</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
         </dependency>
     </dependencies>
 

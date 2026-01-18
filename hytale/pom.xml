@@ -133,6 +133,13 @@
             <systemPath>${project.basedir}/libs/FancyCore-0.4.0.jar</systemPath>
         </dependency>
         <dependency>
+            <groupId>kotlin.it.ethereallabs</groupId>
+            <artifactId>etherealperms</artifactId>
+            <version>1.0.5</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/EtherealPerms-1.0.5.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
             <version>6.3.0</version>

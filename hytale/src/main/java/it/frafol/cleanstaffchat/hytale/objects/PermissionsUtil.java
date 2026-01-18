@@ -7,6 +7,8 @@ import com.hypixel.hytale.common.plugin.PluginIdentifier;
 import com.hypixel.hytale.common.semver.SemverRange;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.permissions.PermissionsModule;
+import it.ethereallabs.etherealperms.EtherealPerms;
+import it.ethereallabs.etherealperms.permissions.PermissionManager;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -16,10 +18,11 @@ import java.util.UUID;
 public class PermissionsUtil {
 
     public static boolean hasPermission(UUID uuid, String permission) {
-        if (PermissionsUtil.hasPermission(uuid, permission)) return true;
+        if (PermissionsModule.get().hasPermission(uuid, permission)) return true;
         if (isLuckPerms()) return hasLuckPermission(uuid, permission);
         if (isFancyCore()) return hasFancyPermission(uuid, permission);
-        return PermissionsUtil.hasPermission(uuid, permission);
+        if (isEtherealPerms()) return hasEtherealPermission(uuid, permission);
+        return PermissionsModule.get().hasPermission(uuid, permission);
     }
 
     private static boolean hasLuckPermission(UUID uuid, String permission) {
@@ -36,15 +39,27 @@ public class PermissionsUtil {
         return fancyPlayer.checkPermission(permission);
     }
 
+    private static boolean hasEtherealPermission(UUID uuid, String permission) {
+        PermissionManager permissionManager = EtherealPerms.Companion.getPermissionManager();
+        it.ethereallabs.etherealperms.permissions.models.User user = permissionManager.getUser(uuid);
+        if (user == null) return false;
+        if (permissionManager.getEffectivePermissions(user).get(permission) != null) {
+            return permissionManager.getEffectivePermissions(user).get(permission);
+        }
+        return false;
+    }
+
     public static String getPrefix(UUID uuid) {
         if (isLuckPerms()) return handleLuckPrefix(uuid);
         if (isFancyCore()) return handleFancyPrefix(uuid);
+        if (isEtherealPerms()) return handleEtherealPrefix(uuid);
         return "";
     }
 
     public static String getSuffix(UUID uuid) {
         if (isLuckPerms()) return handleLuckSuffix(uuid);
         if (isFancyCore()) return handleFancySuffix(uuid);
+        if (isEtherealPerms()) return handleEtherealSuffix(uuid);
         return "";
     }
 
@@ -82,11 +97,25 @@ public class PermissionsUtil {
         return group.getSuffix();
     }
 
+    private static String handleEtherealPrefix(UUID uuid) {
+        PermissionManager permissionManager = EtherealPerms.Companion.getPermissionManager();
+        return permissionManager.getChatMeta(uuid).getPrefix();
+    }
+
+    private static String handleEtherealSuffix(UUID uuid) {
+        PermissionManager permissionManager = EtherealPerms.Companion.getPermissionManager();
+        return permissionManager.getChatMeta(uuid).getSuffix();
+    }
+
     private static boolean isLuckPerms() {
         return HytaleServer.get().getPluginManager().hasPlugin(PluginIdentifier.fromString("LuckPerms:LuckPerms"), SemverRange.fromString("*"));
     }
 
     private static boolean isFancyCore() {
         return HytaleServer.get().getPluginManager().hasPlugin(PluginIdentifier.fromString("FancyInnovations:FancyCore"), SemverRange.fromString("*"));
+    }
+
+    private static boolean isEtherealPerms() {
+        return HytaleServer.get().getPluginManager().hasPlugin(PluginIdentifier.fromString("EtherealLabs:EtherealPerms"), SemverRange.fromString("*"));
     }
 }

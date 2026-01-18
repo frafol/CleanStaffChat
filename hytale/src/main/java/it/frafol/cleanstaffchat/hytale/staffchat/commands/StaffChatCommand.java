@@ -13,7 +13,7 @@ import it.frafol.cleanstaffchat.hytale.enums.HytaleConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleDiscordConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleMessages;
 import it.frafol.cleanstaffchat.hytale.objects.ChatColor;
-import it.frafol.cleanstaffchat.hytale.objects.LuckPermsUtil;
+import it.frafol.cleanstaffchat.hytale.objects.PermissionsUtil;
 import it.frafol.cleanstaffchat.hytale.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -93,8 +93,8 @@ public class StaffChatCommand extends AbstractCommand {
                 .replace("{user}", senderName)
                 .replace("{displayname}", senderName)
                 .replace("{message}", messageArg)
-                .replace("{userprefix}", LuckPermsUtil.getPrefix(sender.getUuid()))
-                .replace("{usersuffix}", LuckPermsUtil.getSuffix(sender.getUuid()))
+                .replace("{userprefix}", PermissionsUtil.getPrefix(sender.getUuid()))
+                .replace("{usersuffix}", PermissionsUtil.getSuffix(sender.getUuid()))
                 .replace("{server}", "");
 
         Message hytaleMsg = ChatColor.color((formatted));

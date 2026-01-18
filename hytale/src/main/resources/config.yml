@@ -96,6 +96,7 @@ settings:
 modules:
 
   update_check: true
+  auto_update: false
 
   globalchat_mute_command_module: true
 

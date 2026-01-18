@@ -81,6 +81,7 @@ public enum HytaleConfig {
     DONORCHAT_TOGGLE_PERMISSION("settings.donorchat.donorchat_toggle_permission"),
 
     UPDATE_CHECK("modules.update_check"),
+    AUTO_UPDATE("modules.auto_update"),
 
     STAFFCHAT_DISCORD_MODULE("modules.staffchat_discord_module"),
     ADMINCHAT_DISCORD_MODULE("modules.adminchat_discord_module"),

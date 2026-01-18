@@ -122,7 +122,7 @@ public class CleanStaffChat extends JavaPlugin {
             registerStaffListCommands();
         }
 
-        UpdateCheck.checkForUpdates(this, getVersionFromJson(), "cmkcxg67b000g01s6ewk287pn");
+        if (Boolean.TRUE.equals(HytaleConfig.UPDATE_CHECK.get(Boolean.class))) UpdateCheck.checkForUpdates(this, getVersionFromJson(), "cmkcxg67b000g01s6ewk287pn");
         getLogger().at(Level.INFO).log("Plugin successfully enabled on Hytale!");
     }
 

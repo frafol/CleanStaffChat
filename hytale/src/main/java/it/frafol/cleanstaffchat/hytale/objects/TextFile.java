@@ -8,7 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class TextFile {
 
@@ -16,7 +15,7 @@ public class TextFile {
 
     private static final List<TextFile> list = new ArrayList<>();
 
-    public TextFile(Path path, String fileName) throws IOException {
+    public TextFile(Path path, String fileName, String internal) throws IOException {
 
         if (!Files.exists(path)) {
             Files.createDirectory(path);
@@ -25,8 +24,11 @@ public class TextFile {
         Path configPath = path.resolve(fileName);
 
         if (!Files.exists(configPath)) {
-            try (InputStream in = this.getClass().getClassLoader().getResourceAsStream(fileName)) {
-                Files.copy(Objects.requireNonNull(in), configPath);
+            try (InputStream in = this.getClass().getResourceAsStream("/" + internal)) {
+                if (in == null) {
+                    throw new IOException("Resource not found in JAR: " + internal);
+                }
+                Files.copy(in, configPath);
             }
         }
 

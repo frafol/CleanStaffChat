@@ -37,6 +37,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -316,16 +317,16 @@ public class CleanStaffChat extends JavaPlugin {
     private void updateConfig() {
         if (!getVersionFromJson().equals(HytaleVersion.VERSION.get(String.class))) {
             getLogger().at(Level.INFO).log("Creating new configurations...");
-            YamlUpdater.create(new File(getDataDirectory() + "/config.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/hytale/hytale/src/main/resources/config.yml"))
+            YamlUpdater.create(new File(getDataDirectory() + "/config.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/hytale/hytale/src/main/resources/cleansc_config.yml"))
                     .backup(true)
                     .update();
-            YamlUpdater.create(new File(getDataDirectory() + "/messages.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/hytale/hytale/src/main/resources/messages.yml"))
+            YamlUpdater.create(new File(getDataDirectory() + "/messages.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/hytale/hytale/src/main/resources/cleansc_messages.yml"))
                     .backup(true)
                     .update();
-            YamlUpdater.create(new File(getDataDirectory() + "/discord.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/hytale/hytale/src/main/resources/discord.yml"))
+            YamlUpdater.create(new File(getDataDirectory() + "/discord.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/hytale/hytale/src/main/resources/cleansc_discord.yml"))
                     .backup(true)
                     .update();
-            YamlUpdater.create(new File(getDataDirectory() + "/aliases.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/hytale/hytale/src/main/resources/aliases.yml"))
+            YamlUpdater.create(new File(getDataDirectory() + "/aliases.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/hytale/hytale/src/main/resources/cleansc_aliases.yml"))
                     .backup(true)
                     .update();
             versionTextFile.getConfig().set("version", getVersionFromJson());
@@ -348,12 +349,13 @@ public class CleanStaffChat extends JavaPlugin {
     }
 
     private void loadFiles() {
+        Path dataFolder = getDataDirectory();
         try {
-            this.configTextFile = new TextFile(getDataDirectory(), "config.yml");
-            this.messagesTextFile = new TextFile(getDataDirectory(), "messages.yml");
-            this.discordTextFile = new TextFile(getDataDirectory(), "discord.yml");
-            this.aliasesTextFile = new TextFile(getDataDirectory(), "aliases.yml");
-            this.versionTextFile = new TextFile(getDataDirectory(), "version.yml");
+            this.configTextFile = new TextFile(dataFolder, "config.yml", "cleansc_config.yml");
+            this.messagesTextFile = new TextFile(dataFolder, "messages.yml", "cleansc_messages.yml");
+            this.discordTextFile = new TextFile(dataFolder, "discord.yml", "cleansc_discord.yml");
+            this.aliasesTextFile = new TextFile(dataFolder, "aliases.yml", "cleansc_aliases.yml");
+            this.versionTextFile = new TextFile(dataFolder, "version.yml", "cleansc_version.yml");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

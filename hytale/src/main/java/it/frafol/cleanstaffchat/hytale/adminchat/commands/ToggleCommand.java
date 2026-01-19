@@ -3,7 +3,6 @@ package it.frafol.cleanstaffchat.hytale.adminchat.commands;
 import com.hypixel.hytale.server.core.command.system.AbstractCommand;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.CommandSender;
-import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import it.frafol.cleanstaffchat.hytale.CleanStaffChat;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleMessages;
@@ -13,6 +12,7 @@ import it.frafol.cleanstaffchat.hytale.objects.PlayerCache;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class ToggleCommand extends AbstractCommand {
@@ -23,6 +23,7 @@ public class ToggleCommand extends AbstractCommand {
         super(name, description);
         this.plugin = plugin;
         this.setAllowsExtraArguments(true);
+        this.requirePermission(Objects.requireNonNull(HytaleConfig.ADMINCHAT_TOGGLE_PERMISSION.get(String.class)));
         if (aliases != null) {
             this.addAliases(aliases.toArray(String[]::new));
         }

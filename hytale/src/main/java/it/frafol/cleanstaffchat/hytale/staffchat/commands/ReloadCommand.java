@@ -2,7 +2,6 @@ package it.frafol.cleanstaffchat.hytale.staffchat.commands;
 
 import com.hypixel.hytale.server.core.command.system.AbstractCommand;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
-import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import it.frafol.cleanstaffchat.hytale.CleanStaffChat;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleDiscordConfig;
@@ -12,6 +11,7 @@ import it.frafol.cleanstaffchat.hytale.objects.PermissionsUtil;
 import it.frafol.cleanstaffchat.hytale.objects.TextFile;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class ReloadCommand extends AbstractCommand {
@@ -21,6 +21,7 @@ public class ReloadCommand extends AbstractCommand {
     public ReloadCommand(CleanStaffChat plugin) {
         super("screload", "Ricarica la configurazione del plugin");
         this.plugin = plugin;
+        this.requirePermission(Objects.requireNonNull(HytaleConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class)));
         this.addAliases("staffchatreload", "cleanscreload", "cleanstaffchatreload", "staffreload");
     }
 

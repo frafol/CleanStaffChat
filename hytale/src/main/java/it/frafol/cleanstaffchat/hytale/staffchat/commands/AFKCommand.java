@@ -4,7 +4,6 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.AbstractCommand;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.CommandSender;
-import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import it.frafol.cleanstaffchat.hytale.CleanStaffChat;
@@ -31,6 +30,7 @@ public class AFKCommand extends AbstractCommand {
         super(name, description);
         this.plugin = plugin;
         this.setAllowsExtraArguments(true);
+        this.requirePermission(Objects.requireNonNull(HytaleConfig.STAFFCHAT_AFK_PERMISSION.get(String.class)));
         if (aliases != null) {
             this.addAliases(aliases.toArray(String[]::new));
         }

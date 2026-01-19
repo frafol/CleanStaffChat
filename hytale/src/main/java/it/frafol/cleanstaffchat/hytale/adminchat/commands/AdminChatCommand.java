@@ -5,7 +5,6 @@ import com.hypixel.hytale.server.core.command.system.AbstractCommand;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.CommandSender;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import it.frafol.cleanstaffchat.hytale.CleanStaffChat;
@@ -20,6 +19,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class AdminChatCommand extends AbstractCommand {
@@ -30,6 +30,7 @@ public class AdminChatCommand extends AbstractCommand {
         super(name, description);
         this.plugin = plugin;
         this.setAllowsExtraArguments(true);
+        this.requirePermission(Objects.requireNonNull(HytaleConfig.ADMINCHAT_USE_PERMISSION.get(String.class)));
         if (aliases != null) {
             this.addAliases(aliases.toArray(new String[0]));
         }

@@ -63,9 +63,9 @@ public class CleanStaffChat extends JavaPlugin {
 
         getLogger().at(Level.INFO).log("""
                 
-                  ___  __    ____    __    _  _    ___    ___\s
+                  ___  __    ____    __    _  _    ___   ___\s
                  / __)(  )  ( ___)  /__\\  ( \\( )  / __) / __)
-                ( (__  )(__  )__)  /(__)\\  )  (    \\__ \\( (__\s
+                ( (__  )(__  )__)  /(__)\\  )  (   \\__ \\( (__\s
                  \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)
                 """);
         //getLogger().at(Level.INFO).log("Hytale Server Version: " + HytaleServer.get());

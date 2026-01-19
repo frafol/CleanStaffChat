@@ -3,7 +3,6 @@ package it.frafol.cleanstaffchat.hytale.staffchat.commands;
 import com.hypixel.hytale.server.core.command.system.AbstractCommand;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.CommandSender;
-import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import it.frafol.cleanstaffchat.hytale.CleanStaffChat;
@@ -17,6 +16,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class StaffListCommand extends AbstractCommand {
@@ -27,6 +27,7 @@ public class StaffListCommand extends AbstractCommand {
         super(name, description);
         this.plugin = plugin;
         this.setAllowsExtraArguments(true);
+        this.requirePermission(Objects.requireNonNull(HytaleConfig.STAFFLIST_PERMISSION.get(String.class)));
         if (aliases != null) {
             this.addAliases(aliases.toArray(new String[0]));
         }

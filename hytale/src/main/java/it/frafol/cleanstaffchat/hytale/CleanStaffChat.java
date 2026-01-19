@@ -59,13 +59,16 @@ public class CleanStaffChat extends JavaPlugin {
     }
 
     @Override
-    protected void setup() {
+    protected void start() {
 
-        getLogger().at(Level.INFO).log("\n  ___  __    ____    __    _  _    ___    ___ \n" +
-                " / __)(  )  ( ___)  /__\\  ( \\( )  / __) / __)\n" +
-                "( (__  )(__  )__)  /(__)\\  )  (    \\__ \\( (__ \n" +
-                " \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)\n");
-        //  getLogger().at(Level.INFO).log("Hytale Server Version: " + HytaleServer.get().getVersion());
+        getLogger().at(Level.INFO).log("""
+                
+                  ___  __    ____    __    _  _    ___    ___\s
+                 / __)(  )  ( ___)  /__\\  ( \\( )  / __) / __)
+                ( (__  )(__  )__)  /(__)\\  )  (    \\__ \\( (__\s
+                 \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)
+                """);
+        //getLogger().at(Level.INFO).log("Hytale Server Version: " + HytaleServer.get());
 
         loadLibraries();
         loadFiles();

@@ -37,10 +37,8 @@ public class ChatListener extends ListenerAdapter {
 
         if (Boolean.TRUE.equals(HytaleConfig.STAFFCHAT_PREFIX_MODULE.get(Boolean.class)) && rawMessage.startsWith(scPrefix)) {
             if (!PermissionsUtil.hasPermission(player.getUuid(), staffChatPerm)) return;
-
             event.setCancelled(true);
             String message = rawMessage.substring(scPrefix.length());
-
             broadcastToStaff(player, message);
             sendToDiscord(player, message);
             return;
@@ -50,10 +48,8 @@ public class ChatListener extends ListenerAdapter {
             if (PlayerCache.getMuted().contains("true")) {
                 PlayerCache.getToggled_2().remove(player.getUuid());
                 event.setCancelled(true);
-
                 String mutedError = HytaleMessages.STAFFCHAT_MUTED_ERROR.get(String.class)
                         .replace("{prefix}", HytaleMessages.PREFIX.get(String.class));
-
                 player.sendMessage(ChatColor.color((mutedError)));
                 return;
             }

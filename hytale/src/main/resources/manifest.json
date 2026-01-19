@@ -3,8 +3,5 @@
   "Name": "CleanStaffChat",
   "Version": "${project.version}",
   "Main": "it.frafol.cleanstaffchat.hytale.CleanStaffChat",
-  "ServerVersion": "*",
-  "Dependencies": {
-    "Hytale:I18nModule": "*"
-  }
+  "ServerVersion": "*"
 }

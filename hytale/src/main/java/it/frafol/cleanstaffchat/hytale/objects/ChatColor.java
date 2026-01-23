@@ -18,7 +18,8 @@ public class ChatColor {
             "[&§]([0-9a-fk-or])|" +
                     "[&§]#([A-Fa-f0-9]{6})|" +
                     "<#([A-Fa-f0-9]{6})>|" +
-                    "<(bold|italic|reset|b|i)>"
+                    "</#([A-Fa-f0-9]{6})>|" +
+                    "<(bold|italic|reset|b|i|/bold|/italic|/b|/i)>"
     );
 
     static {
@@ -56,6 +57,7 @@ public class ChatColor {
         List<Message> messages = new ArrayList<>();
         Matcher matcher = PATTERN.matcher(text);
         int lastIndex = 0;
+
         Color currentColor = Color.WHITE;
         boolean bold = false;
         boolean italic = false;
@@ -70,19 +72,30 @@ public class ChatColor {
                     currentColor = Color.WHITE; bold = false; italic = false;
                 } else if (code == 'l') bold = true;
                 else if (code == 'o') italic = true;
-            } else if (matcher.group(2) != null || matcher.group(3) != null) {
+            }
+
+            else if (matcher.group(2) != null || matcher.group(3) != null) {
                 String hex = matcher.group(2) != null ? matcher.group(2) : matcher.group(3);
                 currentColor = new Color(Integer.parseInt(hex, 16));
-            } else if (matcher.group(4) != null) {
-                String tag = matcher.group(4).toLowerCase();
+            }
+
+            else if (matcher.group(4) != null) {
+                currentColor = Color.WHITE;
+            }
+
+            else if (matcher.group(5) != null) {
+                String tag = matcher.group(5).toLowerCase();
                 switch (tag) {
                     case "bold": case "b": bold = true; break;
+                    case "/bold": case "/b": bold = false; break;
                     case "italic": case "i": italic = true; break;
+                    case "/italic": case "/i": italic = false; break;
                     case "reset": currentColor = Color.WHITE; bold = false; italic = false; break;
                 }
             }
             lastIndex = matcher.end();
         }
+
         if (lastIndex < text.length()) messages.add(applyStyles(text.substring(lastIndex), currentColor, bold, italic));
         return messages.isEmpty() ? Message.raw("") : Message.join(messages.toArray(new Message[0]));
     }

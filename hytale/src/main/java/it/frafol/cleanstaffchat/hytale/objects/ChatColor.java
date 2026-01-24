@@ -17,7 +17,9 @@ public class ChatColor {
                     "[&§]#([A-Fa-f0-9]{6})|" +
                     "<#([A-Fa-f0-9]{6})>|" +
                     "</#([A-Fa-f0-9]{6})>|" +
-                    "<(bold|italic|reset|b|i|/bold|/italic|/b|/i)>"
+                    "<(bold|italic|reset|b|i|/bold|/italic|/b|/i)>|" +
+                    "<gradient:#([A-Fa-f0-9]{6}):#([A-Fa-f0-9]{6})>|" +
+                    "(</gradient>)"
     );
 
     static {
@@ -58,13 +60,22 @@ public class ChatColor {
 
         Deque<Color> colorStack = new ArrayDeque<>();
         colorStack.push(Color.WHITE);
+
+        Color gradientStart = null;
+        Color gradientEnd = null;
+        boolean inGradient = false;
+
         boolean bold = false;
         boolean italic = false;
 
         while (matcher.find()) {
             if (matcher.start() > lastIndex) {
-                Color currentColor = colorStack.peek();
-                messages.add(applyStyles(text.substring(lastIndex, matcher.start()), currentColor, bold, italic));
+                String content = text.substring(lastIndex, matcher.start());
+                if (inGradient) {
+                    messages.add(applyGradient(content, gradientStart, gradientEnd, bold, italic));
+                } else {
+                    messages.add(applyStyles(content, colorStack.peek(), bold, italic));
+                }
             }
 
             if (matcher.group(1) != null) {
@@ -72,29 +83,21 @@ public class ChatColor {
                 if (COLOR_MAP.containsKey(code)) {
                     colorStack.pop();
                     colorStack.push(COLOR_MAP.get(code));
+                    inGradient = false;
                 } else if (code == 'r') {
-                    colorStack.clear();
-                    colorStack.push(Color.WHITE);
-                    bold = false;
-                    italic = false;
+                    resetState(colorStack);
+                    bold = false; italic = false; inGradient = false;
                 } else if (code == 'l') bold = true;
                 else if (code == 'o') italic = true;
             }
-
-            else if (matcher.group(2) != null) {
-                colorStack.pop();
-                colorStack.push(new Color(Integer.parseInt(matcher.group(2), 16)));
+            else if (matcher.group(2) != null || matcher.group(3) != null) {
+                String hex = matcher.group(2) != null ? matcher.group(2) : matcher.group(3);
+                colorStack.push(new Color(Integer.parseInt(hex, 16)));
+                inGradient = false;
             }
-
-            else if (matcher.group(3) != null) {
-                Color hex = new Color(Integer.parseInt(matcher.group(3), 16));
-                colorStack.push(hex);
-            }
-
             else if (matcher.group(4) != null) {
                 if (colorStack.size() > 1) colorStack.pop();
             }
-
             else if (matcher.group(5) != null) {
                 String tag = matcher.group(5).toLowerCase();
                 switch (tag) {
@@ -103,23 +106,40 @@ public class ChatColor {
                     case "italic": case "i": italic = true; break;
                     case "/italic": case "/i": italic = false; break;
                     case "reset":
-                        colorStack.clear();
-                        colorStack.push(Color.WHITE);
-                        bold = false;
-                        italic = false;
+                        resetState(colorStack);
+                        bold = false; italic = false; inGradient = false;
                         break;
                 }
+            }
+
+            else if (matcher.group(6) != null && matcher.group(7) != null) {
+                gradientStart = new Color(Integer.parseInt(matcher.group(6), 16));
+                gradientEnd = new Color(Integer.parseInt(matcher.group(7), 16));
+                inGradient = true;
+            }
+
+            else if (matcher.group(8) != null) {
+                inGradient = false;
             }
 
             lastIndex = matcher.end();
         }
 
         if (lastIndex < text.length()) {
-            Color currentColor = colorStack.peek();
-            messages.add(applyStyles(text.substring(lastIndex), currentColor, bold, italic));
+            String content = text.substring(lastIndex);
+            if (inGradient) {
+                messages.add(applyGradient(content, gradientStart, gradientEnd, bold, italic));
+            } else {
+                messages.add(applyStyles(content, colorStack.peek(), bold, italic));
+            }
         }
 
         return messages.isEmpty() ? Message.raw("") : Message.join(messages.toArray(new Message[0]));
+    }
+
+    private static void resetState(Deque<Color> stack) {
+        stack.clear();
+        stack.push(Color.WHITE);
     }
 
     private static Message applyStyles(String content, Color color, boolean bold, boolean italic) {
@@ -127,5 +147,25 @@ public class ChatColor {
         if (bold) msg = msg.bold(true);
         if (italic) msg = msg.italic(true);
         return msg;
+    }
+
+    private static Message applyGradient(String content, Color start, Color end, boolean bold, boolean italic) {
+        List<Message> gradientParts = new ArrayList<>();
+        int length = content.length();
+
+        for (int i = 0; i < length; i++) {
+            float ratio = (length > 1) ? (float) i / (length - 1) : 0;
+            Color interpolated = interpolate(start, end, ratio);
+            gradientParts.add(applyStyles(String.valueOf(content.charAt(i)), interpolated, bold, italic));
+        }
+
+        return Message.join(gradientParts.toArray(new Message[0]));
+    }
+
+    private static Color interpolate(Color start, Color end, float ratio) {
+        int r = (int) (start.getRed() + (end.getRed() - start.getRed()) * ratio);
+        int g = (int) (start.getGreen() + (end.getGreen() - start.getGreen()) * ratio);
+        int b = (int) (start.getBlue() + (end.getBlue() - start.getBlue()) * ratio);
+        return new Color(r, g, b);
     }
 }

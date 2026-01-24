@@ -4,10 +4,8 @@ import com.hypixel.hytale.server.core.Message;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleMessages;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,29 +56,43 @@ public class ChatColor {
         Matcher matcher = PATTERN.matcher(text);
         int lastIndex = 0;
 
-        Color currentColor = Color.WHITE;
+        Deque<Color> colorStack = new ArrayDeque<>();
+        colorStack.push(Color.WHITE);
         boolean bold = false;
         boolean italic = false;
 
         while (matcher.find()) {
-            if (matcher.start() > lastIndex) messages.add(applyStyles(text.substring(lastIndex, matcher.start()), currentColor, bold, italic));
+            if (matcher.start() > lastIndex) {
+                Color currentColor = colorStack.peek();
+                messages.add(applyStyles(text.substring(lastIndex, matcher.start()), currentColor, bold, italic));
+            }
+
             if (matcher.group(1) != null) {
                 char code = matcher.group(1).charAt(0);
                 if (COLOR_MAP.containsKey(code)) {
-                    currentColor = COLOR_MAP.get(code);
+                    colorStack.pop();
+                    colorStack.push(COLOR_MAP.get(code));
                 } else if (code == 'r') {
-                    currentColor = Color.WHITE; bold = false; italic = false;
+                    colorStack.clear();
+                    colorStack.push(Color.WHITE);
+                    bold = false;
+                    italic = false;
                 } else if (code == 'l') bold = true;
                 else if (code == 'o') italic = true;
             }
 
-            else if (matcher.group(2) != null || matcher.group(3) != null) {
-                String hex = matcher.group(2) != null ? matcher.group(2) : matcher.group(3);
-                currentColor = new Color(Integer.parseInt(hex, 16));
+            else if (matcher.group(2) != null) {
+                colorStack.pop();
+                colorStack.push(new Color(Integer.parseInt(matcher.group(2), 16)));
+            }
+
+            else if (matcher.group(3) != null) {
+                Color hex = new Color(Integer.parseInt(matcher.group(3), 16));
+                colorStack.push(hex);
             }
 
             else if (matcher.group(4) != null) {
-                currentColor = Color.WHITE;
+                if (colorStack.size() > 1) colorStack.pop();
             }
 
             else if (matcher.group(5) != null) {
@@ -90,13 +102,23 @@ public class ChatColor {
                     case "/bold": case "/b": bold = false; break;
                     case "italic": case "i": italic = true; break;
                     case "/italic": case "/i": italic = false; break;
-                    case "reset": currentColor = Color.WHITE; bold = false; italic = false; break;
+                    case "reset":
+                        colorStack.clear();
+                        colorStack.push(Color.WHITE);
+                        bold = false;
+                        italic = false;
+                        break;
                 }
             }
+
             lastIndex = matcher.end();
         }
 
-        if (lastIndex < text.length()) messages.add(applyStyles(text.substring(lastIndex), currentColor, bold, italic));
+        if (lastIndex < text.length()) {
+            Color currentColor = colorStack.peek();
+            messages.add(applyStyles(text.substring(lastIndex), currentColor, bold, italic));
+        }
+
         return messages.isEmpty() ? Message.raw("") : Message.join(messages.toArray(new Message[0]));
     }
 

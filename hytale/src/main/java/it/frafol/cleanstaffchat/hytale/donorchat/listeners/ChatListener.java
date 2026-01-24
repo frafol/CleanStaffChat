@@ -92,8 +92,7 @@ public class ChatListener extends ListenerAdapter {
                 .replace("{usersuffix}", PermissionsUtil.getSuffix(sender.getUuid()))
                 .replace("{server}", "");
 
-        Message hytaleMsg = ChatColor.color((finalMessage));
-
+        Message hytaleMsg = ChatColor.color(sender.getUuid(), sender.getUsername(), finalMessage);
         Universe.get().getWorlds().values().forEach(world -> {
             for (PlayerRef ref : world.getPlayerRefs()) {
                 if (PermissionsUtil.hasPermission(ref.getUuid(), usePerm)

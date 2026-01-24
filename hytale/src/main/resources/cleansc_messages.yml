@@ -41,6 +41,7 @@ messages:
     staffchat_toggled_off: "{prefix} &7The StaffChat is now &ainvisible&7."
 
     # Chat Formats.
+    # You can use WiFlowPlaceholderAPI placeholders in the format.
     staffchat_format: "{prefix} &7{userprefix}{user}{usersuffix} &8» &7{message}"
     staffchat_console_format: "{prefix} &7{user} &8» &7{message}"
 
@@ -81,6 +82,7 @@ messages:
     adminchat_toggled_off: "{prefix} &7The AdminChat is now &ainvisible&7."
 
     # Chat Formats
+    # You can use WiFlowPlaceholderAPI placeholders in the format.
     adminchat_format: "{prefix} &7{userprefix}{user}{usersuffix} &8» &7{message}"
     adminchat_console_format: "{prefix} &7{user} &8» &7{message}"
 
@@ -110,6 +112,7 @@ messages:
     donorchat_toggled_off: "{prefix} &7The DonorChat is now &ainvisible&7."
 
     # Chat Formats
+    # You can use WiFlowPlaceholderAPI placeholders in the format.
     donorchat_format: "{prefix} &7{userprefix}{user}{usersuffix} &8» &7{message}"
     donorchat_console_format: "{prefix} &7{user} &8» &7{message}"
 

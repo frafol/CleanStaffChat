@@ -1,6 +1,11 @@
 package it.frafol.cleanstaffchat.hytale.objects;
 
+import com.hypixel.hytale.common.plugin.PluginIdentifier;
+import com.hypixel.hytale.common.semver.SemverRange;
+import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.wiflow.placeholderapi.WiFlowPlaceholderAPI;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleMessages;
 
 import java.awt.*;
@@ -43,6 +48,13 @@ public class ChatColor {
 
     public static Message color(String string) {
         if (string == null) return Message.raw("");
+        string = string.replace("{prefix}", HytaleMessages.PREFIX.get(String.class));
+        return translate(string);
+    }
+
+    public static Message color(UUID uuid, String playerName, String string) {
+        if (string == null) return Message.raw("");
+        if (getPlaceholderAPI()) string = WiFlowPlaceholderAPI.setPlaceholders(uuid, playerName, string);
         string = string.replace("{prefix}", HytaleMessages.PREFIX.get(String.class));
         return translate(string);
     }
@@ -167,5 +179,10 @@ public class ChatColor {
         int g = (int) (start.getGreen() + (end.getGreen() - start.getGreen()) * ratio);
         int b = (int) (start.getBlue() + (end.getBlue() - start.getBlue()) * ratio);
         return new Color(r, g, b);
+    }
+
+    private static boolean getPlaceholderAPI() {
+        return HytaleServer.get().getPluginManager().hasPlugin(PluginIdentifier.fromString("com.wiflow:WiFlowPlaceholderAPI"), SemverRange.fromString("*"))
+                && WiFlowPlaceholderAPI.isInitialized();
     }
 }

@@ -3,6 +3,7 @@ package it.frafol.cleanstaffchat.hytale.objects;
 import com.fancyinnovations.fancycore.api.FancyCore;
 import com.fancyinnovations.fancycore.api.permissions.Group;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
+import com.hyperperms.HyperPerms;
 import com.hypixel.hytale.common.plugin.PluginIdentifier;
 import com.hypixel.hytale.common.semver.SemverRange;
 import com.hypixel.hytale.server.core.HytaleServer;
@@ -22,6 +23,7 @@ public class PermissionsUtil {
         if (isLuckPerms()) return hasLuckPermission(uuid, permission);
         if (isFancyCore()) return hasFancyPermission(uuid, permission);
         if (isEtherealPerms()) return hasEtherealPermission(uuid, permission);
+        if (isHyperPerms()) return hasHyperPermission(uuid, permission);
         return PermissionsModule.get().hasPermission(uuid, permission);
     }
 
@@ -49,10 +51,19 @@ public class PermissionsUtil {
         return false;
     }
 
+    private static boolean hasHyperPermission(UUID uuid, String permission) {
+        HyperPerms hyperPerms = HyperPerms.getInstance();
+        if (hyperPerms == null) return false;
+        com.hyperperms.model.User user = hyperPerms.getUserManager().getUser(uuid);
+        if (user == null) return false;
+        return hyperPerms.hasPermission(user.getUuid(), permission);
+    }
+
     public static String getPrefix(UUID uuid) {
         if (isLuckPerms()) return handleLuckPrefix(uuid);
         if (isFancyCore()) return handleFancyPrefix(uuid);
         if (isEtherealPerms()) return handleEtherealPrefix(uuid);
+        if (isHyperPerms()) return handleHyperPrefix(uuid);
         return "";
     }
 
@@ -60,6 +71,7 @@ public class PermissionsUtil {
         if (isLuckPerms()) return handleLuckSuffix(uuid);
         if (isFancyCore()) return handleFancySuffix(uuid);
         if (isEtherealPerms()) return handleEtherealSuffix(uuid);
+        if (isHyperPerms()) return handleHyperSuffix(uuid);
         return "";
     }
 
@@ -97,6 +109,22 @@ public class PermissionsUtil {
         return group.getSuffix();
     }
 
+    private static String handleHyperPrefix(UUID uuid) {
+        HyperPerms hyperPerms = HyperPerms.getInstance();
+        if (hyperPerms == null) return "";
+        com.hyperperms.model.User user = hyperPerms.getUserManager().getUser(uuid);
+        if (user == null) return "";
+        return user.getCustomPrefix();
+    }
+
+    private static String handleHyperSuffix(UUID uuid) {
+        HyperPerms hyperPerms = HyperPerms.getInstance();
+        if (hyperPerms == null) return "";
+        com.hyperperms.model.User user = hyperPerms.getUserManager().getUser(uuid);
+        if (user == null) return "";
+        return user.getCustomSuffix();
+    }
+
     private static String handleEtherealPrefix(UUID uuid) {
         PermissionManager permissionManager = EtherealPerms.Companion.getPermissionManager();
         return permissionManager.getChatMeta(uuid).getPrefix();
@@ -117,5 +145,9 @@ public class PermissionsUtil {
 
     private static boolean isEtherealPerms() {
         return HytaleServer.get().getPluginManager().hasPlugin(PluginIdentifier.fromString("EtherealLabs:EtherealPerms"), SemverRange.fromString("*"));
+    }
+
+    private static boolean isHyperPerms() {
+        return HytaleServer.get().getPluginManager().hasPlugin(PluginIdentifier.fromString("com.hyperperms:HyperPerms"), SemverRange.fromString("*"));
     }
 }

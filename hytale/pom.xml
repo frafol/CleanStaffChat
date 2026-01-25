@@ -147,6 +147,13 @@
             <systemPath>${project.basedir}/libs/WiFlowPlaceholderAPI-1.0.0.jar</systemPath>
         </dependency>
         <dependency>
+            <groupId>dev.hyperperms</groupId>
+            <artifactId>hyperperms-api</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/HyperPerms-2.4.3.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
             <version>6.3.0</version>

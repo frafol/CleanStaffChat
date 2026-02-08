@@ -3,18 +3,20 @@ package it.frafol.cleanstaffchat.hytale;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.hypixel.hytale.server.core.HytaleServer;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.AbstractCommand;
 import com.hypixel.hytale.server.core.event.events.player.PlayerChatEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleCommandsConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleDiscordConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleVersion;
-import it.frafol.cleanstaffchat.hytale.objects.TextFile;
+import it.frafol.cleanstaffchat.hytale.objects.*;
 import it.frafol.cleanstaffchat.hytale.staffchat.commands.ReloadCommand;
 import it.frafol.cleanstaffchat.hytale.staffchat.listeners.ChatListener;
 import it.frafol.cleanstaffchat.hytale.staffchat.listeners.JoinListener;
@@ -39,6 +41,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -46,6 +49,8 @@ public class CleanStaffChat extends JavaPlugin {
 
     private static JDA jda;
     private static CleanStaffChat instance;
+
+    private MessagingSystem chatSystem = null;
 
     private TextFile configTextFile;
     private TextFile messagesTextFile;
@@ -126,7 +131,19 @@ public class CleanStaffChat extends JavaPlugin {
             registerStaffListCommands();
         }
 
-        if (Boolean.TRUE.equals(HytaleConfig.UPDATE_CHECK.get(Boolean.class))) UpdateCheck.checkForUpdates(this, getVersionFromJson(), "cmkcxg67b000g01s6ewk287pn");
+        if (Boolean.TRUE.equals(HytaleConfig.MYSQL_ENABLED.get(Boolean.class))) {
+            chatSystem = new MessagingSystem(
+                    HytaleConfig.MYSQL_IP.get(String.class),
+                    HytaleConfig.MYSQL_PORT.get(Integer.class),
+                    HytaleConfig.MYSQL_DATABASE.get(String.class),
+                    HytaleConfig.MYSQL_USER.get(String.class),
+                    HytaleConfig.MYSQL_PASSWORD.get(String.class),
+                    HytaleConfig.SERVER_NAME.color());
+            handleSQL();
+        }
+
+        if (Boolean.TRUE.equals(HytaleConfig.UPDATE_CHECK.get(Boolean.class)))
+            UpdateCheck.checkForUpdates(this, getVersionFromJson(), "cmkcxg67b000g01s6ewk287pn");
         getLogger().at(Level.INFO).log("Plugin successfully enabled on Hytale!");
     }
 
@@ -142,6 +159,7 @@ public class CleanStaffChat extends JavaPlugin {
     }
 
     public void startJDA() {
+        if (Boolean.TRUE.equals(HytaleConfig.MYSQL_ENABLED.get(Boolean.class))) return;
         if (HytaleDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
             try {
                 JDALogger.setFallbackLoggerEnabled(false);
@@ -317,6 +335,32 @@ public class CleanStaffChat extends JavaPlugin {
         ));
     }
 
+    private void handleSQL() {
+        HytaleServer.SCHEDULED_EXECUTOR.scheduleWithFixedDelay(() -> {
+            chatSystem.pollMessages((channel, dbPayload) -> {
+                String[] parts = dbPayload.split(":::", 3);
+                if (parts.length < 3) return;
+                UUID originUuid = UUID.fromString(parts[0]);
+                String originName = parts[1];
+                String formattedContent = parts[2];
+                String perm = switch (channel.toUpperCase()) {
+                    case "ADMIN" -> HytaleConfig.ADMINCHAT_USE_PERMISSION.get(String.class);
+                    case "DONOR" -> HytaleConfig.DONORCHAT_USE_PERMISSION.get(String.class);
+                    default -> HytaleConfig.STAFFCHAT_USE_PERMISSION.get(String.class);
+                };
+                Message hytaleMsg = ChatColor.color(originUuid, originName, formattedContent);
+                Universe.get().getWorlds().values().forEach(world -> {
+                    for (PlayerRef ref : world.getPlayerRefs()) {
+                        if (PermissionsUtil.hasPermission(ref.getUuid(), perm)
+                                && !PlayerCache.getToggled().contains(ref.getUuid())) {
+                            ref.sendMessage(hytaleMsg);
+                        }
+                    }
+                });
+            });
+        }, 0, 1, TimeUnit.SECONDS);
+    }
+
     private void updateConfig() {
         if (!getVersionFromJson().equals(HytaleVersion.VERSION.get(String.class))) {
             getLogger().at(Level.INFO).log("Creating new configurations...");
@@ -366,6 +410,10 @@ public class CleanStaffChat extends JavaPlugin {
 
     public static CleanStaffChat getInstance() {
         return instance;
+    }
+
+    public MessagingSystem getChatSystem() {
+        return chatSystem;
     }
 
     public static JDA getJda() {

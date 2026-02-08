@@ -17,6 +17,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.concurrent.CompletableFuture;
 
 public class JoinListener {
 
@@ -60,6 +61,9 @@ public class JoinListener {
                     .filter(p -> PermissionsUtil.hasPermission(p.getUuid(), staffChatPerm))
                     .forEach(p -> p.sendMessage(hytaleMsg));
 
+            String dbPayload = player.getUuid() + ":::" + player.getUsername() + ":::" + finalMessage;
+            final String finalChannel = "STAFF";
+            CompletableFuture.runAsync(() -> PLUGIN.getChatSystem().sendToChannel(finalChannel, dbPayload));
             sendDiscordJoinLeave(player.getUsername(), true);
         }
     }
@@ -100,6 +104,9 @@ public class JoinListener {
                     .filter(p -> PermissionsUtil.hasPermission(p.getUuid(), staffChatPerm))
                     .forEach(p -> p.sendMessage(hytaleMsg));
 
+            String dbPayload = player.getUuid() + ":::" + player.getUsername() + ":::" + finalMessage;
+            final String finalChannel = "STAFF";
+            CompletableFuture.runAsync(() -> PLUGIN.getChatSystem().sendToChannel(finalChannel, dbPayload));
             sendDiscordJoinLeave(player.getUsername(), false);
         }
     }

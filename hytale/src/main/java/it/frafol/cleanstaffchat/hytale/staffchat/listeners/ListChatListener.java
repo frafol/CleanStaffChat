@@ -68,7 +68,7 @@ public class ListChatListener extends ListenerAdapter {
                                 .replace("{usergroup}", "")
                                 .replace("{player}", player.getUsername())
                                 .replace("{afk}", isAFK)
-                                .replace("{server}", ""))
+                                .replace("{server}", HytaleConfig.SERVER_NAME.get(String.class)))
                         .append("\n");
             }
         }

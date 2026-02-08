@@ -87,7 +87,7 @@ public class AFKCommand extends AbstractCommand {
                 .replace("{displayname}", sender.getDisplayName())
                 .replace("{userprefix}", PermissionsUtil.getPrefix(sender.getUuid()))
                 .replace("{usersuffix}", PermissionsUtil.getSuffix(sender.getUuid()))
-                .replace("{server}", "");
+                .replace("{server}", HytaleConfig.SERVER_NAME.get(String.class));
 
         Message hytaleMsg = ChatColor.color((finalMessage));
 
@@ -100,6 +100,10 @@ public class AFKCommand extends AbstractCommand {
                 }
             }
         });
+
+        String dbPayload = sender.getUuid() + ":::" + sender.getDisplayName() + ":::" + finalMessage;
+        final String finalChannel = "STAFF";
+        CompletableFuture.runAsync(() -> plugin.getChatSystem().sendToChannel(finalChannel, dbPayload));
     }
 
     private void sendDiscordAfkMessage(CommandSender sender, boolean goingAfk) {

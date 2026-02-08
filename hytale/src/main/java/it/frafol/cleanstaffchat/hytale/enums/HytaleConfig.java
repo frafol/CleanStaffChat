@@ -31,6 +31,14 @@ public enum HytaleConfig {
     STAFFLIST_BYPASS("settings.stafflist.bypass_enabled"),
 
     HIDE_ADVERTS("settings.hide_advertisements"),
+    SERVER_NAME("modules.server_name"),
+
+    MYSQL_ENABLED("mysql.enabled"),
+    MYSQL_IP("mysql.ip"),
+    MYSQL_PORT("mysql.port"),
+    MYSQL_DATABASE("mysql.db_name"),
+    MYSQL_USER("mysql.user"),
+    MYSQL_PASSWORD("mysql.password"),
 
     STAFFCHAT_AFK_MODULE("modules.staffchat_afk_module"),
     STAFFCHAT_NO_AFK_ONCHANGE_SERVER("settings.staffchat.staff_disable_afk_on_move"),

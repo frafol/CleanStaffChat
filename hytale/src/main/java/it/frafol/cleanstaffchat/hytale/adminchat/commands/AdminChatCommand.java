@@ -98,7 +98,7 @@ public class AdminChatCommand extends AbstractCommand {
                 .replace("{message}", messageArg)
                 .replace("{userprefix}", PermissionsUtil.getPrefix(sender.getUuid()))
                 .replace("{usersuffix}", PermissionsUtil.getSuffix(sender.getUuid()))
-                .replace("{server}", "");
+                .replace("{server}", HytaleConfig.SERVER_NAME.get(String.class));
 
         Message hytaleMsg = ChatColor.color(sender.getUuid(), sender.getDisplayName(), formatted);
         Universe.get().getWorlds().values().forEach(world -> {
@@ -110,6 +110,9 @@ public class AdminChatCommand extends AbstractCommand {
             }
         });
 
+        String dbPayload = sender.getUuid() + ":::" + sender.getDisplayName() + ":::" + formatted;
+        final String finalChannel = "ADMIN";
+        CompletableFuture.runAsync(() -> plugin.getChatSystem().sendToChannel(finalChannel, dbPayload));
         if (!(sender instanceof Player)) sender.sendMessage(hytaleMsg);
         sendToDiscord(senderName, messageArg);
         return CompletableFuture.completedFuture(null);

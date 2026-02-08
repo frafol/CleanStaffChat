@@ -90,7 +90,7 @@ public class StaffListCommand extends AbstractCommand {
                         .replace("{usersuffix}", PermissionsUtil.getSuffix(sender.getUuid()))
                         .replace("{player}", staff.getUsername())
                         .replace("{afk}", isAFK)
-                        .replace("{server}", "");
+                        .replace("{server}", HytaleConfig.SERVER_NAME.get(String.class));
 
                 sender.sendMessage(ChatColor.color((format)));
             }

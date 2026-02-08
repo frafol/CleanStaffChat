@@ -160,6 +160,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>7.0.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>ru.vyarus</groupId>
             <artifactId>yaml-config-updater</artifactId>
             <version>1.4.4</version>

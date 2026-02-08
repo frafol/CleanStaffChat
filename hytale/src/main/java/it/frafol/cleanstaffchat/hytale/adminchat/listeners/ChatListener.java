@@ -18,6 +18,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.concurrent.CompletableFuture;
 
 public class ChatListener extends ListenerAdapter {
 
@@ -67,7 +68,7 @@ public class ChatListener extends ListenerAdapter {
                 .replace("{message}", finalMessage)
                 .replace("{userprefix}", PermissionsUtil.getPrefix(sender.getUuid()))
                 .replace("{usersuffix}", PermissionsUtil.getSuffix(sender.getUuid()))
-                .replace("{server}", "");
+                .replace("{server}", HytaleConfig.SERVER_NAME.get(String.class));
 
         Message hytaleMsg = ChatColor.color(sender.getUuid(), sender.getUsername(), formattedMessage);
         Universe.get().getWorlds().values().forEach(world -> {
@@ -79,6 +80,9 @@ public class ChatListener extends ListenerAdapter {
             }
         });
 
+        String dbPayload = sender.getUuid() + ":::" + sender.getUsername() + ":::" + formattedMessage;
+        final String finalChannel = "ADMIN";
+        CompletableFuture.runAsync(() -> plugin.getChatSystem().sendToChannel(finalChannel, dbPayload));
         sendToDiscord(sender.getUsername(), finalMessage);
     }
 
@@ -93,7 +97,7 @@ public class ChatListener extends ListenerAdapter {
         String formatted = HytaleMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                 .replace("{user}", user)
                 .replace("{message}", message)
-                .replace("{server}", "");
+                .replace("{server}", HytaleConfig.SERVER_NAME.get(String.class));
 
         if (Boolean.TRUE.equals(HytaleDiscordConfig.USE_EMBED.get(Boolean.class))) {
             EmbedBuilder embed = new EmbedBuilder();

@@ -93,10 +93,28 @@ settings:
     # You can enable or disable the bypass permission.
     bypass_enabled: false
 
+mysql:
+
+  # This section is useful if you are in a network of multiple servers.
+  # With the MySQL connection, you can send staff/admin/donor messages in all servers.
+  # Connect all CleanStaffChat plugins of your servers to the same MySQL server.
+  # WARNING: Discord hook is not supported if you enable MySQL.
+  enabled: false
+
+  # MySQL connection infos
+  ip: "127.0.0.1"
+  port: 3306
+  user: "root"
+  password: "password"
+  db_name: "cleanstaffchat"
+
+
 modules:
 
   update_check: true
   auto_update: false
+
+  server_name: "Lobby" # Change with the name you want to set to the placeholder {server}
 
   globalchat_mute_command_module: true
 

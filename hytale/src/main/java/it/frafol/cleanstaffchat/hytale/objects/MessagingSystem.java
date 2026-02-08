@@ -17,10 +17,14 @@ public class MessagingSystem {
         this.serverID = serverID;
 
         HikariConfig config = new HikariConfig();
+        config.setDriverClassName("com.mysql.cj.jdbc.Driver");
         config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + db);
         config.setUsername(user);
         config.setPassword(pass);
         config.setMaximumPoolSize(5);
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
 
         this.dataSource = new HikariDataSource(config);
 

@@ -300,10 +300,12 @@ public class CleanStaffChat extends JavaPlugin {
         HytaleLibraryManager hytaleLibraryManager = new HytaleLibraryManager(this);
         Library yaml = Library.builder().groupId("me{}carleslc{}Simple-YAML").artifactId("Simple-Yaml").version("1.8.4").url("https://github.com/Carleslc/Simple-YAML/releases/download/1.8.4/Simple-Yaml-1.8.4.jar").build();
         Library discord = Library.builder().groupId("net{}dv8tion").artifactId("JDA").version("6.3.0").url("https://github.com/discord-jda/JDA/releases/download/v6.3.0/JDA-6.3.0-withDependencies-min.jar").build();
+        Library mysql = Library.builder().groupId("com{}mysql").artifactId("mysql-connector-j").version("8.3.0").build();
         hytaleLibraryManager.addMavenCentral();
         hytaleLibraryManager.addJitPack();
         hytaleLibraryManager.loadLibrary(discord);
         hytaleLibraryManager.loadLibrary(yaml);
+        hytaleLibraryManager.loadLibrary(mysql);
     }
 
     private void updateJDATask() {

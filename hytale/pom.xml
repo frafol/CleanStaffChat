@@ -7,7 +7,7 @@
     <parent>
         <groupId>it.frafol</groupId>
         <artifactId>cleanstaffchat</artifactId>
-        <version>1.3.0</version>
+        <version>1.3.1</version>
     </parent>
 
     <artifactId>hytale</artifactId>
@@ -102,6 +102,10 @@
             <url>https://repo.maven.apache.org/maven2/</url>
         </repository>
         <repository>
+            <id>placeholderapi</id>
+            <url>https://repo.helpch.at/releases/</url>
+        </repository>
+        <repository>
             <id>fancyinnovations-repo</id>
             <url>https://repo.fancyinnovations.com/snapshots</url>
         </repository>
@@ -152,6 +156,12 @@
             <version>1.0.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/HyperPerms-2.4.3.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>at.helpch</groupId>
+            <artifactId>placeholderapi-hytale</artifactId>
+            <version>1.0.5</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.dv8tion</groupId>

@@ -5,6 +5,7 @@ import com.google.common.io.ByteStreams;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -86,14 +87,10 @@ public class PlayerCache {
     }
 
     private String convertHexColors(String message) {
-
-        if (!containsHexColor(message)) {
-            return message;
-        }
-
+        if (!containsHexColor(message)) return message;
         Pattern hexPattern = Pattern.compile("(#[A-Fa-f0-9]{6}|<#[A-Fa-f0-9]{6}>|&#[A-Fa-f0-9]{6})");
         Matcher matcher = hexPattern.matcher(message);
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         while (matcher.find()) {
             String hexCode = matcher.group();
             String colorCode = hexCode.substring(1, 7);
@@ -130,22 +127,12 @@ public class PlayerCache {
         return false;
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     public void sendChannelMessage(ProxiedPlayer player, boolean cancel) {
-
-        if (!BungeeConfig.WORKAROUND_KICK.get(Boolean.class)) {
-            return;
-        }
-
+        if (!BungeeConfig.WORKAROUND_KICK.get(Boolean.class)) return;
         final ByteArrayDataOutput buf = ByteStreams.newDataOutput();
-
         buf.writeUTF(String.valueOf(cancel));
         buf.writeUTF(player.getName());
-
-        if (player.getServer() == null) {
-            return;
-        }
-
+        if (player.getServer() == null) return;
         player.getServer().sendData("cleansc:cancel", buf.toByteArray());
     }
 }

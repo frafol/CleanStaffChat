@@ -11,6 +11,7 @@ import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -81,17 +82,16 @@ public class ChatUtil {
                 message.contains("&n") ||
                 message.contains("&o") ||
                 message.contains("&r");
-
     }
 
     public String translateHex(String string) {
         return convertHexColors(string).replace("&", "§");
     }
 
-    private String convertHexColors(String message) {
+    public String convertHexColors(String message) {
 
         if (VelocityConfig.MINIMESSAGE.get(Boolean.class)) {
-            return LegacyComponentSerializer.legacySection().serialize(deserializeMiniMessage(message));
+            return translateMiniMessage(message);
         }
 
         if (!containsHexColor(message)) {
@@ -127,10 +127,12 @@ public class ChatUtil {
                 '§' + chars[5];
     }
 
-    private Component deserializeMiniMessage(String message) {
-        Component legacy = LegacyComponentSerializer.legacySection().deserialize(message);
-        String mmString = MiniMessage.miniMessage().serialize(legacy);
-        return MiniMessage.miniMessage().deserialize(mmString);
+    public String translateMiniMessage(String input) {
+        if (input == null || input.isEmpty()) return "";
+        TextComponent legacyComponent = LegacyComponentSerializer.legacyAmpersand().deserialize(input);
+        String minimessage = MiniMessage.miniMessage().serialize(legacyComponent);
+        Component finalComponent = MiniMessage.miniMessage().deserialize(minimessage);
+        return LegacyComponentSerializer.legacySection().serialize(finalComponent);
     }
 
     private boolean containsHexColor(String message) {

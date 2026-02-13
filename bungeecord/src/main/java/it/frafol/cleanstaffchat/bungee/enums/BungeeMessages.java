@@ -1,7 +1,13 @@
 package it.frafol.cleanstaffchat.bungee.enums;
 
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
+import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.william278.papiproxybridge.api.PlaceholderAPI;
 
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -123,52 +129,7 @@ public enum BungeeMessages {
     }
 
     public String color() {
-        String hex = convertHexColors(get(String.class));
+        String hex = PlayerCache.translateHex(get(String.class));
         return hex.replace("&", "§");
-    }
-
-    private String convertHexColors(String message) {
-
-        if (!containsHexColor(message)) {
-            return message;
-        }
-
-        Pattern hexPattern = Pattern.compile("(#[A-Fa-f0-9]{6}|<#[A-Fa-f0-9]{6}>|&#[A-Fa-f0-9]{6})");
-        Matcher matcher = hexPattern.matcher(message);
-        StringBuffer buffer = new StringBuffer();
-        while (matcher.find()) {
-            String hexCode = matcher.group();
-            String colorCode = hexCode.substring(1, 7);
-            if (hexCode.startsWith("<#") && hexCode.endsWith(">")) {
-                colorCode = hexCode.substring(2, 8);
-            } else if (hexCode.startsWith("&#")) {
-                colorCode = hexCode.substring(2, 8);
-            }
-            String minecraftColorCode = translateHexToMinecraftColorCode(colorCode);
-            matcher.appendReplacement(buffer, minecraftColorCode);
-        }
-        matcher.appendTail(buffer);
-        return buffer.toString();
-    }
-
-    private String translateHexToMinecraftColorCode(String hex) {
-        char[] chars = hex.toCharArray();
-        return "§x" +
-                '§' + chars[0] +
-                '§' + chars[1] +
-                '§' + chars[2] +
-                '§' + chars[3] +
-                '§' + chars[4] +
-                '§' + chars[5];
-    }
-
-    private boolean containsHexColor(String message) {
-        String[] hexColorPattern = new String[]{"#[a-fA-F0-9]{6}", "&#[a-fA-F0-9]{6}", "<#[a-fA-F0-9]]{6}>"};
-        for (String pattern : hexColorPattern) {
-            if (Pattern.compile(pattern).matcher(message).find()) {
-                return true;
-            }
-        }
-        return false;
     }
 }

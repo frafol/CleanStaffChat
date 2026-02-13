@@ -8,6 +8,7 @@ import com.hypixel.hytale.server.core.universe.Universe;
 import it.frafol.cleanstaffchat.hytale.CleanStaffChat;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleConfig;
 import it.frafol.cleanstaffchat.hytale.enums.HytaleMessages;
+import it.frafol.cleanstaffchat.hytale.objects.ChatColor;
 import it.frafol.cleanstaffchat.hytale.objects.PermissionsUtil;
 
 import javax.annotation.Nonnull;
@@ -42,11 +43,10 @@ public class ClearChatCommand extends AbstractCommand {
     }
 
     private void broadcastClearChat(UUID uuid, String senderName) {
-        Universe.get().getPlayers().forEach(player ->
-                player.sendMessage(HytaleMessages.CLEANED.color()
-                        .param("user", senderName)
-                        .param("userprefix", PermissionsUtil.getPrefix(uuid))
-                        .param("usersuffix", PermissionsUtil.getSuffix(uuid)))
-        );
+        String clearchat = HytaleMessages.CLEANED.get(String.class)
+                .replace("{user}", senderName)
+                .replace("{userprefix}", PermissionsUtil.getPrefix(uuid))
+                .replace("{usersuffix}", PermissionsUtil.getSuffix(uuid));
+        Universe.get().getPlayers().forEach(player -> player.sendMessage(ChatColor.color(clearchat)));
     }
 }

@@ -120,6 +120,9 @@ modules:
   auto_update: false
   stats: true
 
+  # WARNING: You must have also your prefix/suffix formatted in MiniMessage.
+  minimessage_support: false
+
   premiumvanish_hook: true
 
   globalchat_mute_command_module: true

@@ -26,6 +26,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.internal.utils.JDALogger;
+import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.simpleyaml.configuration.file.YamlFile;
@@ -44,6 +45,9 @@ import java.util.concurrent.TimeUnit;
 public class CleanStaffChat extends Plugin {
 
     private JDA jda;
+
+    @Getter
+    public BungeeAudiences bungeeAudiences;
 
     private TextFile configTextFile;
     private TextFile messagesTextFile;
@@ -100,9 +104,51 @@ public class CleanStaffChat extends Plugin {
                 .url("https://github.com/discord-jda/JDA/releases/download/v6.0.0-rc.4/JDA-6.0.0-rc.4-withDependencies-min.jar")
                 .build();
 
+        Library adventureKey = Library.builder()
+                .groupId("net{}kyori")
+                .artifactId("adventure-key")
+                .version("4.17.0")
+                .build();
+
+        Library examinationApi = Library.builder()
+                .groupId("net{}kyori")
+                .artifactId("examination-api")
+                .version("1.3.0")
+                .build();
+
+        Library examinationString = Library.builder()
+                .groupId("net{}kyori")
+                .artifactId("examination-string")
+                .version("1.3.0")
+                .build();
+
+        Library adventureApi = Library.builder()
+                .groupId("net{}kyori")
+                .artifactId("adventure-api")
+                .version("4.17.0")
+                .build();
+
+        Library miniMessage = Library.builder()
+                .groupId("net{}kyori")
+                .artifactId("adventure-text-minimessage")
+                .version("4.17.0")
+                .build();
+
+        Library legacySerializer = Library.builder()
+                .groupId("net{}kyori")
+                .artifactId("adventure-text-serializer-legacy")
+                .version("4.17.0")
+                .build();
+
         bungeeLibraryManager.addMavenCentral();
         bungeeLibraryManager.addJitPack();
         bungeeLibraryManager.loadLibrary(updater);
+        bungeeLibraryManager.loadLibrary(examinationApi);
+        bungeeLibraryManager.loadLibrary(examinationString);
+        bungeeLibraryManager.loadLibrary(adventureKey);
+        bungeeLibraryManager.loadLibrary(adventureApi);
+        bungeeLibraryManager.loadLibrary(legacySerializer);
+        bungeeLibraryManager.loadLibrary(miniMessage);
         bungeeLibraryManager.loadLibrary(discord);
 
         try {

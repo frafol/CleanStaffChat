@@ -5,6 +5,10 @@ import com.google.common.io.ByteStreams;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -87,6 +91,7 @@ public class PlayerCache {
     }
 
     private String convertHexColors(String message) {
+        if (BungeeConfig.MINIMESSAGE.get(Boolean.class)) return formatMiniMessage(message);
         if (!containsHexColor(message)) return message;
         Pattern hexPattern = Pattern.compile("(#[A-Fa-f0-9]{6}|<#[A-Fa-f0-9]{6}>|&#[A-Fa-f0-9]{6})");
         Matcher matcher = hexPattern.matcher(message);
@@ -104,6 +109,14 @@ public class PlayerCache {
         }
         matcher.appendTail(buffer);
         return buffer.toString();
+    }
+
+    private String formatMiniMessage(String message) {
+        if (message == null || message.isEmpty()) return "";
+        TextComponent legacyComponent = LegacyComponentSerializer.legacyAmpersand().deserialize(message);
+        String minimessage = MiniMessage.miniMessage().serialize(legacyComponent);
+        Component finalComponent = MiniMessage.miniMessage().deserialize(minimessage);
+        return LegacyComponentSerializer.legacySection().serialize(finalComponent);
     }
 
     private String translateHexToMinecraftColorCode(String hex) {

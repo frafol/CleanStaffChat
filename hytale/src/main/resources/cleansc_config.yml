@@ -31,6 +31,7 @@ settings:
     global_mutechat_permission: "globalchat.mute"
     global_mutechat_all_permission: "globalchat.mute.all"
     global_mutechat_bypass_permission: "globalchat.mute.bypass"
+    global_clearchat_permission: "globalchat.clearchat"
 
   staffchat:
 
@@ -117,6 +118,7 @@ modules:
   server_name: "Lobby" # Change with the name you want to set to the placeholder {server}
 
   globalchat_mute_command_module: true
+  globalchat_clearchat_module: true
 
   staffchat_switch_module: true
   staffchat_afk_module: true

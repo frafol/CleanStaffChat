@@ -24,6 +24,9 @@ public enum HytaleConfig {
     MUTECHAT_ALL_PERMISSION("settings.globalchat.global_mutechat_all_permission"),
     MUTECHAT_BYPASS_PERMISSION("settings.globalchat.global_mutechat_bypass_permission"),
 
+    CLEARCHAT_MODULE("modules.globalchat_clearchat_module"),
+    CLEARCHAT_PERMISSION("settings.globalchat.global_clearchat_permission"),
+
     STAFFLIST_MODULE("modules.stafflist_module"),
     STAFFLIST_PERMISSION("settings.stafflist.stafflist_permission"),
     STAFFLIST_SHOW_PERMISSION("settings.stafflist.stafflist_show_permission"),

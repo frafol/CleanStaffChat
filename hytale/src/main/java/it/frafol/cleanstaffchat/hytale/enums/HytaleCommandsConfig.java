@@ -3,6 +3,7 @@ package it.frafol.cleanstaffchat.hytale.enums;
 import it.frafol.cleanstaffchat.hytale.CleanStaffChat;
 import it.frafol.cleanstaffchat.hytale.adminchat.commands.AdminChatCommand;
 import it.frafol.cleanstaffchat.hytale.donorchat.commands.DonorChatCommand;
+import it.frafol.cleanstaffchat.hytale.general.commands.ClearChatCommand;
 import it.frafol.cleanstaffchat.hytale.general.commands.MuteChatCommand;
 import it.frafol.cleanstaffchat.hytale.staffchat.commands.*;
 
@@ -19,6 +20,7 @@ public enum HytaleCommandsConfig {
     DONORCHAT_MUTE(it.frafol.cleanstaffchat.hytale.donorchat.commands.MuteCommand.class, "aliases.donorchat.mute"),
     STAFFCHAT_TOGGLE(ToggleCommand.class, "aliases.staffchat.toggle"),
     MUTECHAT(MuteChatCommand.class, "aliases.mutechat.main"),
+    CLEARCHAT(ClearChatCommand.class, "aliases.clearchat.main"),
     ADMINCHAT_TOGGLE(it.frafol.cleanstaffchat.hytale.adminchat.commands.ToggleCommand.class, "aliases.adminchat.toggle"),
     DONORCHAT_TOGGLE(it.frafol.cleanstaffchat.hytale.donorchat.commands.ToggleCommand.class, "aliases.donorchat.toggle"),
     STAFFCHAT_AFK(AFKCommand.class, "aliases.staffchat.afk");
@@ -65,6 +67,10 @@ public enum HytaleCommandsConfig {
 
     public static List<HytaleCommandsConfig> getAdminChatCommands() {
         return List.of(ADMINCHAT, ADMINCHAT_MUTE, ADMINCHAT_TOGGLE);
+    }
+
+    public static List<HytaleCommandsConfig> getClearChatCommands() {
+        return List.of(CLEARCHAT);
     }
 
     public static List<HytaleCommandsConfig> getDonorChatCommands() {

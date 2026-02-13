@@ -97,6 +97,13 @@ aliases:
       - "cleanmc"
       - "cleanmutechat"
 
+  clearchat:
+    main:
+      - "clearchat"
+      - "cc"
+      - "cleancc"
+      - "cleanclearchat"
+
   stafflist:
     main:
       - "stafflist"

@@ -127,6 +127,14 @@ public class CleanStaffChat extends JavaPlugin {
             getEventRegistry().registerGlobal(PlayerChatEvent.class, muteListener::onChat);
         }
 
+        if (Boolean.TRUE.equals(HytaleConfig.CLEARCHAT_MODULE.get(Boolean.class))) {
+            try {
+                registerClearChatCommands();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         if (Boolean.TRUE.equals(HytaleConfig.STAFFLIST_MODULE.get(Boolean.class))) {
             registerStaffListCommands();
         }
@@ -252,6 +260,23 @@ public class CleanStaffChat extends JavaPlugin {
                     this,
                     commandLabels.getFirst(),
                     "Mute Chat Command",
+                    commandLabels.subList(1, commandLabels.size())
+            );
+
+            Universe.get().getCommandRegistry().registerCommand(command);
+        }
+    }
+
+    private void registerClearChatCommands() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+        for (HytaleCommandsConfig commandConfig : HytaleCommandsConfig.getClearChatCommands()) {
+            List<String> commandLabels = commandConfig.getStringList();
+            if (commandLabels.isEmpty()) continue;
+
+            AbstractCommand command = (AbstractCommand) commandConfig.getCommandClass()
+                    .getDeclaredConstructors()[0].newInstance(
+                    this,
+                    commandLabels.getFirst(),
+                    "Clear Chat Command",
                     commandLabels.subList(1, commandLabels.size())
             );
 

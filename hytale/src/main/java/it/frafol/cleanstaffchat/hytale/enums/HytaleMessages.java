@@ -63,6 +63,7 @@ public enum HytaleMessages {
     DONORCHAT_TOGGLED_ON("messages.donorchat.donorchat_toggled_on"),
     DONORCHAT_TOGGLED_OFF("messages.donorchat.donorchat_toggled_off"),
     RELOADED("messages.reloaded"),
+    CLEANED("messages.globalchat.chat_cleaned"),
     MODULE_DISABLED("messages.module_disabled"),
     DISCORD_STAFF_FORMAT("messages.staffchat.discord.staffchat_discord_format"),
     DISCORD_DONOR_FORMAT("messages.donorchat.discord.donorchat_discord_format"),

@@ -4,6 +4,7 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.AbstractCommand;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.CommandSender;
+import com.hypixel.hytale.server.core.console.ConsoleSender;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
@@ -40,7 +41,7 @@ public class AdminChatCommand extends AbstractCommand {
     protected CompletableFuture<Void> execute(@Nonnull CommandContext context) {
         CommandSender sender = context.sender();
         String permission = HytaleConfig.ADMINCHAT_USE_PERMISSION.get(String.class);
-        boolean senderHasPerm = PermissionsUtil.hasPermission(sender.getUuid(), permission);
+        boolean senderHasPerm = PermissionsUtil.hasPermission(sender.getUuid(), permission) || sender instanceof ConsoleSender;
 
         String input = context.getInputString().trim();
         String[] split = input.split("\\s+", 2);

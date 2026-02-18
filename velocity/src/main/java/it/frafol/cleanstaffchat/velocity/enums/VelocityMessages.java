@@ -4,12 +4,8 @@ import com.velocitypowered.api.command.CommandSource;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import it.frafol.cleanstaffchat.velocity.utils.ChatUtil;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public enum VelocityMessages {
 
@@ -133,8 +129,7 @@ public enum VelocityMessages {
     }
 
     public String color() {
-        String hex = ChatUtil.convertHexColors(get(String.class));
-        return hex.replace("&", "§");
+        return ChatUtil.convertHexColors(get(String.class));
     }
 
     private MiniMessage getMiniMessage() {

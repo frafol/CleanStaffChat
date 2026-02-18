@@ -6,10 +6,8 @@ import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -111,12 +109,17 @@ public class PlayerCache {
         return buffer.toString();
     }
 
-    private String formatMiniMessage(String message) {
-        if (message == null || message.isEmpty()) return "";
-        TextComponent legacyComponent = LegacyComponentSerializer.legacyAmpersand().deserialize(message);
-        String minimessage = MiniMessage.miniMessage().serialize(legacyComponent);
-        Component finalComponent = MiniMessage.miniMessage().deserialize(minimessage);
-        return LegacyComponentSerializer.legacySection().serialize(finalComponent);
+    public String formatMiniMessage(String input) {
+        Component raw = LegacyComponentSerializer.legacyAmpersand()
+                .deserialize(input);
+        String intermediate = MiniMessage.miniMessage()
+                .serialize(raw);
+        intermediate = intermediate.replace("§", "")
+                .replace("&", "");
+        Component parsed = MiniMessage.miniMessage()
+                .deserialize(intermediate);
+        return LegacyComponentSerializer.legacyAmpersand()
+                .serialize(parsed);
     }
 
     private String translateHexToMinecraftColorCode(String hex) {

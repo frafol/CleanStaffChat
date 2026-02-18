@@ -2,14 +2,6 @@ package it.frafol.cleanstaffchat.bungee.enums;
 
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.william278.papiproxybridge.api.PlaceholderAPI;
-
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public enum BungeeMessages {
 
@@ -129,7 +121,6 @@ public enum BungeeMessages {
     }
 
     public String color() {
-        String hex = PlayerCache.translateHex(get(String.class));
-        return hex.replace("&", "§");
+        return PlayerCache.translateHex(get(String.class));
     }
 }

@@ -11,7 +11,6 @@ import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -128,11 +127,16 @@ public class ChatUtil {
     }
 
     public String translateMiniMessage(String input) {
-        if (input == null || input.isEmpty()) return "";
-        TextComponent legacyComponent = LegacyComponentSerializer.legacyAmpersand().deserialize(input);
-        String minimessage = MiniMessage.miniMessage().serialize(legacyComponent);
-        Component finalComponent = MiniMessage.miniMessage().deserialize(minimessage);
-        return LegacyComponentSerializer.legacySection().serialize(finalComponent);
+        Component raw = LegacyComponentSerializer.legacyAmpersand()
+                .deserialize(input);
+        String intermediate = MiniMessage.miniMessage()
+                .serialize(raw);
+        intermediate = intermediate.replace("§", "")
+                .replace("&", "");
+        Component parsed = MiniMessage.miniMessage()
+                .deserialize(intermediate);
+        return LegacyComponentSerializer.legacyAmpersand()
+                .serialize(parsed);
     }
 
     private boolean containsHexColor(String message) {

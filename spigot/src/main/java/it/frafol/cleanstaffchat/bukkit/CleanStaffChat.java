@@ -193,6 +193,10 @@ public class CleanStaffChat extends JavaPlugin {
             getLogger().info("Hooked into SuperVanish successfully!");
         }
 
+        if (isVanishPP()) {
+            getLogger().info("Hooked into Vanish++ successfully!");
+        }
+
         if (getPAPI()) {
             getLogger().info("Hooked into PlaceholderAPI successfully!");
         }
@@ -507,6 +511,13 @@ public class CleanStaffChat extends JavaPlugin {
     public boolean isSuperVanish() {
         if (SpigotConfig.SUPERVANISH.get(Boolean.class)) {
             return getServer().getPluginManager().getPlugin("SuperVanish") != null;
+        }
+        return false;
+    }
+
+    public boolean isVanishPP() {
+        if (SpigotConfig.SUPERVANISH.get(Boolean.class)) {
+            return getServer().getPluginManager().getPlugin("Vanishpp") != null;
         }
         return false;
     }

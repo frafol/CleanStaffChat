@@ -20,6 +20,7 @@ public enum SpigotConfig {
 
     PREMIUMVANISH("modules.premiumvanish_hook"),
     SUPERVANISH("modules.supervanish_hook"),
+    VANISHPP("modules.vanishpp_hook"),
 
     MUTECHAT_MODULE("modules.globalchat_mute_command_module"),
     MUTECHAT_BC_ALL("settings.globalchat.send_broadcast_to_all"),

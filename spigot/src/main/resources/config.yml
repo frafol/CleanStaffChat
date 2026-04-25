@@ -125,6 +125,7 @@ modules:
 
   premiumvanish_hook: true
   supervanish_hook: true
+  vanishpp_hook: true
 
   globalchat_mute_command_module: true
 

@@ -16,6 +16,7 @@ import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.types.InheritanceNode;
 import net.luckperms.api.query.QueryMode;
 import net.luckperms.api.query.QueryOptions;
+import net.thecommandcraft.vanishpp.Vanishpp;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -68,6 +69,10 @@ public class StaffListCommand extends CommandBase {
                 }
 
                 if (plugin.isSuperVanish() && VanishAPI.getInvisiblePlayers().contains(players.getUniqueId())) {
+                    continue;
+                }
+
+                if (plugin.isVanishPP() && net.thecommandcraft.vanishpp.api.VanishAPI.get().isVanished(players.getUniqueId())) {
                     continue;
                 }
 
@@ -203,6 +208,14 @@ public class StaffListCommand extends CommandBase {
             }
 
             if (plugin.isPremiumVanish() && VanishAPI.getInvisiblePlayers().contains(players.getUniqueId())) {
+                continue;
+            }
+
+            if (plugin.isSuperVanish() && VanishAPI.getInvisiblePlayers().contains(players.getUniqueId())) {
+                continue;
+            }
+
+            if (plugin.isVanishPP() && net.thecommandcraft.vanishpp.api.VanishAPI.get().isVanished(players.getUniqueId())) {
                 continue;
             }
 

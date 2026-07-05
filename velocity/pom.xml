@@ -7,7 +7,7 @@
     <parent>
         <groupId>it.frafol</groupId>
         <artifactId>cleanstaffchat</artifactId>
-        <version>1.17.6</version>
+        <version>1.17.7</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -86,7 +86,7 @@
             <version>1.3.1</version>
         </dependency>
         <dependency>
-            <groupId>com.github.proxiodev.redisbungee</groupId>
+            <groupId>com.github.ProxioDev.ValioBungee</groupId>
             <artifactId>RedisBungee-Velocity</artifactId>
             <version>0.12.5</version>
             <scope>provided</scope>

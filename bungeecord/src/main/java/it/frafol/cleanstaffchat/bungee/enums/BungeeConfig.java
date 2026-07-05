@@ -71,9 +71,9 @@ public enum BungeeConfig {
     ADMINCHAT_TOGGLE_MODULE("modules.adminchat_toggle_module"),
     DONORCHAT_TOGGLE_MODULE("modules.donorchat_toggle_module"),
 
-    STAFFCHAT_PREFIX_MODULE("modules.staffchat_toggle_module"),
-    ADMINCHAT_PREFIX_MODULE("modules.adminchat_toggle_module"),
-    DONORCHAT_PREFIX_MODULE("modules.donorchat_toggle_module"),
+    STAFFCHAT_PREFIX_MODULE("modules.staffchat_prefix_module"),
+    ADMINCHAT_PREFIX_MODULE("modules.adminchat_prefix_module"),
+    DONORCHAT_PREFIX_MODULE("modules.donorchat_prefix_module"),
 
     STAFFCHAT_PREFIX("settings.staffchat.staffchat_prefix"),
     ADMINCHAT_PREFIX("settings.adminchat.adminchat_prefix"),

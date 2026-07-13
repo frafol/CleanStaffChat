@@ -88,12 +88,14 @@ public class PlayerCache {
 
     public String color(String string) {
         CleanStaffChat instance = CleanStaffChat.getInstance();
+        String hex;
         if (instance.supportsMiniMessage()) {
             MiniMessage miniMessage = MiniMessage.miniMessage();
             Component component = miniMessage.deserialize(string);
-            string = LegacyComponentSerializer.legacySection().serialize(component);
+            hex = LegacyComponentSerializer.legacySection().serialize(component);
+        } else {
+            hex = convertHexColors(string);
         }
-        String hex = convertHexColors(string);
         return hex.replace("&", "§");
     }
 

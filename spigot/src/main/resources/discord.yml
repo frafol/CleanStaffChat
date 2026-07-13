@@ -17,7 +17,7 @@ discord: # The Discord Integration is an experimental feature, report all proble
   # Your Discord bot's token.
   token: ""
 
-  # Types: WATCHING, PLAYING, STREAMING.
+  # Types: WATCHING, PLAYING, STREAMING, NULL (to disable).
   activity_type: "WATCHING"
 
   # The Discord bot's activity. You can use %players% to see the amount of players online.

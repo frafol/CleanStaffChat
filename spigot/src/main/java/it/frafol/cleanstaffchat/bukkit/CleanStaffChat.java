@@ -494,11 +494,12 @@ public class CleanStaffChat extends JavaPlugin {
             return;
         }
 
-        jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
-                        (SpigotDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
-                SpigotDiscordConfig.DISCORD_ACTIVITY.get(String.class)
-                        .replace("%players%", String.valueOf(getServer().getOnlinePlayers().size()))));
-
+        if (!SpigotDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).equals("NULL")) {
+            jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
+                            (SpigotDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),
+                    SpigotDiscordConfig.DISCORD_ACTIVITY.get(String.class)
+                            .replace("%players%", String.valueOf(getServer().getOnlinePlayers().size()))));
+        }
     }
 
     public boolean isPremiumVanish() {

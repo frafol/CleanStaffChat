@@ -469,6 +469,10 @@ public class CleanStaffChat extends Plugin {
             return;
         }
 
+        String activity = BungeeDiscordConfig.DISCORD_ACTIVITY.get(String.class);
+        String activityType = BungeeDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class);
+        if (activity.isEmpty() || activityType.equals("NULL")) return;
+
         if (isPremiumVanish()) {
             jda.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf
                             (BungeeDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()),

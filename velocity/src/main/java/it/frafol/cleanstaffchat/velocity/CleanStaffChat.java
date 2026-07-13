@@ -544,7 +544,8 @@ public class CleanStaffChat {
         }
 
         String activity = VelocityDiscordConfig.DISCORD_ACTIVITY.get(String.class);
-        if (activity.isEmpty()) activity = "null";
+        String activityType = VelocityDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class);
+        if (activity.isEmpty() || activityType.equals("NULL")) return;
 
         if (isPremiumVanish()) {
             jda.getJda().getPresence().setActivity(net.dv8tion.jda.api.entities.Activity.of(net.dv8tion.jda.api.entities.Activity.ActivityType.valueOf

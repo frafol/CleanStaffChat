@@ -548,7 +548,7 @@ public class CleanStaffChat extends JavaPlugin {
         try {
             MiniMessage mm = MiniMessage.miniMessage();
             mm.deserialize("supports");
-            return true;
+            return SpigotConfig.MINIMESSAGE.get(Boolean.class);
         } catch (Throwable e) {
             return false;
         }

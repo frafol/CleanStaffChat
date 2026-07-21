@@ -45,7 +45,7 @@ public class MuteChatCommand extends AbstractCommand {
                 return CompletableFuture.completedFuture(null);
             }
 
-            String senderName = sender.getDisplayName();
+            String senderName = sender.getUsername();
 
             if (PlayerCache.getMutedservers().contains("all")) {
                 PlayerCache.getMutedservers().remove("all");

@@ -95,7 +95,7 @@ public class DonorChatCommand extends AbstractCommand {
             return CompletableFuture.completedFuture(null);
         }
 
-        String senderName = (sender instanceof Player) ? sender.getDisplayName() : HytaleConfig.CONSOLE_PREFIX.get(String.class);
+        String senderName = (sender instanceof Player) ? sender.getUsername() : HytaleConfig.CONSOLE_PREFIX.get(String.class);
         String rawFormat = HytaleMessages.DONORCHAT_FORMAT.get(String.class);
         String prefix = HytaleMessages.DONORPREFIX.get(String.class);
 
@@ -108,7 +108,7 @@ public class DonorChatCommand extends AbstractCommand {
                 .replace("{usersuffix}", PermissionsUtil.getSuffix(sender.getUuid()))
                 .replace("{server}", HytaleConfig.SERVER_NAME.get(String.class));
 
-        Message hytaleMsg = ChatColor.color(sender.getUuid(), sender.getDisplayName(), formatted);
+        Message hytaleMsg = ChatColor.color(sender.getUuid(), sender.getUsername(), formatted);
         Universe.get().getWorlds().values().forEach(world -> {
             for (PlayerRef ref : world.getPlayerRefs()) {
                 if (PermissionsUtil.hasPermission(ref.getUuid(), permission)
@@ -128,7 +128,7 @@ public class DonorChatCommand extends AbstractCommand {
                     HytaleConfig.DONOR_TIMER.get(Integer.class), TimeUnit.SECONDS);
         }
 
-        String dbPayload = sender.getUuid() + ":::" + sender.getDisplayName() + ":::" + formatted;
+        String dbPayload = sender.getUuid() + ":::" + sender.getUsername() + ":::" + formatted;
         final String finalChannel = "DONOR";
         CompletableFuture.runAsync(() -> plugin.getChatSystem().sendToChannel(finalChannel, dbPayload));
 

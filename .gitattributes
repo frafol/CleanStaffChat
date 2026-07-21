@@ -1,1 +1,2 @@
 libs/HytaleServer.jar filter=lfs diff=lfs merge=lfs -text
+hytale/libs/HytaleServer.jar filter=lfs diff=lfs merge=lfs -text

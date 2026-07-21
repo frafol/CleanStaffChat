@@ -88,7 +88,7 @@ public class AdminChatCommand extends AbstractCommand {
             return CompletableFuture.completedFuture(null);
         }
 
-        String senderName = (sender instanceof Player) ? sender.getDisplayName() : HytaleConfig.CONSOLE_PREFIX.get(String.class);
+        String senderName = (sender instanceof Player) ? sender.getUsername() : HytaleConfig.CONSOLE_PREFIX.get(String.class);
         String rawFormat = HytaleMessages.ADMINCHAT_FORMAT.get(String.class);
         String prefix = HytaleMessages.ADMINPREFIX.get(String.class);
 
@@ -101,7 +101,7 @@ public class AdminChatCommand extends AbstractCommand {
                 .replace("{usersuffix}", PermissionsUtil.getSuffix(sender.getUuid()))
                 .replace("{server}", HytaleConfig.SERVER_NAME.get(String.class));
 
-        Message hytaleMsg = ChatColor.color(sender.getUuid(), sender.getDisplayName(), formatted);
+        Message hytaleMsg = ChatColor.color(sender.getUuid(), sender.getUsername(), formatted);
         Universe.get().getWorlds().values().forEach(world -> {
             for (PlayerRef ref : world.getPlayerRefs()) {
                 if (PermissionsUtil.hasPermission(ref.getUuid(), permission)
@@ -111,7 +111,7 @@ public class AdminChatCommand extends AbstractCommand {
             }
         });
 
-        String dbPayload = sender.getUuid() + ":::" + sender.getDisplayName() + ":::" + formatted;
+        String dbPayload = sender.getUuid() + ":::" + sender.getUsername() + ":::" + formatted;
         final String finalChannel = "ADMIN";
         CompletableFuture.runAsync(() -> plugin.getChatSystem().sendToChannel(finalChannel, dbPayload));
         if (!(sender instanceof Player)) sender.sendMessage(hytaleMsg);

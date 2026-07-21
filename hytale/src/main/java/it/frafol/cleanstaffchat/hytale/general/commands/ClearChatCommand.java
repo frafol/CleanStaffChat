@@ -34,7 +34,7 @@ public class ClearChatCommand extends AbstractCommand {
     @Override
     protected CompletableFuture<Void> execute(@Nonnull CommandContext context) {
         CommandSender sender = context.sender();
-        String senderName = sender.getDisplayName();
+        String senderName = sender.getUsername();
         Universe.get().getPlayers().forEach(player -> {
             for (int i = 0; i < 100; i++) player.sendMessage(Message.raw(""));
         });

@@ -83,8 +83,8 @@ public class AFKCommand extends AbstractCommand {
 
         String finalMessage = rawFormat
                 .replace("{prefix}", prefix != null ? prefix : "")
-                .replace("{user}", sender.getDisplayName())
-                .replace("{displayname}", sender.getDisplayName())
+                .replace("{user}", sender.getUsername())
+                .replace("{displayname}", sender.getUsername())
                 .replace("{userprefix}", PermissionsUtil.getPrefix(sender.getUuid()))
                 .replace("{usersuffix}", PermissionsUtil.getSuffix(sender.getUuid()))
                 .replace("{server}", HytaleConfig.SERVER_NAME.get(String.class));
@@ -101,7 +101,7 @@ public class AFKCommand extends AbstractCommand {
             }
         });
 
-        String dbPayload = sender.getUuid() + ":::" + sender.getDisplayName() + ":::" + finalMessage;
+        String dbPayload = sender.getUuid() + ":::" + sender.getUsername() + ":::" + finalMessage;
         final String finalChannel = "STAFF";
         CompletableFuture.runAsync(() -> plugin.getChatSystem().sendToChannel(finalChannel, dbPayload));
     }
@@ -122,7 +122,7 @@ public class AFKCommand extends AbstractCommand {
                 ? HytaleMessages.STAFF_DISCORD_AFK_ON_MESSAGE_FORMAT.get(String.class)
                 : HytaleMessages.STAFF_DISCORD_AFK_OFF_MESSAGE_FORMAT.get(String.class);
 
-        String finalMessage = messageFormat.replace("{user}", sender.getDisplayName());
+        String finalMessage = messageFormat.replace("{user}", sender.getUsername());
 
         if (Boolean.TRUE.equals(HytaleDiscordConfig.USE_EMBED.get(Boolean.class))) {
             EmbedBuilder embed = new EmbedBuilder();

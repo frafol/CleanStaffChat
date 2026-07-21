@@ -84,6 +84,7 @@ public class CleanStaffChat extends Plugin {
                 .groupId("me{}carleslc{}Simple-YAML")
                 .artifactId("Simple-Yaml")
                 .version("1.8.4")
+                .url("https://github.com/Carleslc/Simple-YAML/releases/download/1.8.4/Simple-Yaml-1.8.4.jar")
                 .relocate(yamlrelocation)
                 .build();
 
@@ -99,9 +100,9 @@ public class CleanStaffChat extends Plugin {
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("6.0.0-rc.4")
+                .version("6.5.0")
                 .relocate(kotlin)
-                .url("https://github.com/discord-jda/JDA/releases/download/v6.0.0-rc.4/JDA-6.0.0-rc.4-withDependencies-min.jar")
+                .url("https://github.com/discord-jda/JDA/releases/download/v6.5.0/JDA-6.5.0-withDependencies-min.jar")
                 .build();
 
         Library adventureKey = Library.builder()
@@ -150,20 +151,6 @@ public class CleanStaffChat extends Plugin {
         bungeeLibraryManager.loadLibrary(legacySerializer);
         bungeeLibraryManager.loadLibrary(miniMessage);
         bungeeLibraryManager.loadLibrary(discord);
-
-        try {
-            bungeeLibraryManager.loadLibrary(yaml);
-        } catch (RuntimeException ignored) {
-            getLogger().severe("Failed to load Simple-YAML, trying to download it from GitHub...");
-            yaml = Library.builder()
-                    .groupId("me{}carleslc{}Simple-YAML")
-                    .artifactId("Simple-Yaml")
-                    .version("1.8.4")
-                    .url("https://github.com/Carleslc/Simple-YAML/releases/download/1.8.4/Simple-Yaml-1.8.4.jar")
-                    .relocate(yamlrelocation)
-                    .build();
-        }
-
         bungeeLibraryManager.loadLibrary(yaml);
 
         getLogger().info("\n§d  ___  __    ____    __    _  _    ___   ___ \n" +

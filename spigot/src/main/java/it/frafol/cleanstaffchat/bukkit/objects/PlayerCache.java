@@ -1,13 +1,10 @@
 package it.frafol.cleanstaffchat.bukkit.objects;
 
-import io.github.miniplaceholders.api.MiniPlaceholders;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
-import net.kyori.adventure.pointer.Pointered;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 

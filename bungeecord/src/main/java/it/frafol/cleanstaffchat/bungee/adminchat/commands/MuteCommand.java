@@ -14,7 +14,7 @@ import net.md_5.bungee.api.plugin.Command;
 public class MuteCommand extends Command {
 
     public MuteCommand() {
-        super(BungeeCommandsConfig.ADMINCHAT_MUTE.getStringList().get(0),"", BungeeCommandsConfig.ADMINCHAT_MUTE.getStringList().toArray(new String[0]));
+        super(BungeeCommandsConfig.ADMINCHAT_MUTE.getStringList().get(0), "", BungeeCommandsConfig.ADMINCHAT_MUTE.getStringList().toArray(new String[0]));
     }
 
     @Override
@@ -32,22 +32,18 @@ public class MuteCommand extends Command {
         }
 
         if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
-
             final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
             final String final_message = "set.adminchat.mute";
+            boolean muted = PlayerCache.getMuted_admin().contains("true");
 
-            if (!PlayerCache.getMuted_admin().contains("true")) {
-                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_MUTED.color()
-                        .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
-            } else {
-                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_UNMUTED.color()
-                        .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
-            }
+            sender.sendMessage(TextComponent.fromLegacy((muted ? BungeeMessages.ADMINCHAT_UNMUTED : BungeeMessages.ADMINCHAT_MUTED).color()
+                    .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
 
             redisBungeeAPI.sendChannelMessage("CleanStaffChat-MuteAdminChat-RedisBungee", final_message);
             return;
+        }
 
-        } else if (!PlayerCache.getMuted_admin().contains("true")) {
+        if (!PlayerCache.getMuted_admin().contains("true")) {
             PlayerCache.getMuted_admin().add("true");
             sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_MUTED.color()
                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));

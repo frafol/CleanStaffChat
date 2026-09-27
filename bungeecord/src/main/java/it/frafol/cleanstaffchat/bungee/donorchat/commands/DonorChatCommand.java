@@ -28,7 +28,7 @@ public class DonorChatCommand extends Command {
     public final CleanStaffChat plugin;
 
     public DonorChatCommand(CleanStaffChat plugin) {
-        super(BungeeCommandsConfig.DONORCHAT.getStringList().get(0),"", BungeeCommandsConfig.DONORCHAT.getStringList().toArray(new String[0]));
+        super(BungeeCommandsConfig.DONORCHAT.getStringList().get(0), "", BungeeCommandsConfig.DONORCHAT.getStringList().toArray(new String[0]));
         this.plugin = plugin;
     }
 

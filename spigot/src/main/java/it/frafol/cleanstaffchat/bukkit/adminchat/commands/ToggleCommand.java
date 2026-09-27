@@ -26,12 +26,8 @@ public class ToggleCommand extends CommandBase {
             return false;
         }
 
-        if (!inGameCheck(sender, SpigotMessages.ADMINARGUMENTS.color().replace("%prefix%", SpigotMessages.PREFIX.color()))) {
-            return false;
-        }
-
+        if (!inGameCheck(sender, SpigotMessages.ADMINARGUMENTS.color().replace("%prefix%", SpigotMessages.PREFIX.color()))) return false;
         Player player = (Player) sender;
-
         if (!player.hasPermission(SpigotConfig.ADMINCHAT_TOGGLE_PERMISSION.get(String.class))) {
             sender.sendMessage((SpigotMessages.NO_PERMISSION.color()
                     .replace("%prefix%", SpigotMessages.ADMINPREFIX.color())));

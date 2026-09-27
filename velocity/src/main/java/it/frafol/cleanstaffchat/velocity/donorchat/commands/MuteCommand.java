@@ -22,7 +22,6 @@ public class MuteCommand implements SimpleCommand {
 
     @Override
     public void execute(Invocation invocation) {
-
         CommandSource commandSource = invocation.source();
         if (!(DONORCHAT_MUTE_MODULE.get(Boolean.class))) {
             VelocityMessages.MODULE_DISABLED.send(commandSource, new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
@@ -36,31 +35,23 @@ public class MuteCommand implements SimpleCommand {
         }
 
         if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
-
             final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-            final String final_message = "set.donorchat.mute";
+            boolean muted = PlayerCache.getMuted_donor().contains("true");
+            (muted ? VelocityMessages.DONORCHAT_UNMUTED : VelocityMessages.DONORCHAT_MUTED)
+                    .send(commandSource, new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
+            redisBungeeAPI.sendChannelMessage("CleanStaffChat-MuteDonorChat-RedisBungee", "set.donorchat.mute");
+            return;
+        }
 
-            if (!PlayerCache.getMuted_donor().contains("true")) {
-                VelocityMessages.DONORCHAT_MUTED.send(commandSource,
-                        new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
-            } else {
-                VelocityMessages.DONORCHAT_UNMUTED.send(commandSource,
-                        new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
-            }
-
-            redisBungeeAPI.sendChannelMessage("CleanStaffChat-MuteDonorChat-RedisBungee", final_message);
-
-        } else if (!PlayerCache.getMuted_donor().contains("true")) {
-
+        if (!PlayerCache.getMuted_donor().contains("true")) {
             PlayerCache.getMuted_donor().add("true");
             VelocityMessages.DONORCHAT_MUTED.send(commandSource,
                     new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
-
-        } else {
-
-            PlayerCache.getMuted_donor().remove("true");
-            VelocityMessages.DONORCHAT_UNMUTED.send(commandSource,
-                    new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
+            return;
         }
+
+        PlayerCache.getMuted_donor().remove("true");
+        VelocityMessages.DONORCHAT_UNMUTED.send(commandSource,
+                new Placeholder("prefix", VelocityMessages.DONORPREFIX.color()));
     }
 }

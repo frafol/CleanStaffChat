@@ -28,12 +28,10 @@ public class ToggleCommand implements SimpleCommand {
             return;
         }
 
-        if (!(commandSource instanceof Player)) {
+        if (!(commandSource instanceof Player player)) {
             VelocityMessages.PLAYER_ONLY.send(commandSource, new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
             return;
         }
-
-        Player player = (Player) commandSource;
 
         if (!player.hasPermission(VelocityConfig.ADMINCHAT_TOGGLE_PERMISSION.get(String.class))) {
             VelocityMessages.NO_PERMISSION.send(commandSource,

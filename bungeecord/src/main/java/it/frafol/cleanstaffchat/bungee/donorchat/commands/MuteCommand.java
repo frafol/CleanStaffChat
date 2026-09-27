@@ -14,7 +14,7 @@ import net.md_5.bungee.api.plugin.Command;
 public class MuteCommand extends Command {
 
     public MuteCommand() {
-        super(BungeeCommandsConfig.DONORCHAT_MUTE.getStringList().get(0),"", BungeeCommandsConfig.DONORCHAT_MUTE.getStringList().toArray(new String[0]));
+        super(BungeeCommandsConfig.DONORCHAT_MUTE.getStringList().get(0), "", BungeeCommandsConfig.DONORCHAT_MUTE.getStringList().toArray(new String[0]));
     }
 
     @Override
@@ -32,22 +32,18 @@ public class MuteCommand extends Command {
         }
 
         if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
-
             final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-            final String final_message = "set.donorchat.mute";
+            final boolean muted = PlayerCache.getMuted_donor().contains("true");
 
-            if (!PlayerCache.getMuted_donor().contains("true")) {
-                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_MUTED.color()
-                        .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
-            } else {
-                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_UNMUTED.color()
-                        .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
-            }
+            sender.sendMessage(TextComponent.fromLegacy(
+                    (muted ? BungeeMessages.DONORCHAT_UNMUTED : BungeeMessages.DONORCHAT_MUTED).color()
+                            .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
 
-            redisBungeeAPI.sendChannelMessage("CleanStaffChat-MuteDonorChat-RedisBungee", final_message);
+            redisBungeeAPI.sendChannelMessage("CleanStaffChat-MuteDonorChat-RedisBungee", "set.donorchat.mute");
             return;
+        }
 
-        } else if (!PlayerCache.getMuted_donor().contains("true")) {
+        if (!PlayerCache.getMuted_donor().contains("true")) {
             PlayerCache.getMuted_donor().add("true");
             sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_MUTED.color()
                     .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));

@@ -26,12 +26,8 @@ public class ToggleCommand extends CommandBase {
             return false;
         }
 
-        if (!inGameCheck(sender)) {
-            return false;
-        }
-
+        if (!inGameCheck(sender)) return false;
         Player player = (Player) sender;
-
         if (!player.hasPermission(SpigotConfig.STAFFCHAT_TOGGLE_PERMISSION.get(String.class))) {
             sender.sendMessage((SpigotMessages.NO_PERMISSION.color()
                     .replace("%prefix%", SpigotMessages.PREFIX.color())));

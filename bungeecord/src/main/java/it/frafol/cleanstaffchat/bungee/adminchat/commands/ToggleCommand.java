@@ -12,12 +12,11 @@ import net.md_5.bungee.api.plugin.Command;
 public class ToggleCommand extends Command {
 
     public ToggleCommand() {
-        super(BungeeCommandsConfig.ADMINCHAT_TOGGLE.getStringList().get(0),"", BungeeCommandsConfig.ADMINCHAT_TOGGLE.getStringList().toArray(new String[0]));
+        super(BungeeCommandsConfig.ADMINCHAT_TOGGLE.getStringList().get(0), "", BungeeCommandsConfig.ADMINCHAT_TOGGLE.getStringList().toArray(new String[0]));
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-
         if (!(BungeeConfig.ADMINCHAT_TOGGLE_MODULE.get(Boolean.class))) {
             sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.MODULE_DISABLED.color()
                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));

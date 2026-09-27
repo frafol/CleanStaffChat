@@ -4,7 +4,6 @@ import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
-import com.velocitypowered.api.proxy.ProxyServer;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.*;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
@@ -25,7 +24,6 @@ import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.*;
 public class AdminChatCommand implements SimpleCommand {
 
     public final CleanStaffChat PLUGIN;
-    public ProxyServer server;
 
     public AdminChatCommand(CleanStaffChat plugin) {
         this.PLUGIN = plugin;
@@ -36,16 +34,13 @@ public class AdminChatCommand implements SimpleCommand {
 
         CommandSource commandSource = invocation.source();
         String[] args = invocation.arguments();
-
         if (args.length == 0) {
-
             if (!(commandSource instanceof Player player)) {
                 VelocityMessages.ADMINARGUMENTS.send(commandSource, new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color()));
                 return;
             }
 
             if (commandSource.hasPermission(VelocityConfig.ADMINCHAT_USE_PERMISSION.get(String.class))) {
-
                 if (VelocityServers.ADMINCHAT_ENABLE.get(Boolean.class)) {
                     for (String server : VelocityServers.AC_BLOCKED_SRV.getStringList()) {
                         if (player.getCurrentServer().isEmpty()) return;

@@ -19,9 +19,7 @@ public class UpdateCheck {
         CompletableFuture.runAsync(() -> {
             try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=105220")
                     .openStream(); Scanner scanner = new Scanner(inputStream)) {
-                if (scanner.hasNext()) {
-                    consumer.accept(scanner.next());
-                }
+                if (scanner.hasNext()) consumer.accept(scanner.next());
             } catch (IOException exception) {
                 PLUGIN.getLogger().severe("Unable to check for updates: " + exception.getMessage());
             }

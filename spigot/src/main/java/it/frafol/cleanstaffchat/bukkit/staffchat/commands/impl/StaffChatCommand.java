@@ -41,54 +41,41 @@ public class StaffChatCommand extends CommandBase {
 
             Player player = (Player) sender;
 
-            if (sender.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
-
-                if (!PlayerCache.getToggled_2().contains(player.getUniqueId())) {
-
-                    if (!(SpigotConfig.STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
-                        sender.sendMessage((SpigotMessages.ARGUMENTS.color()
-                                .replace("%prefix%", SpigotMessages.PREFIX.color())));
-                        return false;
-                    }
-
-                    if (!PlayerCache.getMuted().contains("true")) {
-                        PlayerCache.getToggled_2().add(player.getUniqueId());
-                        PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
-                        PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
-
-                        sender.sendMessage((SpigotMessages.STAFFCHAT_TALK_ENABLED.color()
-                                .replace("%prefix%", SpigotMessages.PREFIX.color())));
-
-                    } else {
-                        sender.sendMessage((SpigotMessages.ARGUMENTS.color()
-                                .replace("%prefix%", SpigotMessages.PREFIX.color())));
-                        return false;
-                    }
-                    return false;
-
-                } else if (PlayerCache.getToggled_2().contains(player.getUniqueId())) {
-                    PlayerCache.getToggled_2().remove(player.getUniqueId());
-                    sender.sendMessage((SpigotMessages.STAFFCHAT_TALK_DISABLED.color()
-                            .replace("%prefix%", SpigotMessages.PREFIX.color())));
-                    return false;
-                }
-
-            } else {
-
+            if (!sender.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))) {
                 if (SpigotConfig.HIDE_ADVERTS.get(Boolean.class) != null && !SpigotConfig.HIDE_ADVERTS.get(Boolean.class)) {
                     sender.sendMessage(("§7This server is using §dCleanStaffChat §7by §dfrafol§7."));
                 }
-
                 return false;
-
             }
 
+            if (!PlayerCache.getToggled_2().contains(player.getUniqueId())) {
+                if (!(SpigotConfig.STAFFCHAT_TALK_MODULE.get(Boolean.class))) {
+                    sender.sendMessage((SpigotMessages.ARGUMENTS.color()
+                            .replace("%prefix%", SpigotMessages.PREFIX.color())));
+                    return false;
+                }
+                if (!PlayerCache.getMuted().contains("true")) {
+                    PlayerCache.getToggled_2().add(player.getUniqueId());
+                    PlayerCache.getToggled_2_donor().remove(player.getUniqueId());
+                    PlayerCache.getToggled_2_admin().remove(player.getUniqueId());
+                    sender.sendMessage((SpigotMessages.STAFFCHAT_TALK_ENABLED.color()
+                            .replace("%prefix%", SpigotMessages.PREFIX.color())));
+                } else {
+                    sender.sendMessage((SpigotMessages.ARGUMENTS.color()
+                            .replace("%prefix%", SpigotMessages.PREFIX.color())));
+                    return false;
+                }
+                return false;
+            } else if (PlayerCache.getToggled_2().contains(player.getUniqueId())) {
+                PlayerCache.getToggled_2().remove(player.getUniqueId());
+                sender.sendMessage((SpigotMessages.STAFFCHAT_TALK_DISABLED.color()
+                        .replace("%prefix%", SpigotMessages.PREFIX.color())));
+                return false;
+            }
             return false;
-
         }
 
         String message = String.join(" ", Arrays.copyOfRange(args, 0, args.length));
-
         String commandsender = !(sender instanceof Player) ? SpigotConfig.CONSOLE_PREFIX.get(String.class) :
                 sender.getName();
 
@@ -185,65 +172,47 @@ public class StaffChatCommand extends CommandBase {
             }
 
             if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class) && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
-
                 final TextChannel channel = plugin.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
-
-                if (channel == null) {
-                    return false;
-                }
-
+                if (channel == null) return false;
                 if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
-
                     EmbedBuilder embed = new EmbedBuilder();
-
                     embed.setTitle(SpigotDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
-
                     embed.setDescription(SpigotMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                             .replace("%user%", commandsender)
                             .replace("%message%", message)
                             .replace("%server%", ""));
-
                     embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                     embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
-
                     channel.sendMessageEmbeds(embed.build()).queue();
-
                 } else {
-
                     channel.sendMessageFormat(SpigotMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                     .replace("%user%", commandsender)
                                     .replace("%message%", message)
                                     .replace("%server%", ""))
                             .queue();
-
                 }
             }
+            return false;
+        }
 
-        } else if (SpigotConfig.CONSOLE_CAN_TALK.get(Boolean.class)) {
-
-            if (!PlayerCache.getMuted().contains("true")) {
-
-                CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
-                                (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled().contains(players.getUniqueId())))
-                        .forEach(players -> players.sendMessage((SpigotMessages.STAFFCHAT_CONSOLE_FORMAT.color()
-                                .replace("%prefix%", SpigotMessages.PREFIX.color())
-                                .replace("%user%", commandsender)
-                                .replace("%userprefix%", "")
-                                .replace("%usersuffix%", "")
-                                .replace("%displayname%", commandsender)
-                                .replace("%server%", "")
-                                .replace("%message%", message))));
-
-            } else {
-
+        if (SpigotConfig.CONSOLE_CAN_TALK.get(Boolean.class)) {
+            if (PlayerCache.getMuted().contains("true")) {
                 sender.sendMessage((SpigotMessages.STAFFCHAT_MUTED_ERROR.color()
                         .replace("%prefix%", SpigotMessages.PREFIX.color())));
 
                 return false;
-
             }
-
+            CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
+                            (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
+                                    && !(PlayerCache.getToggled().contains(players.getUniqueId())))
+                    .forEach(players -> players.sendMessage((SpigotMessages.STAFFCHAT_CONSOLE_FORMAT.color()
+                            .replace("%prefix%", SpigotMessages.PREFIX.color())
+                            .replace("%user%", commandsender)
+                            .replace("%userprefix%", "")
+                            .replace("%usersuffix%", "")
+                            .replace("%displayname%", commandsender)
+                            .replace("%server%", "")
+                            .replace("%message%", message))));
             sender.sendMessage((SpigotMessages.STAFFCHAT_CONSOLE_FORMAT.color()
                     .replace("%prefix%", SpigotMessages.PREFIX.color())
                     .replace("%user%", commandsender)
@@ -253,40 +222,24 @@ public class StaffChatCommand extends CommandBase {
                     .replace("%server%", "")
                     .replace("%message%", message)));
 
-            if (!SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class) || !SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) {
-                return false;
-            }
-
+            if (!SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class) || !SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)) return false;
             final TextChannel channel = plugin.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
-
-            if (channel == null) {
-                return false;
-            }
-
+            if (channel == null) return false;
             if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
-
                 EmbedBuilder embed = new EmbedBuilder();
-
                 embed.setTitle(SpigotDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
-
                 embed.setDescription(SpigotMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                         .replace("%user%", commandsender)
                         .replace("%message%", message)
                         .replace("%server%", ""));
-
                 embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                 embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
-
                 channel.sendMessageEmbeds(embed.build()).queue();
-
             } else {
-
                 channel.sendMessageFormat(SpigotMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                 .replace("%user%", commandsender)
                                 .replace("%message%", message)
-                                .replace("%server%", ""))
-                        .queue();
-
+                                .replace("%server%", "")).queue();
             }
             return false;
         } else {

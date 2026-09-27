@@ -19,22 +19,12 @@ public class ChatListener implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
-
         Player player = event.getPlayer();
-
-        if (PlayerCache.getMutedservers().contains("all")) {
-
-            if (player.hasPermission(SpigotConfig.MUTECHAT_BYPASS_PERMISSION.get(String.class))) {
-                return;
-            }
-
-            if (event.getMessage().startsWith("/")) {
-                return;
-            }
-
-            player.sendMessage((SpigotMessages.STAFFCHAT_MUTED_ERROR.color()
-                    .replace("%prefix%", SpigotMessages.GLOBALPREFIX.color())));
-            event.setCancelled(true);
-        }
+        if (!PlayerCache.getMutedservers().contains("all")) return;
+        if (player.hasPermission(SpigotConfig.MUTECHAT_BYPASS_PERMISSION.get(String.class))) return;
+        if (event.getMessage().startsWith("/")) return;
+        player.sendMessage((SpigotMessages.STAFFCHAT_MUTED_ERROR.color()
+                .replace("%prefix%", SpigotMessages.GLOBALPREFIX.color())));
+        event.setCancelled(true);
     }
 }

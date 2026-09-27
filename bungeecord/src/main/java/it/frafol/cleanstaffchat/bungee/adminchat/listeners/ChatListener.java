@@ -36,43 +36,41 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
     @EventHandler
     public void onChat(ChatEvent event) {
+        if (!(event.getSender() instanceof ProxiedPlayer)) {
+            return;
+        }
+
+        final ProxiedPlayer sender = (ProxiedPlayer) event.getSender();
 
         if (BungeeConfig.ADMINCHAT_PREFIX_MODULE.get(Boolean.class) && event.getMessage().startsWith(BungeeConfig.ADMINCHAT_PREFIX.get(String.class))) {
             final String message = event.getMessage().substring(1);
-            if (!((ProxiedPlayer) event.getSender()).hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))) return;
-            if (BungeeServers.ADMINCHAT_ENABLE.get(Boolean.class)) {
-                for (String server : BungeeServers.AC_BLOCKED_SRV.getStringList()) {
-                    if (((ProxiedPlayer) event.getSender()).getServer() == null) return;
-                    if (((ProxiedPlayer) event.getSender()).getServer().getInfo().getName().equalsIgnoreCase(server)) {
-                        event.setCancelled(true);
-                        PlayerCache.sendChannelMessage((ProxiedPlayer) event.getSender(), false);
-                        ((ProxiedPlayer) event.getSender()).sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_MUTED_ERROR.color()
-                                .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
-                        return;
-                    }
-                }
+
+            if (!sender.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))) {
+                return;
             }
+
+            if (BungeeServers.ADMINCHAT_ENABLE.get(Boolean.class) && isBlockedAdminChatServer(sender)) {
+                event.setCancelled(true);
+                PlayerCache.sendChannelMessage(sender, false);
+                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_MUTED_ERROR.color()
+                        .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
+                return;
+            }
+
             if (!BungeeConfig.WORKAROUND_KICK.get(Boolean.class)) {
                 event.setCancelled(true);
             }
 
-            if (BungeeConfig.PREVENT_COLOR_CODES.get(Boolean.class)) {
-                if (PlayerCache.hasColorCodes(message)) {
-
-                    ((ProxiedPlayer) event.getSender()).sendMessage(TextComponent.fromLegacy(BungeeMessages.COLOR_CODES.color()
-                            .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
-                            .replace("&", "§")));
-
-                    return;
-
-                }
+            if (BungeeConfig.PREVENT_COLOR_CODES.get(Boolean.class) && PlayerCache.hasColorCodes(message)) {
+                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.COLOR_CODES.color()
+                        .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
+                        .replace("&", "§")));
+                return;
             }
 
             if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
-
-                LuckPerms api = LuckPermsProvider.get();
-
-                User user = api.getUserManager().getUser(((ProxiedPlayer) event.getSender()).getUniqueId());
+                final LuckPerms api = LuckPermsProvider.get();
+                final User user = api.getUserManager().getUser(sender.getUniqueId());
 
                 if (user == null) {
                     return;
@@ -80,362 +78,280 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
-                final String user_prefix = prefix == null ? "" : prefix;
-                final String user_suffix = suffix == null ? "" : suffix;
+                final String userPrefix = prefix == null ? "" : prefix;
+                final String userSuffix = suffix == null ? "" : suffix;
 
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
-
                     final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
                     final String final_message = BungeeMessages.ADMINCHAT_FORMAT.get(String.class)
-                            .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
+                            .replace("%user%", sender.getName())
                             .replace("%message%", message)
-                            .replace("%displayname%", ((ProxiedPlayer) event.getSender()).getName())
+                            .replace("%displayname%", sender.getName())
                             .replace("%userprefix%", "")
                             .replace("%usersuffix%", "")
-                            .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
+                            .replace("%server%", sender.getServer().getInfo().getName())
                             .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                             .replace("&", "§");
 
                     redisBungeeAPI.sendChannelMessage("CleanStaffChat-AdminMessage-RedisBungee", final_message);
-
                     return;
-
                 }
 
-                CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
-                                (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled_admin().contains(players.getUniqueId()))
-                                        && !CleanStaffChat.getInstance().isInBlockedAdminChatServer(players))
-                        .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_FORMAT.color()
-                                .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
-                                .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
-                                .replace("%message%", message)
-                                .replace("%displayname%", PlayerCache.translateHex(user_prefix) + ((ProxiedPlayer) event.getSender()).getName() + PlayerCache.translateHex(user_suffix))
-                                .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
-                                .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
-                                .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
-                                .replace("&", "§"))));
-
+                broadcastAdminChat(sender, message,
+                        PlayerCache.translateHex(userPrefix) + sender.getName() + PlayerCache.translateHex(userSuffix),
+                        PlayerCache.translateHex(userPrefix),
+                        PlayerCache.translateHex(userSuffix));
             } else if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {
-
                 final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissionsBungee.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();
 
-                if (!userList.uuid(((ProxiedPlayer) event.getSender()).getUniqueId()).isPresent()) {
+                if (!userList.uuid(sender.getUniqueId()).isPresent()) {
                     return;
                 }
 
-                final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(((ProxiedPlayer) event.getSender()).getUniqueId()).get();
-
+                final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(sender.getUniqueId()).get();
                 final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
                 final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
                 final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
                 final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
 
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
-
                     final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
                     final String final_message = BungeeMessages.ADMINCHAT_FORMAT.get(String.class)
-                            .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
+                            .replace("%user%", sender.getName())
                             .replace("%message%", message)
-                            .replace("%displayname%", ultraPermissionsUserPrefixFinal + ((ProxiedPlayer) event.getSender()).getName() + ultraPermissionsUserSuffixFinal)
+                            .replace("%displayname%", ultraPermissionsUserPrefixFinal + sender.getName() + ultraPermissionsUserSuffixFinal)
                             .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
                             .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
-                            .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
+                            .replace("%server%", sender.getServer().getInfo().getName())
                             .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                             .replace("&", "§");
 
                     redisBungeeAPI.sendChannelMessage("CleanStaffChat-AdminMessage-RedisBungee", final_message);
-
                     return;
-
                 }
 
-                CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
-                                (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled_admin().contains(players.getUniqueId()))
-                                        && !CleanStaffChat.getInstance().isInBlockedAdminChatServer(players))
-                        .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_FORMAT.color()
-                                .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
-                                .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
-                                .replace("%message%", message)
-                                .replace("%displayname%", ultraPermissionsUserPrefixFinal + ((ProxiedPlayer) event.getSender()).getName() + ultraPermissionsUserSuffixFinal)
-                                .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
-                                .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
-                                .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
-                                .replace("&", "§"))));
-
+                broadcastAdminChat(sender, message,
+                        ultraPermissionsUserPrefixFinal + sender.getName() + ultraPermissionsUserSuffixFinal,
+                        ultraPermissionsUserPrefixFinal,
+                        ultraPermissionsUserSuffixFinal);
             } else {
-
-                CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
-                                (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled_admin().contains(players.getUniqueId()))
-                                        && !CleanStaffChat.getInstance().isInBlockedAdminChatServer(players))
-                        .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_FORMAT.color()
-                                .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
-                                .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
-                                .replace("%message%", message)
-                                .replace("%userprefix%", "")
-                                .replace("%usersuffix%", "")
-                                .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
-                                .replace("&", "§"))));
+                broadcastAdminChat(sender, message, sender.getName(), "", "");
             }
 
             if (!BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class) || !BungeeConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
                 return;
             }
 
-            final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
-
-            if (channel == null) {
-                return;
-            }
-
-            if (BungeeDiscordConfig.USE_EMBED.get(Boolean.class)) {
-
-                EmbedBuilder embed = new EmbedBuilder();
-
-                embed.setTitle(BungeeDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
-
-                embed.setDescription(BungeeMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
-                        .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
-                        .replace("%message%", message)
-                        .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName()));
-
-                embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_ADMINCHATCOLOR.get(String.class)));
-                embed.setFooter(BungeeDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
-
-                channel.sendMessageEmbeds(embed.build()).queue();
-
-            } else {
-
-                channel.sendMessageFormat(BungeeMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
-                                .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
-                                .replace("%message%", message)
-                                .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName()))
-                        .queue();
-
-            }
+            sendDiscordAdminMessage(sender, message, sender.getServer().getInfo().getName());
+            return;
         }
 
         final String message = event.getMessage();
-        if (!PlayerCache.getToggled_2_admin().contains(((ProxiedPlayer) event.getSender()).getUniqueId())) {
+        if (!PlayerCache.getToggled_2_admin().contains(sender.getUniqueId())) {
             return;
         }
 
         if (PlayerCache.getMuted_admin().contains("true")) {
-            PlayerCache.getToggled_2_admin().remove(((ProxiedPlayer) event.getSender()).getUniqueId());
+            PlayerCache.getToggled_2_admin().remove(sender.getUniqueId());
             event.setCancelled(true);
-            PlayerCache.sendChannelMessage((ProxiedPlayer) event.getSender(), false);
-            ((ProxiedPlayer) event.getSender()).sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_MUTED_ERROR.color()
+            PlayerCache.sendChannelMessage(sender, false);
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_MUTED_ERROR.color()
                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
             return;
         }
 
-        if (event.getMessage().startsWith("/")) {
+        if (message.startsWith("/")) {
             return;
         }
 
-        if (BungeeServers.ADMINCHAT_ENABLE.get(Boolean.class)) {
-            for (String server : BungeeServers.AC_BLOCKED_SRV.getStringList()) {
-
-                if (((ProxiedPlayer) event.getSender()).getServer() == null) {
-                    return;
-                }
-
-                if (((ProxiedPlayer) event.getSender()).getServer().getInfo().getName().equalsIgnoreCase(server)) {
-                    PlayerCache.getToggled_2_admin().remove(((ProxiedPlayer) event.getSender()).getUniqueId());
-                    event.setCancelled(true);
-                    PlayerCache.sendChannelMessage((ProxiedPlayer) event.getSender(), false);
-                    ((ProxiedPlayer) event.getSender()).sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_MUTED_ERROR.color()
-                            .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
-                    return;
-                }
-            }
+        if (BungeeServers.ADMINCHAT_ENABLE.get(Boolean.class) && isBlockedAdminChatServer(sender)) {
+            PlayerCache.getToggled_2_admin().remove(sender.getUniqueId());
+            event.setCancelled(true);
+            PlayerCache.sendChannelMessage(sender, false);
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_MUTED_ERROR.color()
+                    .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())));
+            return;
         }
 
         if (!(BungeeConfig.ADMINCHAT_TALK_MODULE.get(Boolean.class))) {
-            ((ProxiedPlayer) event.getSender()).sendMessage(TextComponent.fromLegacy(BungeeMessages.MODULE_DISABLED.color()
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.MODULE_DISABLED.color()
                     .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
                     .replace("&", "§")));
-
-        } else if (((ProxiedPlayer) event.getSender()).hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))) {
-
-            if (!BungeeConfig.WORKAROUND_KICK.get(Boolean.class)) {
-                event.setCancelled(true);
-            }
-
-            if (BungeeConfig.PREVENT_COLOR_CODES.get(Boolean.class)) {
-                if (PlayerCache.hasColorCodes(message)) {
-
-                    ((ProxiedPlayer) event.getSender()).sendMessage(TextComponent.fromLegacy(BungeeMessages.COLOR_CODES.color()
-                            .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
-                            .replace("&", "§")));
-
-                    return;
-
-                }
-            }
-
-            if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
-
-                LuckPerms api = LuckPermsProvider.get();
-
-                User user = api.getUserManager().getUser(((ProxiedPlayer) event.getSender()).getUniqueId());
-
-                if (user == null) {
-                    return;
-                }
-
-                final String prefix = user.getCachedData().getMetaData().getPrefix();
-                final String suffix = user.getCachedData().getMetaData().getSuffix();
-                final String user_prefix = prefix == null ? "" : prefix;
-                final String user_suffix = suffix == null ? "" : suffix;
-
-                if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
-
-                    final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
-                    final String final_message = BungeeMessages.ADMINCHAT_FORMAT.get(String.class)
-                            .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
-                            .replace("%message%", message)
-                            .replace("%displayname%", ((ProxiedPlayer) event.getSender()).getName())
-                            .replace("%userprefix%", "")
-                            .replace("%usersuffix%", "")
-                            .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
-                            .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
-                            .replace("&", "§");
-
-                    redisBungeeAPI.sendChannelMessage("CleanStaffChat-AdminMessage-RedisBungee", final_message);
-
-                    return;
-
-                }
-
-                CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
-                                (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled_admin().contains(players.getUniqueId()))
-                                        && !CleanStaffChat.getInstance().isInBlockedAdminChatServer(players))
-                        .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_FORMAT.color()
-                                .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
-                                .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
-                                .replace("%message%", message)
-                                .replace("%displayname%", PlayerCache.translateHex(user_prefix) + ((ProxiedPlayer) event.getSender()).getName() + PlayerCache.translateHex(user_suffix))
-                                .replace("%userprefix%", PlayerCache.translateHex(user_prefix))
-                                .replace("%usersuffix%", PlayerCache.translateHex(user_suffix))
-                                .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
-                                .replace("&", "§"))));
-
-            } else if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {
-
-                final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissionsBungee.getAPI();
-                final UserList userList = ultraPermissionsAPI.getUsers();
-
-                if (!userList.uuid(((ProxiedPlayer) event.getSender()).getUniqueId()).isPresent()) {
-                    return;
-                }
-
-                final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(((ProxiedPlayer) event.getSender()).getUniqueId()).get();
-
-                final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
-                final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
-                final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
-                final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
-
-                if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
-
-                    final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
-                    final String final_message = BungeeMessages.ADMINCHAT_FORMAT.get(String.class)
-                            .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
-                            .replace("%message%", message)
-                            .replace("%displayname%", ultraPermissionsUserPrefixFinal + ((ProxiedPlayer) event.getSender()).getName() + ultraPermissionsUserSuffixFinal)
-                            .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
-                            .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
-                            .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
-                            .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
-                            .replace("&", "§");
-
-                    redisBungeeAPI.sendChannelMessage("CleanStaffChat-AdminMessage-RedisBungee", final_message);
-
-                    return;
-
-                }
-
-                CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
-                                (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled_admin().contains(players.getUniqueId()))
-                                        && !CleanStaffChat.getInstance().isInBlockedAdminChatServer(players))
-                        .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_FORMAT.color()
-                                .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
-                                .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
-                                .replace("%message%", message)
-                                .replace("%displayname%", ultraPermissionsUserPrefixFinal + ((ProxiedPlayer) event.getSender()).getName() + ultraPermissionsUserSuffixFinal)
-                                .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
-                                .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
-                                .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
-                                .replace("&", "§"))));
-
-            } else {
-
-                CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
-                                (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
-                                        && !(PlayerCache.getToggled_admin().contains(players.getUniqueId()))
-                                        && !CleanStaffChat.getInstance().isInBlockedAdminChatServer(players))
-                        .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_FORMAT.color()
-                                .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
-                                .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
-                                .replace("%message%", message)
-                                .replace("%userprefix%", "")
-                                .replace("%usersuffix%", "")
-                                .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName())
-                                .replace("&", "§"))));
-            }
-
-            if (!BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class) || !BungeeConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
-                return;
-            }
-
-            final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
-
-            if (channel == null) {
-                return;
-            }
-
-            if (BungeeDiscordConfig.USE_EMBED.get(Boolean.class)) {
-
-                EmbedBuilder embed = new EmbedBuilder();
-
-                embed.setTitle(BungeeDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
-
-                embed.setDescription(BungeeMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
-                        .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
-                        .replace("%message%", message)
-                        .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName()));
-
-                embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_ADMINCHATCOLOR.get(String.class)));
-                embed.setFooter(BungeeDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
-
-                channel.sendMessageEmbeds(embed.build()).queue();
-
-            } else {
-
-                channel.sendMessageFormat(BungeeMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
-                                .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
-                                .replace("%message%", message)
-                                .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName()))
-                        .queue();
-
-            }
-        } else {
-            PlayerCache.getToggled_2_admin().remove(((ProxiedPlayer) event.getSender()).getUniqueId());
+            return;
         }
+
+        if (!sender.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))) {
+            PlayerCache.getToggled_2_admin().remove(sender.getUniqueId());
+            return;
+        }
+
+        if (!BungeeConfig.WORKAROUND_KICK.get(Boolean.class)) {
+            event.setCancelled(true);
+        }
+
+        if (BungeeConfig.PREVENT_COLOR_CODES.get(Boolean.class) && PlayerCache.hasColorCodes(message)) {
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.COLOR_CODES.color()
+                    .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
+                    .replace("&", "§")));
+            return;
+        }
+
+        if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
+            final LuckPerms api = LuckPermsProvider.get();
+            final User user = api.getUserManager().getUser(sender.getUniqueId());
+
+            if (user == null) {
+                return;
+            }
+
+            final String prefix = user.getCachedData().getMetaData().getPrefix();
+            final String suffix = user.getCachedData().getMetaData().getSuffix();
+            final String userPrefix = prefix == null ? "" : prefix;
+            final String userSuffix = suffix == null ? "" : suffix;
+
+            if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+                final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+                final String final_message = BungeeMessages.ADMINCHAT_FORMAT.get(String.class)
+                        .replace("%user%", sender.getName())
+                        .replace("%message%", message)
+                        .replace("%displayname%", sender.getName())
+                        .replace("%userprefix%", "")
+                        .replace("%usersuffix%", "")
+                        .replace("%server%", sender.getServer().getInfo().getName())
+                        .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
+                        .replace("&", "§");
+
+                redisBungeeAPI.sendChannelMessage("CleanStaffChat-AdminMessage-RedisBungee", final_message);
+                return;
+            }
+
+            broadcastAdminChat(sender, message,
+                    PlayerCache.translateHex(userPrefix) + sender.getName() + PlayerCache.translateHex(userSuffix),
+                    PlayerCache.translateHex(userPrefix),
+                    PlayerCache.translateHex(userSuffix));
+        } else if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {
+            final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissionsBungee.getAPI();
+            final UserList userList = ultraPermissionsAPI.getUsers();
+
+            if (!userList.uuid(sender.getUniqueId()).isPresent()) {
+                return;
+            }
+
+            final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(sender.getUniqueId()).get();
+            final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
+            final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
+            final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
+            final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+
+            if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+                final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+                final String final_message = BungeeMessages.ADMINCHAT_FORMAT.get(String.class)
+                        .replace("%user%", sender.getName())
+                        .replace("%message%", message)
+                        .replace("%displayname%", ultraPermissionsUserPrefixFinal + sender.getName() + ultraPermissionsUserSuffixFinal)
+                        .replace("%userprefix%", ultraPermissionsUserPrefixFinal)
+                        .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
+                        .replace("%server%", sender.getServer().getInfo().getName())
+                        .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
+                        .replace("&", "§");
+
+                redisBungeeAPI.sendChannelMessage("CleanStaffChat-AdminMessage-RedisBungee", final_message);
+                return;
+            }
+
+            broadcastAdminChat(sender, message,
+                    ultraPermissionsUserPrefixFinal + sender.getName() + ultraPermissionsUserSuffixFinal,
+                    ultraPermissionsUserPrefixFinal,
+                    ultraPermissionsUserSuffixFinal);
+        } else {
+            broadcastAdminChat(sender, message, sender.getName(), "", "");
+        }
+
+        if (!BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class) || !BungeeConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class)) {
+            return;
+        }
+
+        sendDiscordAdminMessage(sender, message, sender.getServer().getInfo().getName());
+    }
+
+    private boolean isBlockedAdminChatServer(ProxiedPlayer player) {
+        if (player.getServer() == null) {
+            return false;
+        }
+
+        for (String server : BungeeServers.AC_BLOCKED_SRV.getStringList()) {
+            if (player.getServer().getInfo().getName().equalsIgnoreCase(server)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void broadcastAdminChat(ProxiedPlayer sender, String message, String displayName, String userPrefix, String userSuffix) {
+        final String serverName = sender.getServer() != null ? sender.getServer().getInfo().getName() : "";
+
+        if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
+            final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+            final String final_message = BungeeMessages.ADMINCHAT_FORMAT.get(String.class)
+                    .replace("%user%", sender.getName())
+                    .replace("%message%", message)
+                    .replace("%displayname%", displayName)
+                    .replace("%userprefix%", userPrefix)
+                    .replace("%usersuffix%", userSuffix)
+                    .replace("%server%", serverName)
+                    .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
+                    .replace("&", "§");
+
+            redisBungeeAPI.sendChannelMessage("CleanStaffChat-AdminMessage-RedisBungee", final_message);
+            return;
+        }
+
+        CleanStaffChat.getInstance().getProxy().getPlayers().stream()
+                .filter(players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
+                        && !(PlayerCache.getToggled_admin().contains(players.getUniqueId()))
+                        && !CleanStaffChat.getInstance().isInBlockedAdminChatServer(players))
+                .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.ADMINCHAT_FORMAT.color()
+                        .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
+                        .replace("%user%", sender.getName())
+                        .replace("%message%", message)
+                        .replace("%displayname%", displayName)
+                        .replace("%userprefix%", userPrefix)
+                        .replace("%usersuffix%", userSuffix)
+                        .replace("%server%", serverName)
+                        .replace("&", "§"))));
+    }
+
+    private void sendDiscordAdminMessage(ProxiedPlayer sender, String message, String serverName) {
+        final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
+
+        if (channel == null) {
+            return;
+        }
+
+        if (BungeeDiscordConfig.USE_EMBED.get(Boolean.class)) {
+            final EmbedBuilder embed = new EmbedBuilder();
+            embed.setTitle(BungeeDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
+            embed.setDescription(BungeeMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                    .replace("%user%", sender.getName())
+                    .replace("%message%", message)
+                    .replace("%server%", serverName));
+            embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_ADMINCHATCOLOR.get(String.class)));
+            embed.setFooter(BungeeDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
+
+            channel.sendMessageEmbeds(embed.build()).queue();
+            return;
+        }
+
+        channel.sendMessageFormat(BungeeMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
+                .replace("%user%", sender.getName())
+                .replace("%message%", message)
+                .replace("%server%", serverName))
+                .queue();
     }
 
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-
         if (PLUGIN.getConfigTextFile() == null) {
             return;
         }
@@ -462,7 +378,6 @@ public class ChatListener extends ListenerAdapter implements Listener {
         }
 
         if (PLUGIN.getProxy().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
-
             final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
             final String final_message = BungeeMessages.DISCORD_ADMIN_FORMAT.get(String.class)
                     .replace("%user%", event.getAuthor().getName())
@@ -472,18 +387,17 @@ public class ChatListener extends ListenerAdapter implements Listener {
                     .replace("&", "§");
 
             redisBungeeAPI.sendChannelMessage("CleanStaffChat-AdminMessage-RedisBungee", final_message);
-
-        } else {
-
-            CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter
-                            (players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
-                                    && !(PlayerCache.getToggled().contains(players.getUniqueId()))
-                                    && !CleanStaffChat.getInstance().isInBlockedAdminChatServer(players))
-                    .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.DISCORD_ADMIN_FORMAT.color()
-                            .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
-                            .replace("%user%", event.getAuthor().getName())
-                            .replace("%username%", event.getMember() != null && event.getMember().getNickname() != null ? event.getMember().getNickname() : event.getAuthor().getName())
-                            .replace("%message%", event.getMessage().getContentDisplay()))));
+            return;
         }
+
+        CleanStaffChat.getInstance().getProxy().getPlayers().stream()
+                .filter(players -> players.hasPermission(BungeeConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
+                        && !(PlayerCache.getToggled().contains(players.getUniqueId()))
+                        && !CleanStaffChat.getInstance().isInBlockedAdminChatServer(players))
+                .forEach(players -> players.sendMessage(TextComponent.fromLegacy(BungeeMessages.DISCORD_ADMIN_FORMAT.color()
+                        .replace("%prefix%", BungeeMessages.ADMINPREFIX.color())
+                        .replace("%user%", event.getAuthor().getName())
+                        .replace("%username%", event.getMember() != null && event.getMember().getNickname() != null ? event.getMember().getNickname() : event.getAuthor().getName())
+                        .replace("%message%", event.getMessage().getContentDisplay()))));
     }
 }

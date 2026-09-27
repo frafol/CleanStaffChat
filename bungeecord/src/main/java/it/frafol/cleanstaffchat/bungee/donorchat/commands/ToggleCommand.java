@@ -12,12 +12,11 @@ import net.md_5.bungee.api.plugin.Command;
 public class ToggleCommand extends Command {
 
     public ToggleCommand() {
-        super(BungeeCommandsConfig.DONORCHAT_TOGGLE.getStringList().get(0),"", BungeeCommandsConfig.DONORCHAT_TOGGLE.getStringList().toArray(new String[0]));
+        super(BungeeCommandsConfig.DONORCHAT_TOGGLE.getStringList().get(0), "", BungeeCommandsConfig.DONORCHAT_TOGGLE.getStringList().toArray(new String[0]));
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-
         if (!(BungeeConfig.DONORCHAT_TOGGLE_MODULE.get(Boolean.class))) {
             sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.MODULE_DISABLED.color()
                     .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
@@ -32,15 +31,15 @@ public class ToggleCommand extends Command {
 
         ProxiedPlayer player = (ProxiedPlayer) sender;
 
-        if (player.hasPermission(BungeeConfig.DONORCHAT_TOGGLE_PERMISSION.get(String.class))) {
-            if (!PlayerCache.getToggled_donor().contains(player.getUniqueId())) {
-                PlayerCache.getToggled_donor().add(player.getUniqueId());
-                sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_TOGGLED_OFF.color()
-                        .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
-                return;
-            }
-        } else {
+        if (!player.hasPermission(BungeeConfig.DONORCHAT_TOGGLE_PERMISSION.get(String.class))) {
             sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.NO_PERMISSION.color()
+                    .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
+            return;
+        }
+
+        if (!PlayerCache.getToggled_donor().contains(player.getUniqueId())) {
+            PlayerCache.getToggled_donor().add(player.getUniqueId());
+            sender.sendMessage(TextComponent.fromLegacy(BungeeMessages.DONORCHAT_TOGGLED_OFF.color()
                     .replace("%prefix%", BungeeMessages.DONORPREFIX.color())));
             return;
         }

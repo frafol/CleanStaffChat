@@ -35,11 +35,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
-
-        if (PLUGIN.isMuted(event.getPlayer())) {
-            return;
-        }
-
+        if (PLUGIN.isMuted(event.getPlayer())) return;
         if (SpigotConfig.DONORCHAT_PREFIX_MODULE.get(Boolean.class) && event.getMessage().startsWith(SpigotConfig.DONORCHAT_PREFIX.get(String.class))) {
             if (!event.getPlayer().hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))) return;
             final String message = event.getMessage().substring(1);
@@ -52,16 +48,13 @@ public class ChatListener extends ListenerAdapter implements Listener {
                     return;
                 }
             }
-
             if (!event.getPlayer().hasPermission(SpigotConfig.COOLDOWN_BYPASS_PERMISSION.get(String.class))) {
                 PlayerCache.getCooldown().add(event.getPlayer().getUniqueId());
                 TaskScheduler scheduler = UniversalScheduler.getScheduler(PLUGIN);
                 scheduler.runTaskLaterAsynchronously(() ->
                         PlayerCache.getCooldown().remove(event.getPlayer().getUniqueId()), SpigotConfig.DONOR_TIMER.get(Integer.class) * 20L);
             }
-
             if (PLUGIN.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
-
                 final LuckPerms api = LuckPermsProvider.get();
                 final User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
                 if (user == null) return;
@@ -69,7 +62,6 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
                 final String user_prefix = prefix == null ? "" : prefix;
                 final String user_suffix = suffix == null ? "" : suffix;
-
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
@@ -82,9 +74,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                 .replace("%server%", "")
                                 .replace("%usersuffix%", PlayerCache.color(user_suffix))
                                 .replace("&", "§")));
-
             } else if (PLUGIN.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {
-
                 final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();
                 if (!userList.uuid(event.getPlayer().getUniqueId()).isPresent()) return;
@@ -93,7 +83,6 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
                 final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
                 final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
-
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
@@ -106,7 +95,6 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                 .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
                                 .replace("%server%", "")
                                 .replace("&", "§")));
-
             } else {
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
@@ -119,14 +107,9 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                 .replace("&", "§")));
 
             }
-
-            if (!SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class) || !SpigotConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
-                return;
-            }
-
+            if (!SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class) || !SpigotConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) return;
             final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotDiscordConfig.DONOR_CHANNEL_ID.get(String.class));
             if (channel == null) return;
-
             if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
                 EmbedBuilder embed = new EmbedBuilder();
                 embed.setTitle(SpigotDiscordConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
@@ -146,10 +129,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
             event.setCancelled(true);
         }
 
-        if (!PlayerCache.getToggled_2_donor().contains(event.getPlayer().getUniqueId())) {
-            return;
-        }
-
+        if (!PlayerCache.getToggled_2_donor().contains(event.getPlayer().getUniqueId())) return;
         if (PlayerCache.getMuted().contains("true")) {
             PlayerCache.getToggled_2_donor().remove(event.getPlayer().getUniqueId());
             event.setCancelled(true);
@@ -166,17 +146,13 @@ public class ChatListener extends ListenerAdapter implements Listener {
             return;
         }
 
-        if (event.getMessage().startsWith("/")) {
-            return;
-        }
-
+        if (event.getMessage().startsWith("/")) return;
         if (!(SpigotConfig.DONORCHAT_TALK_MODULE.get(Boolean.class))) {
             event.getPlayer().sendMessage((SpigotMessages.MODULE_DISABLED.color()
                     .replace("%prefix%", SpigotMessages.DONORPREFIX.color())
                     .replace("&", "§")));
 
         } else if (event.getPlayer().hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))) {
-
             final String message = event.getMessage();
             event.setCancelled(true);
             if (SpigotConfig.PREVENT_COLOR_CODES.get(Boolean.class)) {
@@ -196,7 +172,6 @@ public class ChatListener extends ListenerAdapter implements Listener {
             }
 
             if (PLUGIN.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
-
                 final LuckPerms api = LuckPermsProvider.get();
                 final User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
                 if (user == null) return;
@@ -204,7 +179,6 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
                 final String user_prefix = prefix == null ? "" : prefix;
                 final String user_suffix = suffix == null ? "" : suffix;
-
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
@@ -217,9 +191,7 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                 .replace("%server%", "")
                                 .replace("%usersuffix%", PlayerCache.color(user_suffix))
                                 .replace("&", "§")));
-
             } else if (PLUGIN.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {
-
                 final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();
                 if (userList.uuid(event.getPlayer().getUniqueId()).isEmpty()) return;
@@ -228,7 +200,6 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
                 final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
                 final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
-
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
@@ -241,7 +212,6 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                 .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
                                 .replace("%server%", "")
                                 .replace("&", "§")));
-
             } else {
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
@@ -254,14 +224,9 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                 .replace("&", "§")));
 
             }
-
-            if (!SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class) || !SpigotConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) {
-                return;
-            }
-
+            if (!SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class) || !SpigotConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class)) return;
             final TextChannel channel = PLUGIN.getJda().getTextChannelById(SpigotDiscordConfig.DONOR_CHANNEL_ID.get(String.class));
             if (channel == null) return;
-
             if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
                 EmbedBuilder embed = new EmbedBuilder();
                 embed.setTitle(SpigotDiscordConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
@@ -285,15 +250,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
     }
 
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-
-        if (PLUGIN.getConfigTextFile() == null) {
-            return;
-        }
-
-        if (!event.getChannel().getId().equalsIgnoreCase(SpigotDiscordConfig.DONOR_CHANNEL_ID.get(String.class))) {
-            return;
-        }
-
+        if (PLUGIN.getConfigTextFile() == null) return;
+        if (!event.getChannel().getId().equalsIgnoreCase(SpigotDiscordConfig.DONOR_CHANNEL_ID.get(String.class))) return;
         if (event.getMessage().getContentDisplay().equalsIgnoreCase(SpigotMessages.DONORCHAT_COOLDOWN_ERROR_DISCORD.get(String.class))
                 || event.getMessage().getContentDisplay().equalsIgnoreCase(SpigotMessages.STAFFCHAT_MUTED_ERROR_DISCORD.get(String.class))) {
             TaskScheduler scheduler = UniversalScheduler.getScheduler(PLUGIN);

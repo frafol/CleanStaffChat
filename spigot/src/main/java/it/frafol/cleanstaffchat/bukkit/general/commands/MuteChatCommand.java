@@ -27,16 +27,13 @@ public class MuteChatCommand extends CommandBase {
 
     @Override
     public boolean execute(@NotNull CommandSender commandSource, @NotNull String commandLabel, @NotNull String[] args) {
-
         if (args.length == 0) {
-
             if (!commandSource.hasPermission(SpigotConfig.MUTECHAT_ALL_PERMISSION.get(String.class)) &&
                     !commandSource.hasPermission(SpigotConfig.MUTECHAT_PERMISSION.get(String.class))) {
                 commandSource.sendMessage((SpigotMessages.NO_PERMISSION.color()
                         .replace("%prefix%", SpigotMessages.GLOBALPREFIX.color())));
                 return false;
             }
-
             String user_prefix = "";
             String user_suffix = "";
             if (plugin.getServer().getPluginManager().getPlugin("LuckPerms") != null && commandSource instanceof Player) {
@@ -57,7 +54,6 @@ public class MuteChatCommand extends CommandBase {
                 user_prefix = ultraPermissionsUserPrefix.orElse("");
                 user_suffix = ultraPermissionsUserSuffix.orElse("");
             }
-
             if (PlayerCache.getMutedservers().contains("all")) {
                 PlayerCache.getMutedservers().remove("all");
                 broadcastMuteChat(commandSource, false);
@@ -68,7 +64,6 @@ public class MuteChatCommand extends CommandBase {
                         .replace("%usersuffix%", user_suffix)));
                 return false;
             }
-
             PlayerCache.getMutedservers().add("all");
             broadcastMuteChat(commandSource, true);
             commandSource.sendMessage((SpigotMessages.MUTECHAT_ENABLED.color()
@@ -84,7 +79,6 @@ public class MuteChatCommand extends CommandBase {
     }
 
     private void broadcastMuteChat(CommandSender commandSource, boolean activated) {
-
         String user_prefix = "";
         String user_suffix = "";
         if (plugin.getServer().getPluginManager().getPlugin("LuckPerms") != null && commandSource instanceof Player) {
@@ -96,11 +90,9 @@ public class MuteChatCommand extends CommandBase {
             user_prefix = prefix == null ? "" : prefix;
             user_suffix = suffix == null ? "" : suffix;
         }
-
         Collection<? extends Player> players;
         if (SpigotConfig.MUTECHAT_BC_ALL.get(Boolean.class)) players = plugin.getServer().getOnlinePlayers();
         else players = plugin.getServer().getOnlinePlayers().stream().filter(player -> player.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)) && !(PlayerCache.getToggled().contains(player.getUniqueId()))).toList();
-
         if (activated) {
             for (Player player : players) {
                 player.sendMessage((SpigotMessages.MUTECHAT_ENABLED_BC.color()
@@ -111,7 +103,6 @@ public class MuteChatCommand extends CommandBase {
             }
             return;
         }
-
         for (Player player : players) {
             player.sendMessage((SpigotMessages.MUTECHAT_DISABLED_BC.color()
                     .replace("%prefix%", SpigotMessages.GLOBALPREFIX.color())

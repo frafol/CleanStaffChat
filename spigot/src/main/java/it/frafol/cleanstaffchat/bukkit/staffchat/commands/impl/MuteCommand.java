@@ -29,16 +29,16 @@ public class MuteCommand extends CommandBase {
             return false;
         }
 
-        if (!PlayerCache.getMuted().contains("true")) {
-            PlayerCache.getMuted().add("true");
-            sender.sendMessage((SpigotMessages.STAFFCHAT_MUTED.color()
-                    .replace("%prefix%", SpigotMessages.PREFIX.color())));
-
-        } else {
+        if (PlayerCache.getMuted().contains("true")) {
             PlayerCache.getMuted().remove("true");
             sender.sendMessage((SpigotMessages.STAFFCHAT_UNMUTED.color()
                     .replace("%prefix%", SpigotMessages.PREFIX.color())));
+            return false;
         }
+
+        PlayerCache.getMuted().add("true");
+        sender.sendMessage((SpigotMessages.STAFFCHAT_MUTED.color()
+                .replace("%prefix%", SpigotMessages.PREFIX.color())));
         return false;
     }
 }

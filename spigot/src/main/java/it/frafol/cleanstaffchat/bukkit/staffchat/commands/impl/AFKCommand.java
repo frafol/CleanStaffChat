@@ -39,11 +39,9 @@ public class AFKCommand extends CommandBase {
             return false;
         }
 
-        if (!inGameCheck(sender)) {
-            return false;
-        }
-        
+        if (!inGameCheck(sender)) return false;
         Player player = (Player) sender;
+
         if (!player.hasPermission(SpigotConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))) {
             player.sendMessage((SpigotMessages.NO_PERMISSION.color()
                     .replace("%prefix%", SpigotMessages.PREFIX.color())));
@@ -52,14 +50,9 @@ public class AFKCommand extends CommandBase {
 
         if (!PlayerCache.getAfk().contains(player.getUniqueId())) {
             if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
-
                 final LuckPerms api = LuckPermsProvider.get();
-
                 final User user = api.getUserManager().getUser(player.getUniqueId());
-
-                if (user == null) {
-                    return false;
-                }
+                if (user == null) return false;
 
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
@@ -76,18 +69,12 @@ public class AFKCommand extends CommandBase {
                                 .replace("%userprefix%", PlayerCache.color(user_prefix))
                                 .replace("%server%", "")
                                 .replace("%usersuffix%", PlayerCache.color(user_suffix))));
-
             } else if (Bukkit.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {
-
                 final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();
-
-                if (!userList.uuid(((Player) sender).getUniqueId()).isPresent()) {
-                    return false;
-                }
+                if (!userList.uuid(((Player) sender).getUniqueId()).isPresent()) return false;
 
                 final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(((Player) sender).getUniqueId()).get();
-
                 final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
                 final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
                 final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
@@ -104,9 +91,7 @@ public class AFKCommand extends CommandBase {
                                 .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
                                 .replace("%server%", "")
                                 .replace("&", "§")));
-
             } else {
-
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -117,63 +102,42 @@ public class AFKCommand extends CommandBase {
                                 .replace("%server%", "")
                                 .replace("%usersuffix%", "")
                                 .replace("%displayname%", player.getName())));
-
             }
 
             PlayerCache.getAfk().add(player.getUniqueId());
-
             if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
                     && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
                     && SpigotConfig.STAFFCHAT_DISCORD_AFK_MODULE.get(Boolean.class)) {
-
                 final TextChannel channel = plugin.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
-
-                if (channel == null) {
-                    return false;
-                }
-
+                if (channel == null) return false;
                 if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
-
                     EmbedBuilder embed = new EmbedBuilder();
-
                     embed.setTitle(SpigotDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
-
                     embed.setDescription(SpigotMessages.STAFF_DISCORD_AFK_ON_MESSAGE_FORMAT.get(String.class)
                             .replace("%user%", player.getName()));
-
                     embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                     embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
-
                     channel.sendMessageEmbeds(embed.build()).queue();
-
                 } else {
                     channel.sendMessageFormat(SpigotMessages.STAFF_DISCORD_AFK_ON_MESSAGE_FORMAT.get(String.class)
                             .replace("%user%", player.getName())).queue();
                 }
             }
-
         } else {
-
             PlayerCache.getAfk().remove(player.getUniqueId());
             if (plugin.isPremiumVanish() && VanishAPI.getInvisiblePlayers().contains(player.getUniqueId())) {
                 return false;
             }
 
             if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
-
                 final LuckPerms api = LuckPermsProvider.get();
-
                 final User user = api.getUserManager().getUser(player.getUniqueId());
-
-                if (user == null) {
-                    return false;
-                }
+                if (user == null) return false;
 
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
                 final String user_prefix = prefix == null ? "" : prefix;
                 final String user_suffix = suffix == null ? "" : suffix;
-
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -186,16 +150,11 @@ public class AFKCommand extends CommandBase {
                                 .replace("%usersuffix%", PlayerCache.color(user_suffix))));
 
             } else if (Bukkit.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {
-
                 final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();
-
-                if (!userList.uuid(((Player) sender).getUniqueId()).isPresent()) {
-                    return false;
-                }
+                if (!userList.uuid(((Player) sender).getUniqueId()).isPresent()) return false;
 
                 final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(((Player) sender).getUniqueId()).get();
-
                 final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
                 final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
                 final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
@@ -212,9 +171,7 @@ public class AFKCommand extends CommandBase {
                                 .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
                                 .replace("%server%", "")
                                 .replace("&", "§")));
-
             } else {
-
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -225,33 +182,22 @@ public class AFKCommand extends CommandBase {
                                 .replace("%server%", "")
                                 .replace("%usersuffix%", "")
                                 .replace("%displayname%", player.getName())));
-
             }
 
             if (SpigotDiscordConfig.DISCORD_ENABLED.get(Boolean.class)
                     && SpigotConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class)
                     && SpigotConfig.STAFFCHAT_DISCORD_AFK_MODULE.get(Boolean.class)) {
-
                 final TextChannel channel = plugin.getJda().getTextChannelById(SpigotDiscordConfig.STAFF_CHANNEL_ID.get(String.class));
-
-                if (channel == null) {
-                    return false;
-                }
+                if (channel == null) return false;
 
                 if (SpigotDiscordConfig.USE_EMBED.get(Boolean.class)) {
-
                     EmbedBuilder embed = new EmbedBuilder();
-
                     embed.setTitle(SpigotDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
-
                     embed.setDescription(SpigotMessages.STAFF_DISCORD_AFK_OFF_MESSAGE_FORMAT.get(String.class)
                             .replace("%user%", player.getName()));
-
                     embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                     embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
-
                     channel.sendMessageEmbeds(embed.build()).queue();
-
                 } else {
                     channel.sendMessageFormat(SpigotMessages.STAFF_DISCORD_AFK_OFF_MESSAGE_FORMAT.get(String.class)
                             .replace("%user%", player.getName())).queue();

@@ -4,7 +4,6 @@ import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
-import com.velocitypowered.api.proxy.ProxyServer;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
 import it.frafol.cleanstaffchat.velocity.enums.*;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
@@ -26,7 +25,6 @@ import static it.frafol.cleanstaffchat.velocity.enums.VelocityConfig.*;
 public class DonorChatCommand implements SimpleCommand {
 
     public final CleanStaffChat PLUGIN;
-    public ProxyServer server;
 
     public DonorChatCommand(CleanStaffChat plugin) {
         this.PLUGIN = plugin;

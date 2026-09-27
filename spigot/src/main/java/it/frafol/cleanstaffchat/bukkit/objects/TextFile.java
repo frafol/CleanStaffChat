@@ -18,24 +18,16 @@ public class TextFile {
 
     @SneakyThrows
     public TextFile(Path path, String fileName) {
-
-        if (!Files.exists(path)) {
-            Files.createDirectory(path);
-        }
-
+        if (!Files.exists(path)) Files.createDirectory(path);
         Path configPath = path.resolve(fileName);
-
         if (!Files.exists(configPath)) {
             try (InputStream in = this.getClass().getClassLoader().getResourceAsStream(fileName)) {
                 Files.copy(Objects.requireNonNull(in), configPath);
             }
         }
-
         yamlFile = new YamlFile(configPath.toFile());
         yamlFile.load();
-
         list.add(this);
-
     }
 
     public YamlFile getConfig() {

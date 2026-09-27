@@ -48,34 +48,14 @@ public class StaffListCommand extends CommandBase {
             LuckPerms api = LuckPermsProvider.get();
             String user_prefix;
             String user_suffix;
-
             List<UUID> list = Lists.newArrayList();
             for (Player players : plugin.getServer().getOnlinePlayers()) {
-
-                if (!players.hasPermission(SpigotConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
-                    continue;
-                }
-
-                if (list.contains(players.getUniqueId())) {
-                    continue;
-                }
-
-                if (SpigotConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(SpigotConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
-                    continue;
-                }
-
-                if (plugin.isPremiumVanish() && VanishAPI.getInvisiblePlayers().contains(players.getUniqueId())) {
-                    continue;
-                }
-
-                if (plugin.isSuperVanish() && VanishAPI.getInvisiblePlayers().contains(players.getUniqueId())) {
-                    continue;
-                }
-
-                if (plugin.isVanishPP() && net.thecommandcraft.vanishpp.api.VanishAPI.get().isVanished(players.getUniqueId())) {
-                    continue;
-                }
-
+                if (!players.hasPermission(SpigotConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) continue;
+                if (list.contains(players.getUniqueId())) continue;
+                if (SpigotConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(SpigotConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) continue;
+                if (plugin.isPremiumVanish() && VanishAPI.getInvisiblePlayers().contains(players.getUniqueId())) continue;
+                if (plugin.isSuperVanish() && VanishAPI.getInvisiblePlayers().contains(players.getUniqueId())) continue;
+                if (plugin.isVanishPP() && net.thecommandcraft.vanishpp.api.VanishAPI.get().isVanished(players.getUniqueId())) continue;
                 list.add(players.getUniqueId());
             }
 
@@ -106,50 +86,34 @@ public class StaffListCommand extends CommandBase {
                 list = sortedList;
             } else if (SpigotConfig.SORTING.get(Boolean.class)) {
                 list.sort((o1, o2) -> {
-
                     User user1 = api.getUserManager().getUser(o1);
                     User user2 = api.getUserManager().getUser(o2);
-
                     Group group1 = null;
                     if (user1 != null && getHighestWeightGroup(user1).isPresent()) {
                         group1 = api.getGroupManager().getGroup(getHighestWeightGroup(user1).get());
                     }
-
                     Group group2 = null;
                     if (user2 != null && getHighestWeightGroup(user2).isPresent()) {
                         group2 = api.getGroupManager().getGroup(getHighestWeightGroup(user2).get());
                     }
-
-                    if (group1 == null || group2 == null) {
-                        return 0;
-                    }
-
-                    if (group1.getWeight().isEmpty() || group2.getWeight().isEmpty()) {
-                        return 0;
-                    }
-
+                    if (group1 == null || group2 == null) return 0;
+                    if (group1.getWeight().isEmpty() || group2.getWeight().isEmpty()) return 0;
                     return Integer.compare(group1.getWeight().getAsInt(), group2.getWeight().getAsInt());
                 });
             }
 
             for (UUID uuids : list) {
-
                 Player players = plugin.getServer().getPlayer(uuids);
                 User user = api.getUserManager().getUser(players.getUniqueId());
-
                 if (user == null) continue;
-
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
                 Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
-
                 String isAFK = "";
                 if (PlayerCache.getAfk().contains(uuids)) {
                     isAFK = SpigotMessages.STAFFLIST_AFK.get(String.class);
                 }
-
                 if (group == null || group.getDisplayName() == null) {
-
                     user_prefix = Objects.requireNonNullElse(prefix, "");
                     user_suffix = Objects.requireNonNullElse(suffix, "");
                     sender.sendMessage(SpigotMessages.LIST_FORMAT.color(players)
@@ -161,7 +125,6 @@ public class StaffListCommand extends CommandBase {
                             .replace("%prefix%", SpigotMessages.PREFIX.color()));
                     continue;
                 }
-
                 user_prefix = prefix == null ? group.getDisplayName() : prefix;
                 user_suffix = suffix == null ? group.getDisplayName() : suffix;
                 sender.sendMessage(SpigotMessages.LIST_FORMAT.color(players)
@@ -171,9 +134,7 @@ public class StaffListCommand extends CommandBase {
                         .replace("%afk%", isAFK)
                         .replace("%server%", "")
                         .replace("%prefix%", SpigotMessages.PREFIX.color()));
-
             }
-
             sender.sendMessage(SpigotMessages.LIST_FOOTER.color()
                     .replace("%prefix%", SpigotMessages.PREFIX.color())
                     .replace("%online%", String.valueOf(list.size())));
@@ -195,30 +156,13 @@ public class StaffListCommand extends CommandBase {
         UltraPermissionsAPI api = UltraPermissions.getAPI();
         String user_prefix;
         String user_suffix;
-
         List<UUID> list = Lists.newArrayList();
         for (Player players : plugin.getServer().getOnlinePlayers()) {
-
-            if (!players.hasPermission(SpigotConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) {
-                continue;
-            }
-
-            if (SpigotConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(SpigotConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) {
-                continue;
-            }
-
-            if (plugin.isPremiumVanish() && VanishAPI.getInvisiblePlayers().contains(players.getUniqueId())) {
-                continue;
-            }
-
-            if (plugin.isSuperVanish() && VanishAPI.getInvisiblePlayers().contains(players.getUniqueId())) {
-                continue;
-            }
-
-            if (plugin.isVanishPP() && net.thecommandcraft.vanishpp.api.VanishAPI.get().isVanished(players.getUniqueId())) {
-                continue;
-            }
-
+            if (!players.hasPermission(SpigotConfig.STAFFLIST_SHOW_PERMISSION.get(String.class))) continue;
+            if (SpigotConfig.STAFFLIST_BYPASS.get(Boolean.class) && players.hasPermission(SpigotConfig.STAFFLIST_BYPASS_PERMISSION.get(String.class))) continue;
+            if (plugin.isPremiumVanish() && VanishAPI.getInvisiblePlayers().contains(players.getUniqueId())) continue;
+            if (plugin.isSuperVanish() && VanishAPI.getInvisiblePlayers().contains(players.getUniqueId())) continue;
+            if (plugin.isVanishPP() && net.thecommandcraft.vanishpp.api.VanishAPI.get().isVanished(players.getUniqueId())) continue;
             list.add(players.getUniqueId());
         }
 
@@ -246,62 +190,31 @@ public class StaffListCommand extends CommandBase {
             list = sortedList;
         } else if (SpigotConfig.SORTING.get(Boolean.class)) {
             list.sort((o1, o2) -> {
-
-                if (!api.getUsers().uuid(o1).isPresent()) {
-                    return 0;
-                }
-
-                if (!api.getUsers().uuid(o2).isPresent()) {
-                    return 0;
-                }
-
+                if (!api.getUsers().uuid(o1).isPresent()) return 0;
+                if (!api.getUsers().uuid(o2).isPresent()) return 0;
                 me.TechsCode.UltraPermissions.storage.objects.User user1 = api.getUsers().uuid(o1).get();
                 me.TechsCode.UltraPermissions.storage.objects.User user2 = api.getUsers().uuid(o2).get();
-
                 me.TechsCode.UltraPermissions.storage.objects.Group group1 = user1.getActiveGroups().bestToWorst().get(1);
                 me.TechsCode.UltraPermissions.storage.objects.Group group2 = user2.getActiveGroups().bestToWorst().get(1);
-
-                if (group1 == null || group2 == null) {
-                    return 0;
-                }
-
+                if (group1 == null || group2 == null) return 0;
                 return Integer.compare(group1.getPriority(), group2.getPriority());
             });
         }
 
         for (UUID uuids : list) {
-
             Player players = plugin.getServer().getPlayer(uuids);
-
-            if (!api.getUsers().uuid(players.getUniqueId()).isPresent()) {
-                continue;
-            }
-
+            if (api.getUsers().uuid(players.getUniqueId()).isEmpty()) continue;
             me.TechsCode.UltraPermissions.storage.objects.User user = api.getUsers().uuid(players.getUniqueId()).get();
-
             String prefix = "";
             String suffix = "";
-
-            if (user.getPrefix().isPresent()) {
-                prefix = user.getPrefix().get();
-            }
-
-            if (user.getSuffix().isPresent()) {
-                suffix = user.getSuffix().get();
-            }
-
+            if (user.getPrefix().isPresent()) prefix = user.getPrefix().get();
+            if (user.getSuffix().isPresent()) suffix = user.getSuffix().get();
             me.TechsCode.UltraPermissions.storage.objects.Group group = user.getActiveGroups().bestToWorst().get(1);
-
             String isAFK = "";
-            if (PlayerCache.getAfk().contains(uuids)) {
-                    isAFK = SpigotMessages.STAFFLIST_AFK.color();
-            }
-
+            if (PlayerCache.getAfk().contains(uuids)) isAFK = SpigotMessages.STAFFLIST_AFK.color();
             if (group == null || group.getName() == null) {
-
                 user_prefix = prefix;
                 user_suffix = suffix;
-
                 sender.sendMessage(SpigotMessages.LIST_FORMAT.color()
                         .replace("%userprefix%", PlayerCache.color(user_prefix))
                         .replace("%usersuffix%", PlayerCache.color(user_suffix))
@@ -309,13 +222,10 @@ public class StaffListCommand extends CommandBase {
                         .replace("%server%", "")
                         .replace("%afk%", isAFK)
                         .replace("%prefix%", SpigotMessages.PREFIX.color()));
-
                 continue;
             }
-
             user_prefix = prefix;
             user_suffix = suffix;
-
             sender.sendMessage(SpigotMessages.LIST_FORMAT.color()
                     .replace("%userprefix%", PlayerCache.color(user_prefix))
                     .replace("%usersuffix%", PlayerCache.color(user_suffix))
@@ -324,7 +234,6 @@ public class StaffListCommand extends CommandBase {
                     .replace("%server%", "")
                     .replace("%prefix%", SpigotMessages.PREFIX.color()));
         }
-
         sender.sendMessage(SpigotMessages.LIST_FOOTER.color()
                 .replace("%prefix%", SpigotMessages.PREFIX.color())
                 .replace("%online%", String.valueOf(list.size())));

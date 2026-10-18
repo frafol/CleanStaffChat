@@ -1,5 +1,7 @@
 package it.frafol.cleanstaffchat.bungee.adminchat.listeners;
 
+import it.frafol.cleanstaffchat.bungee.objects.Placeholder;
+
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.*;
@@ -324,6 +326,28 @@ public class ChatListener extends ListenerAdapter implements Listener {
     }
 
     private void sendDiscordAdminMessage(ProxiedPlayer sender, String message, String serverName) {
+        String userPrefix = "";
+        String userSuffix = "";
+        if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
+            final User user = LuckPermsProvider.get().getUserManager().getUser(sender.getUniqueId());
+            if (user != null) {
+                final String prefix = user.getCachedData().getMetaData().getPrefix();
+                final String suffix = user.getCachedData().getMetaData().getSuffix();
+                userPrefix = prefix == null ? "" : prefix;
+                userSuffix = suffix == null ? "" : suffix;
+            }
+        } else if (ProxyServer.getInstance().getPluginManager().getPlugin("UltraPermissions") != null) {
+            final UltraPermissionsAPI api = UltraPermissionsBungee.getAPI();
+            final UserList users = api.getUsers();
+            if (users.uuid(sender.getUniqueId()).isPresent()) {
+                final me.TechsCode.UltraPermissions.storage.objects.User user = users.uuid(sender.getUniqueId()).get();
+                userPrefix = user.getPrefix().orElse("");
+                userSuffix = user.getSuffix().orElse("");
+            }
+        }
+
+        final String discordPrefix = Placeholder.stripToDiscord(userPrefix);
+        final String discordSuffix = Placeholder.stripToDiscord(userSuffix);
         final TextChannel channel = PLUGIN.getJda().getTextChannelById(BungeeDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
 
         if (channel == null) {
@@ -335,6 +359,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
             embed.setTitle(BungeeDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
             embed.setDescription(BungeeMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                     .replace("%user%", sender.getName())
+                    .replace("%userprefix%", discordPrefix)
+                    .replace("%usersuffix%", discordSuffix)
                     .replace("%message%", message)
                     .replace("%server%", serverName));
             embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_ADMINCHATCOLOR.get(String.class)));
@@ -346,6 +372,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
         channel.sendMessageFormat(BungeeMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                 .replace("%user%", sender.getName())
+                .replace("%userprefix%", discordPrefix)
+                .replace("%usersuffix%", discordSuffix)
                 .replace("%message%", message)
                 .replace("%server%", serverName))
                 .queue();

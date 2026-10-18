@@ -202,8 +202,8 @@ public class AdminChatCommand implements SimpleCommand {
                 embed.setTitle(VelocityDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
                 embed.setDescription(VelocityMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                         .replace("%user%", sender)
-                        .replace("%userprefix", Placeholder.stripToDiscord(user_prefix))
-                        .replace("%usersuffix", Placeholder.stripToDiscord(user_suffix))
+                        .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                        .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                         .replace("%message%", message)
                         .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()));
                 embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_ADMINCHATCOLOR.get(String.class)));
@@ -212,8 +212,8 @@ public class AdminChatCommand implements SimpleCommand {
             } else {
                 channel.sendMessageFormat(VelocityMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                                 .replace("%user%", sender)
-                                .replace("%userprefix", Placeholder.stripToDiscord(user_prefix))
-                                .replace("%usersuffix", Placeholder.stripToDiscord(user_suffix))
+                                .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                                .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                                 .replace("%message%", message)
                                 .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()))
                         .queue();
@@ -258,8 +258,8 @@ public class AdminChatCommand implements SimpleCommand {
                     embed.setTitle(VelocityDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
                     embed.setDescription(VelocityMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                             .replace("%user%", sender)
-                            .replace("%userprefix", Placeholder.stripToDiscord(user_prefix))
-                            .replace("%usersuffix", Placeholder.stripToDiscord(user_suffix))
+                            .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                             .replace("%message%", message)
                             .replace("%server%", ""));
                     embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_ADMINCHATCOLOR.get(String.class)));

@@ -1,5 +1,7 @@
 package it.frafol.cleanstaffchat.bukkit.adminchat.listeners;
 
+import it.frafol.cleanstaffchat.bukkit.objects.Placeholder;
+
 import com.github.Anon8281.universalScheduler.UniversalScheduler;
 import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
@@ -48,14 +50,16 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 }
             }
 
+            String user_prefix;
+            String user_suffix;
             if (PLUGIN.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
                 final LuckPerms api = LuckPermsProvider.get();
                 final User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
                 if (user == null) return;
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
-                final String user_prefix = prefix == null ? "" : prefix;
-                final String user_suffix = suffix == null ? "" : suffix;
+                user_prefix = prefix == null ? "" : prefix;
+                user_suffix = suffix == null ? "" : suffix;
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -77,6 +81,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
                 final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
                 final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+                user_prefix = ultraPermissionsUserPrefixFinal;
+                user_suffix = ultraPermissionsUserSuffixFinal;
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -90,6 +96,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                 .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
                                 .replace("&", "§")));
             } else {
+                user_prefix = "";
+                user_suffix = "";
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -109,6 +117,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 embed.setTitle(SpigotDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
                 embed.setDescription(SpigotMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                         .replace("%user%", event.getPlayer().getName())
+                        .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                        .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                         .replace("%message%", message)
                         .replace("%server%", ""));
                 embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_ADMINCHATCOLOR.get(String.class)));
@@ -117,6 +127,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
             } else {
                 channel.sendMessageFormat(SpigotMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                                 .replace("%user%", event.getPlayer().getName())
+                                .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                                .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                                 .replace("%message%", message)
                                 .replace("%server%", "")).queue();
             }
@@ -151,14 +163,16 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 }
             }
 
+            String user_prefix;
+            String user_suffix;
             if (PLUGIN.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
                 final LuckPerms api = LuckPermsProvider.get();
                 final User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
                 if (user == null) return;
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
-                final String user_prefix = prefix == null ? "" : prefix;
-                final String user_suffix = suffix == null ? "" : suffix;
+                user_prefix = prefix == null ? "" : prefix;
+                user_suffix = suffix == null ? "" : suffix;
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -180,6 +194,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
                 final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
                 final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+                user_prefix = ultraPermissionsUserPrefixFinal;
+                user_suffix = ultraPermissionsUserSuffixFinal;
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -193,6 +209,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
                                 .replace("%usersuffix%", ultraPermissionsUserSuffixFinal)
                                 .replace("&", "§")));
             } else {
+                user_prefix = "";
+                user_suffix = "";
                 PLUGIN.getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -211,6 +229,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 embed.setTitle(SpigotDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
                 embed.setDescription(SpigotMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                         .replace("%user%", event.getPlayer().getName())
+                                .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                                .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                         .replace("%message%", message)
                         .replace("%server%", ""));
                 embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_ADMINCHATCOLOR.get(String.class)));
@@ -219,6 +239,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
             } else {
                 channel.sendMessageFormat(SpigotMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                                 .replace("%user%", event.getPlayer().getName())
+                                .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                                .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                                 .replace("%message%", message)
                                 .replace("%server%", "")).queue();
             }

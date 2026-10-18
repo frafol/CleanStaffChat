@@ -1,5 +1,7 @@
 package it.frafol.cleanstaffchat.bukkit.adminchat.commands;
 
+import it.frafol.cleanstaffchat.bukkit.objects.Placeholder;
+
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
@@ -91,14 +93,16 @@ public class AdminChatCommand extends CommandBase {
                 return false;
             }
 
+            String user_prefix;
+            String user_suffix;
             if (plugin.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
                 LuckPerms api = LuckPermsProvider.get();
                 User user = api.getUserManager().getUser(((Player) sender).getUniqueId());
                 if (user == null) return false;
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
-                final String user_prefix = prefix == null ? "" : prefix;
-                final String user_suffix = suffix == null ? "" : suffix;
+                user_prefix = prefix == null ? "" : prefix;
+                user_suffix = suffix == null ? "" : suffix;
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
@@ -114,12 +118,14 @@ public class AdminChatCommand extends CommandBase {
             } else if (plugin.getServer().getPluginManager().getPlugin("UltraPermissions") != null) {
                 final UltraPermissionsAPI ultraPermissionsAPI = UltraPermissions.getAPI();
                 final UserList userList = ultraPermissionsAPI.getUsers();
-                if (!userList.uuid(((Player) sender).getUniqueId()).isPresent()) return false;
+                if (userList.uuid(((Player) sender).getUniqueId()).isEmpty()) return false;
                 final me.TechsCode.UltraPermissions.storage.objects.User ultraPermissionsUser = userList.uuid(((Player) sender).getUniqueId()).get();
                 final Optional<String> ultraPermissionsUserPrefix = ultraPermissionsUser.getPrefix();
                 final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
                 final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
                 final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+                user_prefix = ultraPermissionsUserPrefixFinal;
+                user_suffix = ultraPermissionsUserSuffixFinal;
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
@@ -133,6 +139,8 @@ public class AdminChatCommand extends CommandBase {
                                 .replace("%server%", "")
                                 .replace("&", "§")));
             } else {
+                user_prefix = "";
+                user_suffix = "";
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_admin().contains(players.getUniqueId())))
@@ -154,6 +162,8 @@ public class AdminChatCommand extends CommandBase {
                     embed.setTitle(SpigotDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
                     embed.setDescription(SpigotMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                             .replace("%user%", commandsender)
+                            .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                             .replace("%message%", message)
                             .replace("%server%", ""));
                     embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_ADMINCHATCOLOR.get(String.class)));
@@ -162,11 +172,15 @@ public class AdminChatCommand extends CommandBase {
                 } else {
                     channel.sendMessageFormat(SpigotMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                             .replace("%user%", commandsender)
+                            .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                             .replace("%message%", message)
                             .replace("%server%", "")).queue();
                 }
             }
         } else if (SpigotConfig.CONSOLE_CAN_TALK.get(Boolean.class)) {
+            String user_prefix = "";
+            String user_suffix = "";
             if (!PlayerCache.getMuted().contains("true")) {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.ADMINCHAT_USE_PERMISSION.get(String.class))
@@ -200,6 +214,8 @@ public class AdminChatCommand extends CommandBase {
                 embed.setTitle(SpigotDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
                 embed.setDescription(SpigotMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                         .replace("%user%", commandsender)
+                        .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                        .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                         .replace("%message%", message)
                         .replace("%server%", ""));
                 embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_ADMINCHATCOLOR.get(String.class)));
@@ -208,6 +224,8 @@ public class AdminChatCommand extends CommandBase {
             } else {
                 channel.sendMessageFormat(SpigotMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                                 .replace("%user%", commandsender)
+                                .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                                .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                                 .replace("%message%", message)
                                 .replace("%server%", "")).queue();
             }

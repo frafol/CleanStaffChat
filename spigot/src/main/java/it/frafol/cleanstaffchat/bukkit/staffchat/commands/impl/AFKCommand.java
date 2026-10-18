@@ -1,5 +1,7 @@
 package it.frafol.cleanstaffchat.bukkit.staffchat.commands.impl;
 
+import it.frafol.cleanstaffchat.bukkit.objects.Placeholder;
+
 import de.myzelyam.api.vanish.VanishAPI;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
@@ -49,6 +51,9 @@ public class AFKCommand extends CommandBase {
         }
 
         if (!PlayerCache.getAfk().contains(player.getUniqueId())) {
+
+            String user_prefix;
+            String user_suffix;
             if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
                 final LuckPerms api = LuckPermsProvider.get();
                 final User user = api.getUserManager().getUser(player.getUniqueId());
@@ -56,8 +61,8 @@ public class AFKCommand extends CommandBase {
 
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
-                final String user_prefix = prefix == null ? "" : prefix;
-                final String user_suffix = suffix == null ? "" : suffix;
+                user_prefix = prefix == null ? "" : prefix;
+                user_suffix = suffix == null ? "" : suffix;
 
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
@@ -79,6 +84,8 @@ public class AFKCommand extends CommandBase {
                 final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
                 final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
                 final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+                user_prefix = ultraPermissionsUserPrefixFinal;
+                user_suffix = ultraPermissionsUserSuffixFinal;
 
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
@@ -92,6 +99,8 @@ public class AFKCommand extends CommandBase {
                                 .replace("%server%", "")
                                 .replace("&", "§")));
             } else {
+                user_prefix = "";
+                user_suffix = "";
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -114,13 +123,17 @@ public class AFKCommand extends CommandBase {
                     EmbedBuilder embed = new EmbedBuilder();
                     embed.setTitle(SpigotDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
                     embed.setDescription(SpigotMessages.STAFF_DISCORD_AFK_ON_MESSAGE_FORMAT.get(String.class)
-                            .replace("%user%", player.getName()));
+                            .replace("%user%", player.getName())
+                            .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix)));
                     embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                     embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
                     channel.sendMessageEmbeds(embed.build()).queue();
                 } else {
                     channel.sendMessageFormat(SpigotMessages.STAFF_DISCORD_AFK_ON_MESSAGE_FORMAT.get(String.class)
-                            .replace("%user%", player.getName())).queue();
+                            .replace("%user%", player.getName())
+                            .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))).queue();
                 }
             }
         } else {
@@ -129,6 +142,8 @@ public class AFKCommand extends CommandBase {
                 return false;
             }
 
+            String user_prefix;
+            String user_suffix;
             if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
                 final LuckPerms api = LuckPermsProvider.get();
                 final User user = api.getUserManager().getUser(player.getUniqueId());
@@ -136,8 +151,8 @@ public class AFKCommand extends CommandBase {
 
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
-                final String user_prefix = prefix == null ? "" : prefix;
-                final String user_suffix = suffix == null ? "" : suffix;
+                user_prefix = prefix == null ? "" : prefix;
+                user_suffix = suffix == null ? "" : suffix;
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -159,6 +174,8 @@ public class AFKCommand extends CommandBase {
                 final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
                 final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
                 final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+                user_prefix = ultraPermissionsUserPrefixFinal;
+                user_suffix = ultraPermissionsUserSuffixFinal;
 
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
@@ -172,6 +189,8 @@ public class AFKCommand extends CommandBase {
                                 .replace("%server%", "")
                                 .replace("&", "§")));
             } else {
+                user_prefix = "";
+                user_suffix = "";
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled().contains(players.getUniqueId())))
@@ -194,13 +213,17 @@ public class AFKCommand extends CommandBase {
                     EmbedBuilder embed = new EmbedBuilder();
                     embed.setTitle(SpigotDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
                     embed.setDescription(SpigotMessages.STAFF_DISCORD_AFK_OFF_MESSAGE_FORMAT.get(String.class)
-                            .replace("%user%", player.getName()));
+                            .replace("%user%", player.getName())
+                            .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix)));
                     embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                     embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
                     channel.sendMessageEmbeds(embed.build()).queue();
                 } else {
                     channel.sendMessageFormat(SpigotMessages.STAFF_DISCORD_AFK_OFF_MESSAGE_FORMAT.get(String.class)
-                            .replace("%user%", player.getName())).queue();
+                            .replace("%user%", player.getName())
+                            .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))).queue();
                 }
             }
         }

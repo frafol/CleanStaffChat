@@ -1,5 +1,7 @@
 package it.frafol.cleanstaffchat.bungee.staffchat.commands;
 
+import it.frafol.cleanstaffchat.bungee.objects.Placeholder;
+
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.*;
@@ -132,6 +134,8 @@ public class StaffChatCommand extends Command {
                 }
             }
 
+            String user_prefix;
+            String user_suffix;
             if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
 
                 final LuckPerms api = LuckPermsProvider.get();
@@ -144,8 +148,8 @@ public class StaffChatCommand extends Command {
 
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
-                final String user_prefix = prefix == null ? "" : prefix;
-                final String user_suffix = suffix == null ? "" : suffix;
+                user_prefix = prefix == null ? "" : prefix;
+                user_suffix = suffix == null ? "" : suffix;
 
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
@@ -192,6 +196,8 @@ public class StaffChatCommand extends Command {
                 final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
                 final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
                 final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+                user_prefix = ultraPermissionsUserPrefixFinal;
+                user_suffix = ultraPermissionsUserSuffixFinal;
 
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
@@ -227,10 +233,10 @@ public class StaffChatCommand extends Command {
 
             } else {
 
+                user_prefix = "";
+                user_suffix = "";
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
-
                     final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
                     final String final_message = BungeeMessages.STAFFCHAT_FORMAT.color()
                             .replace("%user%", commandsender)
                             .replace("%message%", message)
@@ -239,7 +245,6 @@ public class StaffChatCommand extends Command {
                             .replace("%usersuffix%", "")
                             .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName())
                             .replace("%prefix%", BungeeMessages.PREFIX.color());
-
                     redisBungeeAPI.sendChannelMessage("CleanStaffChat-StaffMessage-RedisBungee", final_message);
                     return;
                 }
@@ -274,6 +279,8 @@ public class StaffChatCommand extends Command {
 
                     embed.setDescription(BungeeMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                             .replace("%user%", commandsender)
+                            .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                             .replace("%message%", message)
                             .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName()));
 
@@ -286,15 +293,18 @@ public class StaffChatCommand extends Command {
 
                     channel.sendMessageFormat(BungeeMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                     .replace("%user%", commandsender)
+                                    .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                                    .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                                     .replace("%message%", message)
                                     .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName()))
                             .queue();
-
                 }
             }
 
         } else if (BungeeConfig.CONSOLE_CAN_TALK.get(Boolean.class)) {
 
+            String user_prefix = "";
+            String user_suffix = "";
             if (!PlayerCache.getMuted().contains("true")) {
 
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
@@ -363,6 +373,8 @@ public class StaffChatCommand extends Command {
 
                 embed.setDescription(BungeeMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                         .replace("%user%", commandsender)
+                        .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                        .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                         .replace("%message%", message)
                         .replace("%server%", ""));
 
@@ -374,6 +386,8 @@ public class StaffChatCommand extends Command {
             } else {
                 channel.sendMessageFormat(BungeeMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                 .replace("%user%", commandsender)
+                                .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                                .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                                 .replace("%message%", message)
                                 .replace("%server%", ""))
                         .queue();

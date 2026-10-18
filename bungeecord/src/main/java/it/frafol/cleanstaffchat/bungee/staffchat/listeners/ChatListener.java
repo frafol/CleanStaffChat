@@ -1,5 +1,7 @@
 package it.frafol.cleanstaffchat.bungee.staffchat.listeners;
 
+import it.frafol.cleanstaffchat.bungee.objects.Placeholder;
+
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.*;
@@ -63,6 +65,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         }
                     }
 
+                    String user_prefix;
+                    String user_suffix;
                     if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
 
                         LuckPerms api = LuckPermsProvider.get();
@@ -73,8 +77,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         }
                         final String prefix = user.getCachedData().getMetaData().getPrefix();
                         final String suffix = user.getCachedData().getMetaData().getSuffix();
-                        final String user_prefix = prefix == null ? "" : prefix;
-                        final String user_suffix = suffix == null ? "" : suffix;
+                        user_prefix = prefix == null ? "" : prefix;
+                        user_suffix = suffix == null ? "" : suffix;
 
                         if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
@@ -122,6 +126,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
                         final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
                         final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
                         final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+                        user_prefix = ultraPermissionsUserPrefixFinal;
+                        user_suffix = ultraPermissionsUserSuffixFinal;
 
                         if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
@@ -159,6 +165,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                     } else {
 
+                        user_prefix = "";
+                        user_suffix = "";
                         if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
                             final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
@@ -209,6 +217,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                         embed.setDescription(BungeeMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                 .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
+                                .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                                .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                                 .replace("%message%", message)
                                 .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName()));
 
@@ -221,6 +231,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                         channel.sendMessageFormat(BungeeMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                         .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
+                                .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                                .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                                         .replace("%message%", message)
                                         .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName()))
                                 .queue();
@@ -286,6 +298,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 }
             }
 
+            String user_prefix;
+            String user_suffix;
             if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
 
                 LuckPerms api = LuckPermsProvider.get();
@@ -296,8 +310,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 }
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
-                final String user_prefix = prefix == null ? "" : prefix;
-                final String user_suffix = suffix == null ? "" : suffix;
+                user_prefix = prefix == null ? "" : prefix;
+                user_suffix = suffix == null ? "" : suffix;
 
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
@@ -345,6 +359,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
                 final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
                 final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
                 final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+                user_prefix = ultraPermissionsUserPrefixFinal;
+                user_suffix = ultraPermissionsUserSuffixFinal;
 
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
@@ -382,6 +398,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
             } else {
 
+                user_prefix = "";
+                user_suffix = "";
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
                     final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
@@ -432,6 +450,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                 embed.setDescription(BungeeMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                         .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
+                                .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                                .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                         .replace("%message%", message)
                         .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName()));
 
@@ -444,6 +464,8 @@ public class ChatListener extends ListenerAdapter implements Listener {
 
                 channel.sendMessageFormat(BungeeMessages.STAFFCHAT_FORMAT_DISCORD.get(String.class)
                                 .replace("%user%", ((ProxiedPlayer) event.getSender()).getName())
+                                .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                                .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                                 .replace("%message%", message)
                                 .replace("%server%", ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName()))
                         .queue();

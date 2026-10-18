@@ -1,5 +1,7 @@
 package it.frafol.cleanstaffchat.bungee.donorchat.commands;
 
+import it.frafol.cleanstaffchat.bungee.objects.Placeholder;
+
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.*;
@@ -151,6 +153,8 @@ public class DonorChatCommand extends Command {
                 return;
             }
 
+            String user_prefix;
+            String user_suffix;
             if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
 
                 final LuckPerms api = LuckPermsProvider.get();
@@ -163,8 +167,8 @@ public class DonorChatCommand extends Command {
 
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
-                final String user_prefix = prefix == null ? "" : prefix;
-                final String user_suffix = suffix == null ? "" : suffix;
+                user_prefix = prefix == null ? "" : prefix;
+                user_suffix = suffix == null ? "" : suffix;
 
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
@@ -214,6 +218,8 @@ public class DonorChatCommand extends Command {
                 final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
                 final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
                 final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+                user_prefix = ultraPermissionsUserPrefixFinal;
+                user_suffix = ultraPermissionsUserSuffixFinal;
 
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
@@ -251,6 +257,8 @@ public class DonorChatCommand extends Command {
 
             } else {
 
+                user_prefix = "";
+                user_suffix = "";
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
                     final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
@@ -302,6 +310,8 @@ public class DonorChatCommand extends Command {
 
                     embed.setDescription(BungeeMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                             .replace("%user%", commandsender)
+                                .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                                .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                             .replace("%message%", message)
                             .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName()));
 
@@ -314,6 +324,8 @@ public class DonorChatCommand extends Command {
 
                     channel.sendMessageFormat(BungeeMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                                     .replace("%user%", commandsender)
+                                .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                                .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                                     .replace("%message%", message)
                                     .replace("%server%", ((ProxiedPlayer) sender).getServer().getInfo().getName()))
                             .queue();
@@ -330,6 +342,8 @@ public class DonorChatCommand extends Command {
 
         } else if (BungeeConfig.CONSOLE_CAN_TALK.get(Boolean.class)) {
 
+            String user_prefix = "";
+            String user_suffix = "";
             if (!PlayerCache.getMuted_donor().contains("true")) {
 
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
@@ -397,6 +411,8 @@ public class DonorChatCommand extends Command {
 
                 embed.setDescription(BungeeMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                         .replace("%user%", commandsender)
+                                .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                                .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                         .replace("%message%", message)
                         .replace("%server%", ""));
 
@@ -408,6 +424,8 @@ public class DonorChatCommand extends Command {
             } else {
                 channel.sendMessageFormat(BungeeMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                                 .replace("%user%", commandsender)
+                                .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                                .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                                 .replace("%message%", message)
                                 .replace("%server%", ""))
                         .queue();

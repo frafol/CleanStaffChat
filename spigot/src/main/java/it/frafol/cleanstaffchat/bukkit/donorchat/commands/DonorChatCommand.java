@@ -1,5 +1,7 @@
 package it.frafol.cleanstaffchat.bukkit.donorchat.commands;
 
+import it.frafol.cleanstaffchat.bukkit.objects.Placeholder;
+
 import com.github.Anon8281.universalScheduler.UniversalScheduler;
 import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
@@ -101,14 +103,16 @@ public class DonorChatCommand extends CommandBase {
                 return false;
             }
 
+            String user_prefix;
+            String user_suffix;
             if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
                 LuckPerms api = LuckPermsProvider.get();
                 User user = api.getUserManager().getUser(((Player) sender).getUniqueId());
                 if (user == null) return false;
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
-                final String user_prefix = prefix == null ? "" : prefix;
-                final String user_suffix = suffix == null ? "" : suffix;
+                user_prefix = prefix == null ? "" : prefix;
+                user_suffix = suffix == null ? "" : suffix;
 
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
@@ -133,6 +137,8 @@ public class DonorChatCommand extends CommandBase {
                 final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
                 final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
                 final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+                user_prefix = ultraPermissionsUserPrefixFinal;
+                user_suffix = ultraPermissionsUserSuffixFinal;
 
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
@@ -148,6 +154,8 @@ public class DonorChatCommand extends CommandBase {
                                 .replace("&", "§")));
 
             } else {
+                user_prefix = "";
+                user_suffix = "";
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
                                         && !(PlayerCache.getToggled_donor().contains(players.getUniqueId())))
@@ -170,6 +178,8 @@ public class DonorChatCommand extends CommandBase {
                     embed.setTitle(SpigotDiscordConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
                     embed.setDescription(SpigotMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                             .replace("%user%", commandsender)
+                            .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                             .replace("%message%", message)
                             .replace("%server%", ""));
 
@@ -179,6 +189,8 @@ public class DonorChatCommand extends CommandBase {
                 } else {
                     channel.sendMessageFormat(SpigotMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                             .replace("%user%", commandsender)
+                            .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                             .replace("%message%", message)
                             .replace("%server%", "")).queue();
                 }
@@ -191,6 +203,8 @@ public class DonorChatCommand extends CommandBase {
                         PlayerCache.getCooldown().remove(((Player) sender).getUniqueId()), SpigotConfig.DONOR_TIMER.get(Integer.class) * 20L);
             }
         } else if (SpigotConfig.CONSOLE_CAN_TALK.get(Boolean.class)) {
+            String user_prefix = "";
+            String user_suffix = "";
             if (!PlayerCache.getMuted().contains("true")) {
                 CleanStaffChat.getInstance().getServer().getOnlinePlayers().stream().filter
                                 (players -> players.hasPermission(SpigotConfig.DONORCHAT_USE_PERMISSION.get(String.class))
@@ -226,6 +240,8 @@ public class DonorChatCommand extends CommandBase {
                     embed.setTitle(SpigotDiscordConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
                     embed.setDescription(SpigotMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                             .replace("%user%", commandsender)
+                                .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                                .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                             .replace("%message%", message)
                             .replace("%server%", ""));
 
@@ -235,6 +251,8 @@ public class DonorChatCommand extends CommandBase {
                 } else {
                     channel.sendMessageFormat(SpigotMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                             .replace("%user%", commandsender)
+                                .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                                .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                             .replace("%message%", message)
                             .replace("%server%", "")).queue();
                 }

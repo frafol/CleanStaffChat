@@ -1,5 +1,7 @@
 package it.frafol.cleanstaffchat.bungee.staffchat.listeners;
 
+import it.frafol.cleanstaffchat.bungee.objects.Placeholder;
+
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import de.myzelyam.api.vanish.BungeeVanishAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
@@ -66,6 +68,8 @@ public class JoinListener implements Listener {
                         return;
                     }
 
+                    String user_prefix;
+                    String user_suffix;
                     if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
 
                         LuckPerms api = LuckPermsProvider.get();
@@ -78,8 +82,8 @@ public class JoinListener implements Listener {
                         final String prefix = user.getCachedData().getMetaData().getPrefix();
                         final String suffix = user.getCachedData().getMetaData().getSuffix();
 
-                        final String user_prefix = prefix == null ? "" : prefix;
-                        final String user_suffix = suffix == null ? "" : suffix;
+                        user_prefix = prefix == null ? "" : prefix;
+                        user_suffix = suffix == null ? "" : suffix;
 
                         if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
@@ -128,6 +132,8 @@ public class JoinListener implements Listener {
                         final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
                         final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
                         final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+                        user_prefix = ultraPermissionsUserPrefixFinal;
+                        user_suffix = ultraPermissionsUserSuffixFinal;
 
                         if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
@@ -159,6 +165,8 @@ public class JoinListener implements Listener {
 
                     } else {
 
+                        user_prefix = "";
+                        user_suffix = "";
                         if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
                             final String final_message = BungeeMessages.STAFF_JOIN_MESSAGE_FORMAT.get(String.class)
@@ -208,7 +216,9 @@ public class JoinListener implements Listener {
                             embed.setTitle(BungeeDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
                             embed.setDescription(BungeeMessages.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
-                                    .replace("%user%", player.getName()));
+                                    .replace("%user%", player.getName())
+                                    .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                                    .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix)));
 
                             embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                             embed.setFooter(BungeeDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
@@ -218,7 +228,9 @@ public class JoinListener implements Listener {
                         } else {
 
                             channel.sendMessageFormat(BungeeMessages.STAFF_DISCORD_JOIN_MESSAGE_FORMAT.get(String.class)
-                                    .replace("%user%", player.getName())).queue();
+                                    .replace("%user%", player.getName())
+                                    .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                                    .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))).queue();
 
                         }
                     }
@@ -254,6 +266,8 @@ public class JoinListener implements Listener {
                 return;
             }
 
+            String user_prefix;
+            String user_suffix;
             if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
 
                 LuckPerms api = LuckPermsProvider.get();
@@ -265,8 +279,8 @@ public class JoinListener implements Listener {
 
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
-                final String user_prefix = prefix == null ? "" : prefix;
-                final String user_suffix = suffix == null ? "" : suffix;
+                user_prefix = prefix == null ? "" : prefix;
+                user_suffix = suffix == null ? "" : suffix;
 
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
@@ -315,6 +329,8 @@ public class JoinListener implements Listener {
                 final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
                 final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
                 final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+                user_prefix = ultraPermissionsUserPrefixFinal;
+                user_suffix = ultraPermissionsUserSuffixFinal;
 
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
@@ -349,6 +365,8 @@ public class JoinListener implements Listener {
 
             } else {
 
+                user_prefix = "";
+                user_suffix = "";
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
                     final String final_message = BungeeMessages.STAFF_QUIT_MESSAGE_FORMAT.get(String.class)
@@ -401,7 +419,9 @@ public class JoinListener implements Listener {
                     embed.setTitle(BungeeDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
                     embed.setDescription(BungeeMessages.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
-                            .replace("%user%", player.getName()));
+                            .replace("%user%", player.getName())
+                            .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix)));
 
                     embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                     embed.setFooter(BungeeDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
@@ -410,7 +430,9 @@ public class JoinListener implements Listener {
 
                 } else {
                     channel.sendMessageFormat(BungeeMessages.STAFF_DISCORD_QUIT_MESSAGE_FORMAT.get(String.class)
-                            .replace("%user%", player.getName())).queue();
+                            .replace("%user%", player.getName())
+                            .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))).queue();
                 }
             }
         }

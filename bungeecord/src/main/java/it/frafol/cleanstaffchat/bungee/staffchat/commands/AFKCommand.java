@@ -1,5 +1,7 @@
 package it.frafol.cleanstaffchat.bungee.staffchat.commands;
 
+import it.frafol.cleanstaffchat.bungee.objects.Placeholder;
+
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.*;
@@ -49,6 +51,9 @@ public class AFKCommand extends Command {
         }
 
         if (!PlayerCache.getAfk().contains(((ProxiedPlayer) sender).getUniqueId())) {
+
+            String user_prefix;
+            String user_suffix;
             if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
 
                 final LuckPerms api = LuckPermsProvider.get();
@@ -61,8 +66,8 @@ public class AFKCommand extends Command {
 
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
-                final String user_prefix = prefix == null ? "" : prefix;
-                final String user_suffix = suffix == null ? "" : suffix;
+                user_prefix = prefix == null ? "" : prefix;
+                user_suffix = suffix == null ? "" : suffix;
 
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
@@ -107,6 +112,8 @@ public class AFKCommand extends Command {
                     final Optional<String> ultraPermissionsUserSuffix = ultraPermissionsUser.getSuffix();
                     final String ultraPermissionsUserPrefixFinal = ultraPermissionsUserPrefix.orElse("");
                     final String ultraPermissionsUserSuffixFinal = ultraPermissionsUserSuffix.orElse("");
+                    user_prefix = ultraPermissionsUserPrefixFinal;
+                    user_suffix = ultraPermissionsUserSuffixFinal;
 
                     if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
@@ -138,6 +145,8 @@ public class AFKCommand extends Command {
 
             } else {
 
+                user_prefix = "";
+                user_suffix = "";
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
                     final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
@@ -185,7 +194,9 @@ public class AFKCommand extends Command {
                     embed.setTitle(BungeeDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
                     embed.setDescription(BungeeMessages.STAFF_DISCORD_AFK_ON_MESSAGE_FORMAT.get(String.class)
-                            .replace("%user%", sender.getName()));
+                            .replace("%user%", sender.getName())
+                            .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix)));
 
                     embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                     embed.setFooter(BungeeDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
@@ -194,12 +205,16 @@ public class AFKCommand extends Command {
 
                 } else {
                     channel.sendMessageFormat(BungeeMessages.STAFF_DISCORD_AFK_ON_MESSAGE_FORMAT.get(String.class)
-                            .replace("%user%", sender.getName())).queue();
+                            .replace("%user%", sender.getName())
+                            .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))).queue();
                 }
             }
 
         } else {
 
+            String user_prefix;
+            String user_suffix;
             if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") != null) {
 
                 final LuckPerms api = LuckPermsProvider.get();
@@ -212,8 +227,8 @@ public class AFKCommand extends Command {
 
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
-                final String user_prefix = prefix == null ? "" : prefix;
-                final String user_suffix = suffix == null ? "" : suffix;
+                user_prefix = prefix == null ? "" : prefix;
+                user_suffix = suffix == null ? "" : suffix;
 
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
@@ -245,6 +260,8 @@ public class AFKCommand extends Command {
 
             } else {
 
+                user_prefix = "";
+                user_suffix = "";
                 if (ProxyServer.getInstance().getPluginManager().getPlugin("RedisBungee") != null && BungeeRedis.REDIS_ENABLE.get(Boolean.class)) {
 
                     final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
@@ -292,7 +309,9 @@ public class AFKCommand extends Command {
                     embed.setTitle(BungeeDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
 
                     embed.setDescription(BungeeMessages.STAFF_DISCORD_AFK_OFF_MESSAGE_FORMAT.get(String.class)
-                            .replace("%user%", sender.getName()));
+                            .replace("%user%", sender.getName())
+                            .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix)));
 
                     embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                     embed.setFooter(BungeeDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
@@ -301,7 +320,9 @@ public class AFKCommand extends Command {
 
                 } else {
                     channel.sendMessageFormat(BungeeMessages.STAFF_DISCORD_AFK_OFF_MESSAGE_FORMAT.get(String.class)
-                            .replace("%user%", sender.getName())).queue();
+                            .replace("%user%", sender.getName())
+                            .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))).queue();
                 }
             }
         }

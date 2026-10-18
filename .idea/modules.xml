@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/bungeecord/bungeecord.iml" filepath="$PROJECT_DIR$/bungeecord/bungeecord.iml" />
       <module fileurl="file://$PROJECT_DIR$/spigot/spigot.iml" filepath="$PROJECT_DIR$/spigot/spigot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/universal/universal.iml" filepath="$PROJECT_DIR$/universal/universal.iml" />
       <module fileurl="file://$PROJECT_DIR$/velocity/velocity.iml" filepath="$PROJECT_DIR$/velocity/velocity.iml" />
     </modules>
   </component>

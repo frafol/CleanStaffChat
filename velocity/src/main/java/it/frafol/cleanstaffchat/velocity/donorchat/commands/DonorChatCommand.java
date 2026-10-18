@@ -161,6 +161,8 @@ public class DonorChatCommand implements SimpleCommand {
 
             }
 
+            String user_prefix;
+            String user_suffix;
             if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
                 final LuckPerms api = LuckPermsProvider.get();
@@ -172,8 +174,8 @@ public class DonorChatCommand implements SimpleCommand {
                 }
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
-                final String user_prefix = prefix == null ? "" : prefix;
-                final String user_suffix = suffix == null ? "" : suffix;
+                user_prefix = prefix == null ? "" : prefix;
+                user_suffix = suffix == null ? "" : suffix;
 
                 if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
 
@@ -210,6 +212,8 @@ public class DonorChatCommand implements SimpleCommand {
 
             } else {
 
+                user_prefix = "";
+                user_suffix = "";
                 if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
 
                     final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
@@ -261,6 +265,8 @@ public class DonorChatCommand implements SimpleCommand {
 
                     embed.setDescription(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                             .replace("%user%", sender)
+                            .replace("%userprefix", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix", Placeholder.stripToDiscord(user_suffix))
                             .replace("%message%", message)
                             .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()));
 
@@ -273,6 +279,8 @@ public class DonorChatCommand implements SimpleCommand {
 
                     channel.sendMessageFormat(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                                     .replace("%user%", sender)
+                                    .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                                    .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                                     .replace("%message%", message)
                                     .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()))
                             .queue();
@@ -323,29 +331,25 @@ public class DonorChatCommand implements SimpleCommand {
                 }
 
                 if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
-
                     EmbedBuilder embed = new EmbedBuilder();
-
                     embed.setTitle(VelocityDiscordConfig.DONORCHAT_EMBED_TITLE.get(String.class), null);
-
                     embed.setDescription(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                             .replace("%user%", sender)
+                            .replace("%userprefix%", "")
+                            .replace("%usersuffix%", "")
                             .replace("%message%", message)
                             .replace("%server%", ""));
-
                     embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_DONORCHATCOLOR.get(String.class)));
                     embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
-
                     channel.sendMessageEmbeds(embed.build()).queue();
-
                 } else {
-
                     channel.sendMessageFormat(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                                     .replace("%user%", sender)
+                                    .replace("%userprefix%", "")
+                                    .replace("%usersuffix%", "")
                                     .replace("%message%", message)
                                     .replace("%server%", ""))
                             .queue();
-
                 }
             }
 

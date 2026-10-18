@@ -37,14 +37,17 @@ public class ServerListener {
             if (event.getPlayer().hasPermission(VelocityConfig.STAFFCHAT_AFK_PERMISSION.get(String.class))) {
                 PlayerCache.getAfk().remove(event.getPlayer().getUniqueId());
                 if (VanishUtil.isVanished(event.getPlayer())) return;
+
+                String user_prefix;
+                String user_suffix;
                 if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
                     final LuckPerms api = LuckPermsProvider.get();
                     final User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
                     if (user == null) return;
                     final String prefix = user.getCachedData().getMetaData().getPrefix();
                     final String suffix = user.getCachedData().getMetaData().getSuffix();
-                    final String user_prefix = prefix == null ? "" : prefix;
-                    final String user_suffix = suffix == null ? "" : suffix;
+                    user_prefix = prefix == null ? "" : prefix;
+                    user_suffix = suffix == null ? "" : suffix;
                     if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
                         final String final_message = VelocityMessages.STAFFCHAT_AFK_OFF.get(String.class)
                                 .replace("%user%", event.getPlayer().getUsername())
@@ -72,6 +75,9 @@ public class ServerListener {
                                     new Placeholder("prefix", VelocityMessages.PREFIX.color())));
 
                 } else {
+
+                    user_prefix = "";
+                    user_suffix = "";
                     if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
                         final String final_message = VelocityMessages.STAFFCHAT_AFK_OFF.get(String.class)
                                 .replace("%user%", event.getPlayer().getUsername())
@@ -107,13 +113,17 @@ public class ServerListener {
                         EmbedBuilder embed = new EmbedBuilder();
                         embed.setTitle(VelocityDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
                         embed.setDescription(VelocityMessages.STAFF_DISCORD_AFK_OFF_MESSAGE_FORMAT.get(String.class)
-                                .replace("%user%", event.getPlayer().getUsername()));
+                                .replace("%user%", event.getPlayer().getUsername())
+                                .replace("%userprefix", Placeholder.stripToDiscord(user_prefix))
+                                .replace("%usersuffix", Placeholder.stripToDiscord(user_suffix)));
                         embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                         embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
                         channel.sendMessageEmbeds(embed.build()).queue();
                     } else {
                         channel.sendMessageFormat(VelocityMessages.STAFF_DISCORD_AFK_OFF_MESSAGE_FORMAT.get(String.class)
-                                        .replace("%user%", event.getPlayer().getUsername()))
+                                        .replace("%user%", event.getPlayer().getUsername())
+                                        .replace("%userprefix", Placeholder.stripToDiscord(user_prefix))
+                                        .replace("%usersuffix", Placeholder.stripToDiscord(user_suffix)))
                                 .queue();
                     }
                 }
@@ -130,18 +140,18 @@ public class ServerListener {
                         return;
                     }
 
-                    if (VanishUtil.isVanished(player)) {
-                        return;
-                    }
+                    if (VanishUtil.isVanished(player)) return;
 
+                    String user_prefix;
+                    String user_suffix;
                     if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
                         final LuckPerms api = LuckPermsProvider.get();
                         final User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
                         if (user == null) return;
                         final String prefix = user.getCachedData().getMetaData().getPrefix();
                         final String suffix = user.getCachedData().getMetaData().getSuffix();
-                        final String user_prefix = prefix == null ? "" : prefix;
-                        final String user_suffix = suffix == null ? "" : suffix;
+                        user_prefix = prefix == null ? "" : prefix;
+                        user_suffix = suffix == null ? "" : suffix;
                         if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
                             final String final_message = VelocityMessages.STAFF_SWITCH_MESSAGE_FORMAT.get(String.class)
                                     .replace("%user%", player.getUsername())
@@ -178,6 +188,8 @@ public class ServerListener {
                         String server;
                         if (event.getServer().getServerInfo() != null) server = event.getServer().getServerInfo().getName();
                         else server = "";
+                        user_prefix = "";
+                        user_suffix = "";
                         if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
                             final String final_message = VelocityMessages.STAFF_SWITCH_MESSAGE_FORMAT.color()
                                     .replace("%user%", player.getUsername())
@@ -217,6 +229,8 @@ public class ServerListener {
                             embed.setTitle(VelocityDiscordConfig.STAFFCHAT_EMBED_TITLE.get(String.class), null);
                             embed.setDescription(VelocityMessages.STAFF_DISCORD_SWITCH_MESSAGE_FORMAT.get(String.class)
                                     .replace("%user%", player.getUsername())
+                                    .replace("%userprefix", Placeholder.stripToDiscord(user_prefix))
+                                    .replace("%usersuffix", Placeholder.stripToDiscord(user_suffix))
                                     .replace("%from%", event.getPreviousServer().get().getServerInfo().getName())
                                     .replace("%server%", event.getServer().getServerInfo().getName()));
                             embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
@@ -225,6 +239,8 @@ public class ServerListener {
                         } else {
                             channel.sendMessageFormat(VelocityMessages.STAFF_DISCORD_SWITCH_MESSAGE_FORMAT.get(String.class)
                                     .replace("%user%", player.getUsername())
+                                    .replace("%userprefix", Placeholder.stripToDiscord(user_prefix))
+                                    .replace("%usersuffix", Placeholder.stripToDiscord(user_suffix))
                                     .replace("%from%", event.getPreviousServer().get().getServerInfo().getName())
                                     .replace("%server%", event.getServer().getServerInfo().getName())).queue();
                         }

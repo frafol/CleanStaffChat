@@ -84,6 +84,8 @@ public class ChatListener extends ListenerAdapter {
                 event.setResult(PlayerChatEvent.ChatResult.denied());
             }
 
+            String user_prefix;
+            String user_suffix;
             if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
                 LuckPerms api = LuckPermsProvider.get();
@@ -94,8 +96,8 @@ public class ChatListener extends ListenerAdapter {
                 }
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
-                final String user_prefix = prefix == null ? "" : prefix;
-                final String user_suffix = suffix == null ? "" : suffix;
+                user_prefix = prefix == null ? "" : prefix;
+                user_suffix = suffix == null ? "" : suffix;
 
                 if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
 
@@ -130,6 +132,8 @@ public class ChatListener extends ListenerAdapter {
 
             } else {
 
+                user_prefix = "";
+                user_suffix = "";
                 if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
 
                     final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
@@ -181,6 +185,8 @@ public class ChatListener extends ListenerAdapter {
 
                 embed.setDescription(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                         .replace("%user%", sender)
+                        .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                        .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                         .replace("%message%", message)
                         .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()));
 
@@ -270,7 +276,9 @@ public class ChatListener extends ListenerAdapter {
         if (!VelocityConfig.DOUBLE_MESSAGE.get(Boolean.class)) {
             event.setResult(PlayerChatEvent.ChatResult.denied());
         }
-                        
+
+        String user_prefix;
+        String user_suffix;
         if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
             LuckPerms api = LuckPermsProvider.get();
@@ -281,8 +289,8 @@ public class ChatListener extends ListenerAdapter {
             }
             final String prefix = user.getCachedData().getMetaData().getPrefix();
             final String suffix = user.getCachedData().getMetaData().getSuffix();
-            final String user_prefix = prefix == null ? "" : prefix;
-            final String user_suffix = suffix == null ? "" : suffix;
+            user_prefix = prefix == null ? "" : prefix;
+            user_suffix = suffix == null ? "" : suffix;
 
             if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
 
@@ -317,6 +325,8 @@ public class ChatListener extends ListenerAdapter {
 
         } else {
 
+            user_prefix = "";
+            user_suffix = "";
             if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
 
                 final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
@@ -368,6 +378,8 @@ public class ChatListener extends ListenerAdapter {
 
             embed.setDescription(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                     .replace("%user%", sender)
+                    .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                    .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                     .replace("%message%", message)
                     .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()));
 
@@ -380,6 +392,8 @@ public class ChatListener extends ListenerAdapter {
 
             channel.sendMessageFormat(VelocityMessages.DONORCHAT_FORMAT_DISCORD.get(String.class)
                             .replace("%user%", sender)
+                            .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                             .replace("%message%", message)
                             .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()))
                     .queue();

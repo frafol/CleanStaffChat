@@ -122,14 +122,16 @@ public class AdminChatCommand implements SimpleCommand {
                 }
             }
 
+            String user_prefix;
+            String user_suffix;
             if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
                 final LuckPerms api = LuckPermsProvider.get();
                 final User user = api.getUserManager().getUser(((Player) commandSource).getUniqueId());
                 if (user == null) return;
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
-                final String user_prefix = prefix == null ? "" : prefix;
-                final String user_suffix = suffix == null ? "" : suffix;
+                user_prefix = prefix == null ? "" : prefix;
+                user_suffix = suffix == null ? "" : suffix;
                 if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
                     final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
                     final String final_message = VelocityMessages.ADMINCHAT_FORMAT.get(String.class)
@@ -159,6 +161,8 @@ public class AdminChatCommand implements SimpleCommand {
                                 new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color())));
             } else {
 
+                user_prefix = "";
+                user_suffix = "";
                 if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
                     final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
                     final String final_message = VelocityMessages.ADMINCHAT_FORMAT.get(String.class)
@@ -198,6 +202,8 @@ public class AdminChatCommand implements SimpleCommand {
                 embed.setTitle(VelocityDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
                 embed.setDescription(VelocityMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                         .replace("%user%", sender)
+                        .replace("%userprefix", Placeholder.stripToDiscord(user_prefix))
+                        .replace("%usersuffix", Placeholder.stripToDiscord(user_suffix))
                         .replace("%message%", message)
                         .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()));
                 embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_ADMINCHATCOLOR.get(String.class)));
@@ -206,12 +212,16 @@ public class AdminChatCommand implements SimpleCommand {
             } else {
                 channel.sendMessageFormat(VelocityMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                                 .replace("%user%", sender)
+                                .replace("%userprefix", Placeholder.stripToDiscord(user_prefix))
+                                .replace("%usersuffix", Placeholder.stripToDiscord(user_suffix))
                                 .replace("%message%", message)
                                 .replace("%server%", ((Player) commandSource).getCurrentServer().get().getServer().getServerInfo().getName()))
                         .queue();
             }
 
         } else if (CONSOLE_CAN_TALK.get(Boolean.class)) {
+            String user_prefix = "";
+            String user_suffix = "";
             if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
                 final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
                 final String final_message = VelocityMessages.ADMINCHAT_CONSOLE_FORMAT.get(String.class)
@@ -248,6 +258,8 @@ public class AdminChatCommand implements SimpleCommand {
                     embed.setTitle(VelocityDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
                     embed.setDescription(VelocityMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                             .replace("%user%", sender)
+                            .replace("%userprefix", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix", Placeholder.stripToDiscord(user_suffix))
                             .replace("%message%", message)
                             .replace("%server%", ""));
                     embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_ADMINCHATCOLOR.get(String.class)));
@@ -255,7 +267,9 @@ public class AdminChatCommand implements SimpleCommand {
                     channel.sendMessageEmbeds(embed.build()).queue();
                 } else {
                     channel.sendMessageFormat(VelocityMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
-                                    .replace("%user%", sender)
+                            .replace("%user%", sender)
+                            .replace("%userprefix%", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix%", Placeholder.stripToDiscord(user_suffix))
                                     .replace("%message%", message)
                                     .replace("%server%", ""))
                             .queue();

@@ -72,24 +72,18 @@ public class ChatListener extends ListenerAdapter {
                 event.setResult(PlayerChatEvent.ChatResult.denied());
             }
 
+            String user_prefix;
+            String user_suffix;
             if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
-
                 LuckPerms api = LuckPermsProvider.get();
                 User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
-
-                if (user == null) {
-                    return;
-                }
-
+                if (user == null) return;
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
-                final String user_prefix = prefix == null ? "" : prefix;
-                final String user_suffix = suffix == null ? "" : suffix;
-
+                user_prefix = prefix == null ? "" : prefix;
+                user_suffix = suffix == null ? "" : suffix;
                 if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
-
                     final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
                     final String final_message = VelocityMessages.ADMINCHAT_FORMAT.get(String.class)
                             .replace("%user%", sender)
                             .replace("%message%", message)
@@ -99,7 +93,6 @@ public class ChatListener extends ListenerAdapter {
                             .replace("%server%", event.getPlayer().getCurrentServer().get().getServer().getServerInfo().getName())
                             .replace("%prefix%", VelocityMessages.ADMINPREFIX.color())
                             .replace("&", "§");
-
                     redisBungeeAPI.sendChannelMessage("CleanStaffChat-AdminMessage-RedisBungee", final_message);
                     return;
                 }
@@ -116,13 +109,12 @@ public class ChatListener extends ListenerAdapter {
                                 new Placeholder("usersuffix", ChatUtil.translateHex(user_suffix)),
                                 new Placeholder("server", event.getPlayer().getCurrentServer().get().getServerInfo().getName()),
                                 new Placeholder("prefix", VelocityMessages.ADMINPREFIX.color())));
-
             } else {
 
+                user_prefix = "";
+                user_suffix = "";
                 if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
-
                     final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
                     final String final_message = VelocityMessages.ADMINCHAT_FORMAT.get(String.class)
                             .replace("%user%", sender)
                             .replace("%message%", message)
@@ -132,7 +124,6 @@ public class ChatListener extends ListenerAdapter {
                             .replace("%server%", event.getPlayer().getCurrentServer().get().getServer().getServerInfo().getName())
                             .replace("%prefix%", VelocityMessages.ADMINPREFIX.color())
                             .replace("&", "§");
-
                     redisBungeeAPI.sendChannelMessage("CleanStaffChat-AdminMessage-RedisBungee", final_message);
                     return;
                 }
@@ -157,35 +148,27 @@ public class ChatListener extends ListenerAdapter {
             }
 
             final TextChannel channel = PLUGIN.getJda().JdaWorker().getTextChannelById(VelocityDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
-
-            if (channel == null) {
-                return;
-            }
-
+            if (channel == null) return;
             if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
-
                 EmbedBuilder embed = new EmbedBuilder();
-
                 embed.setTitle(VelocityDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
-
                 embed.setDescription(VelocityMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                         .replace("%user%", sender)
+                        .replace("%userprefix", Placeholder.stripToDiscord(user_prefix))
+                        .replace("%usersuffix", Placeholder.stripToDiscord(user_suffix))
                         .replace("%message%", message)
                         .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()));
-
                 embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_ADMINCHATCOLOR.get(String.class)));
                 embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
-
                 channel.sendMessageEmbeds(embed.build()).queue();
-
             } else {
-
                 channel.sendMessageFormat(VelocityMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                                 .replace("%user%", sender)
+                                .replace("%userprefix", Placeholder.stripToDiscord(user_prefix))
+                                .replace("%usersuffix", Placeholder.stripToDiscord(user_suffix))
                                 .replace("%message%", message)
                                 .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()))
                         .queue();
-
             }
         }
 
@@ -243,25 +226,19 @@ public class ChatListener extends ListenerAdapter {
         if (!VelocityConfig.DOUBLE_MESSAGE.get(Boolean.class)) {
             event.setResult(PlayerChatEvent.ChatResult.denied());
         }
-                        
-        if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
 
+        String user_prefix;
+        String user_suffix;
+        if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
             LuckPerms api = LuckPermsProvider.get();
             User user = api.getUserManager().getUser(event.getPlayer().getUniqueId());
-
-            if (user == null) {
-                return;
-            }
-
+            if (user == null) return;
             final String prefix = user.getCachedData().getMetaData().getPrefix();
             final String suffix = user.getCachedData().getMetaData().getSuffix();
-            final String user_prefix = prefix == null ? "" : prefix;
-            final String user_suffix = suffix == null ? "" : suffix;
-
+            user_prefix = prefix == null ? "" : prefix;
+            user_suffix = suffix == null ? "" : suffix;
             if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
-
                 final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
                 final String final_message = VelocityMessages.ADMINCHAT_FORMAT.get(String.class)
                         .replace("%user%", sender)
                         .replace("%message%", message)
@@ -271,7 +248,6 @@ public class ChatListener extends ListenerAdapter {
                         .replace("%server%", event.getPlayer().getCurrentServer().get().getServer().getServerInfo().getName())
                         .replace("%prefix%", VelocityMessages.ADMINPREFIX.color())
                         .replace("&", "§");
-
                 redisBungeeAPI.sendChannelMessage("CleanStaffChat-AdminMessage-RedisBungee", final_message);
                 return;
             }
@@ -291,10 +267,10 @@ public class ChatListener extends ListenerAdapter {
 
         } else {
 
+            user_prefix = "";
+            user_suffix = "";
             if (PLUGIN.getServer().getPluginManager().isLoaded("redisbungee") && VelocityRedis.REDIS_ENABLE.get(Boolean.class)) {
-
                 final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
-
                 final String final_message = VelocityMessages.ADMINCHAT_FORMAT.get(String.class)
                         .replace("%user%", sender)
                         .replace("%message%", message)
@@ -304,7 +280,6 @@ public class ChatListener extends ListenerAdapter {
                         .replace("%server%", event.getPlayer().getCurrentServer().get().getServer().getServerInfo().getName())
                         .replace("%prefix%", VelocityMessages.ADMINPREFIX.color())
                         .replace("&", "§");
-
                 redisBungeeAPI.sendChannelMessage("CleanStaffChat-AdminMessage-RedisBungee", final_message);
                 return;
             }
@@ -329,35 +304,27 @@ public class ChatListener extends ListenerAdapter {
         }
 
         final TextChannel channel = PLUGIN.getJda().JdaWorker().getTextChannelById(VelocityDiscordConfig.ADMIN_CHANNEL_ID.get(String.class));
-
-        if (channel == null) {
-            return;
-        }
-
+        if (channel == null) return;
         if (VelocityDiscordConfig.USE_EMBED.get(Boolean.class)) {
-
             EmbedBuilder embed = new EmbedBuilder();
-
             embed.setTitle(VelocityDiscordConfig.ADMINCHAT_EMBED_TITLE.get(String.class), null);
-
             embed.setDescription(VelocityMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                     .replace("%user%", sender)
+                    .replace("%userprefix", Placeholder.stripToDiscord(user_prefix))
+                    .replace("%usersuffix", Placeholder.stripToDiscord(user_suffix))
                     .replace("%message%", message)
                     .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()));
-
             embed.setColor(Color.getColor(VelocityDiscordConfig.EMBEDS_ADMINCHATCOLOR.get(String.class)));
             embed.setFooter(VelocityDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
-
             channel.sendMessageEmbeds(embed.build()).queue();
-
         } else {
-
             channel.sendMessageFormat(VelocityMessages.ADMINCHAT_FORMAT_DISCORD.get(String.class)
                             .replace("%user%", sender)
+                            .replace("%userprefix", Placeholder.stripToDiscord(user_prefix))
+                            .replace("%usersuffix", Placeholder.stripToDiscord(user_suffix))
                             .replace("%message%", message)
                             .replace("%server%", event.getPlayer().getCurrentServer().get().getServerInfo().getName()))
                     .queue();
-
         }
     }
 

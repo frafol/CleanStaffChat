@@ -243,9 +243,9 @@ public class CleanStaffChat {
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("6.5.0")
+                .version("6.7.0")
                 .relocate(kotlin)
-                .url("https://github.com/discord-jda/JDA/releases/download/v6.5.0/JDA-6.5.0-withDependencies-min.jar")
+                .url("https://github.com/discord-jda/JDA/releases/download/v6.7.0/JDA-6.7.0-withDependencies-min.jar")
                 .build();
 
         velocityLibraryManager.addMavenCentral();

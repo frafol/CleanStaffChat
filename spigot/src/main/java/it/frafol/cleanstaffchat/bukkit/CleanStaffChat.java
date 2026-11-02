@@ -96,9 +96,9 @@ public class CleanStaffChat extends JavaPlugin {
         Library discord = Library.builder()
                 .groupId("net{}dv8tion")
                 .artifactId("JDA")
-                .version("6.0.0-rc.4")
+                .version("6.7.0")
                 .relocate("kotlin", "it{}frafol{}libs{}kotlin")
-                .url("https://github.com/discord-jda/JDA/releases/download/v6.0.0-rc.4/JDA-6.0.0-rc.4-withDependencies-min.jar")
+                .url("https://github.com/discord-jda/JDA/releases/download/v6.7.0/JDA-6.7.0-withDependencies-min.jar")
                 .build();
 
         Library scheduler = Library.builder()

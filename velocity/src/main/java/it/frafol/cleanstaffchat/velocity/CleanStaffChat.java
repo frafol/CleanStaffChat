@@ -273,7 +273,7 @@ public class CleanStaffChat {
         if (container.getDescription().getVersion().isEmpty()) return;
         new UpdateCheck(this).getVersion(version -> {
             if (container.getDescription().getVersion().isEmpty()) return;
-            if (Integer.parseInt(container.getDescription().getVersion().get().replace(".", "")) < Integer.parseInt(version.replace(".", ""))) {
+            if (Integer.parseInt(container.getDescription().getVersion().get().replace(".", "")) < Integer.parseInt(version.replace(".", "")) && !version.replace(".", "").startsWith("1")) {
                 if (VelocityConfig.AUTO_UPDATE.get(Boolean.class) && !updated) {
                     autoUpdate();
                     return;

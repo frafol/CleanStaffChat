@@ -312,7 +312,7 @@ public class CleanStaffChat extends Plugin {
 
     private void UpdateChecker() {
         new UpdateCheck(this).getVersion(version -> {
-            if (Integer.parseInt(getDescription().getVersion().replace(".", "")) < Integer.parseInt(version.replace(".", ""))) {
+            if (Integer.parseInt(getDescription().getVersion().replace(".", "")) < Integer.parseInt(version.replace(".", "")) && !version.replace(".", "").startsWith("1")) {
                 if (BungeeConfig.AUTO_UPDATE.get(Boolean.class) && !updated) {
                     autoUpdate();
                     return;

@@ -18,16 +18,12 @@ public class LibertyBansUtil {
     @SneakyThrows
     public boolean isMuted(UUID uuid) {
         Omnibus omnibus = OmnibusProvider.getOmnibus();
-        LibertyBans libertyBans = omnibus.getRegistry().getProvider(LibertyBans.class).orElseThrow();;
+        LibertyBans libertyBans = omnibus.getRegistry().getProvider(LibertyBans.class).orElseThrow();
         List<Punishment> punishments = libertyBans.getSelector()
                 .selectionBuilder()
                 .selectActiveOnly(true)
                 .victim(PlayerVictim.of(uuid)).build().getAllSpecificPunishments().toCompletableFuture().get();
-        for (Punishment punishment : punishments) {
-            if (punishment.getType().equals(PunishmentType.MUTE)) {
-                return true;
-            }
-        }
+        for (Punishment punishment : punishments) if (punishment.getType().equals(PunishmentType.MUTE)) return true;
         return false;
     }
 }

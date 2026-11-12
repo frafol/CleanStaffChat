@@ -37,10 +37,7 @@ public class ChatUtil {
     }
 
     public String applyPlaceholder(String s, Placeholder @NotNull ... placeholders) {
-        for (Placeholder placeholder : placeholders) {
-            s = s.replace(placeholder.getKey(), placeholder.getValue());
-        }
-
+        for (Placeholder placeholder : placeholders) s = s.replace(placeholder.getKey(), placeholder.getValue());
         return s;
     }
 
@@ -88,26 +85,16 @@ public class ChatUtil {
     }
 
     public String convertHexColors(String message) {
-
-        if (VelocityConfig.MINIMESSAGE.get(Boolean.class)) {
-            return translateMiniMessage(message);
-        }
-
-        if (!containsHexColor(message)) {
-            return message;
-        }
-
+        if (VelocityConfig.MINIMESSAGE.get(Boolean.class)) return translateMiniMessage(message);
+        if (!containsHexColor(message)) return message;
         Pattern hexPattern = Pattern.compile("(#[A-Fa-f0-9]{6}|<#[A-Fa-f0-9]{6}>|&#[A-Fa-f0-9]{6})");
         Matcher matcher = hexPattern.matcher(message);
         StringBuilder buffer = new StringBuilder();
         while (matcher.find()) {
             String hexCode = matcher.group();
             String colorCode = hexCode.substring(1, 7);
-            if (hexCode.startsWith("<#") && hexCode.endsWith(">")) {
-                colorCode = hexCode.substring(2, 8);
-            } else if (hexCode.startsWith("&#")) {
-                colorCode = hexCode.substring(2, 8);
-            }
+            if (hexCode.startsWith("<#") && hexCode.endsWith(">")) colorCode = hexCode.substring(2, 8);
+            else if (hexCode.startsWith("&#")) colorCode = hexCode.substring(2, 8);
             String minecraftColorCode = translateHexToMinecraftColorCode(colorCode);
             matcher.appendReplacement(buffer, minecraftColorCode);
         }
@@ -127,37 +114,24 @@ public class ChatUtil {
     }
 
     public String translateMiniMessage(String input) {
-        Component raw = LegacyComponentSerializer.legacyAmpersand()
-                .deserialize(input);
-        String intermediate = MiniMessage.miniMessage()
-                .serialize(raw);
-        intermediate = intermediate.replace("§", "")
-                .replace("&", "");
-        Component parsed = MiniMessage.miniMessage()
-                .deserialize(intermediate);
-        return LegacyComponentSerializer.legacyAmpersand()
-                .serialize(parsed);
+        Component raw = LegacyComponentSerializer.legacyAmpersand().deserialize(input);
+        String intermediate = MiniMessage.miniMessage().serialize(raw);
+        intermediate = intermediate.replace("§", "").replace("&", "");
+        Component parsed = MiniMessage.miniMessage().deserialize(intermediate);
+        return LegacyComponentSerializer.legacyAmpersand().serialize(parsed);
     }
 
     private boolean containsHexColor(String message) {
         String[] hexColorPattern = new String[]{"#[a-fA-F0-9]{6}", "&#[a-fA-F0-9]{6}", "<#[a-fA-F0-9]]{6}>"};
-        for (String pattern : hexColorPattern) {
-            if (Pattern.compile(pattern).matcher(message).find()) {
-                return true;
-            }
-        }
+        for (String pattern : hexColorPattern) if (Pattern.compile(pattern).matcher(message).find()) return true;
         return false;
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     public void sendChannelMessage(Player player, boolean cancel) {
-        if (!VelocityConfig.DOUBLE_MESSAGE.get(Boolean.class)) {
-            return;
-        }
+        if (!VelocityConfig.DOUBLE_MESSAGE.get(Boolean.class)) return;
         final ByteArrayDataOutput buf = ByteStreams.newDataOutput();
         buf.writeUTF(String.valueOf(cancel));
         buf.writeUTF(player.getUsername());
-        player.getCurrentServer().ifPresent(sv ->
-                sv.sendPluginMessage(CleanStaffChat.channel, buf.toByteArray()));
+        player.getCurrentServer().ifPresent(sv -> sv.sendPluginMessage(CleanStaffChat.channel, buf.toByteArray()));
     }
 }

@@ -11,144 +11,82 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Runtime state that is not tied to a chat channel (per-channel state lives in ChatChannel),
+ * plus the color helpers. All sets are thread-safe: chat events and Discord callbacks run on different threads.
+ */
 @UtilityClass
 public class PlayerCache {
 
     @Getter
-    private final HashSet<UUID> toggled = new HashSet<>();
+    private final Set<UUID> afk = ConcurrentHashMap.newKeySet();
 
     @Getter
-    private final HashSet<UUID> toggled_2 = new HashSet<>();
+    private final Set<UUID> cooldown = ConcurrentHashMap.newKeySet();
 
     @Getter
-    private final HashSet<UUID> toggled_admin = new HashSet<>();
+    private final Set<String> cooldown_discord = ConcurrentHashMap.newKeySet();
 
     @Getter
-    private final HashSet<UUID> toggled_2_admin = new HashSet<>();
+    private final Set<String> mutedservers = ConcurrentHashMap.newKeySet();
 
-    @Getter
-    private final HashSet<UUID> toggled_donor = new HashSet<>();
+    private final Pattern LEGACY_CODE = Pattern.compile("&[0-9a-fk-or]");
 
-    @Getter
-    private final HashSet<UUID> toggled_2_donor = new HashSet<>();
-
-    @Getter
-    private final HashSet<UUID> afk = new HashSet<>();
-
-    @Getter
-    private final HashSet<UUID> cooldown = new HashSet<>();
-
-    @Getter
-    private final HashSet<String> muted = new HashSet<>();
-
-    @Getter
-    private final HashSet<String> muted_admin = new HashSet<>();
-
-    @Getter
-    private final HashSet<String> muted_donor = new HashSet<>();
-
-    @Getter
-    private final HashSet<String> cooldown_discord = new HashSet<>();
-
-    @Getter
-    private final HashSet<String> mutedservers = new HashSet<>();
+    private final Pattern HEX_COLOR = Pattern.compile("(#[A-Fa-f0-9]{6}|<#[A-Fa-f0-9]{6}>|&#[A-Fa-f0-9]{6})");
 
     public boolean hasColorCodes(@NotNull String message) {
-        return message.contains("&0") ||
-                message.contains("&1") ||
-                message.contains("&2") ||
-                message.contains("&3") ||
-                message.contains("&4") ||
-                message.contains("&5") ||
-                message.contains("&6") ||
-                message.contains("&7") ||
-                message.contains("&8") ||
-                message.contains("&9") ||
-                message.contains("&a") ||
-                message.contains("&b") ||
-                message.contains("&c") ||
-                message.contains("&d") ||
-                message.contains("&e") ||
-                message.contains("&f") ||
-                message.contains("&k") ||
-                message.contains("&l") ||
-                message.contains("&m") ||
-                message.contains("&n") ||
-                message.contains("&o") ||
-                message.contains("&r");
+        return LEGACY_CODE.matcher(message).find();
     }
 
     public String translateHex(String string) {
-        String hex = convertHexColors(string);
-        return hex.replace("&", "§");
+        return convertHexColors(string).replace("&", "§");
     }
 
     private String convertHexColors(String message) {
         if (BungeeConfig.MINIMESSAGE.get(Boolean.class)) return formatMiniMessage(message);
-        if (!containsHexColor(message)) return message;
-        Pattern hexPattern = Pattern.compile("(#[A-Fa-f0-9]{6}|<#[A-Fa-f0-9]{6}>|&#[A-Fa-f0-9]{6})");
-        Matcher matcher = hexPattern.matcher(message);
-        StringBuilder buffer = new StringBuilder();
+
+        final Matcher matcher = HEX_COLOR.matcher(message);
+        final StringBuilder buffer = new StringBuilder();
         while (matcher.find()) {
-            String hexCode = matcher.group();
-            String colorCode = hexCode.substring(1, 7);
-            if (hexCode.startsWith("<#") && hexCode.endsWith(">")) {
-                colorCode = hexCode.substring(2, 8);
-            } else if (hexCode.startsWith("&#")) {
-                colorCode = hexCode.substring(2, 8);
-            }
-            String minecraftColorCode = translateHexToMinecraftColorCode(colorCode);
-            matcher.appendReplacement(buffer, minecraftColorCode);
+            final String hexCode = matcher.group();
+            final String digits = hexCode.startsWith("<#") || hexCode.startsWith("&#")
+                    ? hexCode.substring(2, 8) : hexCode.substring(1, 7);
+            matcher.appendReplacement(buffer, Matcher.quoteReplacement(toLegacyHex(digits)));
         }
         matcher.appendTail(buffer);
         return buffer.toString();
     }
 
     public String formatMiniMessage(String input) {
-        Component raw = LegacyComponentSerializer.legacyAmpersand()
-                .deserialize(input);
-        String intermediate = MiniMessage.miniMessage()
-                .serialize(raw);
-        intermediate = intermediate.replace("§", "")
+        final Component raw = LegacyComponentSerializer.legacyAmpersand().deserialize(input);
+        final String intermediate = MiniMessage.miniMessage().serialize(raw)
+                .replace("§", "")
                 .replace("&", "");
-        Component parsed = MiniMessage.miniMessage()
-                .deserialize(intermediate);
-        return LegacyComponentSerializer.legacyAmpersand()
-                .serialize(parsed);
+        final Component parsed = MiniMessage.miniMessage().deserialize(intermediate);
+        return LegacyComponentSerializer.legacyAmpersand().serialize(parsed);
     }
 
-    private String translateHexToMinecraftColorCode(String hex) {
-        char[] chars = hex.toCharArray();
-        return "§x" +
-                '§' + chars[0] +
-                '§' + chars[1] +
-                '§' + chars[2] +
-                '§' + chars[3] +
-                '§' + chars[4] +
-                '§' + chars[5];
-    }
-
-    private boolean containsHexColor(String message) {
-        String[] hexColorPattern = new String[]{"#[a-fA-F0-9]{6}", "&#[a-fA-F0-9]{6}", "<#[a-fA-F0-9]]{6}>"};
-        for (String pattern : hexColorPattern) {
-            if (Pattern.compile(pattern).matcher(message).find()) {
-                return true;
-            }
+    private String toLegacyHex(String digits) {
+        final StringBuilder builder = new StringBuilder("§x");
+        for (char digit : digits.toCharArray()) {
+            builder.append('§').append(digit);
         }
-        return false;
+        return builder.toString();
     }
 
+    /** Tells the backend server (kick workaround) whether it must cancel the player's chat messages. */
     public void sendChannelMessage(ProxiedPlayer player, boolean cancel) {
         if (!BungeeConfig.WORKAROUND_KICK.get(Boolean.class)) return;
+        if (player.getServer() == null) return;
         final ByteArrayDataOutput buf = ByteStreams.newDataOutput();
         buf.writeUTF(String.valueOf(cancel));
         buf.writeUTF(player.getName());
-        if (player.getServer() == null) return;
         player.getServer().sendData("cleansc:cancel", buf.toByteArray());
     }
 }

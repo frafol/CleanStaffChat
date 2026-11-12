@@ -6,6 +6,7 @@ import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotDiscordConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
+import it.frafol.cleanstaffchat.bukkit.objects.DiscordBridge;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -111,7 +112,7 @@ public class ListChatListener extends ListenerAdapter {
                 EmbedBuilder embed = new EmbedBuilder();
                 embed.setTitle(SpigotDiscordConfig.STAFFLIST_EMBED_TITLE.get(String.class), null);
                 embed.setDescription(sb.toString());
-                embed.setColor(Color.getColor(SpigotDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
+                embed.setColor(DiscordBridge.parseColor(SpigotDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                 embed.setFooter(SpigotDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
                 event.getChannel().sendMessageEmbeds(embed.build()).queue();
             } else {

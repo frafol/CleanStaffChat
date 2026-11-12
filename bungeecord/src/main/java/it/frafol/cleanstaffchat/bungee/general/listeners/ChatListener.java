@@ -21,25 +21,12 @@ public class ChatListener implements Listener {
 
     @EventHandler
     public void onChat(ChatEvent event) {
-
         ProxiedPlayer player = (ProxiedPlayer) event.getSender();
-
-        if (player.getServer() == null) {
-            return;
-        }
-
+        if (player.getServer() == null) return;
         Server server = player.getServer();
-
         if (PlayerCache.getMutedservers().contains(server.getInfo().getName()) || PlayerCache.getMutedservers().contains("all")) {
-
-            if (player.hasPermission(BungeeConfig.MUTECHAT_BYPASS_PERMISSION.get(String.class))) {
-                return;
-            }
-
-            if (event.getMessage().startsWith("/")) {
-                return;
-            }
-
+            if (player.hasPermission(BungeeConfig.MUTECHAT_BYPASS_PERMISSION.get(String.class))) return;
+            if (event.getMessage().startsWith("/")) return;
             player.sendMessage(TextComponent.fromLegacy(BungeeMessages.STAFFCHAT_MUTED_ERROR.color()
                     .replace("%prefix%", BungeeMessages.GLOBALPREFIX.color())));
             event.setCancelled(true);

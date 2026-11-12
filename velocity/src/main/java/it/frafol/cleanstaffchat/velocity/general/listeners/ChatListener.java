@@ -22,30 +22,14 @@ public class ChatListener extends ListenerAdapter {
 
     @Subscribe(order = PostOrder.FIRST)
     public void onChat(PlayerChatEvent event) {
-
         Player player = event.getPlayer();
-
-        if (!player.getCurrentServer().isPresent()) {
-            return;
-        }
-
+        if (player.getCurrentServer().isEmpty()) return;
         RegisteredServer server = player.getCurrentServer().get().getServer();
         if (PlayerCache.getMutedservers().contains(server.getServerInfo().getName()) || PlayerCache.getMutedservers().contains("all")) {
-
-            if (player.hasPermission(VelocityConfig.MUTECHAT_BYPASS_PERMISSION.get(String.class))) {
-                return;
-            }
-
-            if (event.getMessage().startsWith("/")) {
-                return;
-            }
-
-            VelocityMessages.STAFFCHAT_MUTED_ERROR.send(player,
-                    new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
-            if (!VelocityConfig.DOUBLE_MESSAGE.get(Boolean.class)) {
-                            event.setResult(PlayerChatEvent.ChatResult.denied());
-                        }
-                        
+            if (player.hasPermission(VelocityConfig.MUTECHAT_BYPASS_PERMISSION.get(String.class))) return;
+            if (event.getMessage().startsWith("/")) return;
+            VelocityMessages.STAFFCHAT_MUTED_ERROR.send(player, new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
+            if (!VelocityConfig.DOUBLE_MESSAGE.get(Boolean.class)) event.setResult(PlayerChatEvent.ChatResult.denied());
         }
     }
 }

@@ -1,6 +1,7 @@
 package it.frafol.cleanstaffchat.bungee.objects;
 
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
+import it.frafol.cleanstaffchat.bungee.channel.ChatChannel;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -22,8 +23,6 @@ public class SwitchUtil implements Listener {
     }
 
     private boolean toggled(ProxiedPlayer player) {
-        return PlayerCache.getToggled_2().contains(player.getUniqueId()) ||
-                PlayerCache.getToggled_2_admin().contains(player.getUniqueId()) ||
-                PlayerCache.getToggled_2_donor().contains(player.getUniqueId());
+        return ChatChannel.isTalkingAnywhere(player.getUniqueId());
     }
 }

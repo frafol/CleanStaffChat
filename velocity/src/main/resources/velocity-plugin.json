@@ -1,7 +1,7 @@
 {
   "id": "cleanstaffchat",
   "name": "CleanStaffChat",
-  "version": "1.17.8",
+  "version": "2.0.0",
   "main": "it.frafol.cleanstaffchat.velocity.CleanStaffChat",
   "url": "github.com/frafol",
   "authors": [

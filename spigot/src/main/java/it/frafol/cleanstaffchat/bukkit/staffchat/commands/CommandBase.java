@@ -12,18 +12,25 @@ import java.util.List;
 
 public abstract class CommandBase extends Command implements PluginIdentifiableCommand {
 
-    protected final CleanStaffChat plugin;
+    /** Creates a command from the labels configured in aliases.yml (first label = name, others = aliases). */
+    @FunctionalInterface
+    public interface Factory {
+        CommandBase create(CleanStaffChat plugin, String name, String usageMessage, List<String> aliases);
+    }
 
-    public abstract boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args);
+    protected final CleanStaffChat plugin;
 
     protected CommandBase(CleanStaffChat plugin, String name, String usageMessage, List<String> aliases) {
         super(name, "", usageMessage, aliases);
         this.plugin = plugin;
     }
 
+    @Override
+    public abstract boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args);
+
     protected boolean inGameCheck(CommandSender sender) {
-       return inGameCheck(sender, (SpigotMessages.PLAYER_ONLY.color()
-                    .replace("%prefix%", SpigotMessages.PREFIX.color())));
+        return inGameCheck(sender, SpigotMessages.PLAYER_ONLY.color()
+                .replace("%prefix%", SpigotMessages.PREFIX.color()));
     }
 
     protected boolean inGameCheck(CommandSender sender, String message) {
@@ -38,5 +45,4 @@ public abstract class CommandBase extends Command implements PluginIdentifiableC
     public CleanStaffChat getPlugin() {
         return plugin;
     }
-
 }

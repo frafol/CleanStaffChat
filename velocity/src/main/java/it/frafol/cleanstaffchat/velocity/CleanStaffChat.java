@@ -13,15 +13,19 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.ChannelIdentifier;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
-import it.frafol.cleanstaffchat.velocity.adminchat.commands.AdminChatCommand;
-import it.frafol.cleanstaffchat.velocity.donorchat.commands.DonorChatCommand;
+import it.frafol.cleanstaffchat.velocity.channel.ChannelCommand;
+import it.frafol.cleanstaffchat.velocity.channel.ChannelListener;
+import it.frafol.cleanstaffchat.velocity.channel.ChannelMuteCommand;
+import it.frafol.cleanstaffchat.velocity.channel.ChannelToggleCommand;
+import it.frafol.cleanstaffchat.velocity.channel.ChatChannel;
+import it.frafol.cleanstaffchat.velocity.objects.DiscordBridge;
 import it.frafol.cleanstaffchat.velocity.enums.*;
 import it.frafol.cleanstaffchat.velocity.general.commands.MuteChatCommand;
 import it.frafol.cleanstaffchat.velocity.hooks.RedisListener;
 import it.frafol.cleanstaffchat.velocity.objects.JdaBuilder;
 import it.frafol.cleanstaffchat.velocity.objects.TextFile;
 import it.frafol.cleanstaffchat.velocity.staffchat.commands.*;
-import it.frafol.cleanstaffchat.velocity.staffchat.listeners.ChatListener;
+import it.frafol.cleanstaffchat.velocity.staffchat.listeners.StaffListDiscordListener;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.JoinListener;
 import it.frafol.cleanstaffchat.velocity.staffchat.listeners.ServerListener;
 import it.frafol.cleanstaffchat.velocity.utils.LibertyBansUtil;
@@ -52,7 +56,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "cleanstaffchat",
         name = "CleanStaffChat",
-        version = "1.17.8",
+        version = "2.0.0",
         dependencies = {@Dependency(id = "redisbungee", optional = true), @Dependency(id = "unsignedvelocity", optional = true), @Dependency(id = "signedvelocity", optional = true), @Dependency(id = "spicord", optional = true), @Dependency(id = "leaf", optional = true), @Dependency(id = "miniplaceholders", optional = true), @Dependency(id = "clientcatcher", optional = true)},
         url = "github.com/frafol",
         authors = "frafol"
@@ -104,13 +108,15 @@ public class CleanStaffChat {
         instance = this;
         loadLibraries();
 
-        getLogger().info("\n  ___  __    ____    __    _  _    ___   ___ \n" +
-                " / __)(  )  ( ___)  /__\\  ( \\( )  / __) / __)\n" +
-                "( (__  )(__  )__)  /(__)\\  )  (   \\__ \\( (__ \n" +
-                " \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)\n");
+        getLogger().info("""
+                
+                  ___  __    ____    __    _  _    ___   ___\s
+                 / __)(  )  ( ___)  /__\\  ( \\( )  / __) / __)
+                ( (__  )(__  )__)  /(__)\\  )  (   \\__ \\( (__\s
+                 \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)
+                """);
 
-        logger.info("Server version: " + getServer().getVersion().getVersion());
-        checkIncompatibilities();
+        logger.info("Server version: {}", getServer().getVersion().getVersion());
 
         loadFiles();
         updateConfig();
@@ -142,17 +148,10 @@ public class CleanStaffChat {
             registerStaffList();
         }
 
-        if (VelocityConfig.STAFFCHAT.get(Boolean.class)) {
-            registerStaffChat();
+        for (ChatChannel channelEntry : ChatChannel.values()) {
+            registerChannel(channelEntry);
         }
-
-        if (VelocityConfig.DONORCHAT.get(Boolean.class)) {
-            registerDonorChat();
-        }
-
-        if (VelocityConfig.ADMINCHAT.get(Boolean.class)) {
-            registerAdminChat();
-        }
+        registerStaffExtras();
 
         if (VelocityConfig.MUTECHAT_MODULE.get(Boolean.class)) {
             registerMuteChat();
@@ -190,22 +189,16 @@ public class CleanStaffChat {
 
     @Subscribe
     public void onProxyShutdown(ProxyShutdownEvent event) throws LoginException {
-        getLogger().info("Deleting instances...");
+        logger.info("Deleting instances...");
         server.getChannelRegistrar().unregister(channel);
 
-        if (VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-            jda.getJda().shutdownNow();
+        if (jda != null) {
+            jda.JdaWorker().shutdownNow();
         }
 
         instance = null;
         configTextFile = null;
         logger.info("Successfully disabled.");
-    }
-
-    private void checkIncompatibilities() {
-        if (getSpicord()) {
-            logger.error("Spicord found, this plugin is completely unsupported and you won't receive any support.");
-        }
     }
 
     private void loadFiles() {
@@ -279,6 +272,7 @@ public class CleanStaffChat {
     private void UpdateChecker() {
         if (container.getDescription().getVersion().isEmpty()) return;
         new UpdateCheck(this).getVersion(version -> {
+            if (container.getDescription().getVersion().isEmpty()) return;
             if (Integer.parseInt(container.getDescription().getVersion().get().replace(".", "")) < Integer.parseInt(version.replace(".", ""))) {
                 if (VelocityConfig.AUTO_UPDATE.get(Boolean.class) && !updated) {
                     autoUpdate();
@@ -299,7 +293,6 @@ public class CleanStaffChat {
     @SneakyThrows
     private void updateConfig() {
         if (container.getDescription().getVersion().isPresent() && (!container.getDescription().getVersion().get().equals(VelocityVersion.VERSION.get(String.class)))) {
-
             logger.info("Creating new §dconfigurations...");
             YamlUpdater.create(new File(path + "/config.yml"), FileUtils.findFile("https://raw.githubusercontent.com/frafol/CleanStaffChat/refs/heads/main/velocity/src/main/resources/config.yml"))
                     .backup(true)
@@ -328,33 +321,26 @@ public class CleanStaffChat {
     @SuppressWarnings("removal")
     private void registerRedisBungee() {
         final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
+        for (ChatChannel channelEntry : ChatChannel.values()) {
+            redisBungeeAPI.registerPubSubChannels(channelEntry.redisMessageChannel);
+            redisBungeeAPI.registerPubSubChannels(channelEntry.redisMuteChannel);
+        }
+        redisBungeeAPI.registerPubSubChannels(RedisListener.STAFF_AFK_CHANNEL);
+        redisBungeeAPI.registerPubSubChannels(RedisListener.STAFF_OTHER_CHANNEL);
         server.getEventManager().register(this, new RedisListener(this));
-        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffMessage-RedisBungee");
-        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-AdminMessage-RedisBungee");
-        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-DonorMessage-RedisBungee");
-        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffAFKMessage-RedisBungee");
-        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffOtherMessage-RedisBungee");
-        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffAFKMessage-RedisBungee");
-        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteStaffChat-RedisBungee");
-        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteAdminChat-RedisBungee");
-        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteDonorChat-RedisBungee");
     }
 
     @SneakyThrows
     private void registerStaffList() {
 
-        if (!server.getPluginManager().isLoaded("luckperms")) {
+        if (!getLuckPerms()) {
             logger.warn("You need LuckPermsVelocity to use StaffList.");
             return;
         }
 
-        if (VelocityCommandsConfig.STAFFLIST.getStringList() == null) {
-            return;
-        }
-
+        if (VelocityCommandsConfig.STAFFLIST.getStringList() == null) return;
         final String[] aliases_stafflist = VelocityCommandsConfig.STAFFLIST.getStringList().toArray(new String[0]);
         if (aliases_stafflist.length == 0) return;
-
         server.getCommandManager().register(server.getCommandManager()
                 .metaBuilder(VelocityCommandsConfig.STAFFLIST.getStringList().get(0))
                 .aliases(aliases_stafflist)
@@ -362,185 +348,71 @@ public class CleanStaffChat {
     }
 
     @SneakyThrows
-    private void registerStaffChat() {
-
-        if (VelocityCommandsConfig.STAFFCHAT.getStringList() != null) {
-            final String[] aliases_staffchat = VelocityCommandsConfig.STAFFCHAT.getStringList().toArray(new String[0]);
-
-            server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder(VelocityCommandsConfig.STAFFCHAT.getStringList().get(0))
-                    .aliases(aliases_staffchat)
-                    .build(), new StaffChatCommand(this));
+    private void registerChannel(ChatChannel channelEntry) {
+        if (!channelEntry.isEnabled()) return;
+        registerCommand(channelEntry.aliases.main, labels -> new ChannelCommand(this, channelEntry));
+        registerCommand(channelEntry.aliases.mute, labels -> new ChannelMuteCommand(channelEntry));
+        registerCommand(channelEntry.aliases.toggle, labels -> new ChannelToggleCommand(channelEntry));
+        final ChannelListener listener = new ChannelListener(this, channelEntry);
+        server.getEventManager().register(this, listener);
+        if (jda != null && DiscordBridge.isActive(channelEntry.settings.discordModule)) {
+            jda.JdaWorker().addEventListener(listener);
         }
+    }
 
-        if (VelocityCommandsConfig.STAFFCHAT_MUTE.getStringList() != null) {
-            final String[] aliases_staffchatmute = VelocityCommandsConfig.STAFFCHAT_MUTE.getStringList().toArray(new String[0]);
-
-            server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder(VelocityCommandsConfig.STAFFCHAT_MUTE.getStringList().get(0))
-                    .aliases(aliases_staffchatmute)
-                    .build(), new MuteCommand(this));
-        }
-
-        if (VelocityCommandsConfig.STAFFCHAT_TOGGLE.getStringList() != null) {
-            final String[] aliases_staffchattoggle = VelocityCommandsConfig.STAFFCHAT_TOGGLE.getStringList().toArray(new String[0]);
-
-            server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder(VelocityCommandsConfig.STAFFCHAT_TOGGLE.getStringList().get(0))
-                    .aliases(aliases_staffchattoggle)
-                    .build(), new ToggleCommand(this));
-        }
-
-        if (VelocityCommandsConfig.STAFFCHAT_AFK.getStringList() != null) {
-            final String[] aliases_staffchatafk = VelocityCommandsConfig.STAFFCHAT_AFK.getStringList().toArray(new String[0]);
-
-            server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder(VelocityCommandsConfig.STAFFCHAT_AFK.getStringList().get(0))
-                    .aliases(aliases_staffchatafk)
-                    .build(), new AFKCommand(this));
-        }
-
+    private void registerStaffExtras() {
+        if (!ChatChannel.STAFF.isEnabled()) return;
+        registerCommand(VelocityCommandsConfig.STAFFCHAT_AFK, labels -> new it.frafol.cleanstaffchat.velocity.staffchat.commands.AFKCommand());
         server.getEventManager().register(this, new JoinListener(this));
         server.getEventManager().register(this, new ServerListener(this));
-
-        if (getLuckPerms()) {
-            server.getEventManager().register(this, new ChatListener(this));
-        }
-
-        if (VelocityConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-            jda.getJda().addEventListener(new ChatListener(this));
+        if (jda != null && DiscordBridge.isActive(VelocityConfig.STAFFCHAT_DISCORD_MODULE)) {
+            jda.JdaWorker().addEventListener(new StaffListDiscordListener(this));
         }
     }
 
-    @SneakyThrows
-    private void registerDonorChat() {
-
-        if (VelocityCommandsConfig.DONORCHAT.getStringList() != null) {
-            final String[] aliases_donorchat = VelocityCommandsConfig.DONORCHAT.getStringList().toArray(new String[0]);
-
-            server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder(VelocityCommandsConfig.DONORCHAT.getStringList().get(0))
-                    .aliases(aliases_donorchat)
-                    .build(), new DonorChatCommand(this));
-        }
-
-        if (VelocityCommandsConfig.DONORCHAT_MUTE.getStringList() != null) {
-            final String[] aliases_donormute = VelocityCommandsConfig.DONORCHAT_MUTE.getStringList().toArray(new String[0]);
-
-            server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder(VelocityCommandsConfig.DONORCHAT_MUTE.getStringList().get(0))
-                    .aliases(aliases_donormute)
-                    .build(), new it.frafol.cleanstaffchat.velocity.donorchat.commands.MuteCommand(this));
-        }
-
-        if (VelocityCommandsConfig.DONORCHAT_TOGGLE.getStringList() != null) {
-            final String[] aliases_donortoggle = VelocityCommandsConfig.DONORCHAT_TOGGLE.getStringList().toArray(new String[0]);
-
-            server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder(VelocityCommandsConfig.DONORCHAT_TOGGLE.getStringList().get(0))
-                    .aliases(aliases_donortoggle)
-                    .build(), new it.frafol.cleanstaffchat.velocity.donorchat.commands.ToggleCommand(this));
-        }
-
-        if (getLuckPerms()) {
-            server.getEventManager().register(this, new it.frafol.cleanstaffchat.velocity.donorchat.listeners.ChatListener(this));
-        }
-
-        if (VelocityConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-            jda.getJda().addEventListener(new it.frafol.cleanstaffchat.velocity.donorchat.listeners.ChatListener(this));
-        }
+    private void registerCommand(VelocityCommandsConfig alias, java.util.function.Function<java.util.List<String>, com.velocitypowered.api.command.SimpleCommand> factory) {
+        final java.util.List<String> labels = alias.getStringList();
+        if (labels.isEmpty()) return;
+        server.getCommandManager().register(server.getCommandManager()
+                .metaBuilder(labels.get(0)).aliases(labels.subList(1, labels.size()).toArray(new String[0])).build(),
+                factory.apply(labels));
     }
 
-    @SneakyThrows
-    private void registerAdminChat() {
-
-        if (VelocityCommandsConfig.ADMINCHAT.getStringList() != null) {
-            final String[] aliases_adminchat = VelocityCommandsConfig.ADMINCHAT.getStringList().toArray(new String[0]);
-
-            server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder(VelocityCommandsConfig.ADMINCHAT.getStringList().get(0))
-                    .aliases(aliases_adminchat)
-                    .build(), new AdminChatCommand(this));
-        }
-
-        if (VelocityCommandsConfig.ADMINCHAT_MUTE.getStringList() != null) {
-            final String[] aliases_adminchatmute = VelocityCommandsConfig.ADMINCHAT_MUTE.getStringList().toArray(new String[0]);
-
-            server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder(VelocityCommandsConfig.ADMINCHAT_MUTE.getStringList().get(0))
-                    .aliases(aliases_adminchatmute)
-                    .build(), new it.frafol.cleanstaffchat.velocity.adminchat.commands.MuteCommand(this));
-        }
-
-        if (VelocityCommandsConfig.ADMINCHAT_TOGGLE.getStringList() != null) {
-            final String[] aliases_adminchattoggle = VelocityCommandsConfig.ADMINCHAT_TOGGLE.getStringList().toArray(new String[0]);
-
-            server.getCommandManager().register(server.getCommandManager()
-                    .metaBuilder(VelocityCommandsConfig.ADMINCHAT_TOGGLE.getStringList().get(0))
-                    .aliases(aliases_adminchattoggle)
-                    .build(), new it.frafol.cleanstaffchat.velocity.adminchat.commands.ToggleCommand(this));
-        }
-
-        if (getLuckPerms()) {
-            server.getEventManager().register(this, new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
-        }
-
-        if (VelocityConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-            jda.getJda().addEventListener(new it.frafol.cleanstaffchat.velocity.adminchat.listeners.ChatListener(this));
-        }
-    }
-
-    @SneakyThrows
     private void registerMuteChat() {
-
-        if (VelocityCommandsConfig.MUTECHAT.getStringList() == null) {
-            return;
-        }
-
+        if (VelocityCommandsConfig.MUTECHAT.getStringList() == null) return;
         final String[] aliases = VelocityCommandsConfig.MUTECHAT.getStringList().toArray(new String[0]);
-
         server.getCommandManager().register(server.getCommandManager()
                 .metaBuilder(VelocityCommandsConfig.MUTECHAT.getStringList().get(0))
                 .aliases(aliases)
                 .build(), new MuteChatCommand(this));
-
         server.getEventManager().register(this, new it.frafol.cleanstaffchat.velocity.general.listeners.ChatListener(this));
     }
 
     private void updateJDATask() {
         getServer().getScheduler().buildTask(this, () -> {
-
             try {
                 updateJDA();
             } catch (LoginException e) {
                 throw new RuntimeException("Fatal error while updating JDA. Is Discord Bot configured correctly?" , e);
             }
-
         }).repeat(30, TimeUnit.SECONDS).schedule();
     }
 
     public void updateJDA() throws LoginException {
-
-        if (!VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-            return;
-        }
-
+        if (!VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) return;
         if (jda.getJda() == null) {
             logger.error("Fatal error while updating JDA. Is Discord Bot configured correctly?");
             return;
         }
-
         String activity = VelocityDiscordConfig.DISCORD_ACTIVITY.get(String.class);
         String activityType = VelocityDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class);
         if (activity.isEmpty() || activityType.equals("NULL")) return;
-
         if (isPremiumVanish()) {
             jda.getJda().getPresence().setActivity(net.dv8tion.jda.api.entities.Activity.of(net.dv8tion.jda.api.entities.Activity.ActivityType.valueOf
                             (VelocityDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()), activity
                             .replace("%players%", String.valueOf(server.getAllPlayers().size() - VanishUtil.getVanishedPlayers().size()))));
             return;
         }
-
         jda.getJda().getPresence().setActivity(net.dv8tion.jda.api.entities.Activity.of(net.dv8tion.jda.api.entities.Activity.ActivityType.valueOf
                         (VelocityDiscordConfig.DISCORD_ACTIVITY_TYPE.get(String.class).toUpperCase()), activity
                         .replace("%players%", String.valueOf(server.getAllPlayers().size()))));
@@ -550,14 +422,11 @@ public class CleanStaffChat {
         try {
             String fileUrl = "https://github.com/frafol/CleanStaffChat/releases/download/release/CleanStaffChat.jar";
             String destination = "./plugins/";
-
             String fileName = getFileNameFromUrl(fileUrl);
             File outputFile = new File(destination, fileName);
-
             downloadFile(fileUrl, outputFile);
             updated = true;
             logger.warn("CleanStaffChat successfully updated, a restart is required.");
-
         } catch (IOException ignored) {
             logger.error("Error while updating CleanStaffChat, please report this error on https://dsc.gg/futuredevelopment.");
         }
@@ -565,9 +434,7 @@ public class CleanStaffChat {
 
     private String getFileNameFromUrl(String fileUrl) {
         int slashIndex = fileUrl.lastIndexOf('/');
-        if (slashIndex != -1 && slashIndex < fileUrl.length() - 1) {
-            return fileUrl.substring(slashIndex + 1);
-        }
+        if (slashIndex != -1 && slashIndex < fileUrl.length() - 1) return fileUrl.substring(slashIndex + 1);
         throw new IllegalArgumentException("Invalid file URL");
     }
 
@@ -579,9 +446,7 @@ public class CleanStaffChat {
     }
 
     public boolean isPremiumVanish() {
-        if (VelocityConfig.PREMIUMVANISH.get(Boolean.class)) {
-            return getServer().getPluginManager().isLoaded("premiumvanish");
-        }
+        if (VelocityConfig.PREMIUMVANISH.get(Boolean.class)) return getServer().getPluginManager().isLoaded("premiumvanish");
         return false;
     }
 
@@ -628,23 +493,14 @@ public class CleanStaffChat {
     }
 
     public boolean isInBlockedStaffChatServer(Player player) {
-        if (player.getCurrentServer().isPresent()) {
-             return (!VelocityServers.SC_BLOCKED_SRV.getStringList().isEmpty() && VelocityServers.SC_BLOCKED_SRV.getStringList().contains(player.getCurrentServer().get().getServerInfo().getName()));
-        }
-        return false;
+        return ChatChannel.STAFF.isBlocked(player);
     }
 
     public boolean isInBlockedAdminChatServer(Player player) {
-        if (player.getCurrentServer().isPresent()) {
-            return (!VelocityServers.AC_BLOCKED_SRV.getStringList().isEmpty() && VelocityServers.AC_BLOCKED_SRV.getStringList().contains(player.getCurrentServer().get().getServerInfo().getName()));
-        }
-        return false;
+        return ChatChannel.ADMIN.isBlocked(player);
     }
 
     public boolean isInBlockedDonorChatServer(Player player) {
-        if (player.getCurrentServer().isPresent()) {
-            return (!VelocityServers.DC_BLOCKED_SRV.getStringList().isEmpty() && VelocityServers.DC_BLOCKED_SRV.getStringList().contains(player.getCurrentServer().get().getServerInfo().getName()));
-        }
-        return false;
+        return ChatChannel.DONOR.isBlocked(player);
     }
 }

@@ -20,21 +20,14 @@ public class ReloadCommand implements SimpleCommand {
 
     @Override
     public void execute(@NotNull Invocation invocation) {
-
         final CommandSource commandSource = invocation.source();
-
         if (!commandSource.hasPermission(VelocityConfig.STAFFCHAT_RELOAD_PERMISSION.get(String.class))) {
             VelocityMessages.NO_PERMISSION.send(commandSource,
                     new Placeholder("prefix", VelocityMessages.PREFIX.color()));
             return;
         }
-
         TextFile.reloadAll();
-        VelocityMessages.RELOADED.send(commandSource,
-                    new Placeholder("prefix", VelocityMessages.PREFIX.color()));
-
-        if (PLUGIN.getJda() == null && VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-            PLUGIN.startJDA();
-        }
+        VelocityMessages.RELOADED.send(commandSource, new Placeholder("prefix", VelocityMessages.PREFIX.color()));
+        if (PLUGIN.getJda() == null && VelocityDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) PLUGIN.startJDA();
     }
 }

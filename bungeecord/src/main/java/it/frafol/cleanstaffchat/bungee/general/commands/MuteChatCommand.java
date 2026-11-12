@@ -1,6 +1,7 @@
 package it.frafol.cleanstaffchat.bungee.general.commands;
 
 import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
+import it.frafol.cleanstaffchat.bungee.channel.ChatChannel;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeCommandsConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
@@ -207,7 +208,7 @@ public class MuteChatCommand extends Command implements TabExecutor {
 
         Collection<ProxiedPlayer> players;
         if (BungeeConfig.MUTECHAT_BC_ALL.get(Boolean.class)) players = ProxyServer.getInstance().getPlayers();
-        else players = CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter(player -> player.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class)) && !(PlayerCache.getToggled().contains(player.getUniqueId())) && !CleanStaffChat.getInstance().isInBlockedStaffChatServer(player)).toList();
+        else players = CleanStaffChat.getInstance().getProxy().getPlayers().stream().filter(player -> player.hasPermission(BungeeConfig.STAFFCHAT_USE_PERMISSION.get(String.class)) && !(ChatChannel.STAFF.isHidden(player.getUniqueId())) && !CleanStaffChat.getInstance().isInBlockedStaffChatServer(player)).toList();
 
         if (activated) {
             if (server.equals("all")) {
@@ -259,20 +260,10 @@ public class MuteChatCommand extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String @NotNull [] args) {
-
-        if (args.length != 1) {
-            return Collections.emptyList();
-        }
-
+        if (args.length != 1) return Collections.emptyList();
         String partialName = args[0].toLowerCase();
-
         List<String> completions = new ArrayList<>();
-        for (String servers : ProxyServer.getInstance().getServers().keySet()) {
-            if (servers.toLowerCase().startsWith(partialName)) {
-                completions.add(servers);
-            }
-        }
-
+        for (String servers : ProxyServer.getInstance().getServers().keySet()) if (servers.toLowerCase().startsWith(partialName)) completions.add(servers);
         return completions;
     }
 }

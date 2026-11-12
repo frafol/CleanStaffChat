@@ -104,6 +104,7 @@ public class StaffListCommand extends CommandBase {
 
             for (UUID uuids : list) {
                 Player players = plugin.getServer().getPlayer(uuids);
+                assert players != null;
                 User user = api.getUserManager().getUser(players.getUniqueId());
                 if (user == null) continue;
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
@@ -190,8 +191,8 @@ public class StaffListCommand extends CommandBase {
             list = sortedList;
         } else if (SpigotConfig.SORTING.get(Boolean.class)) {
             list.sort((o1, o2) -> {
-                if (!api.getUsers().uuid(o1).isPresent()) return 0;
-                if (!api.getUsers().uuid(o2).isPresent()) return 0;
+                if (api.getUsers().uuid(o1).isEmpty()) return 0;
+                if (api.getUsers().uuid(o2).isEmpty()) return 0;
                 me.TechsCode.UltraPermissions.storage.objects.User user1 = api.getUsers().uuid(o1).get();
                 me.TechsCode.UltraPermissions.storage.objects.User user2 = api.getUsers().uuid(o2).get();
                 me.TechsCode.UltraPermissions.storage.objects.Group group1 = user1.getActiveGroups().bestToWorst().get(1);
@@ -203,6 +204,7 @@ public class StaffListCommand extends CommandBase {
 
         for (UUID uuids : list) {
             Player players = plugin.getServer().getPlayer(uuids);
+            assert players != null;
             if (api.getUsers().uuid(players.getUniqueId()).isEmpty()) continue;
             me.TechsCode.UltraPermissions.storage.objects.User user = api.getUsers().uuid(players.getUniqueId()).get();
             String prefix = "";

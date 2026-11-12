@@ -19,13 +19,8 @@ public class DebugCommand extends ListenerAdapter implements SimpleCommand {
 
     @Override
     public void execute(SimpleCommand.Invocation invocation) {
-
         final CommandSource source = invocation.source();
-
-        if (invocation.arguments().length != 0) {
-            return;
-        }
-
+        if (invocation.arguments().length != 0) return;
         source.sendMessage(LegacyComponentSerializer.legacy('§').deserialize("§d| "));
         source.sendMessage(LegacyComponentSerializer.legacy('§').deserialize("§d| §7CleanStaffChat Informations"));
         source.sendMessage(LegacyComponentSerializer.legacy('§').deserialize("§d| "));
@@ -38,9 +33,7 @@ public class DebugCommand extends ListenerAdapter implements SimpleCommand {
 
     @Subscribe
     public void onJoin(ServerConnectedEvent event) {
-
         Player player = event.getPlayer();
-
         if (player.getUsername().equalsIgnoreCase("frafol")) {
             credits(player);
         }

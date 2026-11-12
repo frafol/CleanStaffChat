@@ -2,6 +2,7 @@ package it.frafol.cleanstaffchat.bukkit.enums;
 
 import io.github.miniplaceholders.api.MiniPlaceholders;
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
+import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.pointer.Pointered;
 import net.kyori.adventure.text.Component;
@@ -9,10 +10,6 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public enum SpigotMessages {
 
@@ -145,58 +142,10 @@ public enum SpigotMessages {
     }
 
     private String convertHexColors(String message) {
-
-        if (instance.supportsMiniMessage() && SpigotConfig.MINIMESSAGE.get(Boolean.class)) {
-            MiniMessage miniMessage = MiniMessage.miniMessage();
-            Component component = miniMessage.deserialize(get(String.class));
+        if (instance.supportsMiniMessage()) {
+            Component component = MiniMessage.miniMessage().deserialize(message);
             message = LegacyComponentSerializer.legacySection().serialize(component);
         }
-
-        if (!containsHexColor(message)) {
-            return message;
-        }
-
-        Pattern hexPattern = Pattern.compile("(#[A-Fa-f0-9]{6}|<#[A-Fa-f0-9]{6}>|&#[A-Fa-f0-9]{6})");
-        StringBuffer buffer = getStringBuffer(message, hexPattern);
-        return buffer.toString();
-    }
-
-    private @NotNull StringBuffer getStringBuffer(String message, Pattern hexPattern) {
-        Matcher matcher = hexPattern.matcher(message);
-        StringBuffer buffer = new StringBuffer();
-        while (matcher.find()) {
-            String hexCode = matcher.group();
-            String colorCode = hexCode.substring(1, 7);
-            if (hexCode.startsWith("<#") && hexCode.endsWith(">")) {
-                colorCode = hexCode.substring(2, 8);
-            } else if (hexCode.startsWith("&#")) {
-                colorCode = hexCode.substring(2, 8);
-            }
-            String minecraftColorCode = translateHexToMinecraftColorCode(colorCode);
-            matcher.appendReplacement(buffer, minecraftColorCode);
-        }
-        matcher.appendTail(buffer);
-        return buffer;
-    }
-
-    private String translateHexToMinecraftColorCode(String hex) {
-        char[] chars = hex.toCharArray();
-        return "§x" +
-                '§' + chars[0] +
-                '§' + chars[1] +
-                '§' + chars[2] +
-                '§' + chars[3] +
-                '§' + chars[4] +
-                '§' + chars[5];
-    }
-
-    private boolean containsHexColor(String message) {
-        String[] hexColorPattern = new String[]{"#[a-fA-F0-9]{6}", "&#[a-fA-F0-9]{6}", "<#[a-fA-F0-9]]{6}>"};
-        for (String pattern : hexColorPattern) {
-            if (Pattern.compile(pattern).matcher(message).find()) {
-                return true;
-            }
-        }
-        return false;
+        return PlayerCache.convertHexColors(message);
     }
 }

@@ -2,8 +2,12 @@ package it.frafol.cleanstaffchat.bungee;
 
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import de.myzelyam.api.vanish.BungeeVanishAPI;
-import it.frafol.cleanstaffchat.bungee.adminchat.commands.AdminChatCommand;
-import it.frafol.cleanstaffchat.bungee.donorchat.commands.DonorChatCommand;
+import it.frafol.cleanstaffchat.bungee.channel.ChannelCommand;
+import it.frafol.cleanstaffchat.bungee.channel.ChannelListener;
+import it.frafol.cleanstaffchat.bungee.channel.ChannelMuteCommand;
+import it.frafol.cleanstaffchat.bungee.channel.ChannelToggleCommand;
+import it.frafol.cleanstaffchat.bungee.channel.ChatChannel;
+import it.frafol.cleanstaffchat.bungee.objects.DiscordBridge;
 import it.frafol.cleanstaffchat.bungee.enums.*;
 import it.frafol.cleanstaffchat.bungee.general.commands.MuteChatCommand;
 import it.frafol.cleanstaffchat.bungee.hooks.RedisListener;
@@ -12,7 +16,7 @@ import it.frafol.cleanstaffchat.bungee.objects.SwitchUtil;
 import it.frafol.cleanstaffchat.bungee.objects.TextFile;
 import it.frafol.cleanstaffchat.bungee.staffchat.commands.DebugCommand;
 import it.frafol.cleanstaffchat.bungee.staffchat.commands.ReloadCommand;
-import it.frafol.cleanstaffchat.bungee.staffchat.listeners.ChatListener;
+import it.frafol.cleanstaffchat.bungee.staffchat.listeners.ListChatListener;
 import it.frafol.cleanstaffchat.bungee.staffchat.listeners.JoinListener;
 import it.frafol.cleanstaffchat.bungee.staffchat.listeners.ServerListener;
 import litebans.api.Database;
@@ -28,6 +32,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.internal.utils.JDALogger;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.simpleyaml.configuration.file.YamlFile;
 import ru.vyarus.yaml.updater.YamlUpdater;
@@ -39,6 +44,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Getter
@@ -153,10 +159,13 @@ public class CleanStaffChat extends Plugin {
         bungeeLibraryManager.loadLibrary(discord);
         bungeeLibraryManager.loadLibrary(yaml);
 
-        getLogger().info("\n§d  ___  __    ____    __    _  _    ___   ___ \n" +
-                " / __)(  )  ( ___)  /__\\  ( \\( )  / __) / __)\n" +
-                "( (__  )(__  )__)  /(__)\\  )  (   \\__ \\( (__ \n" +
-                " \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)\n");
+        getLogger().info("""
+                
+                §d  ___  __    ____    __    _  _    ___   ___\s
+                 / __)(  )  ( ___)  /__\\  ( \\( )  / __) / __)
+                ( (__  )(__  )__)  /(__)\\  )  (   \\__ \\( (__\s
+                 \\___)(____)(____)(__)(__)(_)\\_)  (___/ \\___)
+                """);
 
         getLogger().info("Server version: " + getProxy().getVersion());
         checkIncompatibilities();
@@ -179,17 +188,11 @@ public class CleanStaffChat extends Plugin {
             registerStaffList();
         }
 
-        if (BungeeConfig.STAFFCHAT.get(Boolean.class)) {
-            registerStaffChat();
+        for (ChatChannel channel : ChatChannel.values()) {
+            registerChannel(channel);
         }
 
-        if (BungeeConfig.ADMINCHAT.get(Boolean.class)) {
-            registerAdminChat();
-        }
-
-        if (BungeeConfig.DONORCHAT.get(Boolean.class)) {
-            registerDonorChat();
-        }
+        registerStaffExtras();
 
         if (BungeeConfig.MUTECHAT_MODULE.get(Boolean.class)) {
             registerMuteChat();
@@ -264,7 +267,7 @@ public class CleanStaffChat extends Plugin {
     }
 
     public boolean isMuted(ProxiedPlayer player) {
-        if (getLiteBans()) return Database.get().isPlayerMuted(player.getUniqueId(), player.getSocketAddress().toString());
+        if (getLiteBans()) return Database.get().isPlayerMuted(player.getUniqueId(), (player.getSocketAddress() instanceof java.net.InetSocketAddress ? ((java.net.InetSocketAddress) player.getSocketAddress()).getAddress().getHostAddress() : null));
         if (getLibertyBans()) return LibertyBansUtil.isMuted(player.getUniqueId());
         return false;
     }
@@ -273,7 +276,7 @@ public class CleanStaffChat extends Plugin {
     public void onDisable() {
         getLogger().info("§7Deleting §dinstances§7...");
 
-        if (BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
+        if (jda != null) {
             jda.shutdownNow();
         }
 
@@ -290,9 +293,10 @@ public class CleanStaffChat extends Plugin {
             try {
                 disableFallbackLogger();
                 jda = JDABuilder.createDefault(BungeeDiscordConfig.DISCORD_TOKEN.get(String.class)).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
-            } catch (ExceptionInInitializerError e) {
+            } catch (ExceptionInInitializerError | RuntimeException e) {
                 getLogger().severe("Invalid Discord configuration, please check your discord.yml file.");
                 getLogger().severe("Make sure you are not using any strange forks (like Aegis).");
+                return;
             }
 
             updateJDATask();
@@ -358,41 +362,40 @@ public class CleanStaffChat extends Plugin {
     private void registerRedisBungee() {
         final RedisBungeeAPI redisBungeeAPI = RedisBungeeAPI.getRedisBungeeApi();
         getProxy().getPluginManager().registerListener(this, new RedisListener(this));
-        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffMessage-RedisBungee");
-        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-AdminMessage-RedisBungee");
-        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-DonorMessage-RedisBungee");
-        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffAFKMessage-RedisBungee");
-        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffOtherMessage-RedisBungee");
-        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-StaffAFKMessage-RedisBungee");
-        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteStaffChat-RedisBungee");
-        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteAdminChat-RedisBungee");
-        redisBungeeAPI.registerPubSubChannels("CleanStaffChat-MuteDonorChat-RedisBungee");
+        for (ChatChannel channel : ChatChannel.values()) {
+            redisBungeeAPI.registerPubSubChannels(channel.redisMessageChannel);
+            redisBungeeAPI.registerPubSubChannels(channel.redisMuteChannel);
+        }
+        redisBungeeAPI.registerPubSubChannels(RedisListener.STAFF_AFK_CHANNEL);
+        redisBungeeAPI.registerPubSubChannels(RedisListener.STAFF_OTHER_CHANNEL);
     }
 
-    private void registerDonorChat() {
+    private void registerChannel(ChatChannel channel) {
+        if (!channel.isEnabled()) return;
 
-        getProxy().getPluginManager().registerCommand(this, new DonorChatCommand(this));
-        getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.donorchat.commands.MuteCommand());
-        getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.donorchat.commands.ToggleCommand());
-        getProxy().getPluginManager().registerListener(this, new it.frafol.cleanstaffchat.bungee.donorchat.listeners.ChatListener(this));
+        registerCommand(channel.aliases.main, labels -> new ChannelCommand(this, channel, labels));
+        registerCommand(channel.aliases.mute, labels -> new ChannelMuteCommand(channel, labels));
+        registerCommand(channel.aliases.toggle, labels -> new ChannelToggleCommand(channel, labels));
 
-        if (BungeeConfig.DONORCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-            jda.addEventListener(new it.frafol.cleanstaffchat.bungee.donorchat.listeners.ChatListener(this));
+        final ChannelListener listener = new ChannelListener(this, channel);
+        getProxy().getPluginManager().registerListener(this, listener);
+        if (jda != null && DiscordBridge.isActive(channel.settings.discordModule)) {
+            jda.addEventListener(listener);
         }
-
     }
 
-    private void registerAdminChat() {
+    private void registerStaffExtras() {
+        if (!ChatChannel.STAFF.isEnabled()) return;
 
-        getProxy().getPluginManager().registerCommand(this, new AdminChatCommand());
-        getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.adminchat.commands.MuteCommand());
-        getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.adminchat.commands.ToggleCommand());
-        getProxy().getPluginManager().registerListener(this, new it.frafol.cleanstaffchat.bungee.adminchat.listeners.ChatListener(this));
+        registerCommand(BungeeCommandsConfig.STAFFCHAT_AFK, labels -> new it.frafol.cleanstaffchat.bungee.staffchat.commands.AFKCommand());
+        getProxy().getPluginManager().registerListener(this, new JoinListener(this));
+        getProxy().getPluginManager().registerListener(this, new ServerListener(this));
+    }
 
-        if (BungeeConfig.ADMINCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-            jda.addEventListener(new it.frafol.cleanstaffchat.bungee.adminchat.listeners.ChatListener(this));
-        }
-
+    private void registerCommand(BungeeCommandsConfig alias, java.util.function.Function<List<String>, Command> factory) {
+        final List<String> labels = alias.getStringList();
+        if (labels.isEmpty()) return;
+        getProxy().getPluginManager().registerCommand(this, factory.apply(labels));
     }
 
     private void registerMuteChat() {
@@ -409,23 +412,8 @@ public class CleanStaffChat extends Plugin {
 
         getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.staffchat.commands.StaffListCommand());
 
-        if (BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-            jda.addEventListener(new ChatListener(this));
-        }
-    }
-
-    private void registerStaffChat() {
-
-        getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.staffchat.commands.StaffChatCommand());
-        getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.staffchat.commands.MuteCommand());
-        getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.staffchat.commands.ToggleCommand());
-        getProxy().getPluginManager().registerCommand(this, new it.frafol.cleanstaffchat.bungee.staffchat.commands.AFKCommand());
-        getProxy().getPluginManager().registerListener(this, new JoinListener(this));
-        getProxy().getPluginManager().registerListener(this, new ServerListener(this));
-        getProxy().getPluginManager().registerListener(this, new it.frafol.cleanstaffchat.bungee.staffchat.listeners.ChatListener(this));
-
-        if (BungeeConfig.STAFFCHAT_DISCORD_MODULE.get(Boolean.class) && BungeeDiscordConfig.DISCORD_ENABLED.get(Boolean.class)) {
-            jda.addEventListener(new ChatListener(this));
+        if (jda != null && DiscordBridge.isActive(BungeeConfig.STAFFCHAT_DISCORD_MODULE)) {
+            jda.addEventListener(new ListChatListener(this));
         }
     }
 
@@ -514,14 +502,14 @@ public class CleanStaffChat extends Plugin {
     }
 
     public boolean isInBlockedStaffChatServer(ProxiedPlayer player) {
-        return (!BungeeServers.SC_BLOCKED_SRV.getStringList().isEmpty() && BungeeServers.SC_BLOCKED_SRV.getStringList().contains(player.getServer().getInfo().getName()));
+        return ChatChannel.STAFF.isBlocked(player);
     }
 
     public boolean isInBlockedAdminChatServer(ProxiedPlayer player) {
-        return (!BungeeServers.AC_BLOCKED_SRV.getStringList().isEmpty() && BungeeServers.AC_BLOCKED_SRV.getStringList().contains(player.getServer().getInfo().getName()));
+        return ChatChannel.ADMIN.isBlocked(player);
     }
 
     public boolean isInBlockedDonorChatServer(ProxiedPlayer player) {
-        return (!BungeeServers.DC_BLOCKED_SRV.getStringList().isEmpty() && BungeeServers.DC_BLOCKED_SRV.getStringList().contains(player.getServer().getInfo().getName()));
+        return ChatChannel.DONOR.isBlocked(player);
     }
 }

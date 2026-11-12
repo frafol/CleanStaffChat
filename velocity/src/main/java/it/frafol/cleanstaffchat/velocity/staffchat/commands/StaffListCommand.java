@@ -112,7 +112,7 @@ public class StaffListCommand implements SimpleCommand {
                     return 0;
                 }
 
-                if (!group1.getWeight().isPresent() || !group2.getWeight().isPresent()) {
+                if (group1.getWeight().isEmpty() || group2.getWeight().isEmpty()) {
                     return 0;
                 }
 

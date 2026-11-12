@@ -1,6 +1,7 @@
 package it.frafol.cleanstaffchat.bukkit.general.commands;
 
 import it.frafol.cleanstaffchat.bukkit.CleanStaffChat;
+import it.frafol.cleanstaffchat.bukkit.channel.ChatChannel;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotConfig;
 import it.frafol.cleanstaffchat.bukkit.enums.SpigotMessages;
 import it.frafol.cleanstaffchat.bukkit.objects.PlayerCache;
@@ -92,7 +93,7 @@ public class MuteChatCommand extends CommandBase {
         }
         Collection<? extends Player> players;
         if (SpigotConfig.MUTECHAT_BC_ALL.get(Boolean.class)) players = plugin.getServer().getOnlinePlayers();
-        else players = plugin.getServer().getOnlinePlayers().stream().filter(player -> player.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)) && !(PlayerCache.getToggled().contains(player.getUniqueId()))).toList();
+        else players = plugin.getServer().getOnlinePlayers().stream().filter(player -> player.hasPermission(SpigotConfig.STAFFCHAT_USE_PERMISSION.get(String.class)) && !ChatChannel.STAFF.isHidden(player.getUniqueId())).toList();
         if (activated) {
             for (Player player : players) {
                 player.sendMessage((SpigotMessages.MUTECHAT_ENABLED_BC.color()

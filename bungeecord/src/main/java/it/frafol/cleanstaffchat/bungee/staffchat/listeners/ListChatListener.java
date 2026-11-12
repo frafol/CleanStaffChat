@@ -6,6 +6,7 @@ import it.frafol.cleanstaffchat.bungee.CleanStaffChat;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeDiscordConfig;
 import it.frafol.cleanstaffchat.bungee.enums.BungeeMessages;
+import it.frafol.cleanstaffchat.bungee.objects.DiscordBridge;
 import it.frafol.cleanstaffchat.bungee.objects.PlayerCache;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -22,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ListChatListener extends ListenerAdapter {
@@ -108,7 +110,7 @@ public class ListChatListener extends ListenerAdapter {
                         return 0;
                     }
 
-                    if (!group1.getWeight().isPresent() || !group2.getWeight().isPresent()) {
+                    if (group1.getWeight().isEmpty() || group2.getWeight().isEmpty()) {
                         return 0;
                     }
 
@@ -133,34 +135,20 @@ public class ListChatListener extends ListenerAdapter {
                 }
 
                 if (group == null || group.getDisplayName() == null) {
-
                     final String prefix = user.getCachedData().getMetaData().getPrimaryGroup();
-                    if (prefix != null) {
-                        user_prefix = prefix;
-                    } else {
-                        user_prefix = "";
-                    }
-
-                    if (players.getServer() == null) {
-                        continue;
-                    }
-
+                    user_prefix = Objects.requireNonNullElse(prefix, "");
+                    if (players.getServer() == null) continue;
                     sb.append((BungeeMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
                             .replace("%usergroup%", PlayerCache.translateHex(user_prefix))
                             .replace("%player%", players.getName())
                             .replace("%afk%", isAFK)
                             .replace("%server%", players.getServer().getInfo().getName()));
-
                     continue;
                 }
 
                 final String prefix = group.getDisplayName();
                 user_prefix = prefix == null ? group.getDisplayName() : prefix;
-
-                if (players.getServer() == null) {
-                    continue;
-                }
-
+                if (players.getServer() == null) continue;
                 sb.append((BungeeMessages.DISCORDLIST_FORMAT.get(String.class) + "\n")
                         .replace("%usergroup%", PlayerCache.translateHex(user_prefix))
                         .replace("%player%", players.getName())
@@ -169,20 +157,14 @@ public class ListChatListener extends ListenerAdapter {
 
             }
             sb.append(BungeeMessages.DISCORDLIST_FOOTER.get(String.class).replace("%online%", String.valueOf(list.size())));
-
             if (BungeeDiscordConfig.USE_EMBED.get(Boolean.class)) {
                 EmbedBuilder embed = new EmbedBuilder();
                 embed.setTitle(BungeeDiscordConfig.STAFFLIST_EMBED_TITLE.get(String.class), null);
                 embed.setDescription(sb.toString());
-                embed.setColor(Color.getColor(BungeeDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
+                embed.setColor(DiscordBridge.parseColor(BungeeDiscordConfig.EMBEDS_STAFFCHATCOLOR.get(String.class)));
                 embed.setFooter(BungeeDiscordConfig.EMBEDS_FOOTER.get(String.class), null);
                 event.getChannel().sendMessageEmbeds(embed.build()).queue();
-
-            } else {
-                event.getMessage().reply(sb.toString()).queue();
-            }
-
-            return;
+            } else event.getMessage().reply(sb.toString()).queue();
         }
     }
 }

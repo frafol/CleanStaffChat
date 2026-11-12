@@ -3,53 +3,29 @@ package it.frafol.cleanstaffchat.velocity.objects;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
-import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
-
+/**
+ * Runtime state that is not tied to a chat channel (per-channel state lives in ChatChannel).
+ * All sets are thread-safe: chat events and Discord callbacks run on different threads.
+ */
 @UtilityClass
 public class PlayerCache {
 
     @Getter
-    private final HashSet<UUID> staffers = new HashSet<>();
+    private final Set<UUID> staffers = ConcurrentHashMap.newKeySet();
 
     @Getter
-    private final HashSet<UUID> toggled = new HashSet<>();
+    private final Set<UUID> afk = ConcurrentHashMap.newKeySet();
 
     @Getter
-    private final HashSet<UUID> toggled_2 = new HashSet<>();
+    private final Set<UUID> cooldown = ConcurrentHashMap.newKeySet();
 
     @Getter
-    private final HashSet<UUID> toggled_admin = new HashSet<>();
+    private final Set<String> cooldown_discord = ConcurrentHashMap.newKeySet();
 
     @Getter
-    private final HashSet<UUID> toggled_2_admin = new HashSet<>();
-
-    @Getter
-    private final HashSet<UUID> toggled_donor = new HashSet<>();
-
-    @Getter
-    private final HashSet<UUID> toggled_2_donor = new HashSet<>();
-
-    @Getter
-    private final HashSet<UUID> afk = new HashSet<>();
-
-    @Getter
-    private final HashSet<UUID> cooldown = new HashSet<>();
-
-    @Getter
-    private final HashSet<String> muted = new HashSet<>();
-
-    @Getter
-    private final HashSet<String> muted_admin = new HashSet<>();
-
-    @Getter
-    private final HashSet<String> muted_donor = new HashSet<>();
-
-    @Getter
-    private final HashSet<String> cooldown_discord = new HashSet<>();
-
-    @Getter
-    private final HashSet<String> mutedservers = new HashSet<>();
-
+    private final Set<String> mutedservers = ConcurrentHashMap.newKeySet();
 }

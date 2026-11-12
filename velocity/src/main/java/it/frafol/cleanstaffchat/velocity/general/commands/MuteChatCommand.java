@@ -6,6 +6,7 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import it.frafol.cleanstaffchat.velocity.CleanStaffChat;
+import it.frafol.cleanstaffchat.velocity.channel.ChatChannel;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityConfig;
 import it.frafol.cleanstaffchat.velocity.enums.VelocityMessages;
 import it.frafol.cleanstaffchat.velocity.objects.Placeholder;
@@ -37,9 +38,7 @@ public class MuteChatCommand implements SimpleCommand {
 
         CommandSource commandSource = invocation.source();
         String[] args = invocation.arguments();
-
         if (args.length == 0) {
-
             if (!commandSource.hasPermission(VelocityConfig.MUTECHAT_ALL_PERMISSION.get(String.class))) {
                 VelocityMessages.NO_PERMISSION.send(commandSource,
                         new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
@@ -89,7 +88,6 @@ public class MuteChatCommand implements SimpleCommand {
         }
 
         if (args.length == 1) {
-
             if (!(commandSource instanceof Player player)) {
                 VelocityMessages.PLAYER_ONLY.send(commandSource,
                         new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
@@ -100,7 +98,7 @@ public class MuteChatCommand implements SimpleCommand {
             String user_suffix = "";
             if (PLUGIN.getServer().getPluginManager().isLoaded("luckperms")) {
                 final LuckPerms api = LuckPermsProvider.get();
-                final User user = api.getUserManager().getUser(((Player) commandSource).getUniqueId());
+                final User user = api.getUserManager().getUser(player.getUniqueId());
                 if (user == null) return;
                 final String prefix = user.getCachedData().getMetaData().getPrefix();
                 final String suffix = user.getCachedData().getMetaData().getSuffix();
@@ -115,9 +113,7 @@ public class MuteChatCommand implements SimpleCommand {
             }
 
             String server = args[0];
-
             if (server.equalsIgnoreCase("all")) {
-
                 if (!commandSource.hasPermission(VelocityConfig.MUTECHAT_ALL_PERMISSION.get(String.class))) {
                     VelocityMessages.NO_PERMISSION.send(commandSource,
                             new Placeholder("prefix", VelocityMessages.GLOBALPREFIX.color()));
@@ -181,7 +177,6 @@ public class MuteChatCommand implements SimpleCommand {
     }
 
     private void broadcastMuteChat(CommandSource commandSource, String server, boolean activated) {
-
         String user_prefix = "";
         String user_suffix = "";
         String playerName = "";
@@ -199,7 +194,7 @@ public class MuteChatCommand implements SimpleCommand {
 
         Collection<Player> players = null;
         if (VelocityConfig.MUTECHAT_BC_ALL.get(Boolean.class)) players = PLUGIN.getServer().getAllPlayers();
-        if (!VelocityConfig.MUTECHAT_BC_ALL.get(Boolean.class)) players = PLUGIN.getServer().getAllPlayers().stream().filter(player -> player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class)) && !(PlayerCache.getToggled().contains(player.getUniqueId())) && !instance.isInBlockedStaffChatServer(player)).toList();
+        if (!VelocityConfig.MUTECHAT_BC_ALL.get(Boolean.class)) players = PLUGIN.getServer().getAllPlayers().stream().filter(player -> player.hasPermission(VelocityConfig.STAFFCHAT_USE_PERMISSION.get(String.class)) && !ChatChannel.STAFF.isHidden(player.getUniqueId()) && !ChatChannel.STAFF.isBlocked(player)).toList();
         if (players == null) return;
 
         if (activated) {
@@ -252,27 +247,12 @@ public class MuteChatCommand implements SimpleCommand {
 
     @Override
     public CompletableFuture<List<String>> suggestAsync(Invocation invocation) {
-
         final String[] strings = invocation.arguments();
-
-        if (strings.length != 1) {
-            return CompletableFuture.completedFuture(Collections.emptyList());
-        }
-
-        if (!(invocation.source() instanceof Player)) {
-            return CompletableFuture.completedFuture(Collections.emptyList());
-        }
-
+        if (strings.length != 1) return CompletableFuture.completedFuture(Collections.emptyList());
+        if (!(invocation.source() instanceof Player)) return CompletableFuture.completedFuture(Collections.emptyList());
         final List<String> serverslist = new ArrayList<>();
-
-        for (RegisteredServer servers : PLUGIN.getServer().getAllServers()) {
-            serverslist.add(servers.getServerInfo().getName());
-        }
-
-        if (serverslist.isEmpty()) {
-            return CompletableFuture.completedFuture(Collections.emptyList());
-        }
-
+        for (RegisteredServer servers : PLUGIN.getServer().getAllServers()) serverslist.add(servers.getServerInfo().getName());
+        if (serverslist.isEmpty()) return CompletableFuture.completedFuture(Collections.emptyList());
         return CompletableFuture.completedFuture(serverslist);
     }
 }

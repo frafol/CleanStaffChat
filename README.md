@@ -17,9 +17,9 @@ You can active/deactive all features as you want.
 
 ## Velocity, BungeeCord and Spigot compatibility is here.
 ```
-» BungeeCord 1.7 - 1.21 & forks (like Flamecord)
-» Velocity 3.1.2 to 3.4.0 & forks (like Velocity-CTG)
-» Spigot 1.7 - 1.21 & forks (Paper and also Folia)
+» BungeeCord 26.3 & forks (like Flamecord/Waterfall)
+» Velocity & forks (like Velocity-CTG)
+» Spigot 1.8 - 26.3 & forks (Paper and also Folia)
 ```
 
 ## Commands
